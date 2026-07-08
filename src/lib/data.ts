@@ -1,0 +1,244 @@
+// Data layer: uses Supabase when EXPO_PUBLIC_SUPABASE_URL/ANON_KEY are set,
+// otherwise falls back to the bundled demo dataset (same ids as seed.sql)
+// with AsyncStorage-persisted bookings so the whole app works offline.
+
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import demo from '../data/demo.json';
+import { getSupabase } from './supabase';
+import type { Booking, BookingItem, Category, Venue } from './types';
+
+const demoVenues = demo.venues as unknown as Venue[];
+const demoCategories = demo.categories as unknown as Category[];
+
+const VENUE_SELECT = `
+  *,
+  images:venue_images (url, sort_order),
+  services (*),
+  staff (*),
+  reviews (*),
+  hours:opening_hours (weekday, open_time, close_time, is_closed)
+`;
+
+function normalizeVenue(v: any): Venue {
+  return {
+    ...v,
+    rating_avg: Number(v.rating_avg),
+    images: [...(v.images ?? [])].sort((a, b) => a.sort_order - b.sort_order),
+    services: [...(v.services ?? [])].sort((a, b) => a.sort_order - b.sort_order),
+    staff: v.staff ?? [],
+    reviews: [...(v.reviews ?? [])].sort((a, b) => b.created_at.localeCompare(a.created_at)),
+    hours: [...(v.hours ?? [])].sort((a, b) => a.weekday - b.weekday),
+  };
+}
+
+export async function getCategories(): Promise<Category[]> {
+  const sb = getSupabase();
+  if (!sb) return demoCategories;
+  const { data, error } = await sb.from('categories').select('*').order('sort_order');
+  if (error || !data?.length) return demoCategories;
+  return data;
+}
+
+export async function getVenues(): Promise<Venue[]> {
+  const sb = getSupabase();
+  if (!sb) return demoVenues;
+  const { data, error } = await sb.from('venues').select(VENUE_SELECT);
+  if (error || !data?.length) return demoVenues;
+  return data.map(normalizeVenue);
+}
+
+export async function getVenueBySlug(slug: string): Promise<Venue | null> {
+  const sb = getSupabase();
+  if (!sb) return demoVenues.find((v) => v.slug === slug) ?? null;
+  const { data, error } = await sb.from('venues').select(VENUE_SELECT).eq('slug', slug).maybeSingle();
+  if (error || !data) return demoVenues.find((v) => v.slug === slug) ?? null;
+  return normalizeVenue(data);
+}
+
+export function searchVenues(venues: Venue[], query: string, categorySlug?: string, categories?: Category[]): Venue[] {
+  let out = venues;
+  if (categorySlug && categories) {
+    const cat = categories.find((c) => c.slug === categorySlug);
+    if (cat) out = out.filter((v) => v.category_id === cat.id);
+  }
+  // Token match with naive singularization so "nails" finds "Nail Salon" etc.
+  const tokens = query.trim().toLowerCase().split(/\s+/).filter(Boolean);
+  if (tokens.length) {
+    out = out.filter((v) => {
+      const catName = categories?.find((c) => c.id === v.category_id)?.name ?? '';
+      const haystack = [
+        v.name,
+        v.city,
+        v.area,
+        catName,
+        ...v.services.map((s) => `${s.name} ${s.group_name}`),
+      ]
+        .join(' ')
+        .toLowerCase();
+      return tokens.every((t) => {
+        const singular = t.endsWith('s') ? t.slice(0, -1) : t;
+        return haystack.includes(t) || haystack.includes(singular);
+      });
+    });
+  }
+  return out;
+}
+
+// ---------------------------------------------------------------------------
+// Bookings — Supabase when signed in, otherwise AsyncStorage (demo mode)
+// ---------------------------------------------------------------------------
+const LOCAL_BOOKINGS_KEY = 'bink.bookings';
+
+async function getLocalBookings(): Promise<Booking[]> {
+  try {
+    const raw = await AsyncStorage.getItem(LOCAL_BOOKINGS_KEY);
+    return raw ? JSON.parse(raw) : [];
+  } catch {
+    return [];
+  }
+}
+
+export interface CreateBookingInput {
+  venue: Venue;
+  staffId?: string | null;
+  staffName?: string | null;
+  customerName?: string | null;
+  startsAt: Date;
+  items: BookingItem[];
+  currency: string;
+}
+
+export async function createBooking(input: CreateBookingInput): Promise<Booking> {
+  const totalMinutes = input.items.reduce((m, i) => m + i.duration_minutes, 0);
+  const totalCents = input.items.reduce((c, i) => c + i.price_cents, 0);
+  const endsAt = new Date(input.startsAt.getTime() + totalMinutes * 60_000);
+
+  const booking: Booking = {
+    id: `local-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+    venue_id: input.venue.id,
+    customer_name: input.customerName ?? null,
+    venue_name: input.venue.name,
+    venue_image: input.venue.images[0]?.url,
+    venue_area: `${input.venue.area}, ${input.venue.city}`,
+    staff_id: input.staffId ?? null,
+    staff_name: input.staffName ?? null,
+    starts_at: input.startsAt.toISOString(),
+    ends_at: endsAt.toISOString(),
+    status: 'confirmed',
+    total_cents: totalCents,
+    currency: input.currency,
+    items: input.items,
+  };
+
+  const sb = getSupabase();
+  const user = sb ? (await sb.auth.getUser()).data.user : null;
+
+  if (sb && user) {
+    const { data, error } = await sb
+      .from('bookings')
+      .insert({
+        user_id: user.id,
+        venue_id: input.venue.id,
+        staff_id: input.staffId ?? null,
+        starts_at: booking.starts_at,
+        ends_at: booking.ends_at,
+        status: 'confirmed',
+        total_cents: totalCents,
+        currency: input.currency,
+      })
+      .select('id')
+      .single();
+    if (!error && data) {
+      booking.id = data.id;
+      await sb.from('booking_items').insert(
+        input.items.map((i) => ({
+          booking_id: data.id,
+          service_id: i.service_id,
+          service_name: i.service_name,
+          duration_minutes: i.duration_minutes,
+          price_cents: i.price_cents,
+        }))
+      );
+      return booking;
+    }
+  }
+
+  const existing = await getLocalBookings();
+  await AsyncStorage.setItem(LOCAL_BOOKINGS_KEY, JSON.stringify([booking, ...existing]));
+  return booking;
+}
+
+export async function getBookings(): Promise<Booking[]> {
+  const sb = getSupabase();
+  const user = sb ? (await sb.auth.getUser()).data.user : null;
+
+  if (sb && user) {
+    const { data, error } = await sb
+      .from('bookings')
+      .select('*, items:booking_items (service_id, service_name, duration_minutes, price_cents), venue:venues (name, area, city, images:venue_images (url, sort_order))')
+      .order('starts_at', { ascending: false });
+    if (!error && data) {
+      return data.map((b: any) => ({
+        id: b.id,
+        venue_id: b.venue_id,
+        venue_name: b.venue?.name ?? 'Venue',
+        venue_image: b.venue?.images?.[0]?.url,
+        venue_area: b.venue ? `${b.venue.area}, ${b.venue.city}` : undefined,
+        staff_id: b.staff_id,
+        staff_name: null,
+        starts_at: b.starts_at,
+        ends_at: b.ends_at,
+        status: b.status,
+        total_cents: b.total_cents,
+        currency: b.currency,
+        items: b.items ?? [],
+      }));
+    }
+  }
+
+  return getLocalBookings();
+}
+
+export async function cancelBooking(id: string): Promise<void> {
+  const sb = getSupabase();
+  const user = sb ? (await sb.auth.getUser()).data.user : null;
+  if (sb && user && !id.startsWith('local-')) {
+    await sb.from('bookings').update({ status: 'cancelled' }).eq('id', id);
+    return;
+  }
+  const bookings = await getLocalBookings();
+  await AsyncStorage.setItem(
+    LOCAL_BOOKINGS_KEY,
+    JSON.stringify(bookings.map((b) => (b.id === id ? { ...b, status: 'cancelled' } : b)))
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Favorites — local (mirrors to Supabase when signed in)
+// ---------------------------------------------------------------------------
+const LOCAL_FAVS_KEY = 'bink.favorites';
+
+export async function getFavoriteIds(): Promise<string[]> {
+  try {
+    const raw = await AsyncStorage.getItem(LOCAL_FAVS_KEY);
+    return raw ? JSON.parse(raw) : [];
+  } catch {
+    return [];
+  }
+}
+
+export async function toggleFavorite(venueId: string): Promise<string[]> {
+  const favs = await getFavoriteIds();
+  const next = favs.includes(venueId) ? favs.filter((id) => id !== venueId) : [...favs, venueId];
+  await AsyncStorage.setItem(LOCAL_FAVS_KEY, JSON.stringify(next));
+  const sb = getSupabase();
+  const user = sb ? (await sb.auth.getUser()).data.user : null;
+  if (sb && user) {
+    if (next.includes(venueId)) {
+      await sb.from('favorites').upsert({ user_id: user.id, venue_id: venueId });
+    } else {
+      await sb.from('favorites').delete().eq('user_id', user.id).eq('venue_id', venueId);
+    }
+  }
+  return next;
+}

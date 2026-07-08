@@ -1,18 +1,64 @@
-import { DarkTheme, DefaultTheme, ThemeProvider } from 'expo-router';
+import { useFonts } from 'expo-font';
+import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
-import { useColorScheme } from 'react-native';
+import { StatusBar } from 'expo-status-bar';
+import React, { useEffect } from 'react';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { AppDataProvider } from '../lib/app-data-context';
+import { AuthProvider } from '../lib/auth-context';
+import { BookingProvider } from '../lib/booking-context';
+import { colors } from '../lib/theme';
 
-import { AnimatedSplashOverlay } from '@/components/animated-icon';
-import AppTabs from '@/components/app-tabs';
+SplashScreen.preventAutoHideAsync().catch(() => {});
 
-SplashScreen.preventAutoHideAsync();
+export default function RootLayout() {
+  const [fontsLoaded] = useFonts({
+    // Registering Ionicons here (from our own assets) keeps the icon font off
+    // the node_modules asset path, which the Vercel CLI strips from uploads.
+    Ionicons: require('../../assets/fonts/Ionicons.ttf'),
+    Manrope_400Regular: require('../../assets/fonts/Manrope_400Regular.ttf'),
+    Manrope_500Medium: require('../../assets/fonts/Manrope_500Medium.ttf'),
+    Manrope_600SemiBold: require('../../assets/fonts/Manrope_600SemiBold.ttf'),
+    Manrope_700Bold: require('../../assets/fonts/Manrope_700Bold.ttf'),
+    Manrope_800ExtraBold: require('../../assets/fonts/Manrope_800ExtraBold.ttf'),
+  });
 
-export default function TabLayout() {
-  const colorScheme = useColorScheme();
+  useEffect(() => {
+    if (fontsLoaded) SplashScreen.hideAsync().catch(() => {});
+  }, [fontsLoaded]);
+
+  if (!fontsLoaded) return null;
+
   return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <AnimatedSplashOverlay />
-      <AppTabs />
-    </ThemeProvider>
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <SafeAreaProvider>
+        <AuthProvider>
+          <AppDataProvider>
+            <BookingProvider>
+              <StatusBar style="dark" />
+              <Stack
+                screenOptions={{
+                  headerShown: false,
+                  contentStyle: { backgroundColor: colors.white },
+                }}
+              >
+                <Stack.Screen name="index" />
+                <Stack.Screen name="search" />
+                <Stack.Screen name="appointments" />
+                <Stack.Screen name="invoices" />
+                <Stack.Screen name="profile" />
+                <Stack.Screen name="auth" options={{ presentation: 'modal' }} />
+                <Stack.Screen name="venue/[slug]" />
+                <Stack.Screen name="booking/[slug]" options={{ presentation: 'fullScreenModal' }} />
+                <Stack.Screen name="business/index" />
+                <Stack.Screen name="business/dashboard" />
+                <Stack.Screen name="admin" />
+              </Stack>
+            </BookingProvider>
+          </AppDataProvider>
+        </AuthProvider>
+      </SafeAreaProvider>
+    </GestureHandlerRootView>
   );
 }

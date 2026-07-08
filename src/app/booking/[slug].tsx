@@ -1,0 +1,780 @@
+import { Ionicons } from '@expo/vector-icons';
+import { Image } from 'expo-image';
+import { useLocalSearchParams, useRouter } from 'expo-router';
+import React, { useMemo, useState } from 'react';
+import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { ServiceRow } from '../../components/service-row';
+import { Avatar } from '../../components/ui/avatar';
+import { Button } from '../../components/ui/button';
+import { Chip } from '../../components/ui/chip';
+import { Rating } from '../../components/ui/rating';
+import { BText } from '../../components/ui/text';
+import { useAppData } from '../../lib/app-data-context';
+import { useAuth } from '../../lib/auth-context';
+import { useBooking } from '../../lib/booking-context';
+import { createBooking } from '../../lib/data';
+import { formatDuration, formatPrice } from '../../lib/format';
+import { markPayAtVenue, payForBooking, paymentsGateway } from '../../lib/payments';
+import { colors, font, radius, shadow } from '../../lib/theme';
+import type { PaymentMethod } from '../../lib/types';
+import { useIsDesktop } from '../../lib/use-layout';
+
+type Step = 'services' | 'professional' | 'time' | 'confirm' | 'done';
+const STEPS: { key: Step; label: string }[] = [
+  { key: 'services', label: 'Services' },
+  { key: 'professional', label: 'Professional' },
+  { key: 'time', label: 'Time' },
+  { key: 'confirm', label: 'Confirm' },
+];
+
+const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+const DAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+
+function nextDays(count: number): { date: string; day: string; num: number; month: string }[] {
+  const out = [];
+  const now = new Date();
+  for (let i = 0; i < count; i++) {
+    const d = new Date(now.getFullYear(), now.getMonth(), now.getDate() + i + 1);
+    out.push({
+      date: `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`,
+      day: DAYS[d.getDay()],
+      num: d.getDate(),
+      month: MONTHS[d.getMonth()],
+    });
+  }
+  return out;
+}
+
+const TIME_SLOTS = Array.from({ length: 22 }, (_, i) => {
+  const minutes = 10 * 60 + i * 30; // 10:00 → 20:30
+  const h = Math.floor(minutes / 60);
+  const m = minutes % 60;
+  return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`;
+});
+
+export default function BookingScreen() {
+  const { slug } = useLocalSearchParams<{ slug: string }>();
+  const router = useRouter();
+  const isDesktop = useIsDesktop();
+  const insets = useSafeAreaInsets();
+  const { allVenues } = useAppData();
+  const { user } = useAuth();
+  const booking = useBooking();
+  const venue = allVenues.find((v) => v.slug === slug) ?? booking.venue;
+
+  const [step, setStep] = useState<Step>('services');
+  const [group, setGroup] = useState('Featured');
+  const [submitting, setSubmitting] = useState(false);
+  const [confirmedId, setConfirmedId] = useState<string | null>(null);
+  const [payMethod, setPayMethod] = useState<PaymentMethod>('pay_at_venue');
+  const [payError, setPayError] = useState<string | null>(null);
+  const [paid, setPaid] = useState(false);
+
+  const days = useMemo(() => nextDays(14), []);
+
+  if (!venue) return null;
+
+  const groups = [...new Set(venue.services.map((s) => s.group_name))];
+  const visibleServices = venue.services.filter((s) => s.group_name === group);
+  const stepIndex = STEPS.findIndex((s) => s.key === step);
+
+  const canContinue =
+    (step === 'services' && booking.services.length > 0) ||
+    step === 'professional' ||
+    (step === 'time' && booking.date && booking.time) ||
+    step === 'confirm';
+
+  const goNext = async () => {
+    if (step === 'services') setStep('professional');
+    else if (step === 'professional') setStep('time');
+    else if (step === 'time') setStep('confirm');
+    else if (step === 'confirm') {
+      setSubmitting(true);
+      setPayError(null);
+      const [h, m] = booking.time!.split(':').map(Number);
+      const [y, mo, d] = booking.date!.split('-').map(Number);
+      const startsAt = new Date(y, mo - 1, d, h, m);
+      const created = await createBooking({
+        venue,
+        staffId: booking.staff?.id ?? null,
+        staffName: booking.staff?.name ?? null,
+        customerName: user?.name ?? user?.email ?? null,
+        startsAt,
+        currency: booking.currency,
+        items: booking.services.map((s) => ({
+          service_id: s.id,
+          service_name: s.name,
+          duration_minutes: s.duration_minutes,
+          price_cents: Math.round(s.price_cents * (1 - s.discount_pct / 100)),
+        })),
+      });
+      try {
+        if (payMethod === 'pay_at_venue') {
+          await markPayAtVenue(created.id);
+          setPaid(false);
+        } else {
+          await payForBooking({
+            booking: { ...created, payment_method: payMethod },
+            method: payMethod,
+            customerName: user?.name ?? user?.email ?? null,
+            userId: user?.id ?? null,
+          });
+          setPaid(true);
+        }
+      } catch (e: any) {
+        // Booking stays confirmed as pay-at-venue if the charge fails
+        await markPayAtVenue(created.id);
+        setPaid(false);
+        setPayError(e?.message ?? 'Payment failed — your booking is confirmed as pay at venue.');
+      }
+      setSubmitting(false);
+      setConfirmedId(created.id);
+      setStep('done');
+    }
+  };
+
+  const goBack = () => {
+    if (step === 'services' || step === 'done') router.back();
+    else if (step === 'professional') setStep('services');
+    else if (step === 'time') setStep('professional');
+    else if (step === 'confirm') setStep('time');
+  };
+
+  // ------- step content -------
+  let content: React.ReactNode = null;
+  if (step === 'services') {
+    content = (
+      <View>
+        <BText variant="h1">Select services</BText>
+        <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ gap: 8, paddingVertical: 16 }}>
+          {groups.map((g) => (
+            <Chip key={g} label={g} selected={group === g} onPress={() => setGroup(g)} />
+          ))}
+        </ScrollView>
+        <View style={{ gap: 12 }}>
+          {visibleServices.map((s) => (
+            <ServiceRow
+              key={s.id}
+              service={s}
+              mode="add"
+              showDescription
+              selected={booking.services.some((x) => x.id === s.id)}
+              onAction={() => booking.toggleService(s)}
+            />
+          ))}
+        </View>
+      </View>
+    );
+  } else if (step === 'professional') {
+    content = (
+      <View>
+        <BText variant="h1">Select professional</BText>
+        <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 12, marginTop: 20 }}>
+          <ProCard
+            label="Any professional"
+            sub="for maximum availability"
+            icon
+            selected={!booking.staff}
+            onPress={() => booking.setStaff(null)}
+          />
+          {venue.staff.map((m) => (
+            <ProCard
+              key={m.id}
+              label={m.name}
+              sub={m.role}
+              rating={m.rating}
+              selected={booking.staff?.id === m.id}
+              onPress={() => booking.setStaff(m)}
+            />
+          ))}
+        </View>
+      </View>
+    );
+  } else if (step === 'time') {
+    content = (
+      <View>
+        <BText variant="h1">Select time</BText>
+        <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ gap: 8, paddingVertical: 20 }}>
+          {days.map((d) => {
+            const selected = booking.date === d.date;
+            return (
+              <Pressable
+                key={d.date}
+                onPress={() => booking.setDateTime(d.date, booking.time ?? '')}
+                style={[styles.dayCell, selected && { backgroundColor: colors.ink, borderColor: colors.ink }]}
+              >
+                <BText variant="tiny" color={selected ? 'rgba(255,255,255,0.7)' : colors.gray}>
+                  {d.day}
+                </BText>
+                <BText
+                  style={{ fontFamily: font.bold, fontSize: 18, color: selected ? colors.white : colors.ink }}
+                >
+                  {d.num}
+                </BText>
+                <BText variant="tiny" color={selected ? 'rgba(255,255,255,0.7)' : colors.gray}>
+                  {d.month}
+                </BText>
+              </Pressable>
+            );
+          })}
+        </ScrollView>
+        <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 10 }}>
+          {TIME_SLOTS.map((t) => {
+            const selected = booking.time === t;
+            const disabled = !booking.date;
+            return (
+              <Pressable
+                key={t}
+                disabled={disabled}
+                onPress={() => booking.setDateTime(booking.date!, t)}
+                style={[
+                  styles.timeSlot,
+                  selected && { backgroundColor: colors.ink, borderColor: colors.ink },
+                  disabled && { opacity: 0.4 },
+                ]}
+              >
+                <BText
+                  style={{ fontFamily: font.semibold, fontSize: 14, color: selected ? colors.white : colors.ink }}
+                >
+                  {t}
+                </BText>
+              </Pressable>
+            );
+          })}
+        </View>
+        {!booking.date ? (
+          <BText variant="small" style={{ marginTop: 16 }}>
+            Pick a date first, then choose a time.
+          </BText>
+        ) : null}
+      </View>
+    );
+  } else if (step === 'confirm') {
+    content = (
+      <View>
+        <BText variant="h1">Review and confirm</BText>
+        <View style={{ gap: 12, marginTop: 20 }}>
+          <InfoRow icon="calendar-outline" text={`${booking.date} at ${booking.time}`} />
+          <InfoRow icon="time-outline" text={`${formatDuration(booking.totalMinutes)} total duration`} />
+          <InfoRow icon="person-outline" text={booking.staff ? `${booking.staff.name} — ${booking.staff.role}` : 'Any professional'} />
+          <InfoRow icon="location-outline" text={`${venue.name}, ${venue.area}, ${venue.city}`} />
+        </View>
+        <View style={{ marginTop: 28, gap: 12 }}>
+          {booking.services.map((s) => (
+            <View key={s.id} style={styles.confirmRow}>
+              <View style={{ flex: 1 }}>
+                <BText variant="title">{s.name}</BText>
+                <BText variant="small">{formatDuration(s.duration_minutes)}</BText>
+              </View>
+              <BText variant="smallMedium">
+                {formatPrice(Math.round(s.price_cents * (1 - s.discount_pct / 100)), s.currency)}
+              </BText>
+            </View>
+          ))}
+          <View style={[styles.confirmRow, { borderBottomWidth: 0 }]}>
+            <BText variant="h3" style={{ flex: 1 }}>
+              Total
+            </BText>
+            <BText variant="h3">{formatPrice(booking.totalCents, booking.currency)}</BText>
+          </View>
+        </View>
+        <View style={{ marginTop: 28 }}>
+          <BText variant="h3">Payment</BText>
+          <View style={{ gap: 10, marginTop: 14 }}>
+            <PayOption
+              icon="cash-outline"
+              title="Pay at venue"
+              sub="No payment needed today"
+              selected={payMethod === 'pay_at_venue'}
+              onPress={() => setPayMethod('pay_at_venue')}
+            />
+            <PayOption
+              icon="card-outline"
+              title="Pay by card"
+              sub={paymentsGateway === 'demo' ? 'Test gateway — no real charge' : 'mada, Visa, Mastercard'}
+              selected={payMethod === 'card'}
+              onPress={() => setPayMethod('card')}
+            />
+            <PayOption
+              icon="logo-apple"
+              title="Apple Pay"
+              sub={paymentsGateway === 'demo' ? 'Test gateway — no real charge' : 'Pay with Apple Pay'}
+              selected={payMethod === 'apple_pay'}
+              onPress={() => setPayMethod('apple_pay')}
+            />
+          </View>
+          {payMethod !== 'pay_at_venue' ? (
+            <View style={styles.payNote}>
+              <Ionicons name="shield-checkmark-outline" size={18} color={colors.ink} />
+              <BText variant="small" color={colors.ink}>
+                {formatPrice(booking.totalCents, booking.currency)} will be charged now. Includes 15% VAT — a tax
+                invoice is issued automatically.
+              </BText>
+            </View>
+          ) : null}
+        </View>
+        {!user ? (
+          <BText variant="small" style={{ marginTop: 16 }}>
+            Booking as guest. You can create an account from the Profile tab to keep your appointments synced.
+          </BText>
+        ) : null}
+      </View>
+    );
+  } else {
+    content = (
+      <View style={{ alignItems: 'center', paddingTop: 48 }}>
+        <View style={styles.doneCircle}>
+          <Ionicons name="checkmark" size={40} color={colors.white} />
+        </View>
+        <BText variant="h1" style={{ marginTop: 24, textAlign: 'center' }}>
+          Booking confirmed
+        </BText>
+        <BText variant="body" style={{ marginTop: 8, textAlign: 'center', maxWidth: 400 }}>
+          {venue.name} · {booking.date} at {booking.time}. We can’t wait to see you!
+        </BText>
+        {paid ? (
+          <View style={[styles.paidPill, { backgroundColor: '#E9F7EE' }]}>
+            <Ionicons name="checkmark-circle" size={16} color={colors.green} />
+            <BText variant="smallMedium" color={colors.green}>
+              Paid {formatPrice(booking.totalCents, booking.currency)} · tax invoice issued
+            </BText>
+          </View>
+        ) : (
+          <View style={[styles.paidPill, { backgroundColor: colors.bgSubtle }]}>
+            <Ionicons name="cash-outline" size={16} color={colors.ink} />
+            <BText variant="smallMedium">Pay at venue</BText>
+          </View>
+        )}
+        {payError ? (
+          <BText variant="small" color={colors.danger} style={{ marginTop: 10, textAlign: 'center', maxWidth: 400 }}>
+            {payError}
+          </BText>
+        ) : null}
+        <View style={{ flexDirection: 'row', gap: 12, marginTop: 32 }}>
+          <Button
+            title="View appointments"
+            onPress={() => {
+              booking.reset();
+              router.dismissAll?.();
+              router.replace('/appointments');
+            }}
+          />
+          <Button
+            title="Done"
+            variant="secondary"
+            onPress={() => {
+              booking.reset();
+              router.dismissAll?.();
+              router.replace('/');
+            }}
+          />
+        </View>
+      </View>
+    );
+  }
+
+  // ------- summary card (desktop sidebar / mobile bottom bar) -------
+  const summary = (
+    <View style={[styles.summaryCard, shadow.card]}>
+      <View style={{ flexDirection: 'row', gap: 12, alignItems: 'center' }}>
+        <Image
+          source={{ uri: venue.images[0]?.url }}
+          style={{ width: 56, height: 56, borderRadius: radius.sm, backgroundColor: colors.bgSubtle }}
+          contentFit="cover"
+        />
+        <View style={{ flex: 1 }}>
+          <BText variant="title" numberOfLines={1}>
+            {venue.name}
+          </BText>
+          <Rating value={venue.rating_avg} count={venue.rating_count} size={12} />
+          <BText variant="tiny" numberOfLines={1}>
+            {venue.area}, {venue.city}
+          </BText>
+        </View>
+      </View>
+      <View style={styles.summaryDivider} />
+      {booking.services.length === 0 ? (
+        <BText variant="small">No services selected</BText>
+      ) : (
+        <View style={{ gap: 10 }}>
+          {booking.services.map((s) => (
+            <View key={s.id} style={{ flexDirection: 'row', justifyContent: 'space-between', gap: 8 }}>
+              <View style={{ flex: 1 }}>
+                <BText variant="smallMedium" numberOfLines={1}>
+                  {s.name}
+                </BText>
+                <BText variant="tiny">{formatDuration(s.duration_minutes)}</BText>
+              </View>
+              <BText variant="smallMedium">
+                {formatPrice(Math.round(s.price_cents * (1 - s.discount_pct / 100)), s.currency)}
+              </BText>
+            </View>
+          ))}
+        </View>
+      )}
+      <View style={styles.summaryDivider} />
+      <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+        <BText variant="title">Total</BText>
+        <BText variant="title">
+          {booking.services.length ? formatPrice(booking.totalCents, booking.currency) : 'free'}
+        </BText>
+      </View>
+      <View style={{ marginTop: 20 }}>
+        <Button
+          title={
+            step === 'confirm'
+              ? payMethod === 'pay_at_venue'
+                ? 'Confirm booking'
+                : `Pay ${formatPrice(booking.totalCents, booking.currency)}`
+              : 'Continue'
+          }
+          fullWidth
+          size="lg"
+          disabled={!canContinue}
+          loading={submitting}
+          onPress={goNext}
+        />
+      </View>
+    </View>
+  );
+
+  if (isDesktop) {
+    return (
+      <View style={{ flex: 1, backgroundColor: colors.bgPage }}>
+        {/* top bar */}
+        <View style={styles.topBar}>
+          <Pressable onPress={goBack} style={[styles.roundBtn, shadow.card]}>
+            <Ionicons name="arrow-back" size={20} color={colors.ink} />
+          </Pressable>
+          {step !== 'done' && (
+            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
+              {STEPS.map((s, i) => (
+                <React.Fragment key={s.key}>
+                  <BText
+                    variant="small"
+                    style={{ fontFamily: i === stepIndex ? font.bold : font.regular }}
+                    color={i <= stepIndex ? colors.ink : colors.gray}
+                  >
+                    {s.label}
+                  </BText>
+                  {i < STEPS.length - 1 && <Ionicons name="chevron-forward" size={12} color={colors.gray} />}
+                </React.Fragment>
+              ))}
+            </View>
+          )}
+          <Pressable
+            onPress={() => {
+              booking.reset();
+              router.back();
+            }}
+            style={[styles.roundBtn, shadow.card]}
+          >
+            <Ionicons name="close" size={20} color={colors.ink} />
+          </Pressable>
+        </View>
+
+        <ScrollView contentContainerStyle={{ paddingBottom: 80 }}>
+          <View style={styles.desktopColumns}>
+            <View style={{ flex: 1, maxWidth: 640 }}>{content}</View>
+            {step !== 'done' && <View style={{ width: 380 }}>{summary}</View>}
+          </View>
+        </ScrollView>
+      </View>
+    );
+  }
+
+  return (
+    <View style={{ flex: 1, backgroundColor: colors.white }}>
+      {/* mobile top bar */}
+      <View style={[styles.mobileTop, { paddingTop: insets.top + 8 }]}>
+        <Pressable onPress={goBack} hitSlop={8}>
+          <Ionicons name="arrow-back" size={24} color={colors.ink} />
+        </Pressable>
+        {step !== 'done' && (
+          <BText variant="smallMedium">
+            {STEPS[stepIndex]?.label} · step {stepIndex + 1} of {STEPS.length}
+          </BText>
+        )}
+        <Pressable
+          onPress={() => {
+            booking.reset();
+            router.back();
+          }}
+          hitSlop={8}
+        >
+          <Ionicons name="close" size={24} color={colors.ink} />
+        </Pressable>
+      </View>
+
+      <ScrollView contentContainerStyle={{ padding: 20, paddingBottom: 180 }}>{content}</ScrollView>
+
+      {step !== 'done' && (
+        <View style={[styles.mobileBottom, { paddingBottom: Math.max(insets.bottom, 12) }]}>
+          <View style={{ flex: 1 }}>
+            <BText variant="title">
+              {booking.services.length ? formatPrice(booking.totalCents, booking.currency) : 'Select services'}
+            </BText>
+            <BText variant="tiny">
+              {booking.services.length} service{booking.services.length === 1 ? '' : 's'}
+              {booking.totalMinutes ? ` · ${formatDuration(booking.totalMinutes)}` : ''}
+            </BText>
+          </View>
+          <Button
+            title={step === 'confirm' ? (payMethod === 'pay_at_venue' ? 'Confirm' : 'Pay now') : 'Continue'}
+            size="lg"
+            disabled={!canContinue}
+            loading={submitting}
+            onPress={goNext}
+          />
+        </View>
+      )}
+    </View>
+  );
+}
+
+function ProCard({
+  label,
+  sub,
+  rating,
+  icon,
+  selected,
+  onPress,
+}: {
+  label: string;
+  sub: string;
+  rating?: number;
+  icon?: boolean;
+  selected: boolean;
+  onPress: () => void;
+}) {
+  return (
+    <Pressable
+      onPress={onPress}
+      style={[styles.proCard, selected && { borderColor: colors.ink, borderWidth: 2 }]}
+    >
+      {icon ? (
+        <View style={styles.anyPro}>
+          <Ionicons name="people-outline" size={26} color={colors.ink} />
+        </View>
+      ) : (
+        <Avatar name={label} size={56} />
+      )}
+      {rating != null && (
+        <View style={styles.proRating}>
+          <BText variant="tiny" style={{ fontFamily: font.bold, color: colors.ink }}>
+            {rating.toFixed(1)}
+          </BText>
+          <Ionicons name="star" size={10} color={colors.star} />
+        </View>
+      )}
+      <BText variant="smallMedium" style={{ marginTop: 10, textAlign: 'center' }} numberOfLines={1}>
+        {label}
+      </BText>
+      <BText variant="tiny" style={{ textAlign: 'center' }} numberOfLines={1}>
+        {sub}
+      </BText>
+    </Pressable>
+  );
+}
+
+function PayOption({
+  icon,
+  title,
+  sub,
+  selected,
+  onPress,
+}: {
+  icon: any;
+  title: string;
+  sub: string;
+  selected: boolean;
+  onPress: () => void;
+}) {
+  return (
+    <Pressable
+      onPress={onPress}
+      style={[styles.payOption, selected && { borderColor: colors.ink, borderWidth: 2 }]}
+    >
+      <Ionicons name={icon} size={20} color={colors.ink} />
+      <View style={{ flex: 1 }}>
+        <BText variant="smallMedium">{title}</BText>
+        <BText variant="tiny">{sub}</BText>
+      </View>
+      <View style={[styles.radio, selected && { borderColor: colors.ink }]}>
+        {selected ? <View style={styles.radioDot} /> : null}
+      </View>
+    </Pressable>
+  );
+}
+
+function InfoRow({ icon, text }: { icon: any; text: string }) {
+  return (
+    <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
+      <Ionicons name={icon} size={18} color={colors.ink} />
+      <BText variant="body">{text}</BText>
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  topBar: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: 24,
+    paddingVertical: 20,
+  },
+  roundBtn: {
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    backgroundColor: colors.white,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  desktopColumns: {
+    width: '100%',
+    maxWidth: 1080,
+    alignSelf: 'center',
+    flexDirection: 'row',
+    gap: 40,
+    paddingHorizontal: 24,
+    paddingTop: 8,
+  },
+  summaryCard: {
+    backgroundColor: colors.white,
+    borderRadius: radius.lg,
+    padding: 20,
+    position: 'sticky' as any,
+    top: 24,
+  },
+  summaryDivider: { height: 1, backgroundColor: colors.divider, marginVertical: 16 },
+  dayCell: {
+    width: 64,
+    paddingVertical: 10,
+    borderRadius: radius.md,
+    borderWidth: 1,
+    borderColor: colors.border,
+    alignItems: 'center',
+    gap: 2,
+    backgroundColor: colors.white,
+  },
+  timeSlot: {
+    paddingHorizontal: 18,
+    height: 42,
+    borderRadius: radius.pill,
+    borderWidth: 1,
+    borderColor: colors.border,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: colors.white,
+  },
+  proCard: {
+    width: 150,
+    borderWidth: 1,
+    borderColor: colors.divider,
+    borderRadius: radius.lg,
+    paddingVertical: 20,
+    paddingHorizontal: 12,
+    alignItems: 'center',
+    backgroundColor: colors.white,
+  },
+  anyPro: {
+    width: 56,
+    height: 56,
+    borderRadius: 28,
+    borderWidth: 1,
+    borderColor: colors.border,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  proRating: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 3,
+    backgroundColor: colors.white,
+    borderWidth: 1,
+    borderColor: colors.divider,
+    borderRadius: radius.pill,
+    paddingHorizontal: 8,
+    paddingVertical: 2,
+    marginTop: -12,
+  },
+  confirmRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingBottom: 12,
+    borderBottomWidth: 1,
+    borderBottomColor: colors.divider,
+  },
+  payNote: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+    backgroundColor: colors.bgSubtle,
+    borderRadius: radius.md,
+    padding: 14,
+    marginTop: 16,
+  },
+  payOption: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+    borderWidth: 1,
+    borderColor: colors.divider,
+    borderRadius: radius.md,
+    padding: 14,
+    backgroundColor: colors.white,
+  },
+  radio: {
+    width: 20,
+    height: 20,
+    borderRadius: 10,
+    borderWidth: 2,
+    borderColor: colors.border,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  radioDot: { width: 10, height: 10, borderRadius: 5, backgroundColor: colors.ink },
+  paidPill: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    borderRadius: radius.pill,
+    paddingHorizontal: 14,
+    paddingVertical: 8,
+    marginTop: 16,
+  },
+  doneCircle: {
+    width: 80,
+    height: 80,
+    borderRadius: 40,
+    backgroundColor: colors.green,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  mobileTop: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: 20,
+    paddingBottom: 12,
+    borderBottomWidth: 1,
+    borderBottomColor: colors.divider,
+  },
+  mobileBottom: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 16,
+    paddingHorizontal: 20,
+    paddingTop: 12,
+    backgroundColor: colors.white,
+    borderTopWidth: 1,
+    borderTopColor: colors.divider,
+  },
+});

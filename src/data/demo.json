@@ -1,0 +1,2707 @@
+{
+  "categories": [
+    {
+      "id": 1,
+      "slug": "hair-salon",
+      "name": "Hair Salon",
+      "icon": "cut-outline"
+    },
+    {
+      "id": 2,
+      "slug": "barbershop",
+      "name": "Barbershop",
+      "icon": "man-outline"
+    },
+    {
+      "id": 3,
+      "slug": "nail-salon",
+      "name": "Nail Salon",
+      "icon": "color-palette-outline"
+    },
+    {
+      "id": 4,
+      "slug": "brows-lashes",
+      "name": "Eyebrows & Lashes",
+      "icon": "eye-outline"
+    },
+    {
+      "id": 5,
+      "slug": "waxing-salon",
+      "name": "Waxing Salon",
+      "icon": "leaf-outline"
+    },
+    {
+      "id": 6,
+      "slug": "skincare-salon",
+      "name": "Facials & Skincare",
+      "icon": "sparkles-outline"
+    },
+    {
+      "id": 7,
+      "slug": "makeup-salon",
+      "name": "Makeup Studio",
+      "icon": "rose-outline"
+    },
+    {
+      "id": 8,
+      "slug": "bridal-salon",
+      "name": "Bridal Salon",
+      "icon": "heart-outline"
+    }
+  ],
+  "venues": [
+    {
+      "id": "00000000-0000-4000-8000-000000000001",
+      "slug": "glow-lash-studio",
+      "name": "Glow Lash Studio",
+      "description": "Step into the peaceful world of Glow Lash Studio. We are all about perfect lashes and brows, offering expert lash extensions, lash lifts, eyebrow shaping and manicures. Our studio is designed like a relaxing bamboo spa, creating a calm and soothing atmosphere where quality and cleanliness come first.",
+      "category_id": 4,
+      "address": "An Nuzhah District, Olaya St",
+      "area": "An Nuzhah",
+      "city": "Riyadh",
+      "country": "Saudi Arabia",
+      "rating_avg": 4.8,
+      "rating_count": 77,
+      "is_featured": true,
+      "is_new": false,
+      "is_trending": false,
+      "highlights": [
+        "Instant confirmation",
+        "Pay by app",
+        "Parking available",
+        "Woman-owned"
+      ],
+      "images": [
+        {
+          "url": "https://images.unsplash.com/photo-1560066984-138dadb4c035?w=1200&q=80&auto=format&fit=crop",
+          "sort_order": 0
+        },
+        {
+          "url": "https://images.unsplash.com/photo-1512290923902-8a9f81dc236c?w=1200&q=80&auto=format&fit=crop",
+          "sort_order": 1
+        },
+        {
+          "url": "https://images.unsplash.com/photo-1522337660859-02fbefca4702?w=1200&q=80&auto=format&fit=crop",
+          "sort_order": 2
+        }
+      ],
+      "services": [
+        {
+          "id": "00000000-0000-4000-9001-000000000001",
+          "venue_id": "00000000-0000-4000-8000-000000000001",
+          "name": "Classic Lash Extensions",
+          "group_name": "Featured",
+          "duration_minutes": 120,
+          "price_cents": 55000,
+          "currency": "SAR",
+          "description": "Achieve the most natural look with our classic lash extensions, individually applied to enhance length, curl and thickness.",
+          "discount_pct": 0,
+          "is_featured": true,
+          "sort_order": 0
+        },
+        {
+          "id": "00000000-0000-4000-9001-000000000002",
+          "venue_id": "00000000-0000-4000-8000-000000000001",
+          "name": "Brow Shaping",
+          "group_name": "Featured",
+          "duration_minutes": 20,
+          "price_cents": 5000,
+          "currency": "SAR",
+          "description": "Define and sculpt your brows with precision threading, leaving you with clean and beautifully shaped eyebrows.",
+          "discount_pct": 0,
+          "is_featured": true,
+          "sort_order": 1
+        },
+        {
+          "id": "00000000-0000-4000-9001-000000000003",
+          "venue_id": "00000000-0000-4000-8000-000000000001",
+          "name": "Lash Removal",
+          "group_name": "Featured",
+          "duration_minutes": 20,
+          "price_cents": 10000,
+          "currency": "SAR",
+          "description": "Our gentle lash removal service safely removes eyelash extensions while preserving your natural lashes.",
+          "discount_pct": 0,
+          "is_featured": true,
+          "sort_order": 2
+        },
+        {
+          "id": "00000000-0000-4000-9001-000000000004",
+          "venue_id": "00000000-0000-4000-8000-000000000001",
+          "name": "Lashes & Brows Lift",
+          "group_name": "Featured",
+          "duration_minutes": 80,
+          "price_cents": 80000,
+          "currency": "SAR",
+          "description": "A complete lift package for lashes and brows for a naturally polished look.",
+          "discount_pct": 6,
+          "is_featured": true,
+          "sort_order": 3
+        },
+        {
+          "id": "00000000-0000-4000-9001-000000000005",
+          "venue_id": "00000000-0000-4000-8000-000000000001",
+          "name": "Volume Lash Set",
+          "group_name": "Lashes",
+          "duration_minutes": 150,
+          "price_cents": 65000,
+          "currency": "SAR",
+          "description": "Full volume set with handmade fans for a dramatic, fluffy finish.",
+          "discount_pct": 0,
+          "is_featured": false,
+          "sort_order": 4
+        },
+        {
+          "id": "00000000-0000-4000-9001-000000000006",
+          "venue_id": "00000000-0000-4000-8000-000000000001",
+          "name": "Lash Refill (2 weeks)",
+          "group_name": "Lashes",
+          "duration_minutes": 60,
+          "price_cents": 25000,
+          "currency": "SAR",
+          "description": "Keep your set full with a two-week refill by our lash masters.",
+          "discount_pct": 0,
+          "is_featured": false,
+          "sort_order": 5
+        },
+        {
+          "id": "00000000-0000-4000-9001-000000000007",
+          "venue_id": "00000000-0000-4000-8000-000000000001",
+          "name": "Brow Lamination",
+          "group_name": "Brows",
+          "duration_minutes": 45,
+          "price_cents": 20000,
+          "currency": "SAR",
+          "description": "Fuller, fluffier brows that stay in place for up to 8 weeks.",
+          "discount_pct": 0,
+          "is_featured": false,
+          "sort_order": 6
+        },
+        {
+          "id": "00000000-0000-4000-9001-000000000008",
+          "venue_id": "00000000-0000-4000-8000-000000000001",
+          "name": "Classic Manicure",
+          "group_name": "Nails",
+          "duration_minutes": 45,
+          "price_cents": 8000,
+          "currency": "SAR",
+          "description": "A classic manicure with shaping, cuticle care and polish.",
+          "discount_pct": 0,
+          "is_featured": false,
+          "sort_order": 7
+        }
+      ],
+      "staff": [
+        {
+          "id": "00000000-0000-4000-a001-000000000001",
+          "venue_id": "00000000-0000-4000-8000-000000000001",
+          "name": "Ainura",
+          "role": "Lash master",
+          "rating": 4.8999999999999995
+        },
+        {
+          "id": "00000000-0000-4000-a001-000000000002",
+          "venue_id": "00000000-0000-4000-8000-000000000001",
+          "name": "Gulzira",
+          "role": "Lash master",
+          "rating": 5
+        },
+        {
+          "id": "00000000-0000-4000-a001-000000000003",
+          "venue_id": "00000000-0000-4000-8000-000000000001",
+          "name": "Madelaine",
+          "role": "Nail master",
+          "rating": 4.8
+        }
+      ],
+      "reviews": [
+        {
+          "id": "00000000-0000-4000-b001-000000000001",
+          "venue_id": "00000000-0000-4000-8000-000000000001",
+          "author_name": "Norah M",
+          "rating": 5,
+          "comment": "Best booking experience I have had. Walked in and everything was ready for me.",
+          "created_at": "2026-02-04T10:00:00Z"
+        },
+        {
+          "id": "00000000-0000-4000-b001-000000000002",
+          "venue_id": "00000000-0000-4000-8000-000000000001",
+          "author_name": "Dana F",
+          "rating": 5,
+          "comment": "My go-to place now. The attention to detail is unmatched.",
+          "created_at": "2026-02-09T11:00:00Z"
+        },
+        {
+          "id": "00000000-0000-4000-b001-000000000003",
+          "venue_id": "00000000-0000-4000-8000-000000000001",
+          "author_name": "Yara T",
+          "rating": 5,
+          "comment": "The staff really listen to what you want. Left feeling brand new!",
+          "created_at": "2026-02-14T12:00:00Z"
+        },
+        {
+          "id": "00000000-0000-4000-b001-000000000004",
+          "venue_id": "00000000-0000-4000-8000-000000000001",
+          "author_name": "Reem K",
+          "rating": 4,
+          "comment": "Great service and lovely atmosphere. Slightly busy on weekends but worth it.",
+          "created_at": "2026-02-19T13:00:00Z"
+        },
+        {
+          "id": "00000000-0000-4000-b001-000000000005",
+          "venue_id": "00000000-0000-4000-8000-000000000001",
+          "author_name": "Aisha B",
+          "rating": 4,
+          "comment": "Very professional team and beautiful interior. Will definitely come back.",
+          "created_at": "2026-02-24T14:00:00Z"
+        }
+      ],
+      "hours": [
+        {
+          "weekday": 0,
+          "open_time": null,
+          "close_time": null,
+          "is_closed": true
+        },
+        {
+          "weekday": 1,
+          "open_time": "10:00",
+          "close_time": "22:00",
+          "is_closed": false
+        },
+        {
+          "weekday": 2,
+          "open_time": "10:00",
+          "close_time": "22:00",
+          "is_closed": false
+        },
+        {
+          "weekday": 3,
+          "open_time": "10:00",
+          "close_time": "22:00",
+          "is_closed": false
+        },
+        {
+          "weekday": 4,
+          "open_time": "10:00",
+          "close_time": "22:00",
+          "is_closed": false
+        },
+        {
+          "weekday": 5,
+          "open_time": "10:00",
+          "close_time": "22:00",
+          "is_closed": false
+        },
+        {
+          "weekday": 6,
+          "open_time": "10:00",
+          "close_time": "22:00",
+          "is_closed": false
+        }
+      ]
+    },
+    {
+      "id": "00000000-0000-4000-8000-000000000002",
+      "slug": "the-fade-room",
+      "name": "The Fade Room",
+      "description": "A modern barbershop for the modern gentleman. Precision fades, classic cuts, hot towel shaves and beard sculpting from award-winning barbers in a relaxed, stylish space.",
+      "category_id": 2,
+      "address": "Sheikh Mohammed bin Rashid Blvd",
+      "area": "Downtown",
+      "city": "Dubai",
+      "country": "UAE",
+      "rating_avg": 5,
+      "rating_count": 114,
+      "is_featured": true,
+      "is_new": false,
+      "is_trending": false,
+      "highlights": [
+        "Instant confirmation",
+        "Pay by app",
+        "Walk-ins welcome"
+      ],
+      "images": [
+        {
+          "url": "https://images.unsplash.com/photo-1585747860715-2ba37e788b70?w=1200&q=80&auto=format&fit=crop",
+          "sort_order": 0
+        },
+        {
+          "url": "https://images.unsplash.com/photo-1503951914875-452162b0f3f1?w=1200&q=80&auto=format&fit=crop",
+          "sort_order": 1
+        },
+        {
+          "url": "https://images.unsplash.com/photo-1633681926022-84c23e8cb2d6?w=1200&q=80&auto=format&fit=crop",
+          "sort_order": 2
+        }
+      ],
+      "services": [
+        {
+          "id": "00000000-0000-4000-9002-000000000001",
+          "venue_id": "00000000-0000-4000-8000-000000000002",
+          "name": "Skin Fade + Beard Sculpt",
+          "group_name": "Featured",
+          "duration_minutes": 60,
+          "price_cents": 12000,
+          "currency": "AED",
+          "description": "Our signature combo: a razor-sharp skin fade with a fully sculpted beard finish.",
+          "discount_pct": 10,
+          "is_featured": true,
+          "sort_order": 0
+        },
+        {
+          "id": "00000000-0000-4000-9002-000000000002",
+          "venue_id": "00000000-0000-4000-8000-000000000002",
+          "name": "Classic Haircut",
+          "group_name": "Featured",
+          "duration_minutes": 45,
+          "price_cents": 9000,
+          "currency": "AED",
+          "description": "Consultation, cut and style with premium products.",
+          "discount_pct": 0,
+          "is_featured": true,
+          "sort_order": 1
+        },
+        {
+          "id": "00000000-0000-4000-9002-000000000003",
+          "venue_id": "00000000-0000-4000-8000-000000000002",
+          "name": "Hot Towel Shave",
+          "group_name": "Featured",
+          "duration_minutes": 30,
+          "price_cents": 7000,
+          "currency": "AED",
+          "description": "Traditional straight-razor shave with hot towels and soothing balm.",
+          "discount_pct": 0,
+          "is_featured": true,
+          "sort_order": 2
+        },
+        {
+          "id": "00000000-0000-4000-9002-000000000004",
+          "venue_id": "00000000-0000-4000-8000-000000000002",
+          "name": "Beard Trim & Line Up",
+          "group_name": "Beard",
+          "duration_minutes": 25,
+          "price_cents": 5000,
+          "currency": "AED",
+          "description": "Precision beard shaping with sharp lines and natural fades.",
+          "discount_pct": 0,
+          "is_featured": false,
+          "sort_order": 3
+        },
+        {
+          "id": "00000000-0000-4000-9002-000000000005",
+          "venue_id": "00000000-0000-4000-8000-000000000002",
+          "name": "Kids Haircut",
+          "group_name": "Hair",
+          "duration_minutes": 30,
+          "price_cents": 6000,
+          "currency": "AED",
+          "description": "Patient, friendly cuts for the little gentlemen.",
+          "discount_pct": 0,
+          "is_featured": false,
+          "sort_order": 4
+        },
+        {
+          "id": "00000000-0000-4000-9002-000000000006",
+          "venue_id": "00000000-0000-4000-8000-000000000002",
+          "name": "Head Shave",
+          "group_name": "Hair",
+          "duration_minutes": 30,
+          "price_cents": 6500,
+          "currency": "AED",
+          "description": "Clean full head shave with hot lather and aftercare.",
+          "discount_pct": 0,
+          "is_featured": false,
+          "sort_order": 5
+        }
+      ],
+      "staff": [
+        {
+          "id": "00000000-0000-4000-a002-000000000001",
+          "venue_id": "00000000-0000-4000-8000-000000000002",
+          "name": "Omar",
+          "role": "Master barber",
+          "rating": 5
+        },
+        {
+          "id": "00000000-0000-4000-a002-000000000002",
+          "venue_id": "00000000-0000-4000-8000-000000000002",
+          "name": "Khalid",
+          "role": "Barber",
+          "rating": 4.8
+        },
+        {
+          "id": "00000000-0000-4000-a002-000000000003",
+          "venue_id": "00000000-0000-4000-8000-000000000002",
+          "name": "Marco",
+          "role": "Senior barber",
+          "rating": 4.8999999999999995
+        }
+      ],
+      "reviews": [
+        {
+          "id": "00000000-0000-4000-b002-000000000001",
+          "venue_id": "00000000-0000-4000-8000-000000000002",
+          "author_name": "Reem K",
+          "rating": 4,
+          "comment": "Great service and lovely atmosphere. Slightly busy on weekends but worth it.",
+          "created_at": "2026-03-04T10:00:00Z"
+        },
+        {
+          "id": "00000000-0000-4000-b002-000000000002",
+          "venue_id": "00000000-0000-4000-8000-000000000002",
+          "author_name": "Aisha B",
+          "rating": 4,
+          "comment": "Very professional team and beautiful interior. Will definitely come back.",
+          "created_at": "2026-03-09T11:00:00Z"
+        },
+        {
+          "id": "00000000-0000-4000-b002-000000000003",
+          "venue_id": "00000000-0000-4000-8000-000000000002",
+          "author_name": "Sara A",
+          "rating": 5,
+          "comment": "Amazing experience from start to finish. The team is so welcoming and the results were perfect.",
+          "created_at": "2026-03-14T12:00:00Z"
+        },
+        {
+          "id": "00000000-0000-4000-b002-000000000004",
+          "venue_id": "00000000-0000-4000-8000-000000000002",
+          "author_name": "Lina H",
+          "rating": 5,
+          "comment": "Absolutely in love with the results. Professional, clean and friendly staff.",
+          "created_at": "2026-03-19T13:00:00Z"
+        },
+        {
+          "id": "00000000-0000-4000-b002-000000000005",
+          "venue_id": "00000000-0000-4000-8000-000000000002",
+          "author_name": "Maha S",
+          "rating": 5,
+          "comment": "Effortless booking and outstanding service. Highly recommend to everyone.",
+          "created_at": "2026-03-24T14:00:00Z"
+        },
+        {
+          "id": "00000000-0000-4000-b002-000000000006",
+          "venue_id": "00000000-0000-4000-8000-000000000002",
+          "author_name": "Norah M",
+          "rating": 5,
+          "comment": "Best booking experience I have had. Walked in and everything was ready for me.",
+          "created_at": "2026-03-02T15:00:00Z"
+        }
+      ],
+      "hours": [
+        {
+          "weekday": 0,
+          "open_time": null,
+          "close_time": null,
+          "is_closed": true
+        },
+        {
+          "weekday": 1,
+          "open_time": "10:00",
+          "close_time": "22:00",
+          "is_closed": false
+        },
+        {
+          "weekday": 2,
+          "open_time": "10:00",
+          "close_time": "22:00",
+          "is_closed": false
+        },
+        {
+          "weekday": 3,
+          "open_time": "10:00",
+          "close_time": "22:00",
+          "is_closed": false
+        },
+        {
+          "weekday": 4,
+          "open_time": "10:00",
+          "close_time": "22:00",
+          "is_closed": false
+        },
+        {
+          "weekday": 5,
+          "open_time": "10:00",
+          "close_time": "22:00",
+          "is_closed": false
+        },
+        {
+          "weekday": 6,
+          "open_time": "10:00",
+          "close_time": "22:00",
+          "is_closed": false
+        }
+      ]
+    },
+    {
+      "id": "00000000-0000-4000-8000-000000000003",
+      "slug": "the-blowout-bar",
+      "name": "The Blowout Bar",
+      "description": "Dubai’s destination for perfect hair, fast. Signature blowouts, glossy styling, braids and treatments — walk in polished, walk out camera-ready.",
+      "category_id": 1,
+      "address": "Jumeirah Beach Rd, Villa 24",
+      "area": "Jumeirah",
+      "city": "Dubai",
+      "country": "UAE",
+      "rating_avg": 4.7,
+      "rating_count": 151,
+      "is_featured": true,
+      "is_new": false,
+      "is_trending": false,
+      "highlights": [
+        "Instant confirmation",
+        "Walk-ins welcome",
+        "Parking available"
+      ],
+      "images": [
+        {
+          "url": "https://images.unsplash.com/photo-1600948836101-f9ffda59d250?w=1200&q=80&auto=format&fit=crop",
+          "sort_order": 0
+        },
+        {
+          "url": "https://images.unsplash.com/photo-1562322140-8baeececf3df?w=1200&q=80&auto=format&fit=crop",
+          "sort_order": 1
+        },
+        {
+          "url": "https://images.unsplash.com/photo-1522337660859-02fbefca4702?w=1200&q=80&auto=format&fit=crop",
+          "sort_order": 2
+        }
+      ],
+      "services": [
+        {
+          "id": "00000000-0000-4000-9003-000000000001",
+          "venue_id": "00000000-0000-4000-8000-000000000003",
+          "name": "Signature Blowout",
+          "group_name": "Featured",
+          "duration_minutes": 45,
+          "price_cents": 14000,
+          "currency": "AED",
+          "description": "Wash, blow dry and finish — smooth, bouncy or beach waves.",
+          "discount_pct": 0,
+          "is_featured": true,
+          "sort_order": 0
+        },
+        {
+          "id": "00000000-0000-4000-9003-000000000002",
+          "venue_id": "00000000-0000-4000-8000-000000000003",
+          "name": "Express Blowout",
+          "group_name": "Featured",
+          "duration_minutes": 30,
+          "price_cents": 10000,
+          "currency": "AED",
+          "description": "In a rush? Dry styling in half an hour.",
+          "discount_pct": 0,
+          "is_featured": true,
+          "sort_order": 1
+        },
+        {
+          "id": "00000000-0000-4000-9003-000000000003",
+          "venue_id": "00000000-0000-4000-8000-000000000003",
+          "name": "Glass Hair Gloss",
+          "group_name": "Styling",
+          "duration_minutes": 60,
+          "price_cents": 22000,
+          "currency": "AED",
+          "description": "High-shine gloss treatment with sleek finish.",
+          "discount_pct": 0,
+          "is_featured": false,
+          "sort_order": 2
+        },
+        {
+          "id": "00000000-0000-4000-9003-000000000004",
+          "venue_id": "00000000-0000-4000-8000-000000000003",
+          "name": "Braided Updo",
+          "group_name": "Styling",
+          "duration_minutes": 60,
+          "price_cents": 18000,
+          "currency": "AED",
+          "description": "Event-ready braids and updos by our stylists.",
+          "discount_pct": 0,
+          "is_featured": false,
+          "sort_order": 3
+        },
+        {
+          "id": "00000000-0000-4000-9003-000000000005",
+          "venue_id": "00000000-0000-4000-8000-000000000003",
+          "name": "Deep Repair Treatment",
+          "group_name": "Treatments",
+          "duration_minutes": 45,
+          "price_cents": 16000,
+          "currency": "AED",
+          "description": "Intense mask and scalp massage for tired hair.",
+          "discount_pct": 0,
+          "is_featured": false,
+          "sort_order": 4
+        },
+        {
+          "id": "00000000-0000-4000-9003-000000000006",
+          "venue_id": "00000000-0000-4000-8000-000000000003",
+          "name": "Silk Press",
+          "group_name": "Styling",
+          "duration_minutes": 90,
+          "price_cents": 28000,
+          "currency": "AED",
+          "description": "Smooth, natural silk press with heat protection.",
+          "discount_pct": 0,
+          "is_featured": false,
+          "sort_order": 5
+        }
+      ],
+      "staff": [
+        {
+          "id": "00000000-0000-4000-a003-000000000001",
+          "venue_id": "00000000-0000-4000-8000-000000000003",
+          "name": "Anong",
+          "role": "Senior stylist",
+          "rating": 4.8
+        },
+        {
+          "id": "00000000-0000-4000-a003-000000000002",
+          "venue_id": "00000000-0000-4000-8000-000000000003",
+          "name": "Mei",
+          "role": "Stylist",
+          "rating": 4.8999999999999995
+        },
+        {
+          "id": "00000000-0000-4000-a003-000000000003",
+          "venue_id": "00000000-0000-4000-8000-000000000003",
+          "name": "Priya",
+          "role": "Stylist",
+          "rating": 5
+        }
+      ],
+      "reviews": [
+        {
+          "id": "00000000-0000-4000-b003-000000000001",
+          "venue_id": "00000000-0000-4000-8000-000000000003",
+          "author_name": "Lina H",
+          "rating": 5,
+          "comment": "Absolutely in love with the results. Professional, clean and friendly staff.",
+          "created_at": "2026-04-04T10:00:00Z"
+        },
+        {
+          "id": "00000000-0000-4000-b003-000000000002",
+          "venue_id": "00000000-0000-4000-8000-000000000003",
+          "author_name": "Maha S",
+          "rating": 5,
+          "comment": "Effortless booking and outstanding service. Highly recommend to everyone.",
+          "created_at": "2026-04-09T11:00:00Z"
+        },
+        {
+          "id": "00000000-0000-4000-b003-000000000003",
+          "venue_id": "00000000-0000-4000-8000-000000000003",
+          "author_name": "Norah M",
+          "rating": 5,
+          "comment": "Best booking experience I have had. Walked in and everything was ready for me.",
+          "created_at": "2026-04-14T12:00:00Z"
+        },
+        {
+          "id": "00000000-0000-4000-b003-000000000004",
+          "venue_id": "00000000-0000-4000-8000-000000000003",
+          "author_name": "Dana F",
+          "rating": 5,
+          "comment": "My go-to place now. The attention to detail is unmatched.",
+          "created_at": "2026-04-19T13:00:00Z"
+        }
+      ],
+      "hours": [
+        {
+          "weekday": 0,
+          "open_time": null,
+          "close_time": null,
+          "is_closed": true
+        },
+        {
+          "weekday": 1,
+          "open_time": "10:00",
+          "close_time": "22:00",
+          "is_closed": false
+        },
+        {
+          "weekday": 2,
+          "open_time": "10:00",
+          "close_time": "22:00",
+          "is_closed": false
+        },
+        {
+          "weekday": 3,
+          "open_time": "10:00",
+          "close_time": "22:00",
+          "is_closed": false
+        },
+        {
+          "weekday": 4,
+          "open_time": "10:00",
+          "close_time": "22:00",
+          "is_closed": false
+        },
+        {
+          "weekday": 5,
+          "open_time": "10:00",
+          "close_time": "22:00",
+          "is_closed": false
+        },
+        {
+          "weekday": 6,
+          "open_time": "10:00",
+          "close_time": "22:00",
+          "is_closed": false
+        }
+      ]
+    },
+    {
+      "id": "00000000-0000-4000-8000-000000000004",
+      "slug": "velvet-nails-lounge",
+      "name": "Velvet Nails Lounge",
+      "description": "Luxury nail artistry in the heart of Riyadh. From flawless gel manicures to bespoke nail art, our masters treat every set as a canvas.",
+      "category_id": 3,
+      "address": "Olaya Towers, Tahlia St",
+      "area": "Al Olaya",
+      "city": "Riyadh",
+      "country": "Saudi Arabia",
+      "rating_avg": 4.9,
+      "rating_count": 188,
+      "is_featured": true,
+      "is_new": false,
+      "is_trending": false,
+      "highlights": [
+        "Instant confirmation",
+        "Pay by app",
+        "Woman-owned",
+        "Adults only"
+      ],
+      "images": [
+        {
+          "url": "https://images.unsplash.com/photo-1604654894610-df63bc536371?w=1200&q=80&auto=format&fit=crop",
+          "sort_order": 0
+        },
+        {
+          "url": "https://images.unsplash.com/photo-1622287162716-f311baa1a2b8?w=1200&q=80&auto=format&fit=crop",
+          "sort_order": 1
+        },
+        {
+          "url": "https://images.unsplash.com/photo-1607779097040-26e80aa78e66?w=1200&q=80&auto=format&fit=crop",
+          "sort_order": 2
+        }
+      ],
+      "services": [
+        {
+          "id": "00000000-0000-4000-9004-000000000001",
+          "venue_id": "00000000-0000-4000-8000-000000000004",
+          "name": "Gel Manicure",
+          "group_name": "Featured",
+          "duration_minutes": 60,
+          "price_cents": 15000,
+          "currency": "SAR",
+          "description": "Long-lasting gel polish with meticulous cuticle care and shaping.",
+          "discount_pct": 0,
+          "is_featured": true,
+          "sort_order": 0
+        },
+        {
+          "id": "00000000-0000-4000-9004-000000000002",
+          "venue_id": "00000000-0000-4000-8000-000000000004",
+          "name": "Luxury Spa Pedicure",
+          "group_name": "Featured",
+          "duration_minutes": 75,
+          "price_cents": 20000,
+          "currency": "SAR",
+          "description": "A pampering pedicure with sugar scrub, mask and hot towels.",
+          "discount_pct": 15,
+          "is_featured": true,
+          "sort_order": 1
+        },
+        {
+          "id": "00000000-0000-4000-9004-000000000003",
+          "venue_id": "00000000-0000-4000-8000-000000000004",
+          "name": "Acrylic Full Set",
+          "group_name": "Featured",
+          "duration_minutes": 105,
+          "price_cents": 28000,
+          "currency": "SAR",
+          "description": "Sculpted acrylic extensions in your choice of shape and length.",
+          "discount_pct": 0,
+          "is_featured": true,
+          "sort_order": 2
+        },
+        {
+          "id": "00000000-0000-4000-9004-000000000004",
+          "venue_id": "00000000-0000-4000-8000-000000000004",
+          "name": "Nail Art (per nail)",
+          "group_name": "Nail Art",
+          "duration_minutes": 10,
+          "price_cents": 1500,
+          "currency": "SAR",
+          "description": "Hand-painted designs, chrome, foils and crystals.",
+          "discount_pct": 0,
+          "is_featured": false,
+          "sort_order": 3
+        },
+        {
+          "id": "00000000-0000-4000-9004-000000000005",
+          "venue_id": "00000000-0000-4000-8000-000000000004",
+          "name": "Gel Removal",
+          "group_name": "Nails",
+          "duration_minutes": 20,
+          "price_cents": 4000,
+          "currency": "SAR",
+          "description": "Gentle soak-off removal that protects your natural nail.",
+          "discount_pct": 0,
+          "is_featured": false,
+          "sort_order": 4
+        },
+        {
+          "id": "00000000-0000-4000-9004-000000000006",
+          "venue_id": "00000000-0000-4000-8000-000000000004",
+          "name": "Classic Manicure",
+          "group_name": "Nails",
+          "duration_minutes": 45,
+          "price_cents": 9000,
+          "currency": "SAR",
+          "description": "Shape, buff, cuticle care and classic polish.",
+          "discount_pct": 0,
+          "is_featured": false,
+          "sort_order": 5
+        },
+        {
+          "id": "00000000-0000-4000-9004-000000000007",
+          "venue_id": "00000000-0000-4000-8000-000000000004",
+          "name": "BIAB Overlay",
+          "group_name": "Nails",
+          "duration_minutes": 75,
+          "price_cents": 18000,
+          "currency": "SAR",
+          "description": "Builder gel overlay for stronger natural nails.",
+          "discount_pct": 0,
+          "is_featured": false,
+          "sort_order": 6
+        }
+      ],
+      "staff": [
+        {
+          "id": "00000000-0000-4000-a004-000000000001",
+          "venue_id": "00000000-0000-4000-8000-000000000004",
+          "name": "Jenny",
+          "role": "Nail artist",
+          "rating": 4.8999999999999995
+        },
+        {
+          "id": "00000000-0000-4000-a004-000000000002",
+          "venue_id": "00000000-0000-4000-8000-000000000004",
+          "name": "Thao",
+          "role": "Senior nail tech",
+          "rating": 5
+        },
+        {
+          "id": "00000000-0000-4000-a004-000000000003",
+          "venue_id": "00000000-0000-4000-8000-000000000004",
+          "name": "Rania",
+          "role": "Nail tech",
+          "rating": 4.8
+        }
+      ],
+      "reviews": [
+        {
+          "id": "00000000-0000-4000-b004-000000000001",
+          "venue_id": "00000000-0000-4000-8000-000000000004",
+          "author_name": "Dana F",
+          "rating": 5,
+          "comment": "My go-to place now. The attention to detail is unmatched.",
+          "created_at": "2026-05-04T10:00:00Z"
+        },
+        {
+          "id": "00000000-0000-4000-b004-000000000002",
+          "venue_id": "00000000-0000-4000-8000-000000000004",
+          "author_name": "Yara T",
+          "rating": 5,
+          "comment": "The staff really listen to what you want. Left feeling brand new!",
+          "created_at": "2026-05-09T11:00:00Z"
+        },
+        {
+          "id": "00000000-0000-4000-b004-000000000003",
+          "venue_id": "00000000-0000-4000-8000-000000000004",
+          "author_name": "Reem K",
+          "rating": 4,
+          "comment": "Great service and lovely atmosphere. Slightly busy on weekends but worth it.",
+          "created_at": "2026-05-14T12:00:00Z"
+        },
+        {
+          "id": "00000000-0000-4000-b004-000000000004",
+          "venue_id": "00000000-0000-4000-8000-000000000004",
+          "author_name": "Aisha B",
+          "rating": 4,
+          "comment": "Very professional team and beautiful interior. Will definitely come back.",
+          "created_at": "2026-05-19T13:00:00Z"
+        },
+        {
+          "id": "00000000-0000-4000-b004-000000000005",
+          "venue_id": "00000000-0000-4000-8000-000000000004",
+          "author_name": "Sara A",
+          "rating": 5,
+          "comment": "Amazing experience from start to finish. The team is so welcoming and the results were perfect.",
+          "created_at": "2026-05-24T14:00:00Z"
+        }
+      ],
+      "hours": [
+        {
+          "weekday": 0,
+          "open_time": null,
+          "close_time": null,
+          "is_closed": true
+        },
+        {
+          "weekday": 1,
+          "open_time": "10:00",
+          "close_time": "22:00",
+          "is_closed": false
+        },
+        {
+          "weekday": 2,
+          "open_time": "10:00",
+          "close_time": "22:00",
+          "is_closed": false
+        },
+        {
+          "weekday": 3,
+          "open_time": "10:00",
+          "close_time": "22:00",
+          "is_closed": false
+        },
+        {
+          "weekday": 4,
+          "open_time": "10:00",
+          "close_time": "22:00",
+          "is_closed": false
+        },
+        {
+          "weekday": 5,
+          "open_time": "10:00",
+          "close_time": "22:00",
+          "is_closed": false
+        },
+        {
+          "weekday": 6,
+          "open_time": "10:00",
+          "close_time": "22:00",
+          "is_closed": false
+        }
+      ]
+    },
+    {
+      "id": "00000000-0000-4000-8000-000000000005",
+      "slug": "marble-and-mane",
+      "name": "Marble & Mane Hair Studio",
+      "description": "A destination hair studio for cuts, colour and transformations. Our stylists train internationally and specialise in balayage, precision cutting and healthy-hair treatments.",
+      "category_id": 1,
+      "address": "City Walk, Building 5",
+      "area": "Jumeirah",
+      "city": "Dubai",
+      "country": "UAE",
+      "rating_avg": 4.6,
+      "rating_count": 225,
+      "is_featured": true,
+      "is_new": false,
+      "is_trending": false,
+      "highlights": [
+        "Instant confirmation",
+        "Pay by app",
+        "Complimentary drinks"
+      ],
+      "images": [
+        {
+          "url": "https://images.unsplash.com/photo-1560066984-138dadb4c035?w=1200&q=80&auto=format&fit=crop",
+          "sort_order": 0
+        },
+        {
+          "url": "https://images.unsplash.com/photo-1562322140-8baeececf3df?w=1200&q=80&auto=format&fit=crop",
+          "sort_order": 1
+        },
+        {
+          "url": "https://images.unsplash.com/photo-1522337660859-02fbefca4702?w=1200&q=80&auto=format&fit=crop",
+          "sort_order": 2
+        }
+      ],
+      "services": [
+        {
+          "id": "00000000-0000-4000-9005-000000000001",
+          "venue_id": "00000000-0000-4000-8000-000000000005",
+          "name": "Cut & Blow Dry",
+          "group_name": "Featured",
+          "duration_minutes": 60,
+          "price_cents": 18000,
+          "currency": "AED",
+          "description": "Consultation, precision cut and a bouncy blow dry finish.",
+          "discount_pct": 0,
+          "is_featured": true,
+          "sort_order": 0
+        },
+        {
+          "id": "00000000-0000-4000-9005-000000000002",
+          "venue_id": "00000000-0000-4000-8000-000000000005",
+          "name": "Full Balayage",
+          "group_name": "Featured",
+          "duration_minutes": 180,
+          "price_cents": 75000,
+          "currency": "AED",
+          "description": "Hand-painted colour melt with toner and treatment.",
+          "discount_pct": 10,
+          "is_featured": true,
+          "sort_order": 1
+        },
+        {
+          "id": "00000000-0000-4000-9005-000000000003",
+          "venue_id": "00000000-0000-4000-8000-000000000005",
+          "name": "Root Colour",
+          "group_name": "Colour",
+          "duration_minutes": 90,
+          "price_cents": 30000,
+          "currency": "AED",
+          "description": "Full root coverage with premium ammonia-free colour.",
+          "discount_pct": 0,
+          "is_featured": false,
+          "sort_order": 2
+        },
+        {
+          "id": "00000000-0000-4000-9005-000000000004",
+          "venue_id": "00000000-0000-4000-8000-000000000005",
+          "name": "Keratin Smoothing",
+          "group_name": "Treatments",
+          "duration_minutes": 150,
+          "price_cents": 60000,
+          "currency": "AED",
+          "description": "Frizz-free, glossy hair for up to 4 months.",
+          "discount_pct": 0,
+          "is_featured": false,
+          "sort_order": 3
+        },
+        {
+          "id": "00000000-0000-4000-9005-000000000005",
+          "venue_id": "00000000-0000-4000-8000-000000000005",
+          "name": "Olaplex Repair Ritual",
+          "group_name": "Treatments",
+          "duration_minutes": 45,
+          "price_cents": 20000,
+          "currency": "AED",
+          "description": "Bond-building treatment for stronger, healthier hair.",
+          "discount_pct": 0,
+          "is_featured": false,
+          "sort_order": 4
+        },
+        {
+          "id": "00000000-0000-4000-9005-000000000006",
+          "venue_id": "00000000-0000-4000-8000-000000000005",
+          "name": "Bridal Hair Trial",
+          "group_name": "Styling",
+          "duration_minutes": 90,
+          "price_cents": 35000,
+          "currency": "AED",
+          "description": "Full bridal styling session with our senior stylist.",
+          "discount_pct": 0,
+          "is_featured": false,
+          "sort_order": 5
+        }
+      ],
+      "staff": [
+        {
+          "id": "00000000-0000-4000-a005-000000000001",
+          "venue_id": "00000000-0000-4000-8000-000000000005",
+          "name": "Elena",
+          "role": "Creative director",
+          "rating": 5
+        },
+        {
+          "id": "00000000-0000-4000-a005-000000000002",
+          "venue_id": "00000000-0000-4000-8000-000000000005",
+          "name": "Sophie",
+          "role": "Colour specialist",
+          "rating": 4.8
+        },
+        {
+          "id": "00000000-0000-4000-a005-000000000003",
+          "venue_id": "00000000-0000-4000-8000-000000000005",
+          "name": "Amir",
+          "role": "Senior stylist",
+          "rating": 4.8999999999999995
+        }
+      ],
+      "reviews": [
+        {
+          "id": "00000000-0000-4000-b005-000000000001",
+          "venue_id": "00000000-0000-4000-8000-000000000005",
+          "author_name": "Aisha B",
+          "rating": 4,
+          "comment": "Very professional team and beautiful interior. Will definitely come back.",
+          "created_at": "2026-06-04T10:00:00Z"
+        },
+        {
+          "id": "00000000-0000-4000-b005-000000000002",
+          "venue_id": "00000000-0000-4000-8000-000000000005",
+          "author_name": "Sara A",
+          "rating": 5,
+          "comment": "Amazing experience from start to finish. The team is so welcoming and the results were perfect.",
+          "created_at": "2026-06-09T11:00:00Z"
+        },
+        {
+          "id": "00000000-0000-4000-b005-000000000003",
+          "venue_id": "00000000-0000-4000-8000-000000000005",
+          "author_name": "Lina H",
+          "rating": 5,
+          "comment": "Absolutely in love with the results. Professional, clean and friendly staff.",
+          "created_at": "2026-06-14T12:00:00Z"
+        },
+        {
+          "id": "00000000-0000-4000-b005-000000000004",
+          "venue_id": "00000000-0000-4000-8000-000000000005",
+          "author_name": "Maha S",
+          "rating": 5,
+          "comment": "Effortless booking and outstanding service. Highly recommend to everyone.",
+          "created_at": "2026-06-19T13:00:00Z"
+        },
+        {
+          "id": "00000000-0000-4000-b005-000000000005",
+          "venue_id": "00000000-0000-4000-8000-000000000005",
+          "author_name": "Norah M",
+          "rating": 5,
+          "comment": "Best booking experience I have had. Walked in and everything was ready for me.",
+          "created_at": "2026-06-24T14:00:00Z"
+        },
+        {
+          "id": "00000000-0000-4000-b005-000000000006",
+          "venue_id": "00000000-0000-4000-8000-000000000005",
+          "author_name": "Dana F",
+          "rating": 5,
+          "comment": "My go-to place now. The attention to detail is unmatched.",
+          "created_at": "2026-06-02T15:00:00Z"
+        }
+      ],
+      "hours": [
+        {
+          "weekday": 0,
+          "open_time": null,
+          "close_time": null,
+          "is_closed": true
+        },
+        {
+          "weekday": 1,
+          "open_time": "10:00",
+          "close_time": "22:00",
+          "is_closed": false
+        },
+        {
+          "weekday": 2,
+          "open_time": "10:00",
+          "close_time": "22:00",
+          "is_closed": false
+        },
+        {
+          "weekday": 3,
+          "open_time": "10:00",
+          "close_time": "22:00",
+          "is_closed": false
+        },
+        {
+          "weekday": 4,
+          "open_time": "10:00",
+          "close_time": "22:00",
+          "is_closed": false
+        },
+        {
+          "weekday": 5,
+          "open_time": "10:00",
+          "close_time": "22:00",
+          "is_closed": false
+        },
+        {
+          "weekday": 6,
+          "open_time": "10:00",
+          "close_time": "22:00",
+          "is_closed": false
+        }
+      ]
+    },
+    {
+      "id": "00000000-0000-4000-8000-000000000006",
+      "slug": "pure-skin-studio",
+      "name": "Pure Skin Studio",
+      "description": "A skincare salon devoted to the glow: deep-cleansing facials, gentle peels, dermaplaning and LED — tailored to your skin by certified estheticians.",
+      "category_id": 6,
+      "address": "Prince Sultan Rd",
+      "area": "Al Hamra",
+      "city": "Jeddah",
+      "country": "Saudi Arabia",
+      "rating_avg": 4.8,
+      "rating_count": 262,
+      "is_featured": false,
+      "is_new": true,
+      "is_trending": false,
+      "highlights": [
+        "Instant confirmation",
+        "Certified estheticians",
+        "Parking available"
+      ],
+      "images": [
+        {
+          "url": "https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?w=1200&q=80&auto=format&fit=crop",
+          "sort_order": 0
+        },
+        {
+          "url": "https://images.unsplash.com/photo-1616683693504-3ea7e9ad6fec?w=1200&q=80&auto=format&fit=crop",
+          "sort_order": 1
+        },
+        {
+          "url": "https://images.unsplash.com/photo-1596178065887-1198b6148b2b?w=1200&q=80&auto=format&fit=crop",
+          "sort_order": 2
+        }
+      ],
+      "services": [
+        {
+          "id": "00000000-0000-4000-9006-000000000001",
+          "venue_id": "00000000-0000-4000-8000-000000000006",
+          "name": "Signature Glow Facial",
+          "group_name": "Featured",
+          "duration_minutes": 60,
+          "price_cents": 30000,
+          "currency": "SAR",
+          "description": "Deep cleanse, exfoliation, extraction and hydration boost.",
+          "discount_pct": 0,
+          "is_featured": true,
+          "sort_order": 0
+        },
+        {
+          "id": "00000000-0000-4000-9006-000000000002",
+          "venue_id": "00000000-0000-4000-8000-000000000006",
+          "name": "HydraFacial Deluxe",
+          "group_name": "Featured",
+          "duration_minutes": 60,
+          "price_cents": 45000,
+          "currency": "SAR",
+          "description": "Deep cleanse, exfoliation, extraction and antioxidant infusion.",
+          "discount_pct": 0,
+          "is_featured": true,
+          "sort_order": 1
+        },
+        {
+          "id": "00000000-0000-4000-9006-000000000003",
+          "venue_id": "00000000-0000-4000-8000-000000000006",
+          "name": "Gentle Enzyme Peel",
+          "group_name": "Skin",
+          "duration_minutes": 45,
+          "price_cents": 25000,
+          "currency": "SAR",
+          "description": "Brightening peel customised to your skin goals.",
+          "discount_pct": 0,
+          "is_featured": false,
+          "sort_order": 2
+        },
+        {
+          "id": "00000000-0000-4000-9006-000000000004",
+          "venue_id": "00000000-0000-4000-8000-000000000006",
+          "name": "Dermaplaning + Mask",
+          "group_name": "Skin",
+          "duration_minutes": 45,
+          "price_cents": 22000,
+          "currency": "SAR",
+          "description": "Smooth, peach-fuzz-free skin with a soothing finish mask.",
+          "discount_pct": 0,
+          "is_featured": false,
+          "sort_order": 3
+        },
+        {
+          "id": "00000000-0000-4000-9006-000000000005",
+          "venue_id": "00000000-0000-4000-8000-000000000006",
+          "name": "LED Light Therapy",
+          "group_name": "Skin",
+          "duration_minutes": 30,
+          "price_cents": 15000,
+          "currency": "SAR",
+          "description": "Calming, collagen-boosting LED session.",
+          "discount_pct": 0,
+          "is_featured": false,
+          "sort_order": 4
+        }
+      ],
+      "staff": [
+        {
+          "id": "00000000-0000-4000-a006-000000000001",
+          "venue_id": "00000000-0000-4000-8000-000000000006",
+          "name": "Hala",
+          "role": "Lead esthetician",
+          "rating": 4.8
+        },
+        {
+          "id": "00000000-0000-4000-a006-000000000002",
+          "venue_id": "00000000-0000-4000-8000-000000000006",
+          "name": "Nour",
+          "role": "Esthetician",
+          "rating": 4.8999999999999995
+        },
+        {
+          "id": "00000000-0000-4000-a006-000000000003",
+          "venue_id": "00000000-0000-4000-8000-000000000006",
+          "name": "Farah",
+          "role": "Esthetician",
+          "rating": 5
+        }
+      ],
+      "reviews": [
+        {
+          "id": "00000000-0000-4000-b006-000000000001",
+          "venue_id": "00000000-0000-4000-8000-000000000006",
+          "author_name": "Maha S",
+          "rating": 5,
+          "comment": "Effortless booking and outstanding service. Highly recommend to everyone.",
+          "created_at": "2026-01-04T10:00:00Z"
+        },
+        {
+          "id": "00000000-0000-4000-b006-000000000002",
+          "venue_id": "00000000-0000-4000-8000-000000000006",
+          "author_name": "Norah M",
+          "rating": 5,
+          "comment": "Best booking experience I have had. Walked in and everything was ready for me.",
+          "created_at": "2026-01-09T11:00:00Z"
+        },
+        {
+          "id": "00000000-0000-4000-b006-000000000003",
+          "venue_id": "00000000-0000-4000-8000-000000000006",
+          "author_name": "Dana F",
+          "rating": 5,
+          "comment": "My go-to place now. The attention to detail is unmatched.",
+          "created_at": "2026-01-14T12:00:00Z"
+        },
+        {
+          "id": "00000000-0000-4000-b006-000000000004",
+          "venue_id": "00000000-0000-4000-8000-000000000006",
+          "author_name": "Yara T",
+          "rating": 5,
+          "comment": "The staff really listen to what you want. Left feeling brand new!",
+          "created_at": "2026-01-19T13:00:00Z"
+        }
+      ],
+      "hours": [
+        {
+          "weekday": 0,
+          "open_time": null,
+          "close_time": null,
+          "is_closed": true
+        },
+        {
+          "weekday": 1,
+          "open_time": "10:00",
+          "close_time": "22:00",
+          "is_closed": false
+        },
+        {
+          "weekday": 2,
+          "open_time": "10:00",
+          "close_time": "22:00",
+          "is_closed": false
+        },
+        {
+          "weekday": 3,
+          "open_time": "10:00",
+          "close_time": "22:00",
+          "is_closed": false
+        },
+        {
+          "weekday": 4,
+          "open_time": "10:00",
+          "close_time": "22:00",
+          "is_closed": false
+        },
+        {
+          "weekday": 5,
+          "open_time": "10:00",
+          "close_time": "22:00",
+          "is_closed": false
+        },
+        {
+          "weekday": 6,
+          "open_time": "10:00",
+          "close_time": "22:00",
+          "is_closed": false
+        }
+      ]
+    },
+    {
+      "id": "00000000-0000-4000-8000-000000000007",
+      "slug": "the-nail-atelier",
+      "name": "The Nail Atelier",
+      "description": "A boutique nail studio where minimalist design meets meticulous craft. Specialists in Russian manicure, BIAB and editorial nail art.",
+      "category_id": 3,
+      "address": "Anas Ibn Malik Rd",
+      "area": "Al Malqa",
+      "city": "Riyadh",
+      "country": "Saudi Arabia",
+      "rating_avg": 5,
+      "rating_count": 299,
+      "is_featured": false,
+      "is_new": true,
+      "is_trending": false,
+      "highlights": [
+        "Instant confirmation",
+        "Woman-owned",
+        "By appointment only"
+      ],
+      "images": [
+        {
+          "url": "https://images.unsplash.com/photo-1607779097040-26e80aa78e66?w=1200&q=80&auto=format&fit=crop",
+          "sort_order": 0
+        },
+        {
+          "url": "https://images.unsplash.com/photo-1604654894610-df63bc536371?w=1200&q=80&auto=format&fit=crop",
+          "sort_order": 1
+        },
+        {
+          "url": "https://images.unsplash.com/photo-1622287162716-f311baa1a2b8?w=1200&q=80&auto=format&fit=crop",
+          "sort_order": 2
+        }
+      ],
+      "services": [
+        {
+          "id": "00000000-0000-4000-9007-000000000001",
+          "venue_id": "00000000-0000-4000-8000-000000000007",
+          "name": "Russian Manicure + Gel",
+          "group_name": "Featured",
+          "duration_minutes": 90,
+          "price_cents": 22000,
+          "currency": "SAR",
+          "description": "Ultra-precise dry manicure with flawless gel application.",
+          "discount_pct": 0,
+          "is_featured": true,
+          "sort_order": 0
+        },
+        {
+          "id": "00000000-0000-4000-9007-000000000002",
+          "venue_id": "00000000-0000-4000-8000-000000000007",
+          "name": "BIAB Natural Overlay",
+          "group_name": "Featured",
+          "duration_minutes": 75,
+          "price_cents": 19000,
+          "currency": "SAR",
+          "description": "Strengthen and grow your natural nails with builder gel.",
+          "discount_pct": 0,
+          "is_featured": true,
+          "sort_order": 1
+        },
+        {
+          "id": "00000000-0000-4000-9007-000000000003",
+          "venue_id": "00000000-0000-4000-8000-000000000007",
+          "name": "Pedicure + Gel",
+          "group_name": "Pedicure",
+          "duration_minutes": 90,
+          "price_cents": 24000,
+          "currency": "SAR",
+          "description": "Complete pedicure with long-wear gel polish.",
+          "discount_pct": 0,
+          "is_featured": false,
+          "sort_order": 2
+        },
+        {
+          "id": "00000000-0000-4000-9007-000000000004",
+          "venue_id": "00000000-0000-4000-8000-000000000007",
+          "name": "French Tips",
+          "group_name": "Nail Art",
+          "duration_minutes": 30,
+          "price_cents": 6000,
+          "currency": "SAR",
+          "description": "Timeless hand-painted french in any shade.",
+          "discount_pct": 0,
+          "is_featured": false,
+          "sort_order": 3
+        },
+        {
+          "id": "00000000-0000-4000-9007-000000000005",
+          "venue_id": "00000000-0000-4000-8000-000000000007",
+          "name": "Nail Repair (per nail)",
+          "group_name": "Nails",
+          "duration_minutes": 15,
+          "price_cents": 2000,
+          "currency": "SAR",
+          "description": "Crack and break repair that blends invisibly.",
+          "discount_pct": 0,
+          "is_featured": false,
+          "sort_order": 4
+        }
+      ],
+      "staff": [
+        {
+          "id": "00000000-0000-4000-a007-000000000001",
+          "venue_id": "00000000-0000-4000-8000-000000000007",
+          "name": "Kateryna",
+          "role": "Master nail artist",
+          "rating": 4.8999999999999995
+        },
+        {
+          "id": "00000000-0000-4000-a007-000000000002",
+          "venue_id": "00000000-0000-4000-8000-000000000007",
+          "name": "Alina",
+          "role": "Nail artist",
+          "rating": 5
+        },
+        {
+          "id": "00000000-0000-4000-a007-000000000003",
+          "venue_id": "00000000-0000-4000-8000-000000000007",
+          "name": "Joud",
+          "role": "Nail tech",
+          "rating": 4.8
+        }
+      ],
+      "reviews": [
+        {
+          "id": "00000000-0000-4000-b007-000000000001",
+          "venue_id": "00000000-0000-4000-8000-000000000007",
+          "author_name": "Yara T",
+          "rating": 5,
+          "comment": "The staff really listen to what you want. Left feeling brand new!",
+          "created_at": "2026-02-04T10:00:00Z"
+        },
+        {
+          "id": "00000000-0000-4000-b007-000000000002",
+          "venue_id": "00000000-0000-4000-8000-000000000007",
+          "author_name": "Reem K",
+          "rating": 4,
+          "comment": "Great service and lovely atmosphere. Slightly busy on weekends but worth it.",
+          "created_at": "2026-02-09T11:00:00Z"
+        },
+        {
+          "id": "00000000-0000-4000-b007-000000000003",
+          "venue_id": "00000000-0000-4000-8000-000000000007",
+          "author_name": "Aisha B",
+          "rating": 4,
+          "comment": "Very professional team and beautiful interior. Will definitely come back.",
+          "created_at": "2026-02-14T12:00:00Z"
+        },
+        {
+          "id": "00000000-0000-4000-b007-000000000004",
+          "venue_id": "00000000-0000-4000-8000-000000000007",
+          "author_name": "Sara A",
+          "rating": 5,
+          "comment": "Amazing experience from start to finish. The team is so welcoming and the results were perfect.",
+          "created_at": "2026-02-19T13:00:00Z"
+        },
+        {
+          "id": "00000000-0000-4000-b007-000000000005",
+          "venue_id": "00000000-0000-4000-8000-000000000007",
+          "author_name": "Lina H",
+          "rating": 5,
+          "comment": "Absolutely in love with the results. Professional, clean and friendly staff.",
+          "created_at": "2026-02-24T14:00:00Z"
+        }
+      ],
+      "hours": [
+        {
+          "weekday": 0,
+          "open_time": null,
+          "close_time": null,
+          "is_closed": true
+        },
+        {
+          "weekday": 1,
+          "open_time": "10:00",
+          "close_time": "22:00",
+          "is_closed": false
+        },
+        {
+          "weekday": 2,
+          "open_time": "10:00",
+          "close_time": "22:00",
+          "is_closed": false
+        },
+        {
+          "weekday": 3,
+          "open_time": "10:00",
+          "close_time": "22:00",
+          "is_closed": false
+        },
+        {
+          "weekday": 4,
+          "open_time": "10:00",
+          "close_time": "22:00",
+          "is_closed": false
+        },
+        {
+          "weekday": 5,
+          "open_time": "10:00",
+          "close_time": "22:00",
+          "is_closed": false
+        },
+        {
+          "weekday": 6,
+          "open_time": "10:00",
+          "close_time": "22:00",
+          "is_closed": false
+        }
+      ]
+    },
+    {
+      "id": "00000000-0000-4000-8000-000000000008",
+      "slug": "smooth-and-co-waxing",
+      "name": "Smooth & Co Waxing Salon",
+      "description": "The waxing specialists. Gentle low-temperature wax, spotless private rooms and therapists who make it quick, clean and comfortable.",
+      "category_id": 5,
+      "address": "Al Barsha 1, Mall of the Emirates area",
+      "area": "Al Barsha",
+      "city": "Dubai",
+      "country": "UAE",
+      "rating_avg": 4.7,
+      "rating_count": 336,
+      "is_featured": false,
+      "is_new": true,
+      "is_trending": false,
+      "highlights": [
+        "Instant confirmation",
+        "Pay by app",
+        "Private rooms",
+        "Woman-owned"
+      ],
+      "images": [
+        {
+          "url": "https://images.unsplash.com/photo-1540555700478-4be289fbecef?w=1200&q=80&auto=format&fit=crop",
+          "sort_order": 0
+        },
+        {
+          "url": "https://images.unsplash.com/photo-1600948836101-f9ffda59d250?w=1200&q=80&auto=format&fit=crop",
+          "sort_order": 1
+        },
+        {
+          "url": "https://images.unsplash.com/photo-1519415943484-9fa1873496d4?w=1200&q=80&auto=format&fit=crop",
+          "sort_order": 2
+        }
+      ],
+      "services": [
+        {
+          "id": "00000000-0000-4000-9008-000000000001",
+          "venue_id": "00000000-0000-4000-8000-000000000008",
+          "name": "Full Body Wax",
+          "group_name": "Featured",
+          "duration_minutes": 90,
+          "price_cents": 32000,
+          "currency": "AED",
+          "description": "Head-to-toe smoothness with gentle, low-temp wax.",
+          "discount_pct": 0,
+          "is_featured": true,
+          "sort_order": 0
+        },
+        {
+          "id": "00000000-0000-4000-9008-000000000002",
+          "venue_id": "00000000-0000-4000-8000-000000000008",
+          "name": "Full Legs Wax",
+          "group_name": "Featured",
+          "duration_minutes": 40,
+          "price_cents": 14000,
+          "currency": "AED",
+          "description": "Silky legs in under an hour.",
+          "discount_pct": 0,
+          "is_featured": true,
+          "sort_order": 1
+        },
+        {
+          "id": "00000000-0000-4000-9008-000000000003",
+          "venue_id": "00000000-0000-4000-8000-000000000008",
+          "name": "Underarm Wax",
+          "group_name": "Waxing",
+          "duration_minutes": 15,
+          "price_cents": 5000,
+          "currency": "AED",
+          "description": "Quick and gentle underarm waxing.",
+          "discount_pct": 0,
+          "is_featured": false,
+          "sort_order": 2
+        },
+        {
+          "id": "00000000-0000-4000-9008-000000000004",
+          "venue_id": "00000000-0000-4000-8000-000000000008",
+          "name": "Full Arms Wax",
+          "group_name": "Waxing",
+          "duration_minutes": 30,
+          "price_cents": 10000,
+          "currency": "AED",
+          "description": "Complete arm waxing with soothing aftercare.",
+          "discount_pct": 0,
+          "is_featured": false,
+          "sort_order": 3
+        },
+        {
+          "id": "00000000-0000-4000-9008-000000000005",
+          "venue_id": "00000000-0000-4000-8000-000000000008",
+          "name": "Full Face Threading",
+          "group_name": "Threading",
+          "duration_minutes": 30,
+          "price_cents": 9000,
+          "currency": "AED",
+          "description": "Precise full-face hair removal with thread.",
+          "discount_pct": 0,
+          "is_featured": false,
+          "sort_order": 4
+        }
+      ],
+      "staff": [
+        {
+          "id": "00000000-0000-4000-a008-000000000001",
+          "venue_id": "00000000-0000-4000-8000-000000000008",
+          "name": "Grace",
+          "role": "Wax specialist",
+          "rating": 5
+        },
+        {
+          "id": "00000000-0000-4000-a008-000000000002",
+          "venue_id": "00000000-0000-4000-8000-000000000008",
+          "name": "Marta",
+          "role": "Wax specialist",
+          "rating": 4.8
+        },
+        {
+          "id": "00000000-0000-4000-a008-000000000003",
+          "venue_id": "00000000-0000-4000-8000-000000000008",
+          "name": "Ivy",
+          "role": "Therapist",
+          "rating": 4.8999999999999995
+        }
+      ],
+      "reviews": [
+        {
+          "id": "00000000-0000-4000-b008-000000000001",
+          "venue_id": "00000000-0000-4000-8000-000000000008",
+          "author_name": "Sara A",
+          "rating": 5,
+          "comment": "Amazing experience from start to finish. The team is so welcoming and the results were perfect.",
+          "created_at": "2026-03-04T10:00:00Z"
+        },
+        {
+          "id": "00000000-0000-4000-b008-000000000002",
+          "venue_id": "00000000-0000-4000-8000-000000000008",
+          "author_name": "Lina H",
+          "rating": 5,
+          "comment": "Absolutely in love with the results. Professional, clean and friendly staff.",
+          "created_at": "2026-03-09T11:00:00Z"
+        },
+        {
+          "id": "00000000-0000-4000-b008-000000000003",
+          "venue_id": "00000000-0000-4000-8000-000000000008",
+          "author_name": "Maha S",
+          "rating": 5,
+          "comment": "Effortless booking and outstanding service. Highly recommend to everyone.",
+          "created_at": "2026-03-14T12:00:00Z"
+        },
+        {
+          "id": "00000000-0000-4000-b008-000000000004",
+          "venue_id": "00000000-0000-4000-8000-000000000008",
+          "author_name": "Norah M",
+          "rating": 5,
+          "comment": "Best booking experience I have had. Walked in and everything was ready for me.",
+          "created_at": "2026-03-19T13:00:00Z"
+        },
+        {
+          "id": "00000000-0000-4000-b008-000000000005",
+          "venue_id": "00000000-0000-4000-8000-000000000008",
+          "author_name": "Dana F",
+          "rating": 5,
+          "comment": "My go-to place now. The attention to detail is unmatched.",
+          "created_at": "2026-03-24T14:00:00Z"
+        },
+        {
+          "id": "00000000-0000-4000-b008-000000000006",
+          "venue_id": "00000000-0000-4000-8000-000000000008",
+          "author_name": "Yara T",
+          "rating": 5,
+          "comment": "The staff really listen to what you want. Left feeling brand new!",
+          "created_at": "2026-03-02T15:00:00Z"
+        }
+      ],
+      "hours": [
+        {
+          "weekday": 0,
+          "open_time": null,
+          "close_time": null,
+          "is_closed": true
+        },
+        {
+          "weekday": 1,
+          "open_time": "10:00",
+          "close_time": "22:00",
+          "is_closed": false
+        },
+        {
+          "weekday": 2,
+          "open_time": "10:00",
+          "close_time": "22:00",
+          "is_closed": false
+        },
+        {
+          "weekday": 3,
+          "open_time": "10:00",
+          "close_time": "22:00",
+          "is_closed": false
+        },
+        {
+          "weekday": 4,
+          "open_time": "10:00",
+          "close_time": "22:00",
+          "is_closed": false
+        },
+        {
+          "weekday": 5,
+          "open_time": "10:00",
+          "close_time": "22:00",
+          "is_closed": false
+        },
+        {
+          "weekday": 6,
+          "open_time": "10:00",
+          "close_time": "22:00",
+          "is_closed": false
+        }
+      ]
+    },
+    {
+      "id": "00000000-0000-4000-8000-000000000009",
+      "slug": "brow-bar-co",
+      "name": "Brow Bar Co",
+      "description": "The brow specialists. Threading, tinting, lamination and henna brows perfected in minutes — walk in, glow out.",
+      "category_id": 4,
+      "address": "Prince Mmd bin Abdulaziz Rd",
+      "area": "As Sulimaniyah",
+      "city": "Riyadh",
+      "country": "Saudi Arabia",
+      "rating_avg": 4.9,
+      "rating_count": 373,
+      "is_featured": false,
+      "is_new": true,
+      "is_trending": false,
+      "highlights": [
+        "Walk-ins welcome",
+        "Pay by app",
+        "Woman-owned"
+      ],
+      "images": [
+        {
+          "url": "https://images.unsplash.com/photo-1512290923902-8a9f81dc236c?w=1200&q=80&auto=format&fit=crop",
+          "sort_order": 0
+        },
+        {
+          "url": "https://images.unsplash.com/photo-1487412947147-5cebf100ffc2?w=1200&q=80&auto=format&fit=crop",
+          "sort_order": 1
+        },
+        {
+          "url": "https://images.unsplash.com/photo-1522337660859-02fbefca4702?w=1200&q=80&auto=format&fit=crop",
+          "sort_order": 2
+        }
+      ],
+      "services": [
+        {
+          "id": "00000000-0000-4000-9009-000000000001",
+          "venue_id": "00000000-0000-4000-8000-000000000009",
+          "name": "Brow Threading",
+          "group_name": "Featured",
+          "duration_minutes": 15,
+          "price_cents": 4000,
+          "currency": "SAR",
+          "description": "Clean, precise brow shaping with traditional threading.",
+          "discount_pct": 0,
+          "is_featured": true,
+          "sort_order": 0
+        },
+        {
+          "id": "00000000-0000-4000-9009-000000000002",
+          "venue_id": "00000000-0000-4000-8000-000000000009",
+          "name": "Brow Lamination + Tint",
+          "group_name": "Featured",
+          "duration_minutes": 60,
+          "price_cents": 22000,
+          "currency": "SAR",
+          "description": "Brushed-up, fuller brows with a perfectly matched tint.",
+          "discount_pct": 10,
+          "is_featured": true,
+          "sort_order": 1
+        },
+        {
+          "id": "00000000-0000-4000-9009-000000000003",
+          "venue_id": "00000000-0000-4000-8000-000000000009",
+          "name": "Henna Brows",
+          "group_name": "Brows",
+          "duration_minutes": 45,
+          "price_cents": 15000,
+          "currency": "SAR",
+          "description": "Natural henna staining for fuller-looking brows up to 6 weeks.",
+          "discount_pct": 0,
+          "is_featured": false,
+          "sort_order": 2
+        },
+        {
+          "id": "00000000-0000-4000-9009-000000000004",
+          "venue_id": "00000000-0000-4000-8000-000000000009",
+          "name": "Lash Lift + Tint",
+          "group_name": "Lashes",
+          "duration_minutes": 60,
+          "price_cents": 25000,
+          "currency": "SAR",
+          "description": "Curled, darkened natural lashes — mascara optional.",
+          "discount_pct": 0,
+          "is_featured": false,
+          "sort_order": 3
+        },
+        {
+          "id": "00000000-0000-4000-9009-000000000005",
+          "venue_id": "00000000-0000-4000-8000-000000000009",
+          "name": "Full Face Threading",
+          "group_name": "Threading",
+          "duration_minutes": 30,
+          "price_cents": 9000,
+          "currency": "SAR",
+          "description": "Complete facial hair removal with thread.",
+          "discount_pct": 0,
+          "is_featured": false,
+          "sort_order": 4
+        }
+      ],
+      "staff": [
+        {
+          "id": "00000000-0000-4000-a009-000000000001",
+          "venue_id": "00000000-0000-4000-8000-000000000009",
+          "name": "Zainab",
+          "role": "Brow artist",
+          "rating": 4.8
+        },
+        {
+          "id": "00000000-0000-4000-a009-000000000002",
+          "venue_id": "00000000-0000-4000-8000-000000000009",
+          "name": "Hessa",
+          "role": "Brow artist",
+          "rating": 4.8999999999999995
+        },
+        {
+          "id": "00000000-0000-4000-a009-000000000003",
+          "venue_id": "00000000-0000-4000-8000-000000000009",
+          "name": "Mona",
+          "role": "Lash tech",
+          "rating": 5
+        }
+      ],
+      "reviews": [
+        {
+          "id": "00000000-0000-4000-b009-000000000001",
+          "venue_id": "00000000-0000-4000-8000-000000000009",
+          "author_name": "Norah M",
+          "rating": 5,
+          "comment": "Best booking experience I have had. Walked in and everything was ready for me.",
+          "created_at": "2026-04-04T10:00:00Z"
+        },
+        {
+          "id": "00000000-0000-4000-b009-000000000002",
+          "venue_id": "00000000-0000-4000-8000-000000000009",
+          "author_name": "Dana F",
+          "rating": 5,
+          "comment": "My go-to place now. The attention to detail is unmatched.",
+          "created_at": "2026-04-09T11:00:00Z"
+        },
+        {
+          "id": "00000000-0000-4000-b009-000000000003",
+          "venue_id": "00000000-0000-4000-8000-000000000009",
+          "author_name": "Yara T",
+          "rating": 5,
+          "comment": "The staff really listen to what you want. Left feeling brand new!",
+          "created_at": "2026-04-14T12:00:00Z"
+        },
+        {
+          "id": "00000000-0000-4000-b009-000000000004",
+          "venue_id": "00000000-0000-4000-8000-000000000009",
+          "author_name": "Reem K",
+          "rating": 4,
+          "comment": "Great service and lovely atmosphere. Slightly busy on weekends but worth it.",
+          "created_at": "2026-04-19T13:00:00Z"
+        }
+      ],
+      "hours": [
+        {
+          "weekday": 0,
+          "open_time": null,
+          "close_time": null,
+          "is_closed": true
+        },
+        {
+          "weekday": 1,
+          "open_time": "10:00",
+          "close_time": "22:00",
+          "is_closed": false
+        },
+        {
+          "weekday": 2,
+          "open_time": "10:00",
+          "close_time": "22:00",
+          "is_closed": false
+        },
+        {
+          "weekday": 3,
+          "open_time": "10:00",
+          "close_time": "22:00",
+          "is_closed": false
+        },
+        {
+          "weekday": 4,
+          "open_time": "10:00",
+          "close_time": "22:00",
+          "is_closed": false
+        },
+        {
+          "weekday": 5,
+          "open_time": "10:00",
+          "close_time": "22:00",
+          "is_closed": false
+        },
+        {
+          "weekday": 6,
+          "open_time": "10:00",
+          "close_time": "22:00",
+          "is_closed": false
+        }
+      ]
+    },
+    {
+      "id": "00000000-0000-4000-8000-000000000010",
+      "slug": "the-glam-room",
+      "name": "The Glam Room",
+      "description": "Jeddah’s go-to makeup studio for events, weddings and photoshoots. Senior artists, premium products and a look that lasts all night.",
+      "category_id": 7,
+      "address": "North Corniche Rd",
+      "area": "Corniche",
+      "city": "Jeddah",
+      "country": "Saudi Arabia",
+      "rating_avg": 4.6,
+      "rating_count": 410,
+      "is_featured": false,
+      "is_new": false,
+      "is_trending": true,
+      "highlights": [
+        "Instant confirmation",
+        "Sea view",
+        "Parking available",
+        "Woman-owned"
+      ],
+      "images": [
+        {
+          "url": "https://images.unsplash.com/photo-1487412947147-5cebf100ffc2?w=1200&q=80&auto=format&fit=crop",
+          "sort_order": 0
+        },
+        {
+          "url": "https://images.unsplash.com/photo-1596178065887-1198b6148b2b?w=1200&q=80&auto=format&fit=crop",
+          "sort_order": 1
+        },
+        {
+          "url": "https://images.unsplash.com/photo-1522337660859-02fbefca4702?w=1200&q=80&auto=format&fit=crop",
+          "sort_order": 2
+        }
+      ],
+      "services": [
+        {
+          "id": "00000000-0000-4000-9010-000000000001",
+          "venue_id": "00000000-0000-4000-8000-000000000010",
+          "name": "Full Glam Makeup",
+          "group_name": "Featured",
+          "duration_minutes": 75,
+          "price_cents": 40000,
+          "currency": "SAR",
+          "description": "Occasion-ready full face by our senior artists.",
+          "discount_pct": 0,
+          "is_featured": true,
+          "sort_order": 0
+        },
+        {
+          "id": "00000000-0000-4000-9010-000000000002",
+          "venue_id": "00000000-0000-4000-8000-000000000010",
+          "name": "Soft Glam Makeup",
+          "group_name": "Featured",
+          "duration_minutes": 60,
+          "price_cents": 30000,
+          "currency": "SAR",
+          "description": "Natural, radiant makeup for daytime events.",
+          "discount_pct": 0,
+          "is_featured": true,
+          "sort_order": 1
+        },
+        {
+          "id": "00000000-0000-4000-9010-000000000003",
+          "venue_id": "00000000-0000-4000-8000-000000000010",
+          "name": "Bridal Makeup Trial",
+          "group_name": "Bridal",
+          "duration_minutes": 90,
+          "price_cents": 45000,
+          "currency": "SAR",
+          "description": "Try your wedding look before the big day.",
+          "discount_pct": 0,
+          "is_featured": false,
+          "sort_order": 2
+        },
+        {
+          "id": "00000000-0000-4000-9010-000000000004",
+          "venue_id": "00000000-0000-4000-8000-000000000010",
+          "name": "Lash Application",
+          "group_name": "Add-ons",
+          "duration_minutes": 15,
+          "price_cents": 6000,
+          "currency": "SAR",
+          "description": "Strip or individual lashes applied to perfection.",
+          "discount_pct": 0,
+          "is_featured": false,
+          "sort_order": 3
+        },
+        {
+          "id": "00000000-0000-4000-9010-000000000005",
+          "venue_id": "00000000-0000-4000-8000-000000000010",
+          "name": "Makeup Lesson (1:1)",
+          "group_name": "Lessons",
+          "duration_minutes": 90,
+          "price_cents": 50000,
+          "currency": "SAR",
+          "description": "Personal masterclass with your own products.",
+          "discount_pct": 0,
+          "is_featured": false,
+          "sort_order": 4
+        }
+      ],
+      "staff": [
+        {
+          "id": "00000000-0000-4000-a010-000000000001",
+          "venue_id": "00000000-0000-4000-8000-000000000010",
+          "name": "Layla",
+          "role": "Senior makeup artist",
+          "rating": 4.8999999999999995
+        },
+        {
+          "id": "00000000-0000-4000-a010-000000000002",
+          "venue_id": "00000000-0000-4000-8000-000000000010",
+          "name": "Kim",
+          "role": "Makeup artist",
+          "rating": 5
+        },
+        {
+          "id": "00000000-0000-4000-a010-000000000003",
+          "venue_id": "00000000-0000-4000-8000-000000000010",
+          "name": "Amani",
+          "role": "Makeup artist",
+          "rating": 4.8
+        }
+      ],
+      "reviews": [
+        {
+          "id": "00000000-0000-4000-b010-000000000001",
+          "venue_id": "00000000-0000-4000-8000-000000000010",
+          "author_name": "Reem K",
+          "rating": 4,
+          "comment": "Great service and lovely atmosphere. Slightly busy on weekends but worth it.",
+          "created_at": "2026-05-04T10:00:00Z"
+        },
+        {
+          "id": "00000000-0000-4000-b010-000000000002",
+          "venue_id": "00000000-0000-4000-8000-000000000010",
+          "author_name": "Aisha B",
+          "rating": 4,
+          "comment": "Very professional team and beautiful interior. Will definitely come back.",
+          "created_at": "2026-05-09T11:00:00Z"
+        },
+        {
+          "id": "00000000-0000-4000-b010-000000000003",
+          "venue_id": "00000000-0000-4000-8000-000000000010",
+          "author_name": "Sara A",
+          "rating": 5,
+          "comment": "Amazing experience from start to finish. The team is so welcoming and the results were perfect.",
+          "created_at": "2026-05-14T12:00:00Z"
+        },
+        {
+          "id": "00000000-0000-4000-b010-000000000004",
+          "venue_id": "00000000-0000-4000-8000-000000000010",
+          "author_name": "Lina H",
+          "rating": 5,
+          "comment": "Absolutely in love with the results. Professional, clean and friendly staff.",
+          "created_at": "2026-05-19T13:00:00Z"
+        },
+        {
+          "id": "00000000-0000-4000-b010-000000000005",
+          "venue_id": "00000000-0000-4000-8000-000000000010",
+          "author_name": "Maha S",
+          "rating": 5,
+          "comment": "Effortless booking and outstanding service. Highly recommend to everyone.",
+          "created_at": "2026-05-24T14:00:00Z"
+        }
+      ],
+      "hours": [
+        {
+          "weekday": 0,
+          "open_time": null,
+          "close_time": null,
+          "is_closed": true
+        },
+        {
+          "weekday": 1,
+          "open_time": "10:00",
+          "close_time": "22:00",
+          "is_closed": false
+        },
+        {
+          "weekday": 2,
+          "open_time": "10:00",
+          "close_time": "22:00",
+          "is_closed": false
+        },
+        {
+          "weekday": 3,
+          "open_time": "10:00",
+          "close_time": "22:00",
+          "is_closed": false
+        },
+        {
+          "weekday": 4,
+          "open_time": "10:00",
+          "close_time": "22:00",
+          "is_closed": false
+        },
+        {
+          "weekday": 5,
+          "open_time": "10:00",
+          "close_time": "22:00",
+          "is_closed": false
+        },
+        {
+          "weekday": 6,
+          "open_time": "10:00",
+          "close_time": "22:00",
+          "is_closed": false
+        }
+      ]
+    },
+    {
+      "id": "00000000-0000-4000-8000-000000000011",
+      "slug": "gentlemens-quarter",
+      "name": "Gentlemen's Quarter",
+      "description": "Riyadh’s premium grooming lounge: sharp cuts, royal shaves, facials for men and a complimentary espresso bar.",
+      "category_id": 2,
+      "address": "King Fahd Rd",
+      "area": "King Fahd District",
+      "city": "Riyadh",
+      "country": "Saudi Arabia",
+      "rating_avg": 4.8,
+      "rating_count": 447,
+      "is_featured": false,
+      "is_new": false,
+      "is_trending": true,
+      "highlights": [
+        "Instant confirmation",
+        "Pay by app",
+        "Espresso bar"
+      ],
+      "images": [
+        {
+          "url": "https://images.unsplash.com/photo-1503951914875-452162b0f3f1?w=1200&q=80&auto=format&fit=crop",
+          "sort_order": 0
+        },
+        {
+          "url": "https://images.unsplash.com/photo-1585747860715-2ba37e788b70?w=1200&q=80&auto=format&fit=crop",
+          "sort_order": 1
+        },
+        {
+          "url": "https://images.unsplash.com/photo-1633681926022-84c23e8cb2d6?w=1200&q=80&auto=format&fit=crop",
+          "sort_order": 2
+        }
+      ],
+      "services": [
+        {
+          "id": "00000000-0000-4000-9011-000000000001",
+          "venue_id": "00000000-0000-4000-8000-000000000011",
+          "name": "Executive Cut & Style",
+          "group_name": "Featured",
+          "duration_minutes": 60,
+          "price_cents": 15000,
+          "currency": "SAR",
+          "description": "Tailored cut, wash and style with premium finish.",
+          "discount_pct": 0,
+          "is_featured": true,
+          "sort_order": 0
+        },
+        {
+          "id": "00000000-0000-4000-9011-000000000002",
+          "venue_id": "00000000-0000-4000-8000-000000000011",
+          "name": "Royal Shave",
+          "group_name": "Featured",
+          "duration_minutes": 45,
+          "price_cents": 11000,
+          "currency": "SAR",
+          "description": "Hot towels, straight razor, facial massage — the full ritual.",
+          "discount_pct": 0,
+          "is_featured": true,
+          "sort_order": 1
+        },
+        {
+          "id": "00000000-0000-4000-9011-000000000003",
+          "venue_id": "00000000-0000-4000-8000-000000000011",
+          "name": "Gentleman’s Facial",
+          "group_name": "Grooming",
+          "duration_minutes": 45,
+          "price_cents": 18000,
+          "currency": "SAR",
+          "description": "Deep-cleansing facial designed for men’s skin.",
+          "discount_pct": 0,
+          "is_featured": false,
+          "sort_order": 2
+        },
+        {
+          "id": "00000000-0000-4000-9011-000000000004",
+          "venue_id": "00000000-0000-4000-8000-000000000011",
+          "name": "Hair + Beard Combo",
+          "group_name": "Hair",
+          "duration_minutes": 75,
+          "price_cents": 19000,
+          "currency": "SAR",
+          "description": "Complete grooming: cut, beard sculpt and style.",
+          "discount_pct": 12,
+          "is_featured": false,
+          "sort_order": 3
+        },
+        {
+          "id": "00000000-0000-4000-9011-000000000005",
+          "venue_id": "00000000-0000-4000-8000-000000000011",
+          "name": "Grey Blending",
+          "group_name": "Colour",
+          "duration_minutes": 45,
+          "price_cents": 14000,
+          "currency": "SAR",
+          "description": "Subtle, natural-looking grey coverage.",
+          "discount_pct": 0,
+          "is_featured": false,
+          "sort_order": 4
+        }
+      ],
+      "staff": [
+        {
+          "id": "00000000-0000-4000-a011-000000000001",
+          "venue_id": "00000000-0000-4000-8000-000000000011",
+          "name": "Hassan",
+          "role": "Master barber",
+          "rating": 5
+        },
+        {
+          "id": "00000000-0000-4000-a011-000000000002",
+          "venue_id": "00000000-0000-4000-8000-000000000011",
+          "name": "Tony",
+          "role": "Senior barber",
+          "rating": 4.8
+        },
+        {
+          "id": "00000000-0000-4000-a011-000000000003",
+          "venue_id": "00000000-0000-4000-8000-000000000011",
+          "name": "Youssef",
+          "role": "Barber",
+          "rating": 4.8999999999999995
+        }
+      ],
+      "reviews": [
+        {
+          "id": "00000000-0000-4000-b011-000000000001",
+          "venue_id": "00000000-0000-4000-8000-000000000011",
+          "author_name": "Lina H",
+          "rating": 5,
+          "comment": "Absolutely in love with the results. Professional, clean and friendly staff.",
+          "created_at": "2026-06-04T10:00:00Z"
+        },
+        {
+          "id": "00000000-0000-4000-b011-000000000002",
+          "venue_id": "00000000-0000-4000-8000-000000000011",
+          "author_name": "Maha S",
+          "rating": 5,
+          "comment": "Effortless booking and outstanding service. Highly recommend to everyone.",
+          "created_at": "2026-06-09T11:00:00Z"
+        },
+        {
+          "id": "00000000-0000-4000-b011-000000000003",
+          "venue_id": "00000000-0000-4000-8000-000000000011",
+          "author_name": "Norah M",
+          "rating": 5,
+          "comment": "Best booking experience I have had. Walked in and everything was ready for me.",
+          "created_at": "2026-06-14T12:00:00Z"
+        },
+        {
+          "id": "00000000-0000-4000-b011-000000000004",
+          "venue_id": "00000000-0000-4000-8000-000000000011",
+          "author_name": "Dana F",
+          "rating": 5,
+          "comment": "My go-to place now. The attention to detail is unmatched.",
+          "created_at": "2026-06-19T13:00:00Z"
+        },
+        {
+          "id": "00000000-0000-4000-b011-000000000005",
+          "venue_id": "00000000-0000-4000-8000-000000000011",
+          "author_name": "Yara T",
+          "rating": 5,
+          "comment": "The staff really listen to what you want. Left feeling brand new!",
+          "created_at": "2026-06-24T14:00:00Z"
+        },
+        {
+          "id": "00000000-0000-4000-b011-000000000006",
+          "venue_id": "00000000-0000-4000-8000-000000000011",
+          "author_name": "Reem K",
+          "rating": 4,
+          "comment": "Great service and lovely atmosphere. Slightly busy on weekends but worth it.",
+          "created_at": "2026-06-02T15:00:00Z"
+        }
+      ],
+      "hours": [
+        {
+          "weekday": 0,
+          "open_time": null,
+          "close_time": null,
+          "is_closed": true
+        },
+        {
+          "weekday": 1,
+          "open_time": "10:00",
+          "close_time": "22:00",
+          "is_closed": false
+        },
+        {
+          "weekday": 2,
+          "open_time": "10:00",
+          "close_time": "22:00",
+          "is_closed": false
+        },
+        {
+          "weekday": 3,
+          "open_time": "10:00",
+          "close_time": "22:00",
+          "is_closed": false
+        },
+        {
+          "weekday": 4,
+          "open_time": "10:00",
+          "close_time": "22:00",
+          "is_closed": false
+        },
+        {
+          "weekday": 5,
+          "open_time": "10:00",
+          "close_time": "22:00",
+          "is_closed": false
+        },
+        {
+          "weekday": 6,
+          "open_time": "10:00",
+          "close_time": "22:00",
+          "is_closed": false
+        }
+      ]
+    },
+    {
+      "id": "00000000-0000-4000-8000-000000000012",
+      "slug": "bloom-beauty-salon",
+      "name": "Bloom Beauty Salon",
+      "description": "Your everything salon: hair, makeup, nails and waxing under one roof. Trusted by Jeddah’s brides for over a decade.",
+      "category_id": 8,
+      "address": "Sari St",
+      "area": "Al Rawdah",
+      "city": "Jeddah",
+      "country": "Saudi Arabia",
+      "rating_avg": 5,
+      "rating_count": 484,
+      "is_featured": false,
+      "is_new": false,
+      "is_trending": true,
+      "highlights": [
+        "Instant confirmation",
+        "Woman-owned",
+        "Bridal packages"
+      ],
+      "images": [
+        {
+          "url": "https://images.unsplash.com/photo-1522337660859-02fbefca4702?w=1200&q=80&auto=format&fit=crop",
+          "sort_order": 0
+        },
+        {
+          "url": "https://images.unsplash.com/photo-1487412947147-5cebf100ffc2?w=1200&q=80&auto=format&fit=crop",
+          "sort_order": 1
+        },
+        {
+          "url": "https://images.unsplash.com/photo-1562322140-8baeececf3df?w=1200&q=80&auto=format&fit=crop",
+          "sort_order": 2
+        }
+      ],
+      "services": [
+        {
+          "id": "00000000-0000-4000-9012-000000000001",
+          "venue_id": "00000000-0000-4000-8000-000000000012",
+          "name": "Blow Dry & Style",
+          "group_name": "Featured",
+          "duration_minutes": 45,
+          "price_cents": 12000,
+          "currency": "SAR",
+          "description": "Wash and professional blow dry, straight or curled.",
+          "discount_pct": 0,
+          "is_featured": true,
+          "sort_order": 0
+        },
+        {
+          "id": "00000000-0000-4000-9012-000000000002",
+          "venue_id": "00000000-0000-4000-8000-000000000012",
+          "name": "Full Face Makeup",
+          "group_name": "Featured",
+          "duration_minutes": 60,
+          "price_cents": 35000,
+          "currency": "SAR",
+          "description": "Occasion-ready glam by our senior makeup artists.",
+          "discount_pct": 0,
+          "is_featured": true,
+          "sort_order": 1
+        },
+        {
+          "id": "00000000-0000-4000-9012-000000000003",
+          "venue_id": "00000000-0000-4000-8000-000000000012",
+          "name": "Hair Colour (full)",
+          "group_name": "Colour",
+          "duration_minutes": 120,
+          "price_cents": 40000,
+          "currency": "SAR",
+          "description": "Full-head colour with gloss finish.",
+          "discount_pct": 0,
+          "is_featured": false,
+          "sort_order": 2
+        },
+        {
+          "id": "00000000-0000-4000-9012-000000000004",
+          "venue_id": "00000000-0000-4000-8000-000000000012",
+          "name": "Full Body Wax",
+          "group_name": "Waxing",
+          "duration_minutes": 90,
+          "price_cents": 30000,
+          "currency": "SAR",
+          "description": "Complete waxing with gentle, low-temp wax.",
+          "discount_pct": 0,
+          "is_featured": false,
+          "sort_order": 3
+        },
+        {
+          "id": "00000000-0000-4000-9012-000000000005",
+          "venue_id": "00000000-0000-4000-8000-000000000012",
+          "name": "Bridal Package",
+          "group_name": "Bridal",
+          "duration_minutes": 240,
+          "price_cents": 150000,
+          "currency": "SAR",
+          "description": "Hair, makeup, nails and lashes for your big day.",
+          "discount_pct": 8,
+          "is_featured": false,
+          "sort_order": 4
+        },
+        {
+          "id": "00000000-0000-4000-9012-000000000006",
+          "venue_id": "00000000-0000-4000-8000-000000000012",
+          "name": "Hair Treatment Mask",
+          "group_name": "Treatments",
+          "duration_minutes": 30,
+          "price_cents": 10000,
+          "currency": "SAR",
+          "description": "Intense repair mask with scalp massage.",
+          "discount_pct": 0,
+          "is_featured": false,
+          "sort_order": 5
+        }
+      ],
+      "staff": [
+        {
+          "id": "00000000-0000-4000-a012-000000000001",
+          "venue_id": "00000000-0000-4000-8000-000000000012",
+          "name": "Abeer",
+          "role": "Salon director",
+          "rating": 4.8
+        },
+        {
+          "id": "00000000-0000-4000-a012-000000000002",
+          "venue_id": "00000000-0000-4000-8000-000000000012",
+          "name": "Shatha",
+          "role": "Makeup artist",
+          "rating": 4.8999999999999995
+        },
+        {
+          "id": "00000000-0000-4000-a012-000000000003",
+          "venue_id": "00000000-0000-4000-8000-000000000012",
+          "name": "Noura",
+          "role": "Stylist",
+          "rating": 5
+        }
+      ],
+      "reviews": [
+        {
+          "id": "00000000-0000-4000-b012-000000000001",
+          "venue_id": "00000000-0000-4000-8000-000000000012",
+          "author_name": "Dana F",
+          "rating": 5,
+          "comment": "My go-to place now. The attention to detail is unmatched.",
+          "created_at": "2026-01-04T10:00:00Z"
+        },
+        {
+          "id": "00000000-0000-4000-b012-000000000002",
+          "venue_id": "00000000-0000-4000-8000-000000000012",
+          "author_name": "Yara T",
+          "rating": 5,
+          "comment": "The staff really listen to what you want. Left feeling brand new!",
+          "created_at": "2026-01-09T11:00:00Z"
+        },
+        {
+          "id": "00000000-0000-4000-b012-000000000003",
+          "venue_id": "00000000-0000-4000-8000-000000000012",
+          "author_name": "Reem K",
+          "rating": 4,
+          "comment": "Great service and lovely atmosphere. Slightly busy on weekends but worth it.",
+          "created_at": "2026-01-14T12:00:00Z"
+        },
+        {
+          "id": "00000000-0000-4000-b012-000000000004",
+          "venue_id": "00000000-0000-4000-8000-000000000012",
+          "author_name": "Aisha B",
+          "rating": 4,
+          "comment": "Very professional team and beautiful interior. Will definitely come back.",
+          "created_at": "2026-01-19T13:00:00Z"
+        }
+      ],
+      "hours": [
+        {
+          "weekday": 0,
+          "open_time": null,
+          "close_time": null,
+          "is_closed": true
+        },
+        {
+          "weekday": 1,
+          "open_time": "10:00",
+          "close_time": "22:00",
+          "is_closed": false
+        },
+        {
+          "weekday": 2,
+          "open_time": "10:00",
+          "close_time": "22:00",
+          "is_closed": false
+        },
+        {
+          "weekday": 3,
+          "open_time": "10:00",
+          "close_time": "22:00",
+          "is_closed": false
+        },
+        {
+          "weekday": 4,
+          "open_time": "10:00",
+          "close_time": "22:00",
+          "is_closed": false
+        },
+        {
+          "weekday": 5,
+          "open_time": "10:00",
+          "close_time": "22:00",
+          "is_closed": false
+        },
+        {
+          "weekday": 6,
+          "open_time": "10:00",
+          "close_time": "22:00",
+          "is_closed": false
+        }
+      ]
+    }
+  ]
+}
