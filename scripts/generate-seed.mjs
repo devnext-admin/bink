@@ -3,7 +3,7 @@
 import { writeFileSync, mkdirSync } from 'node:fs';
 import { buildData } from './data.mjs';
 
-const { categories, venues } = buildData();
+const { categories, venues, promos } = buildData();
 
 const q = (s) => (s == null ? 'null' : `'${String(s).replace(/'/g, "''")}'`);
 const arr = (a) => `array[${a.map(q).join(', ')}]::text[]`;
@@ -34,6 +34,9 @@ for (const v of venues) {
   sql += v.hours.map((h) => `  (${q(v.id)}, ${h.weekday}, ${h.open_time ? q(h.open_time) : 'null'}, ${h.close_time ? q(h.close_time) : 'null'}, ${h.is_closed})`).join(',\n') + ';\n\n';
 }
 
+sql += `insert into public.promo_codes (code, pct_off, is_active, expires_at) values\n`;
+sql += promos.map((p) => `  (${q(p.code)}, ${p.pct_off}, ${p.is_active}, ${p.expires_at ? q(p.expires_at) : 'null'})`).join(',\n') + ';\n\n';
+
 // Seeded reviews carry hand-set aggregates; re-sync so venues reflect real rows
 // while keeping the marketing-style counts (trigger already updated them).
 sql += `update public.venues v set rating_avg = coalesce((select round(avg(rating)::numeric, 2) from public.reviews r where r.venue_id = v.id), v.rating_avg);\n`;
@@ -43,7 +46,7 @@ writeFileSync(new URL('../supabase/seed.sql', import.meta.url), sql);
 mkdirSync(new URL('../src/data', import.meta.url), { recursive: true });
 writeFileSync(
   new URL('../src/data/demo.json', import.meta.url),
-  JSON.stringify({ categories, venues }, null, 2)
+  JSON.stringify({ categories, venues, promos }, null, 2)
 );
 
 console.log(`Wrote supabase/seed.sql (${venues.length} venues) and src/data/demo.json`);

@@ -1,7 +1,7 @@
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
+import { Platform, Pressable, ScrollView, StyleSheet, TextInput, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Logo } from '../components/logo';
 import { PaymentPill } from '../components/payment-pill';
@@ -11,17 +11,21 @@ import { useAppData } from '../lib/app-data-context';
 import { useAuth } from '../lib/auth-context';
 import { AdminUserRow, getAllBookings, getAllUsers, setVenueStatus } from '../lib/business';
 import { formatDateLong, formatPrice, formatTimeOfDate } from '../lib/format';
+import { createCategory } from '../lib/data';
+import { createPromo, getPromoCodes, togglePromo } from '../lib/ops';
 import { getAllTransactions, salesSummary } from '../lib/payments';
 import { colors, font, maxContentWidth, radius } from '../lib/theme';
 import type { Booking } from '../lib/types';
 import { useIsDesktop } from '../lib/use-layout';
 
-type Tab = 'overview' | 'salons' | 'users' | 'bookings';
+type Tab = 'overview' | 'salons' | 'users' | 'bookings' | 'categories' | 'promos';
 const TABS: { key: Tab; label: string; icon: string }[] = [
   { key: 'overview', label: 'Overview', icon: 'stats-chart-outline' },
   { key: 'salons', label: 'Salons', icon: 'storefront-outline' },
   { key: 'users', label: 'Users', icon: 'people-outline' },
   { key: 'bookings', label: 'Bookings', icon: 'calendar-outline' },
+  { key: 'categories', label: 'Categories', icon: 'pricetags-outline' },
+  { key: 'promos', label: 'Promos', icon: 'ticket-outline' },
 ];
 
 export default function Admin() {
@@ -35,11 +39,16 @@ export default function Admin() {
   const [users, setUsers] = useState<AdminUserRow[]>([]);
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [transactions, setTransactions] = useState<any[]>([]);
+  const [promos, setPromos] = useState<any[]>([]);
+  const [newPromoCode, setNewPromoCode] = useState('');
+  const [newPromoPct, setNewPromoPct] = useState('10');
+  const [newCategory, setNewCategory] = useState('');
 
   const load = useCallback(() => {
     getAllUsers().then(setUsers);
     getAllBookings().then(setBookings);
     getAllTransactions().then(setTransactions);
+    getPromoCodes().then(setPromos);
   }, []);
 
   useEffect(() => {
@@ -186,10 +195,115 @@ export default function Admin() {
         )}
       </View>
     );
+  } else if (tab === 'categories') {
+    body = (
+      <View style={{ gap: 16 }}>
+        <View style={styles.card}>
+          <BText variant="h3">Add category</BText>
+          <View style={{ flexDirection: 'row', gap: 10, marginTop: 14, alignItems: 'center' }}>
+            <TextInput
+              placeholder="e.g. Kids Salon"
+              placeholderTextColor={colors.gray}
+              value={newCategory}
+              onChangeText={setNewCategory}
+              style={styles.input}
+            />
+            <Button
+              title="Add"
+              size="sm"
+              onPress={async () => {
+                if (!newCategory.trim()) return;
+                await createCategory(newCategory.trim());
+                setNewCategory('');
+                await refresh();
+              }}
+            />
+          </View>
+        </View>
+        <View style={styles.card}>
+          <BText variant="h3">Categories ({categories.length})</BText>
+          {categories.map((c) => (
+            <View key={c.slug} style={styles.row}>
+              <View style={{ flex: 1 }}>
+                <BText variant="smallMedium">{c.name}</BText>
+                <BText variant="tiny">
+                  {c.slug} · {allVenues.filter((v) => v.category_id === c.id).length} salons
+                </BText>
+              </View>
+            </View>
+          ))}
+        </View>
+      </View>
+    );
+  } else if (tab === 'promos') {
+    body = (
+      <View style={{ gap: 16 }}>
+        <View style={styles.card}>
+          <BText variant="h3">Create promo code</BText>
+          <View style={{ flexDirection: 'row', gap: 10, marginTop: 14, alignItems: 'center' }}>
+            <TextInput
+              placeholder="CODE"
+              placeholderTextColor={colors.gray}
+              autoCapitalize="characters"
+              value={newPromoCode}
+              onChangeText={setNewPromoCode}
+              style={[styles.input, { flex: 1 }]}
+            />
+            <TextInput
+              placeholder="% off"
+              placeholderTextColor={colors.gray}
+              keyboardType="numeric"
+              value={newPromoPct}
+              onChangeText={setNewPromoPct}
+              style={[styles.input, { width: 80, flex: 0 }]}
+            />
+            <Button
+              title="Create"
+              size="sm"
+              onPress={async () => {
+                const pct = parseInt(newPromoPct, 10);
+                if (!newPromoCode.trim() || !pct) return;
+                await createPromo(newPromoCode.trim(), Math.min(100, Math.max(1, pct)));
+                setNewPromoCode('');
+                load();
+              }}
+            />
+          </View>
+        </View>
+        <View style={styles.card}>
+          <BText variant="h3">Promo codes ({promos.length})</BText>
+          {promos.map((p) => (
+            <View key={p.code} style={styles.row}>
+              <View style={{ flex: 1 }}>
+                <BText variant="smallMedium">{p.code}</BText>
+                <BText variant="tiny">
+                  {p.pct_off}% off
+                  {p.expires_at ? ` · expires ${new Date(p.expires_at).toLocaleDateString('en-US')}` : ' · no expiry'}
+                </BText>
+              </View>
+              <StatusTag status={p.is_active ? 'approved' : 'suspended'} />
+              <SmallAction
+                label={p.is_active ? 'Disable' : 'Enable'}
+                color={p.is_active ? colors.danger : colors.green}
+                onPress={async () => {
+                  await togglePromo(p.code, !p.is_active);
+                  load();
+                }}
+              />
+            </View>
+          ))}
+        </View>
+      </View>
+    );
   } else {
     body = (
       <View style={styles.card}>
-        <BText variant="h3">Bookings ({bookings.length})</BText>
+        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+          <BText variant="h3">Bookings ({bookings.length})</BText>
+          {Platform.OS === 'web' && bookings.length > 0 ? (
+            <SmallAction label="Export CSV" color={colors.ink} onPress={() => exportBookingsCsv(bookings)} />
+          ) : null}
+        </View>
         {bookings.length === 0 ? (
           <BText variant="small" style={{ marginTop: 10 }}>
             No bookings yet.
@@ -309,6 +423,31 @@ function RoleTag({ role }: { role: string }) {
   );
 }
 
+function exportBookingsCsv(bookings: Booking[]) {
+  const esc = (v: unknown) => `"${String(v ?? '').replace(/"/g, '""')}"`;
+  const rows = [
+    ['Booking ID', 'Venue', 'Customer', 'Starts', 'Services', 'Total', 'Currency', 'Status', 'Payment'],
+    ...bookings.map((b) => [
+      b.id,
+      b.venue_name,
+      b.customer_name ?? 'Guest',
+      b.starts_at,
+      b.items.map((i) => i.service_name).join('; '),
+      (b.total_cents / 100).toFixed(2),
+      b.currency,
+      b.status,
+      b.payment_status ?? 'unpaid',
+    ]),
+  ];
+  const csv = rows.map((r) => r.map(esc).join(',')).join('\n');
+  const blob = new Blob([csv], { type: 'text/csv' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `bink-bookings-${new Date().toISOString().slice(0, 10)}.csv`;
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
+
 function SmallAction({ label, color, onPress }: { label: string; color: string; onPress: () => void }) {
   return (
     <Pressable
@@ -374,6 +513,18 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     borderBottomWidth: 1,
     borderBottomColor: colors.divider,
+  },
+  input: {
+    flex: 1,
+    borderWidth: 1,
+    borderColor: colors.border,
+    borderRadius: radius.md,
+    height: 42,
+    paddingHorizontal: 12,
+    fontFamily: font.regular,
+    fontSize: 14,
+    color: colors.ink,
+    ...(typeof window !== 'undefined' ? ({ outlineStyle: 'none' } as any) : null),
   },
   smallAction: {
     borderWidth: 1,

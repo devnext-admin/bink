@@ -4,6 +4,7 @@ import { ScrollView, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { BottomTabs, TAB_BAR_HEIGHT } from '../components/bottom-tabs';
 import { Logo } from '../components/logo';
+import { Onboarding } from '../components/onboarding';
 import { SectionRail } from '../components/section-rail';
 import { HeroSearchMobile } from '../components/search-bar';
 import { BText } from '../components/ui/text';
@@ -45,6 +46,7 @@ export function HomeMobile() {
         <SectionRail title="Trending" venues={trending} cardWidth={240} paddingHorizontal={20} />
       </ScrollView>
       <BottomTabs />
+      <Onboarding />
     </View>
   );
 }

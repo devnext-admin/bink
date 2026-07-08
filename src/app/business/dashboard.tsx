@@ -16,22 +16,28 @@ import { useAuth } from '../../lib/auth-context';
 import {
   addService,
   addStaff,
+  addVenueImage,
   deleteService,
   deleteStaff,
   getVenueBookings,
+  removeVenueImage,
+  updateService,
+  updateVenueHours,
   updateVenueInfo,
 } from '../../lib/business';
 import { formatDateLong, formatDuration, formatPrice, formatTimeOfDate } from '../../lib/format';
+import { setBookingStatus } from '../../lib/ops';
 import { getVenueTransactions, refundBooking, salesSummary } from '../../lib/payments';
 import { colors, font, maxContentWidth, radius } from '../../lib/theme';
 import type { Booking, Transaction, Venue } from '../../lib/types';
 import { useIsDesktop } from '../../lib/use-layout';
 
-type Section = 'overview' | 'bookings' | 'sales' | 'services' | 'staff' | 'settings';
+type Section = 'overview' | 'bookings' | 'sales' | 'analytics' | 'services' | 'staff' | 'settings';
 const SECTIONS: { key: Section; label: string; icon: string }[] = [
   { key: 'overview', label: 'Overview', icon: 'grid-outline' },
   { key: 'bookings', label: 'Bookings', icon: 'calendar-outline' },
   { key: 'sales', label: 'Sales', icon: 'cash-outline' },
+  { key: 'analytics', label: 'Analytics', icon: 'stats-chart-outline' },
   { key: 'services', label: 'Services', icon: 'pricetags-outline' },
   { key: 'staff', label: 'Team', icon: 'people-outline' },
   { key: 'settings', label: 'Settings', icon: 'settings-outline' },
@@ -212,6 +218,8 @@ export default function BusinessDashboard() {
         </View>
       </View>
     );
+  } else if (section === 'analytics') {
+    body = <AnalyticsSection bookings={bookings} venue={venue!} isDesktop={isDesktop} />;
   } else if (section === 'services') {
     body = <ServicesEditor venue={venue!} onChanged={reload} />;
   } else if (section === 'staff') {
@@ -335,19 +343,43 @@ function StatCard({ label, value, icon }: { label: string; value: string; icon: 
 
 function BookingRow({ booking, onRefund }: { booking: Booking; onRefund?: () => void }) {
   const [refunding, setRefunding] = useState(false);
+  const canManage = onRefund && (booking.status === 'confirmed' || booking.status === 'pending');
   return (
-    <View style={styles.bookingRow}>
-      <View style={{ flex: 1 }}>
+    <View style={[styles.bookingRow, { flexWrap: 'wrap' }]}>
+      <View style={{ flex: 1, minWidth: 220 }}>
         <BText variant="smallMedium">
           {booking.customer_name || 'Guest customer'} · {booking.items.map((i) => i.service_name).join(', ')}
         </BText>
         <BText variant="tiny" style={{ marginTop: 2 }}>
           {formatDateLong(booking.starts_at)} at {formatTimeOfDate(booking.starts_at)}
           {booking.staff_name ? ` · with ${booking.staff_name}` : ''}
+          {booking.status === 'completed' ? ' · completed' : ''}
+          {booking.status === 'no_show' ? ' · no-show' : ''}
+          {booking.status === 'cancelled' ? ' · cancelled' : ''}
         </BText>
       </View>
       <BText variant="smallMedium">{formatPrice(booking.total_cents, booking.currency)}</BText>
       <PaymentPill status={booking.payment_status ?? 'unpaid'} />
+      {canManage ? (
+        <View style={{ flexDirection: 'row', gap: 6 }}>
+          <SmallPillBtn
+            label="Complete"
+            color={colors.green}
+            onPress={async () => {
+              await setBookingStatus(booking.id, 'completed');
+              onRefund!();
+            }}
+          />
+          <SmallPillBtn
+            label="No-show"
+            color={colors.gray}
+            onPress={async () => {
+              await setBookingStatus(booking.id, 'no_show');
+              onRefund!();
+            }}
+          />
+        </View>
+      ) : null}
       {onRefund && booking.payment_status === 'paid' ? (
         <Pressable
           disabled={refunding}
@@ -368,6 +400,134 @@ function BookingRow({ booking, onRefund }: { booking: Booking; onRefund?: () => 
   );
 }
 
+function SmallPillBtn({ label, color, onPress }: { label: string; color: string; onPress: () => void }) {
+  return (
+    <Pressable onPress={onPress} style={[styles.refundBtn, { borderColor: color }]}>
+      <BText style={{ fontFamily: font.semibold, fontSize: 12, color }}>{label}</BText>
+    </Pressable>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Analytics: pure-View bar charts from real bookings
+// ---------------------------------------------------------------------------
+function BarChart({ data, unit }: { data: { label: string; value: number }[]; unit?: string }) {
+  const max = Math.max(...data.map((d) => d.value), 1);
+  return (
+    <View style={{ gap: 8, marginTop: 14 }}>
+      {data.map((d) => (
+        <View key={d.label} style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
+          <BText variant="tiny" style={{ width: 82 }} numberOfLines={1}>
+            {d.label}
+          </BText>
+          <View style={{ flex: 1, height: 18, backgroundColor: colors.bgSubtle, borderRadius: radius.pill }}>
+            <View
+              style={{
+                width: `${(d.value / max) * 100}%`,
+                height: 18,
+                borderRadius: radius.pill,
+                backgroundColor: colors.accent,
+                minWidth: d.value > 0 ? 6 : 0,
+              }}
+            />
+          </View>
+          <BText variant="tiny" style={{ width: 70, textAlign: 'right' }}>
+            {unit === 'money' ? formatPrice(d.value, 'SAR') : d.value}
+          </BText>
+        </View>
+      ))}
+    </View>
+  );
+}
+
+function AnalyticsSection({
+  bookings,
+  venue,
+  isDesktop,
+}: {
+  bookings: Booking[];
+  venue: Venue;
+  isDesktop: boolean;
+}) {
+  const active = bookings.filter((b) => b.status !== 'cancelled' && b.status !== 'no_show');
+
+  // Revenue: last 7 days
+  const days: { label: string; value: number }[] = [];
+  for (let i = 6; i >= 0; i--) {
+    const d = new Date();
+    d.setDate(d.getDate() - i);
+    const key = d.toDateString();
+    days.push({
+      label: d.toLocaleDateString('en-US', { weekday: 'short', day: 'numeric' }),
+      value: active
+        .filter((b) => new Date(b.starts_at).toDateString() === key)
+        .reduce((c, b) => c + b.total_cents, 0),
+    });
+  }
+
+  // Peak hours
+  const hours = [10, 12, 14, 16, 18, 20].map((h) => ({
+    label: `${h}:00–${h + 2}:00`,
+    value: active.filter((b) => {
+      const bh = new Date(b.starts_at).getHours();
+      return bh >= h && bh < h + 2;
+    }).length,
+  }));
+
+  // Top services
+  const svcCounts = new Map<string, number>();
+  active.forEach((b) => b.items.forEach((i) => svcCounts.set(i.service_name, (svcCounts.get(i.service_name) ?? 0) + 1)));
+  const topServices = [...svcCounts.entries()]
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 5)
+    .map(([label, value]) => ({ label, value }));
+
+  // Team performance
+  const team = venue.staff.map((m) => ({
+    label: m.name,
+    value: active.filter((b) => b.staff_id === m.id).length,
+  }));
+  const anyPro = active.filter((b) => !b.staff_id).length;
+  if (anyPro) team.push({ label: 'Any professional', value: anyPro });
+
+  return (
+    <View style={{ gap: 16 }}>
+      <View style={{ flexDirection: isDesktop ? 'row' : 'column', gap: 16 }}>
+        <View style={[styles.card, { flex: 1 }]}>
+          <BText variant="h3">Revenue — last 7 days</BText>
+          <BarChart data={days} unit="money" />
+        </View>
+        <View style={[styles.card, { flex: 1 }]}>
+          <BText variant="h3">Peak hours</BText>
+          <BarChart data={hours} />
+        </View>
+      </View>
+      <View style={{ flexDirection: isDesktop ? 'row' : 'column', gap: 16 }}>
+        <View style={[styles.card, { flex: 1 }]}>
+          <BText variant="h3">Top services</BText>
+          {topServices.length ? (
+            <BarChart data={topServices} />
+          ) : (
+            <BText variant="small" style={{ marginTop: 10 }}>
+              No bookings yet.
+            </BText>
+          )}
+        </View>
+        <View style={[styles.card, { flex: 1 }]}>
+          <BText variant="h3">Team performance</BText>
+          {team.length ? (
+            <BarChart data={team} />
+          ) : (
+            <BText variant="small" style={{ marginTop: 10 }}>
+              Add team members to see their bookings.
+            </BText>
+          )}
+        </View>
+      </View>
+    </View>
+  );
+}
+
 function TxStatusPill({ status }: { status: string }) {
   const map: Record<string, { label: string; color: string; bg: string }> = {
     succeeded: { label: 'Succeeded', color: colors.green, bg: '#E9F7EE' },
@@ -384,23 +544,45 @@ function TxStatusPill({ status }: { status: string }) {
 }
 
 function ServicesEditor({ venue, onChanged }: { venue: Venue; onChanged: () => void }) {
+  const [editingId, setEditingId] = useState<string | null>(null);
   const [name, setName] = useState('');
   const [group, setGroup] = useState('Featured');
   const [duration, setDuration] = useState('60');
   const [price, setPrice] = useState('');
+  const [discount, setDiscount] = useState('0');
   const [busy, setBusy] = useState(false);
 
-  const add = async () => {
+  const resetForm = () => {
+    setEditingId(null);
+    setName('');
+    setGroup('Featured');
+    setDuration('60');
+    setPrice('');
+    setDiscount('0');
+  };
+
+  const startEdit = (s: Venue['services'][number]) => {
+    setEditingId(s.id);
+    setName(s.name);
+    setGroup(s.group_name);
+    setDuration(String(s.duration_minutes));
+    setPrice(String(s.price_cents / 100));
+    setDiscount(String(s.discount_pct));
+  };
+
+  const save = async () => {
     if (!name.trim() || !price.trim()) return;
     setBusy(true);
-    await addService(venue, {
+    const payload = {
       name: name.trim(),
       group_name: group.trim() || 'Featured',
       duration_minutes: Math.max(5, parseInt(duration, 10) || 30),
       price_cents: Math.round(parseFloat(price) * 100),
-    });
-    setName('');
-    setPrice('');
+      discount_pct: Math.min(90, Math.max(0, parseInt(discount, 10) || 0)),
+    };
+    if (editingId) await updateService(venue, editingId, payload);
+    else await addService(venue, payload);
+    resetForm();
     setBusy(false);
     onChanged();
   };
@@ -408,7 +590,7 @@ function ServicesEditor({ venue, onChanged }: { venue: Venue; onChanged: () => v
   return (
     <View style={{ gap: 16 }}>
       <View style={styles.card}>
-        <BText variant="h3">Add a service</BText>
+        <BText variant="h3">{editingId ? 'Edit service' : 'Add a service'}</BText>
         <View style={{ gap: 12, marginTop: 16 }}>
           <Field label="Service name" placeholder="e.g. Gel Manicure" value={name} onChangeText={setName} />
           <View style={{ flexDirection: 'row', gap: 12 }}>
@@ -421,8 +603,14 @@ function ServicesEditor({ venue, onChanged }: { venue: Venue; onChanged: () => v
             <View style={{ flex: 1 }}>
               <Field label="Price" keyboardType="numeric" placeholder="150" value={price} onChangeText={setPrice} />
             </View>
+            <View style={{ flex: 1 }}>
+              <Field label="Discount %" keyboardType="numeric" value={discount} onChangeText={setDiscount} />
+            </View>
           </View>
-          <Button title="Add service" loading={busy} onPress={add} />
+          <View style={{ flexDirection: 'row', gap: 10 }}>
+            <Button title={editingId ? 'Save changes' : 'Add service'} loading={busy} onPress={save} />
+            {editingId ? <Button title="Cancel" variant="secondary" onPress={resetForm} /> : null}
+          </View>
         </View>
       </View>
       <View style={styles.card}>
@@ -433,11 +621,16 @@ function ServicesEditor({ venue, onChanged }: { venue: Venue; onChanged: () => v
               <BText variant="smallMedium">{s.name}</BText>
               <BText variant="tiny">
                 {s.group_name} · {formatDuration(s.duration_minutes)} · {formatPrice(s.price_cents, s.currency)}
+                {s.discount_pct ? ` · ${s.discount_pct}% off` : ''}
               </BText>
             </View>
+            <Pressable onPress={() => startEdit(s)} hitSlop={8}>
+              <Ionicons name="pencil-outline" size={18} color={colors.ink} />
+            </Pressable>
             <Pressable
               onPress={async () => {
                 await deleteService(venue, s.id);
+                if (editingId === s.id) resetForm();
                 onChanged();
               }}
               hitSlop={8}
@@ -562,6 +755,132 @@ function SettingsEditor({ venue, onChanged }: { venue: Venue; onChanged: () => v
         <Field label="Street address" value={address} onChangeText={setAddress} />
         <Button title={saved ? 'Saved ✓' : 'Save changes'} loading={busy} onPress={save} />
       </View>
+      <HoursEditor venue={venue} onChanged={onChanged} />
+      <GalleryEditor venue={venue} onChanged={onChanged} />
+    </View>
+  );
+}
+
+const WEEKDAY_NAMES = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+
+function HoursEditor({ venue, onChanged }: { venue: Venue; onChanged: () => void }) {
+  const [hours, setHours] = useState(() =>
+    [0, 1, 2, 3, 4, 5, 6].map(
+      (w) => venue.hours.find((h) => h.weekday === w) ?? { weekday: w, open_time: '10:00', close_time: '22:00', is_closed: false }
+    )
+  );
+  const [busy, setBusy] = useState(false);
+  const [saved, setSaved] = useState(false);
+
+  const patch = (weekday: number, p: Partial<(typeof hours)[number]>) =>
+    setHours((hs) => hs.map((h) => (h.weekday === weekday ? { ...h, ...p } : h)));
+
+  const save = async () => {
+    setBusy(true);
+    await updateVenueHours(venue, hours);
+    setBusy(false);
+    setSaved(true);
+    setTimeout(() => setSaved(false), 2500);
+    onChanged();
+  };
+
+  return (
+    <View style={[styles.card, { marginTop: 16 }]}>
+      <BText variant="h3">Opening hours</BText>
+      <View style={{ gap: 10, marginTop: 16 }}>
+        {[1, 2, 3, 4, 5, 6, 0].map((w) => {
+          const h = hours.find((x) => x.weekday === w)!;
+          return (
+            <View key={w} style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
+              <BText variant="smallMedium" style={{ width: 92 }}>
+                {WEEKDAY_NAMES[w]}
+              </BText>
+              {h.is_closed ? (
+                <BText variant="small" style={{ flex: 1 }}>
+                  Closed
+                </BText>
+              ) : (
+                <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center', gap: 8 }}>
+                  <Field
+                    value={h.open_time ?? '10:00'}
+                    onChangeText={(v) => patch(w, { open_time: v })}
+                    style={{ minHeight: 38, width: 74, paddingHorizontal: 8 }}
+                  />
+                  <BText variant="tiny">to</BText>
+                  <Field
+                    value={h.close_time ?? '22:00'}
+                    onChangeText={(v) => patch(w, { close_time: v })}
+                    style={{ minHeight: 38, width: 74, paddingHorizontal: 8 }}
+                  />
+                </View>
+              )}
+              <Pressable
+                onPress={() => patch(w, { is_closed: !h.is_closed })}
+                style={[styles.refundBtn, { borderColor: h.is_closed ? colors.green : colors.border }]}
+              >
+                <BText style={{ fontFamily: font.semibold, fontSize: 12, color: h.is_closed ? colors.green : colors.gray }}>
+                  {h.is_closed ? 'Open this day' : 'Mark closed'}
+                </BText>
+              </Pressable>
+            </View>
+          );
+        })}
+      </View>
+      <View style={{ marginTop: 16, alignItems: 'flex-start' }}>
+        <Button title={saved ? 'Saved ✓' : 'Save hours'} size="sm" loading={busy} onPress={save} />
+      </View>
+    </View>
+  );
+}
+
+function GalleryEditor({ venue, onChanged }: { venue: Venue; onChanged: () => void }) {
+  const [url, setUrl] = useState('');
+  const [busy, setBusy] = useState(false);
+
+  return (
+    <View style={[styles.card, { marginTop: 16 }]}>
+      <BText variant="h3">Gallery ({venue.images.length})</BText>
+      <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 10, marginTop: 14 }}>
+        {venue.images.map((im) => (
+          <View key={im.url} style={{ position: 'relative' }}>
+            <Image
+              source={{ uri: im.url }}
+              style={{ width: 110, height: 74, borderRadius: radius.sm, backgroundColor: colors.bgSubtle }}
+              contentFit="cover"
+            />
+            {venue.images.length > 1 && (
+              <Pressable
+                onPress={async () => {
+                  await removeVenueImage(venue, im.url);
+                  onChanged();
+                }}
+                style={styles.imgRemove}
+                hitSlop={6}
+              >
+                <Ionicons name="close" size={12} color={colors.white} />
+              </Pressable>
+            )}
+          </View>
+        ))}
+      </View>
+      <View style={{ flexDirection: 'row', gap: 10, marginTop: 14, alignItems: 'flex-end' }}>
+        <View style={{ flex: 1 }}>
+          <Field label="Image URL" placeholder="https://…" value={url} onChangeText={setUrl} autoCapitalize="none" />
+        </View>
+        <Button
+          title="Add photo"
+          size="sm"
+          loading={busy}
+          onPress={async () => {
+            if (!url.trim().startsWith('http')) return;
+            setBusy(true);
+            await addVenueImage(venue, url.trim());
+            setUrl('');
+            setBusy(false);
+            onChanged();
+          }}
+        />
+      </View>
     </View>
   );
 }
@@ -637,6 +956,17 @@ const styles = StyleSheet.create({
     borderRadius: radius.pill,
     paddingHorizontal: 10,
     height: 26,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  imgRemove: {
+    position: 'absolute',
+    top: 4,
+    right: 4,
+    width: 20,
+    height: 20,
+    borderRadius: 10,
+    backgroundColor: 'rgba(19,19,19,0.6)',
     alignItems: 'center',
     justifyContent: 'center',
   },

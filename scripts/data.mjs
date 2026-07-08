@@ -238,6 +238,11 @@ const venueDefs = [
   },
 ];
 
+export const promos = [
+  { id: 1, code: 'WELCOME10', pct_off: 10, is_active: true, expires_at: null },
+  { id: 2, code: 'BINK20', pct_off: 20, is_active: true, expires_at: '2026-12-31T23:59:59Z' },
+];
+
 export function buildData() {
   const venues = venueDefs.map((v, vi) => {
     const id = vid(v.n);
@@ -300,5 +305,5 @@ export function buildData() {
       })),
     };
   });
-  return { categories, venues };
+  return { categories, venues, promos };
 }

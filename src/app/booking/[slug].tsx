@@ -1,8 +1,8 @@
 import { Ionicons } from '@expo/vector-icons';
 import { Image } from 'expo-image';
 import { useLocalSearchParams, useRouter } from 'expo-router';
-import React, { useMemo, useState } from 'react';
-import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
+import React, { useEffect, useMemo, useState } from 'react';
+import { Pressable, ScrollView, StyleSheet, TextInput, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { ServiceRow } from '../../components/service-row';
 import { Avatar } from '../../components/ui/avatar';
@@ -15,9 +15,10 @@ import { useAuth } from '../../lib/auth-context';
 import { useBooking } from '../../lib/booking-context';
 import { createBooking } from '../../lib/data';
 import { formatDuration, formatPrice } from '../../lib/format';
+import { getBusyIntervals, isSlotFree, validatePromo, type BusyInterval } from '../../lib/ops';
 import { markPayAtVenue, payForBooking, paymentsGateway } from '../../lib/payments';
 import { colors, font, radius, shadow } from '../../lib/theme';
-import type { PaymentMethod } from '../../lib/types';
+import type { PaymentMethod, PromoCode } from '../../lib/types';
 import { useIsDesktop } from '../../lib/use-layout';
 
 type Step = 'services' | 'professional' | 'time' | 'confirm' | 'done';
@@ -70,6 +71,16 @@ export default function BookingScreen() {
   const [payMethod, setPayMethod] = useState<PaymentMethod>('pay_at_venue');
   const [payError, setPayError] = useState<string | null>(null);
   const [paid, setPaid] = useState(false);
+  const [busy, setBusy] = useState<BusyInterval[]>([]);
+  const [promoInput, setPromoInput] = useState('');
+  const [promo, setPromo] = useState<PromoCode | null>(null);
+  const [promoError, setPromoError] = useState<string | null>(null);
+
+  // Live availability for the selected day
+  useEffect(() => {
+    if (venue && booking.date) getBusyIntervals(venue.id, booking.date).then(setBusy);
+    else setBusy([]);
+  }, [venue?.id, booking.date]);
 
   const days = useMemo(() => nextDays(14), []);
 
@@ -78,6 +89,21 @@ export default function BookingScreen() {
   const groups = [...new Set(venue.services.map((s) => s.group_name))];
   const visibleServices = venue.services.filter((s) => s.group_name === group);
   const stepIndex = STEPS.findIndex((s) => s.key === step);
+  const finalTotal = promo
+    ? Math.round(booking.totalCents * (1 - promo.pct_off / 100))
+    : booking.totalCents;
+
+  const applyPromo = async () => {
+    setPromoError(null);
+    if (!promoInput.trim()) return;
+    const p = await validatePromo(promoInput);
+    if (p) {
+      setPromo(p);
+      setPromoInput('');
+    } else {
+      setPromoError('This code is invalid or expired.');
+    }
+  };
 
   const canContinue =
     (step === 'services' && booking.services.length > 0) ||
@@ -102,6 +128,8 @@ export default function BookingScreen() {
         customerName: user?.name ?? user?.email ?? null,
         startsAt,
         currency: booking.currency,
+        promoCode: promo?.code ?? null,
+        promoPctOff: promo?.pct_off,
         items: booking.services.map((s) => ({
           service_id: s.id,
           service_name: s.name,
@@ -222,7 +250,11 @@ export default function BookingScreen() {
         <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 10 }}>
           {TIME_SLOTS.map((t) => {
             const selected = booking.time === t;
-            const disabled = !booking.date;
+            const [sh, sm] = t.split(':').map(Number);
+            const taken =
+              !!booking.date &&
+              !isSlotFree(busy, sh * 60 + sm, booking.totalMinutes || 30, booking.staff?.id ?? null, venue.staff.length);
+            const disabled = !booking.date || taken;
             return (
               <Pressable
                 key={t}
@@ -232,10 +264,16 @@ export default function BookingScreen() {
                   styles.timeSlot,
                   selected && { backgroundColor: colors.ink, borderColor: colors.ink },
                   disabled && { opacity: 0.4 },
+                  taken && { backgroundColor: colors.bgSubtle, borderColor: colors.bgSubtle },
                 ]}
               >
                 <BText
-                  style={{ fontFamily: font.semibold, fontSize: 14, color: selected ? colors.white : colors.ink }}
+                  style={{
+                    fontFamily: font.semibold,
+                    fontSize: 14,
+                    color: selected ? colors.white : taken ? colors.grayLight : colors.ink,
+                    textDecorationLine: taken ? 'line-through' : 'none',
+                  }}
                 >
                   {t}
                 </BText>
@@ -272,11 +310,45 @@ export default function BookingScreen() {
               </BText>
             </View>
           ))}
+          {promo ? (
+            <View style={styles.confirmRow}>
+              <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center', gap: 8 }}>
+                <BText variant="smallMedium" color={colors.green}>
+                  {promo.code} · {promo.pct_off}% off
+                </BText>
+                <Pressable onPress={() => setPromo(null)} hitSlop={6}>
+                  <Ionicons name="close-circle" size={16} color={colors.gray} />
+                </Pressable>
+              </View>
+              <BText variant="smallMedium" color={colors.green}>
+                −{formatPrice(booking.totalCents - finalTotal, booking.currency)}
+              </BText>
+            </View>
+          ) : (
+            <View style={[styles.confirmRow, { gap: 10 }]}>
+              <TextInput
+                placeholder="Promo code"
+                placeholderTextColor={colors.gray}
+                value={promoInput}
+                onChangeText={setPromoInput}
+                autoCapitalize="characters"
+                style={styles.promoInput}
+              />
+              <Pressable onPress={applyPromo} style={styles.promoBtn}>
+                <BText style={{ fontFamily: font.semibold, fontSize: 13, color: colors.ink }}>Apply</BText>
+              </Pressable>
+            </View>
+          )}
+          {promoError ? (
+            <BText variant="tiny" color={colors.danger}>
+              {promoError}
+            </BText>
+          ) : null}
           <View style={[styles.confirmRow, { borderBottomWidth: 0 }]}>
             <BText variant="h3" style={{ flex: 1 }}>
               Total
             </BText>
-            <BText variant="h3">{formatPrice(booking.totalCents, booking.currency)}</BText>
+            <BText variant="h3">{formatPrice(finalTotal, booking.currency)}</BText>
           </View>
         </View>
         <View style={{ marginTop: 28 }}>
@@ -308,7 +380,7 @@ export default function BookingScreen() {
             <View style={styles.payNote}>
               <Ionicons name="shield-checkmark-outline" size={18} color={colors.ink} />
               <BText variant="small" color={colors.ink}>
-                {formatPrice(booking.totalCents, booking.currency)} will be charged now. Includes 15% VAT — a tax
+                {formatPrice(finalTotal, booking.currency)} will be charged now. Includes 15% VAT — a tax
                 invoice is issued automatically.
               </BText>
             </View>
@@ -417,7 +489,7 @@ export default function BookingScreen() {
       <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
         <BText variant="title">Total</BText>
         <BText variant="title">
-          {booking.services.length ? formatPrice(booking.totalCents, booking.currency) : 'free'}
+          {booking.services.length ? formatPrice(finalTotal, booking.currency) : 'free'}
         </BText>
       </View>
       <View style={{ marginTop: 20 }}>
@@ -426,7 +498,7 @@ export default function BookingScreen() {
             step === 'confirm'
               ? payMethod === 'pay_at_venue'
                 ? 'Confirm booking'
-                : `Pay ${formatPrice(booking.totalCents, booking.currency)}`
+                : `Pay ${formatPrice(finalTotal, booking.currency)}`
               : 'Continue'
           }
           fullWidth
@@ -716,6 +788,27 @@ const styles = StyleSheet.create({
     borderRadius: radius.md,
     padding: 14,
     marginTop: 16,
+  },
+  promoInput: {
+    flex: 1,
+    borderWidth: 1,
+    borderColor: colors.border,
+    borderRadius: radius.pill,
+    height: 40,
+    paddingHorizontal: 14,
+    fontFamily: font.regular,
+    fontSize: 14,
+    color: colors.ink,
+    ...(typeof window !== 'undefined' ? ({ outlineStyle: 'none' } as any) : null),
+  },
+  promoBtn: {
+    borderWidth: 1,
+    borderColor: colors.border,
+    borderRadius: radius.pill,
+    height: 40,
+    paddingHorizontal: 16,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   payOption: {
     flexDirection: 'row',

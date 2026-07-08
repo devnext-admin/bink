@@ -1,7 +1,7 @@
 import { Ionicons } from '@expo/vector-icons';
 import { Image } from 'expo-image';
 import { useLocalSearchParams, useRouter } from 'expo-router';
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { ReviewCard } from '../../components/review-card';
@@ -17,8 +17,9 @@ import { WebHeader } from '../../components/web-header';
 import { useAppData } from '../../lib/app-data-context';
 import { useBooking } from '../../lib/booking-context';
 import { formatTime, weekdayName } from '../../lib/format';
+import { getLocalReviews, ratingWithLocal } from '../../lib/ops';
 import { colors, font, maxContentWidth, radius, shadow } from '../../lib/theme';
-import type { Service, Venue } from '../../lib/types';
+import type { Review, Service, Venue } from '../../lib/types';
 import { useIsDesktop } from '../../lib/use-layout';
 
 const HIGHLIGHT_ICONS: Record<string, string> = {
@@ -109,20 +110,28 @@ function TeamSection({ venue }: { venue: Venue }) {
 }
 
 function ReviewsSection({ venue, columns = 2 }: { venue: Venue; columns?: number }) {
+  const [localReviews, setLocalReviews] = useState<Review[]>([]);
+  useEffect(() => {
+    getLocalReviews(venue.id).then(setLocalReviews);
+  }, [venue.id]);
+
+  const { avg, count } = ratingWithLocal(venue, localReviews);
+  const reviews = [...localReviews, ...venue.reviews];
+
   return (
     <View>
       <BText variant="h2">Reviews</BText>
       <View style={{ marginTop: 16, gap: 6 }}>
-        <RatingStars value={venue.rating_avg} size={28} />
+        <RatingStars value={avg} size={28} />
         <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
-          <BText variant="h3">{venue.rating_avg.toFixed(1)}</BText>
+          <BText variant="h3">{avg.toFixed(1)}</BText>
           <BText variant="body" color={colors.accent}>
-            ({venue.rating_count.toLocaleString()})
+            ({count.toLocaleString()})
           </BText>
         </View>
       </View>
       <View style={{ flexDirection: 'row', flexWrap: 'wrap', columnGap: 32 }}>
-        {venue.reviews.map((r) => (
+        {reviews.map((r) => (
           <View key={r.id} style={{ width: columns === 2 ? '47%' : '100%' }}>
             <ReviewCard review={r} />
           </View>

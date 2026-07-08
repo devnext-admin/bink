@@ -77,7 +77,15 @@ export interface Venue {
   hours: OpeningHour[];
 }
 
-export type BookingStatus = 'pending' | 'confirmed' | 'completed' | 'cancelled';
+export type BookingStatus = 'pending' | 'confirmed' | 'completed' | 'cancelled' | 'no_show';
+
+export interface PromoCode {
+  id: number | string;
+  code: string;
+  pct_off: number;
+  is_active: boolean;
+  expires_at?: string | null;
+}
 export type PaymentStatus = 'unpaid' | 'paid' | 'refunded';
 export type PaymentMethod = 'pay_at_venue' | 'card' | 'apple_pay';
 
@@ -126,6 +134,8 @@ export interface Booking {
   customer_name?: string | null;
   payment_status?: PaymentStatus;
   payment_method?: PaymentMethod;
+  promo_code?: string | null;
+  rated?: boolean;
   venue_name: string;
   venue_image?: string;
   venue_area?: string;

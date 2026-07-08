@@ -193,6 +193,61 @@ export async function addService(venue: Venue, input: ServiceInput): Promise<Ven
   return mutateLocalVenue(venue, (v) => ({ ...v, services: [...v.services, service] }));
 }
 
+export async function updateService(
+  venue: Venue,
+  serviceId: string,
+  patch: Partial<Pick<Service, 'name' | 'group_name' | 'duration_minutes' | 'price_cents' | 'discount_pct' | 'description'>>
+): Promise<Venue> {
+  const sb = getSupabase();
+  if (sb && !serviceId.startsWith('svc-')) {
+    await sb.from('services').update(patch).eq('id', serviceId);
+  }
+  return mutateLocalVenue(venue, (v) => ({
+    ...v,
+    services: v.services.map((s) => (s.id === serviceId ? { ...s, ...patch } : s)),
+  }));
+}
+
+export async function updateVenueHours(
+  venue: Venue,
+  hours: Venue['hours']
+): Promise<Venue> {
+  const sb = getSupabase();
+  if (sb && !venue.id.startsWith('venue-')) {
+    for (const h of hours) {
+      await sb
+        .from('opening_hours')
+        .upsert(
+          { venue_id: venue.id, weekday: h.weekday, open_time: h.open_time, close_time: h.close_time, is_closed: h.is_closed },
+          { onConflict: 'venue_id,weekday' }
+        );
+    }
+  }
+  return mutateLocalVenue(venue, (v) => ({ ...v, hours }));
+}
+
+export async function addVenueImage(venue: Venue, url: string): Promise<Venue> {
+  const sb = getSupabase();
+  if (sb && !venue.id.startsWith('venue-')) {
+    await sb.from('venue_images').insert({ venue_id: venue.id, url, sort_order: venue.images.length });
+  }
+  return mutateLocalVenue(venue, (v) => ({
+    ...v,
+    images: [...v.images, { url, sort_order: v.images.length }],
+  }));
+}
+
+export async function removeVenueImage(venue: Venue, url: string): Promise<Venue> {
+  const sb = getSupabase();
+  if (sb && !venue.id.startsWith('venue-')) {
+    await sb.from('venue_images').delete().eq('venue_id', venue.id).eq('url', url);
+  }
+  return mutateLocalVenue(venue, (v) => ({
+    ...v,
+    images: v.images.filter((im) => im.url !== url),
+  }));
+}
+
 export async function deleteService(venue: Venue, serviceId: string): Promise<Venue> {
   const sb = getSupabase();
   if (sb && !serviceId.startsWith('svc-')) {

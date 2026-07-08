@@ -392,4 +392,8 @@ insert into public.opening_hours (venue_id, weekday, open_time, close_time, is_c
   ('00000000-0000-4000-8000-000000000012', 5, '10:00', '22:00', false),
   ('00000000-0000-4000-8000-000000000012', 6, '10:00', '22:00', false);
 
+insert into public.promo_codes (code, pct_off, is_active, expires_at) values
+  ('WELCOME10', 10, true, null),
+  ('BINK20', 20, true, '2026-12-31T23:59:59Z');
+
 update public.venues v set rating_avg = coalesce((select round(avg(rating)::numeric, 2) from public.reviews r where r.venue_id = v.id), v.rating_avg);

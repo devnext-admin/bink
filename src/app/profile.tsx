@@ -20,8 +20,8 @@ const BASE_MENU = [
   { icon: 'receipt-outline', label: 'Invoices', href: '/invoices' },
   { icon: 'heart-outline', label: 'Favorites', href: null },
   { icon: 'storefront-outline', label: 'Bink for Business', href: '/business' },
-  { icon: 'settings-outline', label: 'Settings', href: null },
-  { icon: 'help-circle-outline', label: 'Help and support', href: null },
+  { icon: 'settings-outline', label: 'Settings', href: '/settings' },
+  { icon: 'help-circle-outline', label: 'Help and support', href: '/support' },
 ];
 
 export default function Profile() {

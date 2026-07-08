@@ -31,12 +31,35 @@ function normalizeVenue(v: any): Venue {
   };
 }
 
+const LOCAL_CATEGORIES_KEY = 'bink.localCategories';
+
 export async function getCategories(): Promise<Category[]> {
   const sb = getSupabase();
-  if (!sb) return demoCategories;
-  const { data, error } = await sb.from('categories').select('*').order('sort_order');
-  if (error || !data?.length) return demoCategories;
-  return data;
+  if (sb) {
+    const { data, error } = await sb.from('categories').select('*').order('sort_order');
+    if (!error && data?.length) return data;
+  }
+  try {
+    const raw = await AsyncStorage.getItem(LOCAL_CATEGORIES_KEY);
+    const local: Category[] = raw ? JSON.parse(raw) : [];
+    return [...demoCategories, ...local];
+  } catch {
+    return demoCategories;
+  }
+}
+
+export async function createCategory(name: string): Promise<void> {
+  const slug = name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+  const sb = getSupabase();
+  if (sb) {
+    const { error } = await sb.from('categories').insert({ name, slug, icon: 'sparkles-outline', sort_order: 99 });
+    if (!error) return;
+  }
+  const raw = await AsyncStorage.getItem(LOCAL_CATEGORIES_KEY);
+  const local: Category[] = raw ? JSON.parse(raw) : [];
+  if (local.some((c) => c.slug === slug) || demoCategories.some((c) => c.slug === slug)) return;
+  local.push({ id: 100 + local.length, slug, name, icon: 'sparkles-outline' });
+  await AsyncStorage.setItem(LOCAL_CATEGORIES_KEY, JSON.stringify(local));
 }
 
 export async function getVenues(): Promise<Venue[]> {
@@ -106,17 +129,21 @@ export interface CreateBookingInput {
   startsAt: Date;
   items: BookingItem[];
   currency: string;
+  promoCode?: string | null;
+  promoPctOff?: number;
 }
 
 export async function createBooking(input: CreateBookingInput): Promise<Booking> {
   const totalMinutes = input.items.reduce((m, i) => m + i.duration_minutes, 0);
-  const totalCents = input.items.reduce((c, i) => c + i.price_cents, 0);
+  const rawTotal = input.items.reduce((c, i) => c + i.price_cents, 0);
+  const totalCents = input.promoPctOff ? Math.round(rawTotal * (1 - input.promoPctOff / 100)) : rawTotal;
   const endsAt = new Date(input.startsAt.getTime() + totalMinutes * 60_000);
 
   const booking: Booking = {
     id: `local-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
     venue_id: input.venue.id,
     customer_name: input.customerName ?? null,
+    promo_code: input.promoCode ?? null,
     venue_name: input.venue.name,
     venue_image: input.venue.images[0]?.url,
     venue_area: `${input.venue.area}, ${input.venue.city}`,
