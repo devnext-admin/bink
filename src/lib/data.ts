@@ -115,7 +115,13 @@ const LOCAL_BOOKINGS_KEY = 'bink.bookings';
 async function getLocalBookings(): Promise<Booking[]> {
   try {
     const raw = await AsyncStorage.getItem(LOCAL_BOOKINGS_KEY);
-    return raw ? JSON.parse(raw) : [];
+    const bookings: Booking[] = raw ? JSON.parse(raw) : [];
+    // Re-resolve the venue thumbnail from current data so image updates
+    // (e.g. the people-free imagery pass) apply to previously stored bookings.
+    return bookings.map((b) => ({
+      ...b,
+      venue_image: demoVenues.find((v) => v.id === b.venue_id)?.images[0]?.url ?? b.venue_image,
+    }));
   } catch {
     return [];
   }

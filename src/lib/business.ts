@@ -67,7 +67,7 @@ export interface RegisterSalonInput {
 
 const DEFAULT_IMAGES = [
   'https://images.unsplash.com/photo-1560066984-138dadb4c035?w=1200&q=80&auto=format&fit=crop',
-  'https://images.unsplash.com/photo-1522337660859-02fbefca4702?w=1200&q=80&auto=format&fit=crop',
+  'https://images.unsplash.com/photo-1633681926022-84c23e8cb2d6?w=1200&q=80&auto=format&fit=crop',
 ];
 
 export async function registerSalon(input: RegisterSalonInput): Promise<Venue> {

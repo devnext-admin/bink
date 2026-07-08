@@ -41,7 +41,7 @@ const venueDefs = [
     flags: { featured: true },
     desc: 'Step into the peaceful world of Glow Lash Studio. We are all about perfect lashes and brows, offering expert lash extensions, lash lifts, eyebrow shaping and manicures. Our studio is designed like a relaxing bamboo spa, creating a calm and soothing atmosphere where quality and cleanliness come first.',
     highlights: ['Instant confirmation', 'Pay by app', 'Parking available', 'Woman-owned'],
-    images: ['photo-1560066984-138dadb4c035', 'photo-1512290923902-8a9f81dc236c', 'photo-1522337660859-02fbefca4702'],
+    images: ['photo-1633681926022-84c23e8cb2d6', 'photo-1571875257727-256c39da42af', 'photo-1441974231531-c6227db76b6e'],
     services: [
       ['Classic Lash Extensions', 'Featured', 120, 55000, 'Achieve the most natural look with our classic lash extensions, individually applied to enhance length, curl and thickness.'],
       ['Brow Shaping', 'Featured', 20, 5000, 'Define and sculpt your brows with precision threading, leaving you with clean and beautifully shaped eyebrows.'],
@@ -60,7 +60,7 @@ const venueDefs = [
     flags: { featured: true },
     desc: 'A modern barbershop for the modern gentleman. Precision fades, classic cuts, hot towel shaves and beard sculpting from award-winning barbers in a relaxed, stylish space.',
     highlights: ['Instant confirmation', 'Pay by app', 'Walk-ins welcome'],
-    images: ['photo-1585747860715-2ba37e788b70', 'photo-1503951914875-452162b0f3f1', 'photo-1633681926022-84c23e8cb2d6'],
+    images: ['photo-1585747860715-2ba37e788b70', 'photo-1560066984-138dadb4c035', 'photo-1506744038136-46273834b3fb'],
     services: [
       ['Skin Fade + Beard Sculpt', 'Featured', 60, 12000, 'Our signature combo: a razor-sharp skin fade with a fully sculpted beard finish.', 10],
       ['Classic Haircut', 'Featured', 45, 9000, 'Consultation, cut and style with premium products.'],
@@ -77,7 +77,7 @@ const venueDefs = [
     flags: { featured: true },
     desc: 'Dubai’s destination for perfect hair, fast. Signature blowouts, glossy styling, braids and treatments — walk in polished, walk out camera-ready.',
     highlights: ['Instant confirmation', 'Walk-ins welcome', 'Parking available'],
-    images: ['photo-1600948836101-f9ffda59d250', 'photo-1562322140-8baeececf3df', 'photo-1522337660859-02fbefca4702'],
+    images: ['photo-1600948836101-f9ffda59d250', 'photo-1500840216050-6ffa99d75160', 'photo-1596178065887-1198b6148b2b'],
     services: [
       ['Signature Blowout', 'Featured', 45, 14000, 'Wash, blow dry and finish — smooth, bouncy or beach waves.'],
       ['Express Blowout', 'Featured', 30, 10000, 'In a rush? Dry styling in half an hour.'],
@@ -94,7 +94,7 @@ const venueDefs = [
     flags: { featured: true },
     desc: 'Luxury nail artistry in the heart of Riyadh. From flawless gel manicures to bespoke nail art, our masters treat every set as a canvas.',
     highlights: ['Instant confirmation', 'Pay by app', 'Woman-owned', 'Adults only'],
-    images: ['photo-1604654894610-df63bc536371', 'photo-1622287162716-f311baa1a2b8', 'photo-1607779097040-26e80aa78e66'],
+    images: ['photo-1583209814683-c023dd293cc6', 'photo-1556228720-195a672e8a03', 'photo-1501785888041-af3ef285b470'],
     services: [
       ['Gel Manicure', 'Featured', 60, 15000, 'Long-lasting gel polish with meticulous cuticle care and shaping.'],
       ['Luxury Spa Pedicure', 'Featured', 75, 20000, 'A pampering pedicure with sugar scrub, mask and hot towels.', 15],
@@ -112,7 +112,7 @@ const venueDefs = [
     flags: { featured: true },
     desc: 'A destination hair studio for cuts, colour and transformations. Our stylists train internationally and specialise in balayage, precision cutting and healthy-hair treatments.',
     highlights: ['Instant confirmation', 'Pay by app', 'Complimentary drinks'],
-    images: ['photo-1560066984-138dadb4c035', 'photo-1562322140-8baeececf3df', 'photo-1522337660859-02fbefca4702'],
+    images: ['photo-1560066984-138dadb4c035', 'photo-1600948836101-f9ffda59d250', 'photo-1441974231531-c6227db76b6e'],
     services: [
       ['Cut & Blow Dry', 'Featured', 60, 18000, 'Consultation, precision cut and a bouncy blow dry finish.'],
       ['Full Balayage', 'Featured', 180, 75000, 'Hand-painted colour melt with toner and treatment.', 10],
@@ -129,7 +129,7 @@ const venueDefs = [
     flags: { isNew: true },
     desc: 'A skincare salon devoted to the glow: deep-cleansing facials, gentle peels, dermaplaning and LED — tailored to your skin by certified estheticians.',
     highlights: ['Instant confirmation', 'Certified estheticians', 'Parking available'],
-    images: ['photo-1570172619644-dfd03ed5d881', 'photo-1616683693504-3ea7e9ad6fec', 'photo-1596178065887-1198b6148b2b'],
+    images: ['photo-1631729371254-42c2892f0e6e', 'photo-1540555700478-4be289fbecef', 'photo-1507652313519-d4e9174996dd'],
     services: [
       ['Signature Glow Facial', 'Featured', 60, 30000, 'Deep cleanse, exfoliation, extraction and hydration boost.'],
       ['HydraFacial Deluxe', 'Featured', 60, 45000, 'Deep cleanse, exfoliation, extraction and antioxidant infusion.'],
@@ -145,7 +145,7 @@ const venueDefs = [
     flags: { isNew: true },
     desc: 'A boutique nail studio where minimalist design meets meticulous craft. Specialists in Russian manicure, BIAB and editorial nail art.',
     highlights: ['Instant confirmation', 'Woman-owned', 'By appointment only'],
-    images: ['photo-1607779097040-26e80aa78e66', 'photo-1604654894610-df63bc536371', 'photo-1622287162716-f311baa1a2b8'],
+    images: ['photo-1556228720-195a672e8a03', 'photo-1583209814683-c023dd293cc6', 'photo-1506744038136-46273834b3fb'],
     services: [
       ['Russian Manicure + Gel', 'Featured', 90, 22000, 'Ultra-precise dry manicure with flawless gel application.'],
       ['BIAB Natural Overlay', 'Featured', 75, 19000, 'Strengthen and grow your natural nails with builder gel.'],
@@ -161,7 +161,7 @@ const venueDefs = [
     flags: { isNew: true },
     desc: 'The waxing specialists. Gentle low-temperature wax, spotless private rooms and therapists who make it quick, clean and comfortable.',
     highlights: ['Instant confirmation', 'Pay by app', 'Private rooms', 'Woman-owned'],
-    images: ['photo-1540555700478-4be289fbecef', 'photo-1600948836101-f9ffda59d250', 'photo-1519415943484-9fa1873496d4'],
+    images: ['photo-1507652313519-d4e9174996dd', 'photo-1540555700478-4be289fbecef', 'photo-1596178065887-1198b6148b2b'],
     services: [
       ['Full Body Wax', 'Featured', 90, 32000, 'Head-to-toe smoothness with gentle, low-temp wax.'],
       ['Full Legs Wax', 'Featured', 40, 14000, 'Silky legs in under an hour.'],
@@ -177,7 +177,7 @@ const venueDefs = [
     flags: { isNew: true },
     desc: 'The brow specialists. Threading, tinting, lamination and henna brows perfected in minutes — walk in, glow out.',
     highlights: ['Walk-ins welcome', 'Pay by app', 'Woman-owned'],
-    images: ['photo-1512290923902-8a9f81dc236c', 'photo-1487412947147-5cebf100ffc2', 'photo-1522337660859-02fbefca4702'],
+    images: ['photo-1571875257727-256c39da42af', 'photo-1500840216050-6ffa99d75160', 'photo-1501785888041-af3ef285b470'],
     services: [
       ['Brow Threading', 'Featured', 15, 4000, 'Clean, precise brow shaping with traditional threading.'],
       ['Brow Lamination + Tint', 'Featured', 60, 22000, 'Brushed-up, fuller brows with a perfectly matched tint.', 10],
@@ -193,7 +193,7 @@ const venueDefs = [
     flags: { trending: true },
     desc: 'Jeddah’s go-to makeup studio for events, weddings and photoshoots. Senior artists, premium products and a look that lasts all night.',
     highlights: ['Instant confirmation', 'Sea view', 'Parking available', 'Woman-owned'],
-    images: ['photo-1487412947147-5cebf100ffc2', 'photo-1596178065887-1198b6148b2b', 'photo-1522337660859-02fbefca4702'],
+    images: ['photo-1500840216050-6ffa99d75160', 'photo-1583209814683-c023dd293cc6', 'photo-1571875257727-256c39da42af'],
     services: [
       ['Full Glam Makeup', 'Featured', 75, 40000, 'Occasion-ready full face by our senior artists.'],
       ['Soft Glam Makeup', 'Featured', 60, 30000, 'Natural, radiant makeup for daytime events.'],
@@ -209,7 +209,7 @@ const venueDefs = [
     flags: { trending: true },
     desc: 'Riyadh’s premium grooming lounge: sharp cuts, royal shaves, facials for men and a complimentary espresso bar.',
     highlights: ['Instant confirmation', 'Pay by app', 'Espresso bar'],
-    images: ['photo-1503951914875-452162b0f3f1', 'photo-1585747860715-2ba37e788b70', 'photo-1633681926022-84c23e8cb2d6'],
+    images: ['photo-1585747860715-2ba37e788b70', 'photo-1560066984-138dadb4c035', 'photo-1501785888041-af3ef285b470'],
     services: [
       ['Executive Cut & Style', 'Featured', 60, 15000, 'Tailored cut, wash and style with premium finish.'],
       ['Royal Shave', 'Featured', 45, 11000, 'Hot towels, straight razor, facial massage — the full ritual.'],
@@ -225,7 +225,7 @@ const venueDefs = [
     flags: { trending: true },
     desc: 'Your everything salon: hair, makeup, nails and waxing under one roof. Trusted by Jeddah’s brides for over a decade.',
     highlights: ['Instant confirmation', 'Woman-owned', 'Bridal packages'],
-    images: ['photo-1522337660859-02fbefca4702', 'photo-1487412947147-5cebf100ffc2', 'photo-1562322140-8baeececf3df'],
+    images: ['photo-1571875257727-256c39da42af', 'photo-1540555700478-4be289fbecef', 'photo-1441974231531-c6227db76b6e'],
     services: [
       ['Blow Dry & Style', 'Featured', 45, 12000, 'Wash and professional blow dry, straight or curled.'],
       ['Full Face Makeup', 'Featured', 60, 35000, 'Occasion-ready glam by our senior makeup artists.'],
