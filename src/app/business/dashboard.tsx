@@ -111,14 +111,14 @@ export default function BusinessDashboard() {
       <View style={{ gap: 24 }}>
         {venue!.status === 'pending' && (
           <View style={styles.pendingBanner}>
-            <Ionicons name="time-outline" size={18} color="#B77400" />
-            <BText variant="small" color="#B77400" style={{ flex: 1 }}>
+            <Ionicons name="time-outline" size={18} color={colors.warning} />
+            <BText variant="small" color={colors.warning} style={{ flex: 1 }}>
               Your listing is pending review by the Bink team. It is not visible to customers yet.
             </BText>
           </View>
         )}
         {venue!.status === 'suspended' && (
-          <View style={[styles.pendingBanner, { backgroundColor: '#FDEBEC' }]}>
+          <View style={[styles.pendingBanner, { backgroundColor: colors.dangerBg }]}>
             <Ionicons name="alert-circle-outline" size={18} color={colors.danger} />
             <BText variant="small" color={colors.danger} style={{ flex: 1 }}>
               Your listing is suspended. Contact Bink support for details.
@@ -315,9 +315,9 @@ export default function BusinessDashboard() {
 // ---------------------------------------------------------------------------
 function StatusTag({ status }: { status: string }) {
   const map: Record<string, { label: string; color: string; bg: string }> = {
-    approved: { label: 'Live', color: colors.green, bg: '#E9F7EE' },
-    pending: { label: 'Pending review', color: '#B77400', bg: '#FFF7E8' },
-    suspended: { label: 'Suspended', color: colors.danger, bg: '#FDEBEC' },
+    approved: { label: 'Live', color: colors.green, bg: colors.greenBg },
+    pending: { label: 'Pending review', color: colors.warning, bg: colors.warningBg },
+    suspended: { label: 'Suspended', color: colors.danger, bg: colors.dangerBg },
   };
   const m = map[status] ?? map.approved;
   return (
@@ -530,10 +530,10 @@ function AnalyticsSection({
 
 function TxStatusPill({ status }: { status: string }) {
   const map: Record<string, { label: string; color: string; bg: string }> = {
-    succeeded: { label: 'Succeeded', color: colors.green, bg: '#E9F7EE' },
-    pending: { label: 'Pending', color: '#B77400', bg: '#FFF7E8' },
-    failed: { label: 'Failed', color: colors.danger, bg: '#FDEBEC' },
-    refunded: { label: 'Refunded', color: colors.danger, bg: '#FDEBEC' },
+    succeeded: { label: 'Succeeded', color: colors.green, bg: colors.greenBg },
+    pending: { label: 'Pending', color: colors.warning, bg: colors.warningBg },
+    failed: { label: 'Failed', color: colors.danger, bg: colors.dangerBg },
+    refunded: { label: 'Refunded', color: colors.danger, bg: colors.dangerBg },
   };
   const m = map[status] ?? map.pending;
   return (
@@ -902,7 +902,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   bizTag: {
-    backgroundColor: '#F3EFFF',
+    backgroundColor: colors.accentSoft,
     borderRadius: radius.pill,
     paddingHorizontal: 8,
     paddingVertical: 3,
@@ -974,7 +974,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 10,
-    backgroundColor: '#FFF7E8',
+    backgroundColor: colors.warningBg,
     borderRadius: radius.md,
     padding: 14,
   },

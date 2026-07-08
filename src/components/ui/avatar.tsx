@@ -4,8 +4,8 @@ import { View } from 'react-native';
 import { colors, font } from '../../lib/theme';
 import { BText } from './text';
 
-const PALETTE = ['#F3EFFF', '#FFEFF6', '#EFF6FF', '#F0FBF4', '#FFF7E8'];
-const TEXT_PALETTE = ['#6950F3', '#D6247A', '#1D6FD6', '#12873F', '#B77400'];
+const PALETTE = [colors.accentSoft, '#FFEFF6', '#EFF6FF', '#F0FBF4', colors.warningBg];
+const TEXT_PALETTE = ['#6950F3', '#D6247A', '#1D6FD6', '#12873F', colors.warning];
 
 interface AvatarProps {
   name: string;

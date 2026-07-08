@@ -230,7 +230,7 @@ export default function BookingScreen() {
               <Pressable
                 key={d.date}
                 onPress={() => booking.setDateTime(d.date, booking.time ?? '')}
-                style={[styles.dayCell, selected && { backgroundColor: colors.ink, borderColor: colors.ink }]}
+                style={[styles.dayCell, selected && { backgroundColor: colors.accent, borderColor: colors.accent }]}
               >
                 <BText variant="tiny" color={selected ? 'rgba(255,255,255,0.7)' : colors.gray}>
                   {d.day}
@@ -262,7 +262,7 @@ export default function BookingScreen() {
                 onPress={() => booking.setDateTime(booking.date!, t)}
                 style={[
                   styles.timeSlot,
-                  selected && { backgroundColor: colors.ink, borderColor: colors.ink },
+                  selected && { backgroundColor: colors.accent, borderColor: colors.accent },
                   disabled && { opacity: 0.4 },
                   taken && { backgroundColor: colors.bgSubtle, borderColor: colors.bgSubtle },
                 ]}
@@ -406,7 +406,7 @@ export default function BookingScreen() {
           {venue.name} · {booking.date} at {booking.time}. We can’t wait to see you!
         </BText>
         {paid ? (
-          <View style={[styles.paidPill, { backgroundColor: '#E9F7EE' }]}>
+          <View style={[styles.paidPill, { backgroundColor: colors.greenBg }]}>
             <Ionicons name="checkmark-circle" size={16} color={colors.green} />
             <BText variant="smallMedium" color={colors.green}>
               Paid {formatPrice(booking.totalCents, booking.currency)} · tax invoice issued
@@ -623,7 +623,7 @@ function ProCard({
   return (
     <Pressable
       onPress={onPress}
-      style={[styles.proCard, selected && { borderColor: colors.ink, borderWidth: 2 }]}
+      style={[styles.proCard, selected && { borderColor: colors.accent, borderWidth: 2 }]}
     >
       {icon ? (
         <View style={styles.anyPro}>
@@ -666,14 +666,14 @@ function PayOption({
   return (
     <Pressable
       onPress={onPress}
-      style={[styles.payOption, selected && { borderColor: colors.ink, borderWidth: 2 }]}
+      style={[styles.payOption, selected && { borderColor: colors.accent, borderWidth: 2 }]}
     >
       <Ionicons name={icon} size={20} color={colors.ink} />
       <View style={{ flex: 1 }}>
         <BText variant="smallMedium">{title}</BText>
         <BText variant="tiny">{sub}</BText>
       </View>
-      <View style={[styles.radio, selected && { borderColor: colors.ink }]}>
+      <View style={[styles.radio, selected && { borderColor: colors.accent }]}>
         {selected ? <View style={styles.radioDot} /> : null}
       </View>
     </Pressable>
@@ -829,7 +829,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  radioDot: { width: 10, height: 10, borderRadius: 5, backgroundColor: colors.ink },
+  radioDot: { width: 10, height: 10, borderRadius: 5, backgroundColor: colors.accent },
   paidPill: {
     flexDirection: 'row',
     alignItems: 'center',

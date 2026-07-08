@@ -23,8 +23,8 @@ export function ServiceRow({ service, mode = 'book', selected, showDescription, 
       onPress={onAction}
       style={({ hovered }: any) => [
         styles.card,
-        selected && { borderColor: colors.ink, borderWidth: 2 },
-        hovered && { borderColor: selected ? colors.ink : colors.gray },
+        selected && { borderColor: colors.accent, borderWidth: 2 },
+        hovered && { borderColor: selected ? colors.accent : colors.gray },
       ]}
     >
       <View style={{ flex: 1, gap: 4 }}>
@@ -57,7 +57,7 @@ export function ServiceRow({ service, mode = 'book', selected, showDescription, 
           <BText style={{ fontFamily: font.semibold, fontSize: 14, color: colors.ink }}>Book</BText>
         </View>
       ) : (
-        <View style={[styles.addBtn, selected && { backgroundColor: colors.ink, borderColor: colors.ink }]}>
+        <View style={[styles.addBtn, selected && { backgroundColor: colors.accent, borderColor: colors.accent }]}>
           <Ionicons name={selected ? 'checkmark' : 'add'} size={18} color={selected ? colors.white : colors.ink} />
         </View>
       )}

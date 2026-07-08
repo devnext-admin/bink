@@ -1,39 +1,50 @@
-// Bink design tokens — extracted from Fresha's live design system.
-// Text #0D0D0D on white, violet accent #6950F3, star yellow #FFC00A,
-// pill buttons (999), cards 8/16, pastel violet hero gradient.
+// Bink design tokens — from the official Bink brand guidelines
+// (carried over from the original client app's theme system).
+// Bink Red #FF385C on white, Bink Black #222222, Poppins type,
+// pill buttons, 20px cards, 12px inputs, star #FBBF24.
 
 export const colors = {
-  ink: '#0D0D0D',
-  gray: '#767676',
-  grayLight: '#A8A8A8',
-  border: '#D3D3D3',
-  divider: '#E9E9E9',
-  bgSubtle: '#F2F2F2',
-  bgPage: '#F7F7F7',
+  ink: '#222222', // Bink Black — primary text
+  gray: '#545A62', // neutral 600 — subtitles
+  grayLight: '#8A8D93', // neutral 500 — hints/placeholders
+  body: '#374151', // neutral 700 — body text
+  border: '#D1D4D9', // neutral 300
+  divider: '#E5E7EB', // neutral 200
+  bgSubtle: '#F1F5F9', // neutral 100
+  bgPage: '#F9F9F9', // BG light
   white: '#FFFFFF',
-  accent: '#6950F3',
-  star: '#FFC00A',
-  green: '#12873F',
-  danger: '#D2222D',
-  overlay: 'rgba(19, 19, 19, 0.33)',
-  heroGradient: ['#DCCEFF', '#F6DFF3', '#E4DDFB'] as const,
-  pink: '#FF3B8D',
+  accent: '#FF385C', // Bink Red — CTA / interactive
+  accentDark: '#E6323A', // red 600 — hover/pressed
+  accentSoft: '#FFF5F7', // red 50 — ghost backgrounds
+  accentLight: '#FFEBEF', // red 100
+  star: '#FBBF24',
+  green: '#10A660',
+  greenBg: '#B6E8D1',
+  warning: '#E18308',
+  warningBg: '#FEF4E6',
+  danger: '#E83550',
+  dangerBg: '#FEECEB',
+  info: '#194F8A',
+  infoBg: '#EAF4FF',
+  overlay: 'rgba(0, 0, 0, 0.4)',
+  heroGradient: ['#FFE7EC', '#FFF5F7', '#FFDDE4'] as const,
+  pink: '#FF385C',
 } as const;
 
 export const radius = {
   sm: 8,
-  md: 12,
-  lg: 16,
+  md: 12, // inputs
+  lg: 20, // cards
   xl: 24,
-  pill: 999,
+  pill: 999, // buttons & badges
 } as const;
 
 export const font = {
-  regular: 'Manrope_400Regular',
-  medium: 'Manrope_500Medium',
-  semibold: 'Manrope_600SemiBold',
-  bold: 'Manrope_700Bold',
-  extrabold: 'Manrope_800ExtraBold',
+  regular: 'Poppins_400Regular',
+  medium: 'Poppins_500Medium',
+  semibold: 'Poppins_600SemiBold',
+  bold: 'Poppins_700Bold',
+  extrabold: 'Poppins_800ExtraBold',
 } as const;
 
 export const shadow = {

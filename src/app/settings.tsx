@@ -143,7 +143,7 @@ function SettingRow({
       <Switch
         value={value}
         onValueChange={onToggle}
-        trackColor={{ false: colors.border, true: colors.ink }}
+        trackColor={{ false: colors.border, true: colors.accent }}
         thumbColor={colors.white}
       />
     </View>

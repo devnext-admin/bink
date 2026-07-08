@@ -33,13 +33,13 @@ export function BottomTabs() {
             <Ionicons
               name={(active ? tab.activeIcon : tab.icon) as any}
               size={24}
-              color={active ? colors.ink : colors.gray}
+              color={active ? colors.accent : colors.gray}
             />
             <BText
               style={{
                 fontFamily: active ? font.bold : font.medium,
                 fontSize: 11,
-                color: active ? colors.ink : colors.gray,
+                color: active ? colors.accent : colors.gray,
               }}
             >
               {tab.label}

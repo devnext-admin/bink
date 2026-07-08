@@ -5,9 +5,9 @@ import { BText } from './ui/text';
 
 export function PaymentPill({ status }: { status: string }) {
   const map: Record<string, { label: string; color: string; bg: string }> = {
-    paid: { label: 'Paid', color: colors.green, bg: '#E9F7EE' },
+    paid: { label: 'Paid', color: colors.green, bg: colors.greenBg },
     unpaid: { label: 'Pay at venue', color: colors.gray, bg: colors.bgSubtle },
-    refunded: { label: 'Refunded', color: colors.danger, bg: '#FDEBEC' },
+    refunded: { label: 'Refunded', color: colors.danger, bg: colors.dangerBg },
   };
   const m = map[status] ?? map.unpaid;
   return (

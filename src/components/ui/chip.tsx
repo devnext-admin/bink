@@ -15,8 +15,8 @@ export function Chip({ label, selected, onPress }: ChipProps) {
       onPress={onPress}
       style={({ hovered }: any) => [
         styles.chip,
-        selected && { backgroundColor: colors.ink, borderColor: colors.ink },
-        !selected && hovered && { backgroundColor: colors.bgSubtle },
+        selected && { backgroundColor: colors.accent, borderColor: colors.accent },
+        !selected && hovered && { backgroundColor: colors.accentSoft },
       ]}
     >
       <BText

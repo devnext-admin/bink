@@ -42,30 +42,37 @@ export function Button({
       style={({ pressed, hovered }: any) => [
         styles.base,
         { height: s.height, paddingHorizontal: s.paddingHorizontal },
-        variant === 'primary' && { backgroundColor: colors.ink },
-        variant === 'accent' && { backgroundColor: colors.accent },
+        // Brand spec: primary CTA = Bink Red pill; "accent" kept as the dark pill
+        variant === 'primary' && { backgroundColor: colors.accent },
+        variant === 'accent' && { backgroundColor: colors.ink },
         variant === 'secondary' && styles.secondary,
-        variant === 'ghost' && { backgroundColor: 'transparent' },
+        variant === 'ghost' && { backgroundColor: colors.accentSoft },
         fullWidth && { alignSelf: 'stretch', width: '100%' },
-        (hovered || pressed) && variant === 'primary' && { backgroundColor: '#2A2A2A' },
+        (hovered || pressed) && variant === 'primary' && { backgroundColor: colors.accentDark },
         (hovered || pressed) && variant === 'secondary' && { backgroundColor: colors.bgSubtle },
         (hovered || pressed) && variant === 'accent' && { opacity: 0.9 },
-        isDisabled && { backgroundColor: colors.bgSubtle },
+        (hovered || pressed) && variant === 'ghost' && { backgroundColor: colors.accentLight },
+        isDisabled && { backgroundColor: colors.border },
         style,
       ]}
     >
       {loading ? (
-        <ActivityIndicator color={variant === 'secondary' || variant === 'ghost' ? colors.ink : '#fff'} />
+        <ActivityIndicator
+          color={variant === 'secondary' ? colors.ink : variant === 'ghost' ? colors.accent : '#fff'}
+        />
       ) : (
         <BText
           style={{
             fontFamily: font.bold,
             fontSize: s.fontSize,
+            letterSpacing: 0.2,
             color: isDisabled
-              ? colors.grayLight
-              : variant === 'secondary' || variant === 'ghost'
+              ? colors.white
+              : variant === 'secondary'
                 ? colors.ink
-                : colors.white,
+                : variant === 'ghost'
+                  ? colors.accent
+                  : colors.white,
           }}
         >
           {title}

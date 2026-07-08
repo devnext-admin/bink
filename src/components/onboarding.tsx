@@ -4,7 +4,8 @@ import { LinearGradient } from 'expo-linear-gradient';
 import React, { useEffect, useState } from 'react';
 import { Modal, Pressable, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { colors, font, radius } from '../lib/theme';
+import { colors, radius } from '../lib/theme';
+import { Logo } from './logo';
 import { Button } from './ui/button';
 import { BText } from './ui/text';
 
@@ -58,9 +59,7 @@ export function Onboarding() {
         style={[styles.wrap, { paddingTop: insets.top + 24, paddingBottom: Math.max(insets.bottom, 24) }]}
       >
         <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-          <BText style={{ fontFamily: font.extrabold, fontSize: 26, color: colors.ink, letterSpacing: -0.5 }}>
-            bink
-          </BText>
+          <Logo size={26} />
           <Pressable onPress={finish} hitSlop={8}>
             <BText variant="smallMedium">Skip</BText>
           </Pressable>

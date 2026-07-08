@@ -16,12 +16,13 @@ export default function RootLayout() {
   const [fontsLoaded] = useFonts({
     // Registering Ionicons here (from our own assets) keeps the icon font off
     // the node_modules asset path, which the Vercel CLI strips from uploads.
+    // Poppins is the Bink brand typeface (same files as the original app).
     Ionicons: require('../../assets/fonts/Ionicons.ttf'),
-    Manrope_400Regular: require('../../assets/fonts/Manrope_400Regular.ttf'),
-    Manrope_500Medium: require('../../assets/fonts/Manrope_500Medium.ttf'),
-    Manrope_600SemiBold: require('../../assets/fonts/Manrope_600SemiBold.ttf'),
-    Manrope_700Bold: require('../../assets/fonts/Manrope_700Bold.ttf'),
-    Manrope_800ExtraBold: require('../../assets/fonts/Manrope_800ExtraBold.ttf'),
+    Poppins_400Regular: require('../../assets/fonts/Poppins-Regular.ttf'),
+    Poppins_500Medium: require('../../assets/fonts/Poppins-Medium.ttf'),
+    Poppins_600SemiBold: require('../../assets/fonts/Poppins-SemiBold.ttf'),
+    Poppins_700Bold: require('../../assets/fonts/Poppins-Bold.ttf'),
+    Poppins_800ExtraBold: require('../../assets/fonts/Poppins-ExtraBold.ttf'),
   });
 
   useEffect(() => {

@@ -301,10 +301,10 @@ export default function Appointments() {
 
 function StatusPill({ status }: { status: Booking['status'] }) {
   const statusMap: Record<string, { label: string; color: string; bg: string }> = {
-    confirmed: { label: 'Confirmed', color: colors.green, bg: '#E9F7EE' },
-    pending: { label: 'Pending', color: '#B77400', bg: '#FFF7E8' },
+    confirmed: { label: 'Confirmed', color: colors.green, bg: colors.greenBg },
+    pending: { label: 'Pending', color: colors.warning, bg: colors.warningBg },
     completed: { label: 'Completed', color: colors.gray, bg: colors.bgSubtle },
-    cancelled: { label: 'Cancelled', color: colors.danger, bg: '#FDEBEC' },
+    cancelled: { label: 'Cancelled', color: colors.danger, bg: colors.dangerBg },
     no_show: { label: 'No-show', color: colors.gray, bg: colors.bgSubtle },
   };
   const map = statusMap[status] ?? statusMap.confirmed;

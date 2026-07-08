@@ -43,7 +43,7 @@ export function HeroSearchDesktop() {
         <Ionicons name="calendar-outline" size={18} color={colors.ink} />
         <BText variant="body">Any time</BText>
       </View>
-      <Pressable onPress={submit} style={({ hovered }: any) => [styles.searchBtn, hovered && { backgroundColor: '#2A2A2A' }]}>
+      <Pressable onPress={submit} style={({ hovered }: any) => [styles.searchBtn, hovered && { backgroundColor: colors.accentDark }]}>
         <BText style={{ fontFamily: font.bold, fontSize: 15, color: colors.white }}>Search</BText>
       </Pressable>
     </View>
@@ -136,7 +136,7 @@ const styles = StyleSheet.create({
   dividerV: { width: 1, height: 28, backgroundColor: colors.divider, marginRight: 16 },
   dividerH: { height: 1, backgroundColor: colors.divider },
   searchBtn: {
-    backgroundColor: colors.ink,
+    backgroundColor: colors.accent,
     borderRadius: radius.pill,
     height: 48,
     paddingHorizontal: 26,
@@ -151,7 +151,7 @@ const styles = StyleSheet.create({
   },
   mobileField: { flexDirection: 'row', alignItems: 'center', gap: 10, paddingVertical: 14, paddingHorizontal: 8 },
   mobileBtn: {
-    backgroundColor: colors.ink,
+    backgroundColor: colors.accent,
     borderRadius: radius.pill,
     height: 52,
     alignItems: 'center',
@@ -175,7 +175,7 @@ const styles = StyleSheet.create({
     width: 32,
     height: 32,
     borderRadius: 16,
-    backgroundColor: colors.ink,
+    backgroundColor: colors.accent,
     alignItems: 'center',
     justifyContent: 'center',
   },

@@ -394,12 +394,12 @@ function StatCard({ label, value, icon, accent }: { label: string; value: string
 
 function StatusTag({ status }: { status: string }) {
   const map: Record<string, { label: string; color: string; bg: string }> = {
-    approved: { label: 'Live', color: colors.green, bg: '#E9F7EE' },
-    pending: { label: 'Pending', color: '#B77400', bg: '#FFF7E8' },
-    suspended: { label: 'Suspended', color: colors.danger, bg: '#FDEBEC' },
-    confirmed: { label: 'Confirmed', color: colors.green, bg: '#E9F7EE' },
+    approved: { label: 'Live', color: colors.green, bg: colors.greenBg },
+    pending: { label: 'Pending', color: colors.warning, bg: colors.warningBg },
+    suspended: { label: 'Suspended', color: colors.danger, bg: colors.dangerBg },
+    confirmed: { label: 'Confirmed', color: colors.green, bg: colors.greenBg },
     completed: { label: 'Completed', color: colors.gray, bg: colors.bgSubtle },
-    cancelled: { label: 'Cancelled', color: colors.danger, bg: '#FDEBEC' },
+    cancelled: { label: 'Cancelled', color: colors.danger, bg: colors.dangerBg },
   };
   const m = map[status] ?? map.approved;
   return (
@@ -412,7 +412,7 @@ function StatusTag({ status }: { status: string }) {
 function RoleTag({ role }: { role: string }) {
   const map: Record<string, { color: string; bg: string }> = {
     admin: { color: colors.white, bg: colors.ink },
-    partner: { color: colors.accent, bg: '#F3EFFF' },
+    partner: { color: colors.accent, bg: colors.accentSoft },
     customer: { color: colors.gray, bg: colors.bgSubtle },
   };
   const m = map[role] ?? map.customer;
