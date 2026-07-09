@@ -4,7 +4,7 @@ import React from 'react';
 import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import { useAppData } from '../lib/app-data-context';
 import { useAuth } from '../lib/auth-context';
-import { colors, font, maxContentWidth, radius } from '../lib/theme';
+import { colors, font, radius } from '../lib/theme';
 import { BText } from './ui/text';
 import { WebHeader } from './web-header';
 
@@ -99,13 +99,11 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
     width: '100%',
-    maxWidth: maxContentWidth + 48,
-    alignSelf: 'center',
-    paddingHorizontal: 24,
   },
   sidebar: {
-    width: 250,
+    width: 280,
     paddingTop: 40,
+    paddingLeft: 32,
     paddingRight: 20,
     borderRightWidth: 1,
     borderRightColor: colors.divider,
@@ -120,5 +118,12 @@ const styles = StyleSheet.create({
     marginBottom: 2,
   },
   sideDivider: { height: 1, backgroundColor: colors.divider, marginVertical: 12, marginHorizontal: 14 },
-  content: { paddingTop: 40, paddingLeft: 36, paddingBottom: 60, maxWidth: 860 },
+  content: {
+    paddingTop: 40,
+    paddingLeft: 48,
+    paddingRight: 48,
+    paddingBottom: 60,
+    width: '100%',
+    maxWidth: 1400,
+  },
 });

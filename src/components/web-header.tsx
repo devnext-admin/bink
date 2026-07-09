@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
 import { useAppData } from '../lib/app-data-context';
 import { useAuth } from '../lib/auth-context';
-import { colors, font, maxContentWidth, radius, shadow } from '../lib/theme';
+import { colors, font, radius, shadow } from '../lib/theme';
 import { Logo } from './logo';
 import { NotificationsBell } from './notifications-bell';
 import { CompactSearch } from './search-bar';
@@ -58,8 +58,10 @@ export function WebHeader({ transparent, showSearch }: WebHeaderProps) {
       <View style={styles.inner}>
         <Logo />
         {showSearch ? (
-          <View style={{ flex: 1, maxWidth: 520, marginHorizontal: 24 }}>
-            <CompactSearch />
+          <View style={{ flex: 1, alignItems: 'center', marginHorizontal: 24 }}>
+            <View style={{ width: '100%', maxWidth: 560 }}>
+              <CompactSearch />
+            </View>
           </View>
         ) : (
           <View style={{ flex: 1 }} />
@@ -145,11 +147,9 @@ const styles = StyleSheet.create({
   solid: { backgroundColor: colors.white, borderBottomWidth: 1, borderBottomColor: colors.divider },
   inner: {
     width: '100%',
-    maxWidth: maxContentWidth + 48,
-    alignSelf: 'center',
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: 24,
+    paddingHorizontal: 32,
     height: 68,
   },
   pill: {
