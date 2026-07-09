@@ -27,9 +27,13 @@ const AuthContext = createContext<AuthContextValue | null>(null);
 const GUEST_KEY = 'bink.guestUser';
 const USERS_KEY = 'bink.users'; // demo-mode registry so the admin panel can list users
 
-// In demo mode, sign in with an email starting with "admin@" to get admin access.
+// In demo mode, sign in with an email starting with "admin@" to get admin
+// access; "owner@" gets the partner role (used by the one-click salon demo).
 function demoRole(email: string): UserRole {
-  return email.toLowerCase().startsWith('admin@') ? 'admin' : 'customer';
+  const e = email.toLowerCase();
+  if (e.startsWith('admin@')) return 'admin';
+  if (e.startsWith('owner@')) return 'partner';
+  return 'customer';
 }
 
 async function registerDemoUser(user: AuthUser) {

@@ -6,13 +6,45 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Logo } from '../components/logo';
 import { Button } from '../components/ui/button';
 import { BText } from '../components/ui/text';
+import { useAppData } from '../lib/app-data-context';
 import { isSupabaseConfigured, useAuth } from '../lib/auth-context';
+import {
+  DEMO_ADMIN_EMAIL,
+  DEMO_CUSTOMER_EMAIL,
+  DEMO_OWNER_EMAIL,
+  seedCustomerDemo,
+  seedOwnerDemo,
+} from '../lib/demo-seed';
 import { colors, font, radius } from '../lib/theme';
 
 export default function Auth() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
   const { signIn, signUp, continueAsGuest } = useAuth();
+  const { refresh } = useAppData();
+  const [demoBusy, setDemoBusy] = useState<string | null>(null);
+
+  const enterDemo = async (persona: 'customer' | 'owner' | 'admin') => {
+    setDemoBusy(persona);
+    if (persona === 'customer') {
+      await seedCustomerDemo();
+      await signIn(DEMO_CUSTOMER_EMAIL, 'demo');
+      await refresh();
+      router.replace('/appointments');
+    } else if (persona === 'owner') {
+      await seedOwnerDemo();
+      await signIn(DEMO_OWNER_EMAIL, 'demo');
+      await refresh();
+      router.replace('/business/dashboard');
+    } else {
+      await seedCustomerDemo();
+      await seedOwnerDemo();
+      await signIn(DEMO_ADMIN_EMAIL, 'demo');
+      await refresh();
+      router.replace('/admin');
+    }
+    setDemoBusy(null);
+  };
   const params = useLocalSearchParams<{ mode?: string }>();
   const [mode, setMode] = useState<'signin' | 'signup'>(params.mode === 'signup' ? 'signup' : 'signin');
   const [name, setName] = useState('');
@@ -119,6 +151,37 @@ export default function Auth() {
           }}
         />
 
+        {!isSupabaseConfigured && (
+          <View style={{ gap: 10 }}>
+            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12, marginTop: 4 }}>
+              <View style={styles.hr} />
+              <BText variant="tiny">or explore a ready-made demo</BText>
+              <View style={styles.hr} />
+            </View>
+            <DemoButton
+              icon="person-outline"
+              title="Demo customer"
+              sub="Bookings, escrow, chat & reviews pre-loaded"
+              loading={demoBusy === 'customer'}
+              onPress={() => enterDemo('customer')}
+            />
+            <DemoButton
+              icon="storefront-outline"
+              title="Demo salon owner"
+              sub="A live salon with sales, messages & analytics"
+              loading={demoBusy === 'owner'}
+              onPress={() => enterDemo('owner')}
+            />
+            <DemoButton
+              icon="shield-checkmark-outline"
+              title="Demo admin"
+              sub="Approvals, users, payments & platform stats"
+              loading={demoBusy === 'admin'}
+              onPress={() => enterDemo('admin')}
+            />
+          </View>
+        )}
+
         <Pressable onPress={() => setMode(mode === 'signin' ? 'signup' : 'signin')}>
           <BText variant="small" style={{ textAlign: 'center' }}>
             {mode === 'signin' ? "Don't have an account? " : 'Already have an account? '}
@@ -129,6 +192,37 @@ export default function Auth() {
         </Pressable>
       </View>
     </ScrollView>
+  );
+}
+
+function DemoButton({
+  icon,
+  title,
+  sub,
+  loading,
+  onPress,
+}: {
+  icon: any;
+  title: string;
+  sub: string;
+  loading: boolean;
+  onPress: () => void;
+}) {
+  return (
+    <Pressable
+      onPress={onPress}
+      disabled={loading}
+      style={({ hovered }: any) => [styles.demoBtn, hovered && { backgroundColor: colors.accentSoft }]}
+    >
+      <View style={styles.demoIcon}>
+        <Ionicons name={icon} size={18} color={colors.accent} />
+      </View>
+      <View style={{ flex: 1 }}>
+        <BText variant="smallMedium">{title}</BText>
+        <BText variant="tiny">{sub}</BText>
+      </View>
+      <Ionicons name={loading ? 'hourglass-outline' : 'arrow-forward'} size={16} color={colors.gray} />
+    </Pressable>
   );
 }
 
@@ -155,6 +249,24 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: colors.ink,
     ...(typeof window !== 'undefined' ? ({ outlineStyle: 'none' } as any) : null),
+  },
+  hr: { flex: 1, height: 1, backgroundColor: colors.divider },
+  demoBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+    borderWidth: 1,
+    borderColor: colors.divider,
+    borderRadius: radius.md,
+    padding: 12,
+  },
+  demoIcon: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    backgroundColor: colors.accentSoft,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   demoNote: {
     flexDirection: 'row',
