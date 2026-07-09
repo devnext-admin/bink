@@ -63,6 +63,11 @@ export interface RegisterSalonInput {
   country: string;
   imageUrl?: string;
   currency?: string;
+  // Full setup captured by the registration wizard
+  images?: string[];
+  services?: { name: string; group_name?: string; duration_minutes: number; price_cents: number }[];
+  staff?: { name: string; role: string }[];
+  hours?: Venue['hours'];
 }
 
 const DEFAULT_IMAGES = [
@@ -71,8 +76,14 @@ const DEFAULT_IMAGES = [
 ];
 
 export async function registerSalon(input: RegisterSalonInput): Promise<Venue> {
+  const venueId = uid('venue');
+  const currency = input.currency ?? 'SAR';
+  const imageUrls = input.images?.length
+    ? input.images
+    : [input.imageUrl || DEFAULT_IMAGES[0]];
+
   const venue: Venue = {
-    id: uid('venue'),
+    id: venueId,
     slug: `${slugify(input.name)}-${Math.random().toString(36).slice(2, 6)}`,
     name: input.name,
     description: input.description,
@@ -89,16 +100,36 @@ export async function registerSalon(input: RegisterSalonInput): Promise<Venue> {
     is_new: true,
     is_trending: false,
     highlights: ['Instant confirmation', 'Pay by app'],
-    images: [{ url: input.imageUrl || DEFAULT_IMAGES[0], sort_order: 0 }],
-    services: [],
-    staff: [],
-    reviews: [],
-    hours: Array.from({ length: 7 }, (_, weekday) => ({
-      weekday,
-      open_time: weekday === 0 ? null : '10:00',
-      close_time: weekday === 0 ? null : '22:00',
-      is_closed: weekday === 0,
+    images: imageUrls.map((url, i) => ({ url, sort_order: i })),
+    services: (input.services ?? []).map((s, i) => ({
+      id: uid('svc'),
+      venue_id: venueId,
+      name: s.name,
+      description: '',
+      group_name: s.group_name || 'Featured',
+      duration_minutes: s.duration_minutes,
+      price_cents: s.price_cents,
+      currency,
+      discount_pct: 0,
+      is_featured: true,
+      sort_order: i,
     })),
+    staff: (input.staff ?? []).map((m) => ({
+      id: uid('staff'),
+      venue_id: venueId,
+      name: m.name,
+      role: m.role,
+      rating: 5.0,
+    })),
+    reviews: [],
+    hours:
+      input.hours ??
+      Array.from({ length: 7 }, (_, weekday) => ({
+        weekday,
+        open_time: weekday === 0 ? null : '10:00',
+        close_time: weekday === 0 ? null : '22:00',
+        is_closed: weekday === 0,
+      })),
   };
 
   const sb = getSupabase();
@@ -123,10 +154,20 @@ export async function registerSalon(input: RegisterSalonInput): Promise<Venue> {
       .single();
     if (!error && data) {
       venue.id = data.id;
-      await sb.from('venue_images').insert({ venue_id: data.id, url: venue.images[0].url, sort_order: 0 });
-      await sb.from('opening_hours').insert(
-        venue.hours.map((h) => ({ venue_id: data.id, ...h }))
+      await sb.from('venue_images').insert(
+        venue.images.map((im) => ({ venue_id: data.id, url: im.url, sort_order: im.sort_order }))
       );
+      await sb.from('opening_hours').insert(venue.hours.map((h) => ({ venue_id: data.id, ...h })));
+      if (venue.services.length) {
+        await sb.from('services').insert(
+          venue.services.map(({ id: _id, venue_id: _v, ...s }) => ({ ...s, venue_id: data.id }))
+        );
+      }
+      if (venue.staff.length) {
+        await sb.from('staff').insert(
+          venue.staff.map((m) => ({ venue_id: data.id, name: m.name, role: m.role }))
+        );
+      }
       return venue;
     }
   }
