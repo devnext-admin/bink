@@ -4,6 +4,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import demo from '../data/demo.json';
 import { getBookings } from './data';
+import { pushNotification } from './notifications';
 import { getSupabase } from './supabase';
 import type { Booking, BookingStatus, PromoCode, Review, Venue } from './types';
 
@@ -99,30 +100,50 @@ export function isSlotFree(
 export async function rescheduleBooking(id: string, newStart: Date, durationMin: number): Promise<void> {
   const ends = new Date(newStart.getTime() + durationMin * 60_000);
   const sb = getSupabase();
+  const bookings = await readList<Booking>(BOOKINGS_KEY);
+  const booking = bookings.find((b) => b.id === id);
   if (sb && !id.startsWith('local-')) {
     await sb
       .from('bookings')
       .update({ starts_at: newStart.toISOString(), ends_at: ends.toISOString() })
       .eq('id', id);
-    return;
+  } else {
+    await writeList(
+      BOOKINGS_KEY,
+      bookings.map((b) =>
+        b.id === id ? { ...b, starts_at: newStart.toISOString(), ends_at: ends.toISOString() } : b
+      )
+    );
   }
-  const bookings = await readList<Booking>(BOOKINGS_KEY);
-  await writeList(
-    BOOKINGS_KEY,
-    bookings.map((b) =>
-      b.id === id ? { ...b, starts_at: newStart.toISOString(), ends_at: ends.toISOString() } : b
-    )
-  );
+  if (booking) {
+    const when = newStart.toLocaleString('en-US', { weekday: 'short', day: 'numeric', month: 'short', hour: 'numeric', minute: '2-digit' });
+    await pushNotification({
+      audience: 'venue',
+      venueId: booking.venue_id,
+      title: 'Booking rescheduled',
+      body: `${booking.customer_name ?? 'A customer'} moved their appointment to ${when}.`,
+    });
+  }
 }
 
 export async function setBookingStatus(id: string, status: BookingStatus): Promise<void> {
   const sb = getSupabase();
+  const bookings = await readList<Booking>(BOOKINGS_KEY);
+  const booking = bookings.find((b) => b.id === id);
   if (sb && !id.startsWith('local-')) {
     await sb.from('bookings').update({ status }).eq('id', id);
-    return;
+  } else {
+    await writeList(BOOKINGS_KEY, bookings.map((b) => (b.id === id ? { ...b, status } : b)));
   }
-  const bookings = await readList<Booking>(BOOKINGS_KEY);
-  await writeList(BOOKINGS_KEY, bookings.map((b) => (b.id === id ? { ...b, status } : b)));
+  if (booking && status === 'completed') {
+    await pushNotification({
+      audience: 'customer',
+      userId: booking.user_id ?? null,
+      venueId: booking.venue_id,
+      title: 'Thanks for visiting!',
+      body: `How was ${booking.venue_name}? Rate your visit under Appointments.`,
+    });
+  }
 }
 
 // ---------------------------------------------------------------------------
@@ -160,6 +181,12 @@ export async function submitReview(input: {
   // Mark the booking as rated
   const bookings = await readList<Booking>(BOOKINGS_KEY);
   await writeList(BOOKINGS_KEY, bookings.map((b) => (b.id === input.bookingId ? { ...b, rated: true } : b)));
+  await pushNotification({
+    audience: 'venue',
+    venueId: input.venue.id,
+    title: 'New review',
+    body: `${input.authorName} rated you ${input.rating}★${input.comment ? ` — “${input.comment.slice(0, 80)}”` : ''}`,
+  });
   return review;
 }
 

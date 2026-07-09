@@ -20,6 +20,7 @@ interface AuthContextValue {
   continueAsGuest: (name?: string) => Promise<void>;
   signOut: () => Promise<void>;
   setRole: (role: UserRole) => Promise<void>;
+  updateName: (name: string) => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextValue | null>(null);
@@ -168,6 +169,22 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     [user, persistLocal]
   );
 
+  const updateName = useCallback(
+    async (name: string) => {
+      if (!user || !name.trim()) return;
+      const next = { ...user, name: name.trim() };
+      const sb = getSupabase();
+      if (sb && !user.isGuest) {
+        await sb.auth.updateUser({ data: { full_name: name.trim() } });
+        await sb.from('profiles').update({ full_name: name.trim() }).eq('id', user.id);
+        setUser(next);
+        return;
+      }
+      await persistLocal(next);
+    },
+    [user, persistLocal]
+  );
+
   const signOut = useCallback(async () => {
     const sb = getSupabase();
     if (sb) await sb.auth.signOut();
@@ -176,8 +193,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const value = useMemo(
-    () => ({ user, loading, signIn, signUp, continueAsGuest, signOut, setRole }),
-    [user, loading, signIn, signUp, continueAsGuest, signOut, setRole]
+    () => ({ user, loading, signIn, signUp, continueAsGuest, signOut, setRole, updateName }),
+    [user, loading, signIn, signUp, continueAsGuest, signOut, setRole, updateName]
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

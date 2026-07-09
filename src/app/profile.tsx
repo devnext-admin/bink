@@ -1,7 +1,7 @@
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
-import React from 'react';
-import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
+import React, { useState } from 'react';
+import { Pressable, ScrollView, StyleSheet, TextInput, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { BottomTabs, TAB_BAR_HEIGHT } from '../components/bottom-tabs';
 import { Avatar } from '../components/ui/avatar';
@@ -18,6 +18,7 @@ import { useIsDesktop } from '../lib/use-layout';
 const BASE_MENU = [
   { icon: 'calendar-outline', label: 'Appointments', href: '/appointments' },
   { icon: 'receipt-outline', label: 'Invoices', href: '/invoices' },
+  { icon: 'notifications-outline', label: 'Notifications', href: '/notifications' },
   { icon: 'heart-outline', label: 'Favorites', href: null },
   { icon: 'storefront-outline', label: 'Bink for Business', href: '/business' },
   { icon: 'settings-outline', label: 'Settings', href: '/settings' },
@@ -28,8 +29,10 @@ export default function Profile() {
   const isDesktop = useIsDesktop();
   const insets = useSafeAreaInsets();
   const router = useRouter();
-  const { user, signOut } = useAuth();
+  const { user, signOut, updateName } = useAuth();
   const { venues, allVenues, favorites } = useAppData();
+  const [editingName, setEditingName] = useState(false);
+  const [nameDraft, setNameDraft] = useState('');
   const favVenues = venues.filter((v) => favorites.includes(v.id));
 
   const ownsVenues = user ? allVenues.some((v) => v.owner_id === user.id) : false;
@@ -48,7 +51,43 @@ export default function Profile() {
         <View style={{ flexDirection: 'row', alignItems: 'center', gap: 16 }}>
           <Avatar name={user.name ?? user.email ?? 'You'} size={64} />
           <View style={{ flex: 1 }}>
-            <BText variant="h2">{user.name ?? 'Welcome'}</BText>
+            {editingName ? (
+              <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
+                <TextInput
+                  value={nameDraft}
+                  onChangeText={setNameDraft}
+                  autoFocus
+                  style={styles.nameInput}
+                  placeholder="Your name"
+                  placeholderTextColor={colors.gray}
+                />
+                <Pressable
+                  onPress={async () => {
+                    await updateName(nameDraft);
+                    setEditingName(false);
+                  }}
+                  hitSlop={8}
+                >
+                  <Ionicons name="checkmark-circle" size={26} color={colors.green} />
+                </Pressable>
+                <Pressable onPress={() => setEditingName(false)} hitSlop={8}>
+                  <Ionicons name="close-circle-outline" size={26} color={colors.gray} />
+                </Pressable>
+              </View>
+            ) : (
+              <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
+                <BText variant="h2">{user.name ?? 'Welcome'}</BText>
+                <Pressable
+                  onPress={() => {
+                    setNameDraft(user.name ?? '');
+                    setEditingName(true);
+                  }}
+                  hitSlop={8}
+                >
+                  <Ionicons name="pencil-outline" size={18} color={colors.gray} />
+                </Pressable>
+              </View>
+            )}
             <BText variant="small">{user.email ?? (user.isGuest ? 'Guest account' : '')}</BText>
           </View>
         </View>
@@ -158,6 +197,17 @@ const styles = StyleSheet.create({
     borderColor: colors.divider,
     borderRadius: radius.lg,
     overflow: 'hidden',
+  },
+  nameInput: {
+    flex: 1,
+    borderWidth: 1,
+    borderColor: colors.border,
+    borderRadius: radius.md,
+    height: 44,
+    paddingHorizontal: 12,
+    fontSize: 18,
+    color: colors.ink,
+    ...(typeof window !== 'undefined' ? ({ outlineStyle: 'none' } as any) : null),
   },
   menuRow: {
     flexDirection: 'row',

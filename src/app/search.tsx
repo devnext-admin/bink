@@ -20,25 +20,51 @@ export default function Search() {
   const { venues, categories } = useAppData();
   const [query, setQuery] = useState(params.q ?? '');
   const [categorySlug, setCategorySlug] = useState<string | undefined>(params.category);
+  const [sortBy, setSortBy] = useState<'recommended' | 'rating' | 'reviews' | 'price'>('recommended');
+  const [priceBand, setPriceBand] = useState<0 | 1 | 2 | 3>(0); // 0 = any
   const insets = useSafeAreaInsets();
 
-  const results = useMemo(
-    () => searchVenues(venues, query, categorySlug, categories),
-    [venues, query, categorySlug, categories]
-  );
+  const avgPrice = (v: (typeof venues)[number]) =>
+    v.services.length ? v.services.reduce((c, x) => c + x.price_cents, 0) / v.services.length : 0;
+
+  const results = useMemo(() => {
+    let out = searchVenues(venues, query, categorySlug, categories);
+    if (priceBand) {
+      out = out.filter((v) => {
+        const avg = avgPrice(v);
+        if (priceBand === 1) return avg <= 15000;
+        if (priceBand === 2) return avg > 15000 && avg <= 35000;
+        return avg > 35000;
+      });
+    }
+    if (sortBy === 'rating') out = [...out].sort((a, b) => b.rating_avg - a.rating_avg);
+    else if (sortBy === 'reviews') out = [...out].sort((a, b) => b.rating_count - a.rating_count);
+    else if (sortBy === 'price') out = [...out].sort((a, b) => avgPrice(a) - avgPrice(b));
+    return out;
+  }, [venues, query, categorySlug, categories, sortBy, priceBand]);
 
   const chips = (
-    <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ gap: 8 }}>
-      <Chip label="All" selected={!categorySlug} onPress={() => setCategorySlug(undefined)} />
-      {categories.map((c) => (
-        <Chip
-          key={c.slug}
-          label={c.name}
-          selected={categorySlug === c.slug}
-          onPress={() => setCategorySlug(categorySlug === c.slug ? undefined : c.slug)}
-        />
-      ))}
-    </ScrollView>
+    <View style={{ gap: 8 }}>
+      <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ gap: 8 }}>
+        <Chip label="All" selected={!categorySlug} onPress={() => setCategorySlug(undefined)} />
+        {categories.map((c) => (
+          <Chip
+            key={c.slug}
+            label={c.name}
+            selected={categorySlug === c.slug}
+            onPress={() => setCategorySlug(categorySlug === c.slug ? undefined : c.slug)}
+          />
+        ))}
+      </ScrollView>
+      <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ gap: 8 }}>
+        <Chip label="Top rated" selected={sortBy === 'rating'} onPress={() => setSortBy(sortBy === 'rating' ? 'recommended' : 'rating')} />
+        <Chip label="Most reviewed" selected={sortBy === 'reviews'} onPress={() => setSortBy(sortBy === 'reviews' ? 'recommended' : 'reviews')} />
+        <Chip label="Lowest price" selected={sortBy === 'price'} onPress={() => setSortBy(sortBy === 'price' ? 'recommended' : 'price')} />
+        <Chip label="﷼" selected={priceBand === 1} onPress={() => setPriceBand(priceBand === 1 ? 0 : 1)} />
+        <Chip label="﷼﷼" selected={priceBand === 2} onPress={() => setPriceBand(priceBand === 2 ? 0 : 2)} />
+        <Chip label="﷼﷼﷼" selected={priceBand === 3} onPress={() => setPriceBand(priceBand === 3 ? 0 : 3)} />
+      </ScrollView>
+    </View>
   );
 
   const searchInput = (

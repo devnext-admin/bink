@@ -5,6 +5,7 @@
 // locally so Sales, Invoices and dashboards run on real data flows either way.
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { pushNotification } from './notifications';
 import { getSupabase } from './supabase';
 import type { Booking, Invoice, PaymentMethod, Transaction } from './types';
 
@@ -124,6 +125,13 @@ export async function payForBooking(input: PayForBookingInput): Promise<Transact
   await writeList(INV_KEY, [invoice, ...invoices]);
 
   await patchLocalBooking(input.booking.id, { payment_status: 'paid', payment_method: input.method });
+  await pushNotification({
+    audience: 'customer',
+    userId: input.userId ?? null,
+    venueId: input.booking.venue_id,
+    title: 'Payment received',
+    body: `${invoice.number} issued for your booking at ${input.booking.venue_name}.`,
+  });
   return tx;
 }
 
@@ -148,11 +156,21 @@ export async function refundBooking(bookingId: string): Promise<void> {
     return;
   }
   const txs = await readList<Transaction>(TX_KEY);
+  const tx = txs.find((t) => t.booking_id === bookingId && t.status === 'succeeded');
   await writeList(
     TX_KEY,
     txs.map((t) => (t.booking_id === bookingId && t.status === 'succeeded' ? { ...t, status: 'refunded' } : t))
   );
   await patchLocalBooking(bookingId, { payment_status: 'refunded' });
+  if (tx) {
+    await pushNotification({
+      audience: 'customer',
+      userId: tx.user_id,
+      venueId: tx.venue_id,
+      title: 'Refund issued',
+      body: `Your payment of ${(tx.amount_cents / 100).toFixed(2)} ${tx.currency} was refunded to your original payment method.`,
+    });
+  }
 }
 
 // ---------------------------------------------------------------------------

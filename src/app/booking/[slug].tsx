@@ -75,6 +75,7 @@ export default function BookingScreen() {
   const [promoInput, setPromoInput] = useState('');
   const [promo, setPromo] = useState<PromoCode | null>(null);
   const [promoError, setPromoError] = useState<string | null>(null);
+  const [notes, setNotes] = useState('');
 
   // Live availability for the selected day
   useEffect(() => {
@@ -126,6 +127,8 @@ export default function BookingScreen() {
         staffId: booking.staff?.id ?? null,
         staffName: booking.staff?.name ?? null,
         customerName: user?.name ?? user?.email ?? null,
+        userId: user?.id ?? null,
+        notes: notes.trim() || null,
         startsAt,
         currency: booking.currency,
         promoCode: promo?.code ?? null,
@@ -350,6 +353,17 @@ export default function BookingScreen() {
             </BText>
             <BText variant="h3">{formatPrice(finalTotal, booking.currency)}</BText>
           </View>
+        </View>
+        <View style={{ marginTop: 24 }}>
+          <BText variant="h3">Notes for the salon</BText>
+          <TextInput
+            placeholder="Anything they should know? Allergies, preferences, parking…"
+            placeholderTextColor={colors.gray}
+            value={notes}
+            onChangeText={setNotes}
+            multiline
+            style={styles.notesInput}
+          />
         </View>
         <View style={{ marginTop: 28 }}>
           <BText variant="h3">Payment</BText>
@@ -788,6 +802,19 @@ const styles = StyleSheet.create({
     borderRadius: radius.md,
     padding: 14,
     marginTop: 16,
+  },
+  notesInput: {
+    borderWidth: 1,
+    borderColor: colors.border,
+    borderRadius: radius.md,
+    minHeight: 72,
+    padding: 12,
+    marginTop: 12,
+    fontFamily: font.regular,
+    fontSize: 14,
+    color: colors.ink,
+    textAlignVertical: 'top',
+    ...(typeof window !== 'undefined' ? ({ outlineStyle: 'none' } as any) : null),
   },
   promoInput: {
     flex: 1,

@@ -4,6 +4,7 @@
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import demo from '../data/demo.json';
+import { pushNotification } from './notifications';
 import { getSupabase } from './supabase';
 import type { Booking, BookingItem, Category, Venue } from './types';
 
@@ -132,6 +133,8 @@ export interface CreateBookingInput {
   staffId?: string | null;
   staffName?: string | null;
   customerName?: string | null;
+  userId?: string | null;
+  notes?: string | null;
   startsAt: Date;
   items: BookingItem[];
   currency: string;
@@ -148,7 +151,9 @@ export async function createBooking(input: CreateBookingInput): Promise<Booking>
   const booking: Booking = {
     id: `local-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
     venue_id: input.venue.id,
+    user_id: input.userId ?? null,
     customer_name: input.customerName ?? null,
+    notes: input.notes ?? null,
     promo_code: input.promoCode ?? null,
     venue_name: input.venue.name,
     venue_image: input.venue.images[0]?.url,
@@ -178,6 +183,8 @@ export async function createBooking(input: CreateBookingInput): Promise<Booking>
         status: 'confirmed',
         total_cents: totalCents,
         currency: input.currency,
+        notes: input.notes ?? null,
+        promo_code: input.promoCode ?? null,
       })
       .select('id')
       .single();
@@ -192,13 +199,38 @@ export async function createBooking(input: CreateBookingInput): Promise<Booking>
           price_cents: i.price_cents,
         }))
       );
+      await notifyBookingCreated(booking, input);
       return booking;
     }
   }
 
   const existing = await getLocalBookings();
   await AsyncStorage.setItem(LOCAL_BOOKINGS_KEY, JSON.stringify([booking, ...existing]));
+  await notifyBookingCreated(booking, input);
   return booking;
+}
+
+async function notifyBookingCreated(booking: Booking, input: CreateBookingInput) {
+  const when = new Date(booking.starts_at).toLocaleString('en-US', {
+    weekday: 'short',
+    day: 'numeric',
+    month: 'short',
+    hour: 'numeric',
+    minute: '2-digit',
+  });
+  await pushNotification({
+    audience: 'customer',
+    userId: input.userId ?? null,
+    venueId: booking.venue_id,
+    title: 'Booking confirmed',
+    body: `${input.venue.name} · ${when}. See you there!`,
+  });
+  await pushNotification({
+    audience: 'venue',
+    venueId: booking.venue_id,
+    title: 'New booking',
+    body: `${input.customerName ?? 'A customer'} booked ${input.items.map((i) => i.service_name).join(', ')} for ${when}.`,
+  });
 }
 
 export async function getBookings(): Promise<Booking[]> {
@@ -235,15 +267,24 @@ export async function getBookings(): Promise<Booking[]> {
 export async function cancelBooking(id: string): Promise<void> {
   const sb = getSupabase();
   const user = sb ? (await sb.auth.getUser()).data.user : null;
+  const bookings = await getLocalBookings();
+  const booking = bookings.find((b) => b.id === id);
   if (sb && user && !id.startsWith('local-')) {
     await sb.from('bookings').update({ status: 'cancelled' }).eq('id', id);
-    return;
+  } else {
+    await AsyncStorage.setItem(
+      LOCAL_BOOKINGS_KEY,
+      JSON.stringify(bookings.map((b) => (b.id === id ? { ...b, status: 'cancelled' } : b)))
+    );
   }
-  const bookings = await getLocalBookings();
-  await AsyncStorage.setItem(
-    LOCAL_BOOKINGS_KEY,
-    JSON.stringify(bookings.map((b) => (b.id === id ? { ...b, status: 'cancelled' } : b)))
-  );
+  if (booking) {
+    await pushNotification({
+      audience: 'venue',
+      venueId: booking.venue_id,
+      title: 'Booking cancelled',
+      body: `${booking.customer_name ?? 'A customer'} cancelled ${booking.items.map((i) => i.service_name).join(', ')}.`,
+    });
+  }
 }
 
 // ---------------------------------------------------------------------------

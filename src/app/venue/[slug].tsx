@@ -2,7 +2,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { Image } from 'expo-image';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import React, { useEffect, useMemo, useState } from 'react';
-import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
+import { Modal, Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { ReviewCard } from '../../components/review-card';
 import { SectionRail } from '../../components/section-rail';
@@ -205,6 +205,58 @@ function NearbySection({ venue }: { venue: Venue }) {
 }
 
 // ---------------------------------------------------------------------------
+// Full-gallery viewer
+// ---------------------------------------------------------------------------
+function GalleryViewer({ venue, open, onClose }: { venue: Venue; open: boolean; onClose: () => void }) {
+  return (
+    <Modal visible={open} animationType="slide" onRequestClose={onClose}>
+      <View style={{ flex: 1, backgroundColor: colors.white }}>
+        <View style={galleryStyles.top}>
+          <BText variant="h2">
+            {venue.name} — photos ({venue.images.length})
+          </BText>
+          <Pressable onPress={onClose} hitSlop={10} style={galleryStyles.close}>
+            <Ionicons name="close" size={22} color={colors.ink} />
+          </Pressable>
+        </View>
+        <ScrollView contentContainerStyle={{ padding: 20, gap: 14, maxWidth: 900, width: '100%', alignSelf: 'center' }}>
+          {venue.images.map((im) => (
+            <Image
+              key={im.url + im.sort_order}
+              source={{ uri: im.url }}
+              style={{ width: '100%', aspectRatio: 1.5, borderRadius: radius.lg, backgroundColor: colors.bgSubtle }}
+              contentFit="cover"
+              transition={200}
+            />
+          ))}
+        </ScrollView>
+      </View>
+    </Modal>
+  );
+}
+
+const galleryStyles = StyleSheet.create({
+  top: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: 20,
+    paddingVertical: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: colors.divider,
+  },
+  close: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    borderWidth: 1,
+    borderColor: colors.border,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+});
+
+// ---------------------------------------------------------------------------
 // Desktop
 // ---------------------------------------------------------------------------
 function VenueDesktop({ venue }: { venue: Venue }) {
@@ -212,6 +264,7 @@ function VenueDesktop({ venue }: { venue: Venue }) {
   const { startBooking } = useBooking();
   const { categoryOf } = useAppData();
   const category = categoryOf(venue);
+  const [galleryOpen, setGalleryOpen] = useState(false);
 
   const book = () => {
     startBooking(venue);
@@ -256,7 +309,7 @@ function VenueDesktop({ venue }: { venue: Venue }) {
         </View>
 
         {/* Gallery: 1 large + 2 stacked */}
-        <View style={{ flexDirection: 'row', gap: 8, marginTop: 24 }}>
+        <View style={{ flexDirection: 'row', gap: 8, marginTop: 24, position: 'relative' }}>
           <Image
             source={{ uri: venue.images[0]?.url }}
             style={{ flex: 2, aspectRatio: 1.55, borderRadius: radius.lg, backgroundColor: colors.bgSubtle }}
@@ -274,7 +327,12 @@ function VenueDesktop({ venue }: { venue: Venue }) {
               />
             ))}
           </View>
+          <Pressable onPress={() => setGalleryOpen(true)} style={styles.seeAllPhotos}>
+            <Ionicons name="images-outline" size={14} color={colors.ink} />
+            <BText variant="smallMedium">See all photos</BText>
+          </Pressable>
         </View>
+        <GalleryViewer venue={venue} open={galleryOpen} onClose={() => setGalleryOpen(false)} />
 
         {/* Main columns */}
         <View style={{ flexDirection: 'row', gap: 40, marginTop: 40 }}>
@@ -330,6 +388,7 @@ function VenueMobile({ venue }: { venue: Venue }) {
   const router = useRouter();
   const insets = useSafeAreaInsets();
   const { startBooking } = useBooking();
+  const [galleryOpen, setGalleryOpen] = useState(false);
 
   const book = () => {
     startBooking(venue);
@@ -358,7 +417,12 @@ function VenueMobile({ venue }: { venue: Venue }) {
             </View>
             <FavButton venueId={venue.id} floating />
           </View>
+          <Pressable onPress={() => setGalleryOpen(true)} style={[styles.seeAllPhotos, { bottom: 12, right: 16, top: undefined }]}>
+            <Ionicons name="images-outline" size={14} color={colors.ink} />
+            <BText variant="smallMedium">{venue.images.length}</BText>
+          </Pressable>
         </View>
+        <GalleryViewer venue={venue} open={galleryOpen} onClose={() => setGalleryOpen(false)} />
 
         <View style={{ padding: 20, gap: 8 }}>
           <BText variant="h1">{venue.name}</BText>
@@ -465,6 +529,20 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     ...shadow.card,
+  },
+  seeAllPhotos: {
+    position: 'absolute',
+    bottom: 12,
+    right: 12,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    backgroundColor: colors.white,
+    borderRadius: radius.pill,
+    paddingHorizontal: 12,
+    height: 34,
+    borderWidth: 1,
+    borderColor: colors.divider,
   },
   stickyBar: {
     position: 'absolute',

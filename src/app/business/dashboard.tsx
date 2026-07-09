@@ -358,6 +358,11 @@ function BookingRow({ booking, onRefund }: { booking: Booking; onRefund?: () => 
           {booking.status === 'no_show' ? ' · no-show' : ''}
           {booking.status === 'cancelled' ? ' · cancelled' : ''}
         </BText>
+        {booking.notes ? (
+          <BText variant="tiny" color={colors.accent} style={{ marginTop: 2 }}>
+            Note: {booking.notes}
+          </BText>
+        ) : null}
       </View>
       <BText variant="smallMedium">{formatPrice(booking.total_cents, booking.currency)}</BText>
       <PaymentPill status={booking.payment_status ?? 'unpaid'} />

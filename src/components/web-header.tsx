@@ -5,6 +5,7 @@ import { Pressable, StyleSheet, View } from 'react-native';
 import { useAuth } from '../lib/auth-context';
 import { colors, font, maxContentWidth, radius } from '../lib/theme';
 import { Logo } from './logo';
+import { NotificationsBell } from './notifications-bell';
 import { CompactSearch } from './search-bar';
 import { BText } from './ui/text';
 
@@ -28,7 +29,8 @@ export function WebHeader({ transparent, showSearch }: WebHeaderProps) {
         ) : (
           <View style={{ flex: 1 }} />
         )}
-        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
+        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 14 }}>
+          <NotificationsBell />
           <HeaderPill
             label={user ? (user.name ?? 'Account') : 'Log in'}
             onPress={() => router.push(user ? '/profile' : '/auth')}

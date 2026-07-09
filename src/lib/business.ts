@@ -4,6 +4,7 @@
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { getDemoUsers } from './auth-context';
+import { pushNotification } from './notifications';
 import { getBookings } from './data';
 import { getSupabase } from './supabase';
 import type { Booking, Service, Staff, Venue, VenueStatus } from './types';
@@ -207,6 +208,14 @@ export async function setVenueStatus(venue: Venue, status: VenueStatus): Promise
   const sb = getSupabase();
   if (sb && !venue.id.startsWith('venue-')) {
     await sb.from('venues').update({ status }).eq('id', venue.id);
+  }
+  if (status === 'approved' && venue.status !== 'approved') {
+    await pushNotification({
+      audience: 'venue',
+      venueId: venue.id,
+      title: 'Your salon is live!',
+      body: `${venue.name} was approved and is now visible to customers on Bink.`,
+    });
   }
   return mutateLocalVenue(venue, (v) => ({ ...v, status }));
 }

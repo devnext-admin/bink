@@ -48,6 +48,7 @@ export default function RootLayout() {
                 <Stack.Screen name="search" />
                 <Stack.Screen name="appointments" />
                 <Stack.Screen name="invoices" />
+                <Stack.Screen name="notifications" />
                 <Stack.Screen name="support" />
                 <Stack.Screen name="settings" />
                 <Stack.Screen name="profile" />

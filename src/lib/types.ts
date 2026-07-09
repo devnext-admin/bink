@@ -131,7 +131,9 @@ export interface BookingItem {
 export interface Booking {
   id: string;
   venue_id: string;
+  user_id?: string | null;
   customer_name?: string | null;
+  notes?: string | null;
   payment_status?: PaymentStatus;
   payment_method?: PaymentMethod;
   promo_code?: string | null;

@@ -4,6 +4,7 @@ import { ScrollView, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { BottomTabs, TAB_BAR_HEIGHT } from '../components/bottom-tabs';
 import { Logo } from '../components/logo';
+import { NotificationsBell } from '../components/notifications-bell';
 import { Onboarding } from '../components/onboarding';
 import { SectionRail } from '../components/section-rail';
 import { HeroSearchMobile } from '../components/search-bar';
@@ -27,7 +28,10 @@ export function HomeMobile() {
           end={{ x: 1, y: 1 }}
           style={{ paddingTop: insets.top + 16, paddingHorizontal: 20, paddingBottom: 32 }}
         >
-          <Logo />
+          <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+            <Logo />
+            <NotificationsBell />
+          </View>
           <BText style={{ fontFamily: font.bold, fontSize: 34, lineHeight: 42, color: colors.ink, marginTop: 20 }}>
             Book your salon visit in seconds
           </BText>
