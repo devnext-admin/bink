@@ -22,6 +22,7 @@ import {
   getVenueBookings,
   removeVenueImage,
   updateService,
+  updateStaff,
   updateVenueHours,
   updateVenueInfo,
 } from '../../lib/business';
@@ -650,16 +651,32 @@ function ServicesEditor({ venue, onChanged }: { venue: Venue; onChanged: () => v
 }
 
 function StaffEditor({ venue, onChanged }: { venue: Venue; onChanged: () => void }) {
+  const [editingId, setEditingId] = useState<string | null>(null);
   const [name, setName] = useState('');
   const [role, setRole] = useState('');
   const [busy, setBusy] = useState(false);
 
-  const add = async () => {
-    if (!name.trim()) return;
-    setBusy(true);
-    await addStaff(venue, name.trim(), role.trim() || 'Specialist');
+  const resetForm = () => {
+    setEditingId(null);
     setName('');
     setRole('');
+  };
+
+  const startEdit = (m: Venue['staff'][number]) => {
+    setEditingId(m.id);
+    setName(m.name);
+    setRole(m.role);
+  };
+
+  const save = async () => {
+    if (!name.trim()) return;
+    setBusy(true);
+    if (editingId) {
+      await updateStaff(venue, editingId, { name: name.trim(), role: role.trim() || 'Specialist' });
+    } else {
+      await addStaff(venue, name.trim(), role.trim() || 'Specialist');
+    }
+    resetForm();
     setBusy(false);
     onChanged();
   };
@@ -667,7 +684,7 @@ function StaffEditor({ venue, onChanged }: { venue: Venue; onChanged: () => void
   return (
     <View style={{ gap: 16 }}>
       <View style={styles.card}>
-        <BText variant="h3">Add a team member</BText>
+        <BText variant="h3">{editingId ? 'Edit team member' : 'Add a team member'}</BText>
         <View style={{ flexDirection: 'row', gap: 12, marginTop: 16, alignItems: 'flex-end' }}>
           <View style={{ flex: 1 }}>
             <Field label="Name" placeholder="e.g. Sara" value={name} onChangeText={setName} />
@@ -675,7 +692,8 @@ function StaffEditor({ venue, onChanged }: { venue: Venue; onChanged: () => void
           <View style={{ flex: 1 }}>
             <Field label="Role" placeholder="Stylist" value={role} onChangeText={setRole} />
           </View>
-          <Button title="Add" loading={busy} onPress={add} />
+          <Button title={editingId ? 'Save' : 'Add'} loading={busy} onPress={save} />
+          {editingId ? <Button title="Cancel" variant="secondary" onPress={resetForm} /> : null}
         </View>
       </View>
       <View style={styles.card}>
@@ -686,9 +704,13 @@ function StaffEditor({ venue, onChanged }: { venue: Venue; onChanged: () => void
               <BText variant="smallMedium">{m.name}</BText>
               <BText variant="tiny">{m.role}</BText>
             </View>
+            <Pressable onPress={() => startEdit(m)} hitSlop={8}>
+              <Ionicons name="pencil-outline" size={18} color={colors.ink} />
+            </Pressable>
             <Pressable
               onPress={async () => {
                 await deleteStaff(venue, m.id);
+                if (editingId === m.id) resetForm();
                 onChanged();
               }}
               hitSlop={8}
@@ -707,14 +729,33 @@ function StaffEditor({ venue, onChanged }: { venue: Venue; onChanged: () => void
   );
 }
 
+const HIGHLIGHT_OPTIONS = [
+  'Instant confirmation',
+  'Pay by app',
+  'Parking available',
+  'Walk-ins welcome',
+  'By appointment only',
+  'Woman-owned',
+  'Adults only',
+  'Private rooms',
+  'Complimentary drinks',
+  'Bridal packages',
+];
+
 function SettingsEditor({ venue, onChanged }: { venue: Venue; onChanged: () => void }) {
+  const { categories } = useAppData();
   const [name, setName] = useState(venue.name);
   const [description, setDescription] = useState(venue.description);
   const [address, setAddress] = useState(venue.address);
   const [area, setArea] = useState(venue.area);
   const [city, setCity] = useState(venue.city);
+  const [categoryId, setCategoryId] = useState(venue.category_id);
+  const [highlights, setHighlights] = useState<string[]>(venue.highlights);
   const [busy, setBusy] = useState(false);
   const [saved, setSaved] = useState(false);
+
+  const toggleHighlight = (h: string) =>
+    setHighlights((list) => (list.includes(h) ? list.filter((x) => x !== h) : [...list, h]));
 
   const save = async () => {
     setBusy(true);
@@ -724,6 +765,8 @@ function SettingsEditor({ venue, onChanged }: { venue: Venue; onChanged: () => v
       address: address.trim(),
       area: area.trim(),
       city: city.trim() || venue.city,
+      category_id: categoryId,
+      highlights,
     });
     setBusy(false);
     setSaved(true);
@@ -744,6 +787,14 @@ function SettingsEditor({ venue, onChanged }: { venue: Venue; onChanged: () => v
           numberOfLines={4}
           style={{ minHeight: 100 }}
         />
+        <View style={{ gap: 6 }}>
+          <BText variant="smallMedium">Category</BText>
+          <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8 }}>
+            {categories.map((c) => (
+              <Chip key={c.id} label={c.name} selected={categoryId === c.id} onPress={() => setCategoryId(c.id)} />
+            ))}
+          </View>
+        </View>
         <View style={{ flexDirection: 'row', gap: 12 }}>
           <View style={{ flex: 1 }}>
             <Field label="City" value={city} onChangeText={setCity} />
@@ -753,6 +804,14 @@ function SettingsEditor({ venue, onChanged }: { venue: Venue; onChanged: () => v
           </View>
         </View>
         <Field label="Street address" value={address} onChangeText={setAddress} />
+        <View style={{ gap: 6 }}>
+          <BText variant="smallMedium">Amenities shown on your page</BText>
+          <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8 }}>
+            {HIGHLIGHT_OPTIONS.map((h) => (
+              <Chip key={h} label={h} selected={highlights.includes(h)} onPress={() => toggleHighlight(h)} />
+            ))}
+          </View>
+        </View>
         <Button title={saved ? 'Saved ✓' : 'Save changes'} loading={busy} onPress={save} />
       </View>
       <HoursEditor venue={venue} onChanged={onChanged} />

@@ -179,13 +179,28 @@ export async function registerSalon(input: RegisterSalonInput): Promise<Venue> {
 
 export async function updateVenueInfo(
   venue: Venue,
-  patch: Partial<Pick<Venue, 'name' | 'description' | 'address' | 'area' | 'city'>>
+  patch: Partial<Pick<Venue, 'name' | 'description' | 'address' | 'area' | 'city' | 'category_id' | 'highlights'>>
 ): Promise<Venue> {
   const sb = getSupabase();
   if (sb && !venue.id.startsWith('venue-')) {
     await sb.from('venues').update(patch).eq('id', venue.id);
   }
   return mutateLocalVenue(venue, (v) => ({ ...v, ...patch }));
+}
+
+export async function updateStaff(
+  venue: Venue,
+  staffId: string,
+  patch: Partial<Pick<Staff, 'name' | 'role'>>
+): Promise<Venue> {
+  const sb = getSupabase();
+  if (sb && !staffId.startsWith('staff-')) {
+    await sb.from('staff').update(patch).eq('id', staffId);
+  }
+  return mutateLocalVenue(venue, (v) => ({
+    ...v,
+    staff: v.staff.map((m) => (m.id === staffId ? { ...m, ...patch } : m)),
+  }));
 }
 
 export async function setVenueStatus(venue: Venue, status: VenueStatus): Promise<Venue> {
