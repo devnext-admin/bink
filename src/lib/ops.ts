@@ -136,12 +136,17 @@ export async function setBookingStatus(id: string, status: BookingStatus): Promi
     await writeList(BOOKINGS_KEY, bookings.map((b) => (b.id === id ? { ...b, status } : b)));
   }
   if (booking && status === 'completed') {
+    const { tryReleaseEscrow } = await import('./payments');
+    const released = await tryReleaseEscrow(id);
     await pushNotification({
       audience: 'customer',
       userId: booking.user_id ?? null,
       venueId: booking.venue_id,
       title: 'Thanks for visiting!',
-      body: `How was ${booking.venue_name}? Rate your visit under Appointments.`,
+      body:
+        booking.payment_status === 'paid' && !released
+          ? `How was ${booking.venue_name}? Confirm your visit under Appointments to release the payment, and leave a rating.`
+          : `How was ${booking.venue_name}? Rate your visit under Appointments.`,
     });
   }
 }

@@ -98,6 +98,7 @@ export async function payForBooking(input: PayForBookingInput): Promise<Transact
     currency: input.booking.currency,
     method: input.method,
     status: 'succeeded',
+    escrow_status: 'held',
     gateway: 'demo',
     gateway_ref: uid('demo'),
     created_at: new Date().toISOString(),
@@ -129,8 +130,8 @@ export async function payForBooking(input: PayForBookingInput): Promise<Transact
     audience: 'customer',
     userId: input.userId ?? null,
     venueId: input.booking.venue_id,
-    title: 'Payment received',
-    body: `${invoice.number} issued for your booking at ${input.booking.venue_name}.`,
+    title: 'Payment held in escrow',
+    body: `${invoice.number} issued. Bink holds your payment securely and releases it to ${input.booking.venue_name} after your visit is confirmed.`,
   });
   return tx;
 }
@@ -159,7 +160,11 @@ export async function refundBooking(bookingId: string): Promise<void> {
   const tx = txs.find((t) => t.booking_id === bookingId && t.status === 'succeeded');
   await writeList(
     TX_KEY,
-    txs.map((t) => (t.booking_id === bookingId && t.status === 'succeeded' ? { ...t, status: 'refunded' } : t))
+    txs.map((t) =>
+      t.booking_id === bookingId && t.status === 'succeeded'
+        ? { ...t, status: 'refunded', escrow_status: 'refunded' }
+        : t
+    )
   );
   await patchLocalBooking(bookingId, { payment_status: 'refunded' });
   if (tx) {
@@ -171,6 +176,65 @@ export async function refundBooking(bookingId: string): Promise<void> {
       body: `Your payment of ${(tx.amount_cents / 100).toFixed(2)} ${tx.currency} was refunded to your original payment method.`,
     });
   }
+}
+
+// ---------------------------------------------------------------------------
+// Escrow: release when BOTH the venue marked the booking completed and the
+// customer confirmed the visit.
+// ---------------------------------------------------------------------------
+export async function confirmServiceByCustomer(bookingId: string): Promise<void> {
+  const sb = getSupabase();
+  const now = new Date().toISOString();
+  if (sb && !bookingId.startsWith('local-')) {
+    await sb.from('bookings').update({ customer_confirmed_at: now }).eq('id', bookingId);
+  } else {
+    await patchLocalBooking(bookingId, { customer_confirmed_at: now });
+  }
+  await tryReleaseEscrow(bookingId);
+}
+
+export async function tryReleaseEscrow(bookingId: string): Promise<boolean> {
+  const sb = getSupabase();
+  if (sb && !bookingId.startsWith('local-')) {
+    const { data } = await sb.rpc('try_release_escrow', { p_booking_id: bookingId });
+    return !!data;
+  }
+  const bookings = await readList<Booking>(BOOKINGS_KEY);
+  const booking = bookings.find((b) => b.id === bookingId);
+  if (!booking || booking.status !== 'completed' || !booking.customer_confirmed_at) return false;
+
+  const txs = await readList<Transaction>(TX_KEY);
+  const tx = txs.find((t) => t.booking_id === bookingId && t.status === 'succeeded' && t.escrow_status === 'held');
+  if (!tx) return false;
+
+  await writeList(
+    TX_KEY,
+    txs.map((t) => (t.id === tx.id ? { ...t, escrow_status: 'released', released_at: new Date().toISOString() } : t))
+  );
+  await pushNotification({
+    audience: 'venue',
+    venueId: tx.venue_id,
+    title: 'Payment released',
+    body: `${(tx.amount_cents / 100).toFixed(2)} ${tx.currency} from ${booking.customer_name ?? 'a customer'} was released from escrow to your account.`,
+  });
+  await pushNotification({
+    audience: 'customer',
+    userId: booking.user_id ?? tx.user_id,
+    venueId: tx.venue_id,
+    title: 'Payment released to salon',
+    body: `Thanks for confirming your visit at ${booking.venue_name}. Your payment was released.`,
+  });
+  return true;
+}
+
+export function escrowSummary(transactions: Transaction[]) {
+  const held = transactions.filter((t) => t.status === 'succeeded' && t.escrow_status === 'held');
+  const released = transactions.filter((t) => t.escrow_status === 'released');
+  return {
+    held_cents: held.reduce((c, t) => c + t.amount_cents, 0),
+    released_cents: released.reduce((c, t) => c + t.amount_cents, 0),
+    currency: transactions[0]?.currency ?? 'SAR',
+  };
 }
 
 // ---------------------------------------------------------------------------

@@ -100,6 +100,8 @@ export interface Transaction {
   currency: string;
   method: PaymentMethod;
   status: 'pending' | 'succeeded' | 'failed' | 'refunded';
+  escrow_status?: 'held' | 'released' | 'refunded';
+  released_at?: string | null;
   gateway: string;
   gateway_ref?: string | null;
   created_at: string;
@@ -138,6 +140,7 @@ export interface Booking {
   payment_method?: PaymentMethod;
   promo_code?: string | null;
   rated?: boolean;
+  customer_confirmed_at?: string | null;
   venue_name: string;
   venue_image?: string;
   venue_area?: string;

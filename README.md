@@ -70,6 +70,20 @@ admin sees paid-online volume and per-booking payment status.
 Out of the box it runs on a simulated gateway (`EXPO_PUBLIC_PAYMENTS_GATEWAY=demo`)
 — no keys needed, no real charges.
 
+### Escrow
+
+Online payments follow a marketplace escrow model (migration
+`20260709000006_escrow.sql`): the charge is captured immediately but **held**
+by Bink. Release requires **both parties** — the salon marks the booking
+completed AND the customer taps "Confirm visit" — after which the transaction
+flips to `released` (with `released_at`), both sides are notified, and the
+amount moves from "In escrow" to "Released to you" in the salon's Sales tab.
+Refunds before release return the held funds to the customer. On cloud
+Supabase the release check runs in the `try_release_escrow` SQL function so
+neither client can force a release unilaterally. With Moyasar, funds settle
+into the Bink merchant account; the released ledger is the salons' payout
+basis (bank payouts are an ops process on top of this ledger).
+
 ### Activate real payments (once you have Moyasar keys)
 
 ```bash

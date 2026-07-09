@@ -394,8 +394,9 @@ export default function BookingScreen() {
             <View style={styles.payNote}>
               <Ionicons name="shield-checkmark-outline" size={18} color={colors.ink} />
               <BText variant="small" color={colors.ink}>
-                {formatPrice(finalTotal, booking.currency)} will be charged now. Includes 15% VAT — a tax
-                invoice is issued automatically.
+                {formatPrice(finalTotal, booking.currency)} is charged now and held securely in escrow by
+                Bink. It is only released to the salon after your visit is completed and you confirm it.
+                Includes 15% VAT — a tax invoice is issued automatically.
               </BText>
             </View>
           ) : null}

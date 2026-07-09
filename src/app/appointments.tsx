@@ -16,6 +16,7 @@ import { useAuth } from '../lib/auth-context';
 import { cancelBooking, getBookings } from '../lib/data';
 import { formatDateLong, formatPrice, formatTimeOfDate } from '../lib/format';
 import { rescheduleBooking, submitReview } from '../lib/ops';
+import { confirmServiceByCustomer } from '../lib/payments';
 import { colors, font, maxContentWidth, radius } from '../lib/theme';
 import type { Booking } from '../lib/types';
 import { useIsDesktop } from '../lib/use-layout';
@@ -68,11 +69,12 @@ export default function Appointments() {
   );
 
   const now = Date.now();
-  const visible = bookings.filter((b) =>
-    filter === 'upcoming'
-      ? new Date(b.starts_at).getTime() >= now && b.status !== 'cancelled'
-      : new Date(b.starts_at).getTime() < now || b.status === 'cancelled'
-  );
+  const isPast = (b: Booking) =>
+    new Date(b.starts_at).getTime() < now ||
+    b.status === 'cancelled' ||
+    b.status === 'completed' ||
+    b.status === 'no_show';
+  const visible = bookings.filter((b) => (filter === 'upcoming' ? !isPast(b) : isPast(b)));
 
   const onCancel = async (id: string) => {
     await cancelBooking(id);
@@ -149,7 +151,16 @@ export default function Appointments() {
               </View>
               <View style={{ gap: 4, alignItems: 'flex-end' }}>
                 <StatusPill status={b.status} />
-                <PaymentPill status={b.payment_status ?? 'unpaid'} />
+                <PaymentPill
+                  status={b.payment_status ?? 'unpaid'}
+                  escrow={
+                    b.payment_status === 'paid'
+                      ? b.status === 'completed' && b.customer_confirmed_at
+                        ? 'released'
+                        : 'held'
+                      : undefined
+                  }
+                />
               </View>
             </View>
             <View style={styles.cardDivider} />
@@ -211,6 +222,25 @@ export default function Appointments() {
                     )}
                   </View>
                 )}
+              </View>
+            ) : null}
+            {filter === 'past' &&
+            (b.status === 'completed' || b.status === 'confirmed') &&
+            b.payment_status === 'paid' &&
+            !b.customer_confirmed_at ? (
+              <View style={styles.escrowNote}>
+                <BText variant="tiny" color={colors.info} style={{ flex: 1 }}>
+                  Your payment is held in escrow by Bink. Confirm the service was completed to release it to
+                  the salon.
+                </BText>
+                <Button
+                  title="Confirm visit"
+                  size="sm"
+                  onPress={async () => {
+                    await confirmServiceByCustomer(b.id);
+                    refresh();
+                  }}
+                />
               </View>
             ) : null}
             {filter === 'past' && (b.status === 'completed' || b.status === 'confirmed') && !b.rated ? (
@@ -336,6 +366,15 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingVertical: 56,
     paddingHorizontal: 24,
+  },
+  escrowNote: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+    backgroundColor: colors.infoBg,
+    borderRadius: radius.md,
+    padding: 12,
+    marginTop: 16,
   },
   slot: {
     borderWidth: 1,

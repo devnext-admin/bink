@@ -28,7 +28,7 @@ import {
 } from '../../lib/business';
 import { formatDateLong, formatDuration, formatPrice, formatTimeOfDate } from '../../lib/format';
 import { setBookingStatus } from '../../lib/ops';
-import { getVenueTransactions, refundBooking, salesSummary } from '../../lib/payments';
+import { escrowSummary, getVenueTransactions, refundBooking, salesSummary } from '../../lib/payments';
 import { colors, font, maxContentWidth, radius } from '../../lib/theme';
 import type { Booking, Transaction, Venue } from '../../lib/types';
 import { useIsDesktop } from '../../lib/use-layout';
@@ -177,13 +177,21 @@ export default function BusinessDashboard() {
     );
   } else if (section === 'sales') {
     const summary = salesSummary(transactions);
+    const escrow = escrowSummary(transactions);
     body = (
       <View style={{ gap: 16 }}>
         <View style={{ flexDirection: isDesktop ? 'row' : 'column', gap: 12 }}>
           <StatCard label="Gross sales" value={formatPrice(summary.gross_cents, summary.currency)} icon="trending-up-outline" />
+          <StatCard label="In escrow" value={formatPrice(escrow.held_cents, escrow.currency)} icon="lock-closed-outline" />
+          <StatCard label="Released to you" value={formatPrice(escrow.released_cents, escrow.currency)} icon="checkmark-done-outline" />
           <StatCard label="Refunds" value={formatPrice(summary.refunds_cents, summary.currency)} icon="return-down-back-outline" />
-          <StatCard label="Net revenue" value={formatPrice(summary.net_cents, summary.currency)} icon="cash-outline" />
-          <StatCard label="Transactions" value={String(summary.count)} icon="receipt-outline" />
+        </View>
+        <View style={styles.escrowExplain}>
+          <Ionicons name="lock-closed-outline" size={16} color={colors.info} />
+          <BText variant="tiny" color={colors.info} style={{ flex: 1 }}>
+            Online payments are held by Bink in escrow. They are released to you once you mark the booking
+            completed and the customer confirms their visit.
+          </BText>
         </View>
         <View style={styles.card}>
           <BText variant="h3">Transactions</BText>
@@ -212,7 +220,7 @@ export default function BusinessDashboard() {
                 >
                   {formatPrice(t.amount_cents, t.currency)}
                 </BText>
-                <TxStatusPill status={t.status} />
+                <TxStatusPill status={t.status === 'succeeded' && t.escrow_status ? t.escrow_status : t.status} />
               </View>
             ))
           )}
@@ -365,7 +373,16 @@ function BookingRow({ booking, onRefund }: { booking: Booking; onRefund?: () => 
         ) : null}
       </View>
       <BText variant="smallMedium">{formatPrice(booking.total_cents, booking.currency)}</BText>
-      <PaymentPill status={booking.payment_status ?? 'unpaid'} />
+      <PaymentPill
+        status={booking.payment_status ?? 'unpaid'}
+        escrow={
+          booking.payment_status === 'paid'
+            ? booking.status === 'completed' && booking.customer_confirmed_at
+              ? 'released'
+              : 'held'
+            : undefined
+        }
+      />
       {canManage ? (
         <View style={{ flexDirection: 'row', gap: 6 }}>
           <SmallPillBtn
@@ -537,6 +554,8 @@ function AnalyticsSection({
 function TxStatusPill({ status }: { status: string }) {
   const map: Record<string, { label: string; color: string; bg: string }> = {
     succeeded: { label: 'Succeeded', color: colors.green, bg: colors.greenBg },
+    held: { label: 'In escrow', color: colors.info, bg: colors.infoBg },
+    released: { label: 'Released', color: colors.green, bg: colors.greenBg },
     pending: { label: 'Pending', color: colors.warning, bg: colors.warningBg },
     failed: { label: 'Failed', color: colors.danger, bg: colors.dangerBg },
     refunded: { label: 'Refunded', color: colors.danger, bg: colors.dangerBg },
@@ -1033,6 +1052,14 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(19,19,19,0.6)',
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  escrowExplain: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+    backgroundColor: colors.infoBg,
+    borderRadius: radius.md,
+    padding: 12,
   },
   pendingBanner: {
     flexDirection: 'row',
