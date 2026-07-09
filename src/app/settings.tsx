@@ -4,6 +4,7 @@ import { useRouter } from 'expo-router';
 import React, { useEffect, useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, Switch, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { AccountLayout } from '../components/account-layout';
 import { BottomTabs, TAB_BAR_HEIGHT } from '../components/bottom-tabs';
 import { Button } from '../components/ui/button';
 import { BText } from '../components/ui/text';
@@ -91,18 +92,7 @@ export default function Settings() {
   );
 
   if (isDesktop) {
-    return (
-      <ScrollView style={{ flex: 1, backgroundColor: colors.white }}>
-        <WebHeader showSearch />
-        <View style={styles.desktopContent}>
-          <BText variant="h1" style={{ marginBottom: 24 }}>
-            Settings
-          </BText>
-          <View style={{ maxWidth: 640 }}>{content}</View>
-        </View>
-        <WebFooter />
-      </ScrollView>
-    );
+    return <AccountLayout title="Settings">{content}</AccountLayout>;
   }
 
   return (

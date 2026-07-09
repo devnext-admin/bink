@@ -3,6 +3,7 @@ import { useFocusEffect, useRouter } from 'expo-router';
 import React, { useCallback, useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { AccountLayout } from '../components/account-layout';
 import { BottomTabs, TAB_BAR_HEIGHT } from '../components/bottom-tabs';
 import { BText } from '../components/ui/text';
 import { WebFooter } from '../components/web-footer';
@@ -107,18 +108,7 @@ export default function Invoices() {
   );
 
   if (isDesktop) {
-    return (
-      <ScrollView style={{ flex: 1, backgroundColor: colors.white }}>
-        <WebHeader showSearch />
-        <View style={styles.desktopContent}>
-          <BText variant="h1" style={{ marginBottom: 24 }}>
-            Invoices
-          </BText>
-          <View style={{ maxWidth: 640 }}>{list}</View>
-        </View>
-        <WebFooter />
-      </ScrollView>
-    );
+    return <AccountLayout title="Invoices">{list}</AccountLayout>;
   }
 
   return (

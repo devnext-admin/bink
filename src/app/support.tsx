@@ -3,6 +3,7 @@ import { useRouter } from 'expo-router';
 import React, { useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { AccountLayout } from '../components/account-layout';
 import { BottomTabs, TAB_BAR_HEIGHT } from '../components/bottom-tabs';
 import { BText } from '../components/ui/text';
 import { WebFooter } from '../components/web-footer';
@@ -80,18 +81,7 @@ export default function Support() {
   );
 
   if (isDesktop) {
-    return (
-      <ScrollView style={{ flex: 1, backgroundColor: colors.white }}>
-        <WebHeader showSearch />
-        <View style={styles.desktopContent}>
-          <BText variant="h1" style={{ marginBottom: 24 }}>
-            Help and support
-          </BText>
-          <View style={{ maxWidth: 680 }}>{content}</View>
-        </View>
-        <WebFooter />
-      </ScrollView>
-    );
+    return <AccountLayout title="Help and support">{content}</AccountLayout>;
   }
 
   return (

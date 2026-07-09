@@ -4,6 +4,7 @@ import { useRouter } from 'expo-router';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { ChatThread, ConversationList } from '../../components/chat';
 import { Logo } from '../../components/logo';
 import { PaymentPill } from '../../components/payment-pill';
 import { Button } from '../../components/ui/button';
@@ -27,16 +28,18 @@ import {
   updateVenueInfo,
 } from '../../lib/business';
 import { formatDateLong, formatDuration, formatPrice, formatTimeOfDate } from '../../lib/format';
+import { Conversation, getConversationsForVenue } from '../../lib/messages';
 import { setBookingStatus } from '../../lib/ops';
 import { escrowSummary, getVenueTransactions, refundBooking, salesSummary } from '../../lib/payments';
 import { colors, font, maxContentWidth, radius } from '../../lib/theme';
 import type { Booking, Transaction, Venue } from '../../lib/types';
 import { useIsDesktop } from '../../lib/use-layout';
 
-type Section = 'overview' | 'bookings' | 'sales' | 'analytics' | 'services' | 'staff' | 'settings';
+type Section = 'overview' | 'bookings' | 'messages' | 'sales' | 'analytics' | 'services' | 'staff' | 'settings';
 const SECTIONS: { key: Section; label: string; icon: string }[] = [
   { key: 'overview', label: 'Overview', icon: 'grid-outline' },
   { key: 'bookings', label: 'Bookings', icon: 'calendar-outline' },
+  { key: 'messages', label: 'Messages', icon: 'chatbubble-ellipses-outline' },
   { key: 'sales', label: 'Sales', icon: 'cash-outline' },
   { key: 'analytics', label: 'Analytics', icon: 'stats-chart-outline' },
   { key: 'services', label: 'Services', icon: 'pricetags-outline' },
@@ -175,6 +178,8 @@ export default function BusinessDashboard() {
         )}
       </View>
     );
+  } else if (section === 'messages') {
+    body = <VenueMessages venue={venue!} />;
   } else if (section === 'sales') {
     const summary = salesSummary(transactions);
     const escrow = escrowSummary(transactions);
@@ -419,6 +424,47 @@ function BookingRow({ booking, onRefund }: { booking: Booking; onRefund?: () => 
           </BText>
         </Pressable>
       ) : null}
+    </View>
+  );
+}
+
+function VenueMessages({ venue }: { venue: Venue }) {
+  const [conversations, setConversations] = useState<Conversation[]>([]);
+  const [active, setActive] = useState<Conversation | null>(null);
+
+  useEffect(() => {
+    const load = () => getConversationsForVenue(venue.id).then(setConversations);
+    load();
+    const t = setInterval(load, 5000);
+    return () => clearInterval(t);
+  }, [venue.id]);
+
+  return (
+    <View style={[styles.card, { padding: 0, overflow: 'hidden', minHeight: 460, flexDirection: 'row' }]}>
+      <ScrollView style={{ width: 300, borderRightWidth: 1, borderRightColor: colors.divider }}>
+        <ConversationList
+          conversations={conversations}
+          perspective="venue"
+          activeKey={active ? `${active.venue_id}|${active.user_id}` : null}
+          onSelect={setActive}
+        />
+      </ScrollView>
+      <View style={{ flex: 1 }}>
+        {active ? (
+          <ChatThread
+            venueId={venue.id}
+            venueName={venue.name}
+            userId={active.user_id}
+            userName={active.user_name}
+            perspective="venue"
+          />
+        ) : (
+          <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', padding: 24, gap: 10 }}>
+            <Ionicons name="chatbubbles-outline" size={40} color={colors.grayLight} />
+            <BText variant="small">Select a conversation to reply to your customers.</BText>
+          </View>
+        )}
+      </View>
     </View>
   );
 }

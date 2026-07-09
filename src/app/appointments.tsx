@@ -4,6 +4,7 @@ import { useFocusEffect, useRouter } from 'expo-router';
 import React, { useCallback, useState } from 'react';
 import { Modal, Pressable, ScrollView, StyleSheet, TextInput, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { AccountLayout } from '../components/account-layout';
 import { BottomTabs, TAB_BAR_HEIGHT } from '../components/bottom-tabs';
 import { PaymentPill } from '../components/payment-pill';
 import { Button } from '../components/ui/button';
@@ -197,6 +198,15 @@ export default function Appointments() {
                     }}
                   />
                   <Button title="Cancel booking" variant="secondary" size="sm" onPress={() => onCancel(b.id)} />
+                  <Button
+                    title="Message"
+                    variant="secondary"
+                    size="sm"
+                    onPress={() => {
+                      const v = allVenues.find((x) => x.id === b.venue_id);
+                      if (v) router.push(`/messages?venue=${v.slug}`);
+                    }}
+                  />
                 </View>
                 {reschedId === b.id && (
                   <View style={{ marginTop: 14, gap: 10 }}>
@@ -295,17 +305,10 @@ export default function Appointments() {
 
   if (isDesktop) {
     return (
-      <ScrollView style={{ flex: 1, backgroundColor: colors.white }}>
-        <WebHeader showSearch />
-        <View style={styles.desktopContent}>
-          <BText variant="h1" style={{ marginBottom: 24 }}>
-            Appointments
-          </BText>
-          <View style={{ maxWidth: 720 }}>{list}</View>
-        </View>
-        <WebFooter />
+      <>
+        <AccountLayout title="Appointments">{list}</AccountLayout>
         {ratingModal}
-      </ScrollView>
+      </>
     );
   }
 

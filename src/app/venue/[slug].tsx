@@ -348,6 +348,14 @@ function VenueDesktop({ venue }: { venue: Venue }) {
           <View style={{ width: 360 }}>
             <View style={[styles.bookCard, shadow.card]}>
               <Button title="Book now" size="lg" fullWidth onPress={book} />
+              <View style={{ marginTop: 10 }}>
+                <Button
+                  title="Message salon"
+                  variant="secondary"
+                  fullWidth
+                  onPress={() => router.push(`/messages?venue=${venue.slug}`)}
+                />
+              </View>
               <View style={{ flexDirection: 'row', gap: 10, marginTop: 20 }}>
                 <Ionicons name="time-outline" size={18} color={colors.ink} />
                 <BText variant="small">
@@ -457,6 +465,9 @@ function VenueMobile({ venue }: { venue: Venue }) {
           <BText variant="smallMedium">{venue.services.length} services available</BText>
           <Rating value={venue.rating_avg} count={venue.rating_count} size={12} />
         </View>
+        <Pressable onPress={() => router.push(`/messages?venue=${venue.slug}`)} style={styles.msgBtn} hitSlop={6}>
+          <Ionicons name="chatbubble-ellipses-outline" size={20} color={colors.ink} />
+        </Pressable>
         <Button title="Book now" size="lg" onPress={book} />
       </View>
     </View>
@@ -529,6 +540,15 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     ...shadow.card,
+  },
+  msgBtn: {
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    borderWidth: 1,
+    borderColor: colors.border,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   seeAllPhotos: {
     position: 'absolute',

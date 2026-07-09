@@ -3,6 +3,7 @@ import { useRouter } from 'expo-router';
 import React, { useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, TextInput, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { AccountLayout } from '../components/account-layout';
 import { BottomTabs, TAB_BAR_HEIGHT } from '../components/bottom-tabs';
 import { Avatar } from '../components/ui/avatar';
 import { Button } from '../components/ui/button';
@@ -18,6 +19,7 @@ import { useIsDesktop } from '../lib/use-layout';
 const BASE_MENU = [
   { icon: 'calendar-outline', label: 'Appointments', href: '/appointments' },
   { icon: 'receipt-outline', label: 'Invoices', href: '/invoices' },
+  { icon: 'chatbubble-ellipses-outline', label: 'Messages', href: '/messages' },
   { icon: 'notifications-outline', label: 'Notifications', href: '/notifications' },
   { icon: 'heart-outline', label: 'Favorites', href: null },
   { icon: 'storefront-outline', label: 'Bink for Business', href: '/business' },
@@ -145,18 +147,7 @@ export default function Profile() {
   );
 
   if (isDesktop) {
-    return (
-      <ScrollView style={{ flex: 1, backgroundColor: colors.white }}>
-        <WebHeader showSearch />
-        <View style={styles.desktopContent}>
-          <BText variant="h1" style={{ marginBottom: 24 }}>
-            Profile
-          </BText>
-          <View style={{ maxWidth: 720 }}>{content}</View>
-        </View>
-        <WebFooter />
-      </ScrollView>
-    );
+    return <AccountLayout title="Profile">{content}</AccountLayout>;
   }
 
   return (
