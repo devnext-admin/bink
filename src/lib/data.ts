@@ -242,24 +242,32 @@ export async function getBookings(forUserId?: string | null): Promise<Booking[]>
   const user = sb ? (await sb.auth.getUser()).data.user : null;
 
   if (sb && user) {
-    const { data, error } = await sb
+    let query = sb
       .from('bookings')
-      .select('*, items:booking_items (service_id, service_name, duration_minutes, price_cents), venue:venues (name, area, city, images:venue_images (url, sort_order))')
+      .select('*, items:booking_items (service_id, service_name, duration_minutes, price_cents), staff (name), venue:venues (name, area, city, images:venue_images (url, sort_order))')
       .order('starts_at', { ascending: false });
+    if (forUserId !== undefined) query = query.eq('user_id', forUserId ?? user.id);
+    const { data, error } = await query;
     if (!error && data) {
       return data.map((b: any) => ({
         id: b.id,
+        user_id: b.user_id,
         venue_id: b.venue_id,
         venue_name: b.venue?.name ?? 'Venue',
         venue_image: b.venue?.images?.[0]?.url,
         venue_area: b.venue ? `${b.venue.area}, ${b.venue.city}` : undefined,
         staff_id: b.staff_id,
-        staff_name: null,
+        staff_name: b.staff?.name ?? null,
         starts_at: b.starts_at,
         ends_at: b.ends_at,
         status: b.status,
         total_cents: b.total_cents,
         currency: b.currency,
+        payment_status: b.payment_status,
+        payment_method: b.payment_method,
+        promo_code: b.promo_code,
+        notes: b.notes,
+        customer_confirmed_at: b.customer_confirmed_at,
         items: b.items ?? [],
       }));
     }
@@ -303,6 +311,14 @@ const LOCAL_FAVS_KEY = 'bink.favorites';
 const favsKey = (userId?: string | null) => (userId ? `${LOCAL_FAVS_KEY}:${userId}` : LOCAL_FAVS_KEY);
 
 export async function getFavoriteIds(userId?: string | null): Promise<string[]> {
+  const sb = getSupabase();
+  if (sb) {
+    const user = (await sb.auth.getUser()).data.user;
+    if (user) {
+      const { data, error } = await sb.from('favorites').select('venue_id').eq('user_id', user.id);
+      if (!error && data) return data.map((r: any) => r.venue_id);
+    }
+  }
   try {
     const raw = await AsyncStorage.getItem(favsKey(userId));
     return raw ? JSON.parse(raw) : [];

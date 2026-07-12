@@ -7,9 +7,11 @@ waxing, skincare, makeup and bridal salons. One Expo (React Native) codebase tha
 - **Mobile website** (same responsive code below 1024px)
 - **iOS / Android app** via Expo Go (bottom tabs, native-feeling screens)
 
-Backend: **Supabase** (schema + seed managed with the Supabase CLI). Until a cloud
-project is connected the app runs in **demo mode** — bundled data (same IDs as the
-SQL seed) with bookings/favorites persisted locally, so everything works offline.
+Backend: **cloud Supabase** (project `Bink` in the ThreeLines org, region
+eu-central-1; schema + seed managed with the Supabase CLI). Auth, bookings,
+messaging, payments/escrow and notifications all run on the live database.
+Without `.env` credentials the app falls back to **demo mode** — bundled data
+with everything persisted locally.
 
 ## Run it
 
@@ -30,8 +32,17 @@ npm start          # then scan the QR code with Expo Go for the native app
 
 New salons are created as **pending** and only appear in the marketplace after an
 admin approves them. Partners manage services, team, settings and see their
-bookings/revenue in the dashboard. **Demo mode:** any email/password works; log
-in with an email starting with `admin@` (e.g. `admin@bink.com`) for admin access.
+bookings/revenue in the dashboard.
+
+**Demo accounts** (cloud, password `binkdemo123`, one-click buttons on `/auth`):
+
+| Persona | Email | Lands on |
+| --- | --- | --- |
+| Customer (Deema) | `demo@bink.com` | Appointments with escrow states, chat, invoices, favorites |
+| Salon owner (Lama) | `owner@bink.com` | Glow & Co dashboard: bookings, sales, messages |
+| Admin | `admin@bink.com` | Platform stats, approvals, users |
+
+Demo persona data lives in `supabase/demo-personas.sql`.
 
 ## Design system
 
@@ -110,22 +121,23 @@ redirect if required → `payments-webhook` settles the transaction, marks the
 booking paid and issues the invoice. Refunds go through `refund-payment`
 (venue-owner/admin only). Tap can be swapped in later behind the same functions.
 
-## Connect cloud Supabase (when ready)
+## Cloud Supabase
 
-1. Free a project slot or upgrade, then:
-   ```bash
-   npx supabase projects create Bink --org-id <org> --db-password <pw> --region <region>
-   npx supabase link --project-ref <ref>
-   npx supabase db push                # applies migrations
-   npx supabase db push --include-seed # pushes seed.sql too
-   ```
-2. Copy `.env.example` to `.env` and fill in:
-   ```
-   EXPO_PUBLIC_SUPABASE_URL=https://<ref>.supabase.co
-   EXPO_PUBLIC_SUPABASE_ANON_KEY=<anon key>
-   ```
-3. Restart Expo. Auth, bookings and favorites switch to the cloud automatically
-   (`src/lib/supabase.ts` + `src/lib/data.ts`).
+Live project: `yxidiwkswariavopixmf` (ThreeLines org, eu-central-1). `.env`
+(gitignored) carries `EXPO_PUBLIC_SUPABASE_URL` + `EXPO_PUBLIC_SUPABASE_ANON_KEY`
+— copy from `.env.example` and fill from the dashboard's API settings if you're
+setting up a new machine.
+
+```bash
+npx supabase link --project-ref yxidiwkswariavopixmf   # once per machine
+npx supabase db push                                   # apply new migrations
+```
+
+To rebuild from scratch: create a project, `db push`, run `supabase/seed.sql`,
+create the demo auth users (emails above, password `binkdemo123`) via the auth
+admin API, update the UUIDs at the top of `supabase/demo-personas.sql`, and run
+it. Email confirmations are disabled (`mailer_autoconfirm`) so signups get an
+instant session.
 
 ## Deploy web to Vercel
 

@@ -93,7 +93,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           setLoading(false);
         }
         const { data: sub } = sb.auth.onAuthStateChange((_e, session) => {
-          setUser(fromSession(session));
+          const u = fromSession(session);
+          setUser(u);
+          // profiles.role stays the source of truth (metadata may lag)
+          if (u) {
+            sb.from('profiles').select('role').eq('id', u.id).maybeSingle().then(({ data: p }) => {
+              if (p?.role) setUser((cur) => (cur && cur.id === u.id ? { ...cur, role: p.role as UserRole } : cur));
+            });
+          }
         });
         unsub = () => sub.subscription.unsubscribe();
         if (data.session) return;

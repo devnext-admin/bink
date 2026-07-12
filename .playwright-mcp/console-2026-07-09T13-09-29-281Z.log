@@ -1,3 +1,0 @@
-[    3859ms] [WARNING] Failed to decode downloaded font: https://bink-three.vercel.app/assets/node_modules/@expo/vector-icons/build/vendor/react-native-vector-icons/Fonts/Ionicons.b4eb097d35f44ed943676fd56f6bdc51.ttf @ https://bink-three.vercel.app/profile:0
-[    3859ms] [WARNING] OTS parsing error: invalid sfntVersion: 1008813135 @ https://bink-three.vercel.app/profile:0
-[    3866ms] A network error occurred.

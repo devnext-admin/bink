@@ -87,6 +87,65 @@ export async function payForBooking(input: PayForBookingInput): Promise<Transact
 
   // Demo gateway: instant success
   await new Promise((r) => setTimeout(r, 600));
+
+  // With Supabase live, record the demo charge in the database so the whole
+  // money layer (sales, escrow, invoices) runs off cloud data.
+  if (sb && !input.booking.id.startsWith('local-')) {
+    const user = (await sb.auth.getUser()).data.user;
+    if (user) {
+      const { data: txRow, error: txErr } = await sb
+        .from('transactions')
+        .insert({
+          booking_id: input.booking.id,
+          venue_id: input.booking.venue_id,
+          user_id: user.id,
+          amount_cents: input.booking.total_cents,
+          currency: input.booking.currency,
+          method: input.method,
+          status: 'succeeded',
+          escrow_status: 'held',
+          gateway: 'demo',
+          gateway_ref: uid('demo'),
+        })
+        .select()
+        .single();
+      if (!txErr && txRow) {
+        const vat = splitVat(input.booking.total_cents);
+        const { data: invRow } = await sb
+          .from('invoices')
+          .insert({
+            booking_id: input.booking.id,
+            transaction_id: txRow.id,
+            venue_id: input.booking.venue_id,
+            user_id: user.id,
+            subtotal_cents: vat.subtotal_cents,
+            vat_cents: vat.vat_cents,
+            total_cents: input.booking.total_cents,
+          })
+          .select()
+          .single();
+        await sb
+          .from('bookings')
+          .update({ payment_status: 'paid', payment_method: input.method })
+          .eq('id', input.booking.id);
+        await pushNotification({
+          audience: 'customer',
+          userId: user.id,
+          venueId: input.booking.venue_id,
+          title: 'Payment held in escrow',
+          body: `${invRow?.number ?? 'Your invoice'} issued. Bink holds your payment securely and releases it to ${input.booking.venue_name} after your visit is confirmed.`,
+        });
+        await pushNotification({
+          audience: 'venue',
+          venueId: input.booking.venue_id,
+          title: 'Payment received',
+          body: `${(input.booking.total_cents / 100).toFixed(2)} ${input.booking.currency} paid online — held in escrow until the visit is confirmed.`,
+        });
+        return { ...txRow, venue_name: input.booking.venue_name, customer_name: input.customerName ?? null } as Transaction;
+      }
+    }
+  }
+
   const tx: Transaction = {
     id: uid('tx'),
     booking_id: input.booking.id,
@@ -156,6 +215,30 @@ export async function refundBooking(bookingId: string): Promise<void> {
     if (error) throw new Error(error.message);
     return;
   }
+  if (sb && !bookingId.startsWith('local-')) {
+    const { data: cloudTx } = await sb
+      .from('transactions')
+      .select('*')
+      .eq('booking_id', bookingId)
+      .eq('status', 'succeeded')
+      .maybeSingle();
+    if (cloudTx) {
+      await sb
+        .from('transactions')
+        .update({ status: 'refunded', escrow_status: 'refunded' })
+        .eq('id', cloudTx.id);
+      await sb.from('bookings').update({ payment_status: 'refunded' }).eq('id', bookingId);
+      await pushNotification({
+        audience: 'customer',
+        userId: cloudTx.user_id,
+        venueId: cloudTx.venue_id,
+        title: 'Refund issued',
+        body: `Your payment of ${(cloudTx.amount_cents / 100).toFixed(2)} ${cloudTx.currency} was refunded to your original payment method.`,
+      });
+      return;
+    }
+  }
+
   const txs = await readList<Transaction>(TX_KEY);
   const tx = txs.find((t) => t.booking_id === bookingId && t.status === 'succeeded');
   await writeList(
@@ -248,7 +331,12 @@ export async function getVenueTransactions(venueId: string): Promise<Transaction
       .select('*')
       .eq('venue_id', venueId)
       .order('created_at', { ascending: false });
-    if (!error && data?.length) return data;
+    if (!error && data?.length) {
+      const userIds = [...new Set(data.map((t: any) => t.user_id).filter(Boolean))];
+      const { data: profs } = await sb.from('profiles').select('id, full_name').in('id', userIds);
+      const names = new Map((profs ?? []).map((p: any) => [p.id, p.full_name]));
+      return data.map((t: any) => ({ ...t, customer_name: names.get(t.user_id) ?? null }));
+    }
   }
   return (await readList<Transaction>(TX_KEY)).filter((t) => t.venue_id === venueId);
 }
@@ -271,6 +359,7 @@ export async function getMyInvoices(userId?: string | null): Promise<Invoice[]> 
     const { data, error } = await sb
       .from('invoices')
       .select('*, venue:venues (name)')
+      .eq('user_id', userId)
       .order('issued_at', { ascending: false });
     if (!error && data?.length) return data.map((i: any) => ({ ...i, venue_name: i.venue?.name }));
   }

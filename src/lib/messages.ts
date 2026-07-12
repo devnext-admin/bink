@@ -173,7 +173,15 @@ export async function getConversationsForVenue(venueId: string): Promise<Convers
       .select('*')
       .eq('venue_id', venueId)
       .order('created_at', { ascending: true });
-    if (data?.length) return toConversations(data as ChatMessage[], 'venue');
+    if (data?.length) {
+      const userIds = [...new Set(data.map((m: any) => m.user_id))];
+      const { data: profs } = await sb.from('profiles').select('id, full_name').in('id', userIds);
+      const names = new Map((profs ?? []).map((p: any) => [p.id, p.full_name]));
+      return toConversations(
+        data.map((m: any) => ({ ...m, user_name: names.get(m.user_id) ?? 'Customer' })),
+        'venue'
+      );
+    }
   }
   return toConversations((await readAll()).filter((m) => m.venue_id === venueId), 'venue');
 }
@@ -193,6 +201,28 @@ export async function markThreadRead(venueId: string, userId: string, by: 'custo
 
 export async function getUnreadMessageCount(userId: string | null, ownedVenueIds: string[]): Promise<number> {
   if (!userId && !ownedVenueIds.length) return 0;
+  const sb = getSupabase();
+  if (sb && userId && isCloudId(userId)) {
+    let count = 0;
+    const { count: mine } = await sb
+      .from('messages')
+      .select('id', { count: 'exact', head: true })
+      .eq('user_id', userId)
+      .eq('sender', 'venue')
+      .eq('read_by_customer', false);
+    count += mine ?? 0;
+    const cloudVenues = ownedVenueIds.filter(isCloudId);
+    if (cloudVenues.length) {
+      const { count: theirs } = await sb
+        .from('messages')
+        .select('id', { count: 'exact', head: true })
+        .in('venue_id', cloudVenues)
+        .eq('sender', 'customer')
+        .eq('read_by_venue', false);
+      count += theirs ?? 0;
+    }
+    return count;
+  }
   const all = await readAll();
   let count = 0;
   for (const m of all) {

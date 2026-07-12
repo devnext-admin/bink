@@ -354,11 +354,21 @@ export async function getVenueBookings(venueId: string): Promise<Booking[]> {
   if (sb) {
     const { data, error } = await sb
       .from('bookings')
-      .select('*, items:booking_items (service_id, service_name, duration_minutes, price_cents)')
+      .select('*, items:booking_items (service_id, service_name, duration_minutes, price_cents), staff (name)')
       .eq('venue_id', venueId)
       .order('starts_at', { ascending: false });
     if (!error && data?.length) {
-      return data.map((b: any) => ({ ...b, venue_name: '', items: b.items ?? [] }));
+      // bookings reference auth.users, so resolve display names via profiles
+      const userIds = [...new Set(data.map((b: any) => b.user_id).filter(Boolean))];
+      const { data: profs } = await sb.from('profiles').select('id, full_name').in('id', userIds);
+      const names = new Map((profs ?? []).map((p: any) => [p.id, p.full_name]));
+      return data.map((b: any) => ({
+        ...b,
+        venue_name: '',
+        customer_name: names.get(b.user_id) ?? null,
+        staff_name: b.staff?.name ?? null,
+        items: b.items ?? [],
+      }));
     }
   }
   return (await getBookings()).filter((b) => b.venue_id === venueId);

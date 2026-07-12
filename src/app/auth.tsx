@@ -23,26 +23,31 @@ export default function Auth() {
   const { signIn, signUp, continueAsGuest } = useAuth();
   const { refresh } = useAppData();
   const [demoBusy, setDemoBusy] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
+  // In cloud mode these are real pre-seeded accounts; in demo mode the data
+  // is seeded locally and any password works.
+  const DEMO_PASSWORD = 'binkdemo123';
   const enterDemo = async (persona: 'customer' | 'owner' | 'admin') => {
     setDemoBusy(persona);
-    if (persona === 'customer') {
-      await seedCustomerDemo();
-      await signIn(DEMO_CUSTOMER_EMAIL, 'demo');
-      await refresh();
-      router.replace('/appointments');
-    } else if (persona === 'owner') {
-      await seedOwnerDemo();
-      await signIn(DEMO_OWNER_EMAIL, 'demo');
-      await refresh();
-      router.replace('/business/dashboard');
-    } else {
-      await seedCustomerDemo();
-      await seedOwnerDemo();
-      await signIn(DEMO_ADMIN_EMAIL, 'demo');
-      await refresh();
-      router.replace('/admin');
+    if (!isSupabaseConfigured) {
+      if (persona === 'customer') await seedCustomerDemo();
+      else if (persona === 'owner') await seedOwnerDemo();
+      else {
+        await seedCustomerDemo();
+        await seedOwnerDemo();
+      }
     }
+    const email =
+      persona === 'customer' ? DEMO_CUSTOMER_EMAIL : persona === 'owner' ? DEMO_OWNER_EMAIL : DEMO_ADMIN_EMAIL;
+    const err = await signIn(email, DEMO_PASSWORD);
+    if (err) {
+      setError(err);
+      setDemoBusy(null);
+      return;
+    }
+    await refresh();
+    router.replace(persona === 'customer' ? '/appointments' : persona === 'owner' ? '/business/dashboard' : '/admin');
     setDemoBusy(null);
   };
   const params = useLocalSearchParams<{ mode?: string }>();
@@ -50,7 +55,6 @@ export default function Auth() {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
 
   const close = () => {
@@ -151,7 +155,7 @@ export default function Auth() {
           }}
         />
 
-        {!isSupabaseConfigured && (
+        {(
           <View style={{ gap: 10 }}>
             <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12, marginTop: 4 }}>
               <View style={styles.hr} />
