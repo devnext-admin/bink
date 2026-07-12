@@ -244,7 +244,7 @@ export async function getBookings(forUserId?: string | null): Promise<Booking[]>
   if (sb && user) {
     let query = sb
       .from('bookings')
-      .select('*, items:booking_items (service_id, service_name, duration_minutes, price_cents), staff (name), venue:venues (name, area, city, images:venue_images (url, sort_order))')
+      .select('*, items:booking_items (service_id, service_name, duration_minutes, price_cents), staff (name), reviews (id), venue:venues (name, area, city, images:venue_images (url, sort_order))')
       .order('starts_at', { ascending: false });
     if (forUserId !== undefined) query = query.eq('user_id', forUserId ?? user.id);
     const { data, error } = await query;
@@ -268,6 +268,7 @@ export async function getBookings(forUserId?: string | null): Promise<Booking[]>
         promo_code: b.promo_code,
         notes: b.notes,
         customer_confirmed_at: b.customer_confirmed_at,
+        rated: (b.reviews?.length ?? 0) > 0,
         items: b.items ?? [],
       }));
     }

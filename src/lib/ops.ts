@@ -175,6 +175,7 @@ export async function submitReview(input: {
     await sb.from('reviews').insert({
       venue_id: input.venue.id,
       user_id: input.userId,
+      booking_id: input.bookingId.startsWith('local-') ? null : input.bookingId,
       author_name: input.authorName,
       rating: input.rating,
       comment: input.comment,
