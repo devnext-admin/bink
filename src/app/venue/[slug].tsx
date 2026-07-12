@@ -295,10 +295,16 @@ function VenueDesktop({ venue }: { venue: Venue }) {
         {/* Breadcrumb */}
         <View style={{ flexDirection: 'row', gap: 6, marginTop: 20 }}>
           {[t('Home'), category ? t(category.name) : t('Venues'), venue.city, venue.name].map((c, i, a) => (
-            <BText key={c} variant="small" color={i === a.length - 1 ? colors.ink : colors.gray}>
-              {c}
-              {i < a.length - 1 ? '  ·' : ''}
-            </BText>
+            <React.Fragment key={c}>
+              <BText variant="small" color={i === a.length - 1 ? colors.ink : colors.gray}>
+                {c}
+              </BText>
+              {i < a.length - 1 && (
+                <BText variant="small" color={colors.gray}>
+                  ·
+                </BText>
+              )}
+            </React.Fragment>
           ))}
         </View>
 
@@ -321,7 +327,10 @@ function VenueDesktop({ venue }: { venue: Venue }) {
                 {t('Open')}
               </BText>
               <BText variant="body" color={colors.gray}>
-                {t('until {time}', { time: '10:00 PM' })} · {venue.area}, {venue.city}
+                {t('until {time}', { time: t('10:00 PM') })}
+              </BText>
+              <BText variant="body" color={colors.gray}>
+                · {venue.area}, {venue.city}
               </BText>
               <BText variant="link" onPress={() => Linking.openURL(directionsUrl(venue))}>
                 {t('Get directions')}
@@ -388,7 +397,7 @@ function VenueDesktop({ venue }: { venue: Venue }) {
                   <BText variant="smallMedium" color={colors.green}>
                     {t('Open')}
                   </BText>{' '}
-                  {t('until {time}', { time: '10:00 PM' })}
+                  {t('until {time}', { time: t('10:00 PM') })}
                 </BText>
               </View>
               <View style={{ flexDirection: 'row', gap: 10, marginTop: 14 }}>
@@ -466,7 +475,7 @@ function VenueMobile({ venue }: { venue: Venue }) {
             <BText variant="small" color={colors.green} style={{ fontFamily: font.semibold }}>
               {t('Open')}
             </BText>
-            <BText variant="small">{t('until {time}', { time: '10:00 PM' })}</BText>
+            <BText variant="small">{t('until {time}', { time: t('10:00 PM') })}</BText>
           </View>
           <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
             <Ionicons name="location-outline" size={14} color={colors.gray} />

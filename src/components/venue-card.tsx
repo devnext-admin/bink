@@ -57,8 +57,8 @@ export function VenueCard({ venue, width, badge }: VenueCardProps) {
       </View>
 
       <View style={{ marginTop: 12, gap: 3 }}>
-        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
-          <BText variant="title" numberOfLines={1} style={{ flex: 1, marginRight: 8 }}>
+        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: 8 }}>
+          <BText variant="title" numberOfLines={1} style={{ flex: 1 }}>
             {venue.name}
           </BText>
           <Rating value={venue.rating_avg} />

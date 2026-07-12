@@ -47,8 +47,11 @@ const AR_FONT: Record<string, string> = {
 export function BText({ variant = 'body', color, style, ...rest }: BTextProps) {
   const { lang } = useI18n();
   let flat = StyleSheet.flatten([variants[variant], color ? { color } : null, style]) as TextStyle;
-  if (lang === 'ar' && flat.fontFamily && AR_FONT[flat.fontFamily]) {
-    flat = { ...flat, fontFamily: AR_FONT[flat.fontFamily] };
+  if (lang === 'ar') {
+    if (flat.fontFamily && AR_FONT[flat.fontFamily]) flat = { ...flat, fontFamily: AR_FONT[flat.fontFamily] };
+    // Arabic needs taller lines: Tajawal's ascenders/diacritics clip at Poppins metrics
+    const size = flat.fontSize ?? 16;
+    flat = { ...flat, lineHeight: Math.max(flat.lineHeight ?? 0, Math.round(size * 1.6)) };
   }
   return <RNText {...rest} style={flat} />;
 }

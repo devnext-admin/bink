@@ -3,6 +3,7 @@
 export const ar: Record<string, string> = {
   "% off": "نسبة الخصم %",
   "+966 5X XXX XXXX (9 AM – 9 PM, Sun–Thu)": "+966 5X XXX XXXX (من 9 صباحًا إلى 9 مساءً، الأحد–الخميس)",
+  "10:00 PM": "10:00 مساءً",
   "1 billion+": "أكثر من مليار",
   "1 hr": "ساعة واحدة",
   "1 salon for “{q}”": "صالون واحد لـ “{q}”",
