@@ -95,15 +95,15 @@ export function CompactSearch({ onPress }: { onPress?: () => void }) {
       onPress={onPress ?? (() => router.push('/search'))}
       style={({ hovered }: any) => [styles.compact, hovered && { backgroundColor: colors.bgSubtle }]}
     >
-      <BText variant="small" color={colors.ink} numberOfLines={1}>
+      <BText variant="small" color={colors.ink} numberOfLines={1} style={styles.compactSegment}>
         All treatments
       </BText>
       <View style={styles.compactDivider} />
-      <BText variant="small" color={colors.ink} numberOfLines={1}>
+      <BText variant="small" color={colors.ink} numberOfLines={1} style={styles.compactSegment}>
         Current location
       </BText>
       <View style={styles.compactDivider} />
-      <BText variant="small" color={colors.ink} numberOfLines={1}>
+      <BText variant="small" color={colors.ink} numberOfLines={1} style={styles.compactSegment}>
         Any time
       </BText>
       <View style={styles.compactBtn}>
@@ -170,6 +170,7 @@ const styles = StyleSheet.create({
     height: 44,
     backgroundColor: colors.white,
   },
+  compactSegment: { flex: 1 },
   compactDivider: { width: 1, height: 20, backgroundColor: colors.divider },
   compactBtn: {
     width: 32,

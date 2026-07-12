@@ -56,6 +56,8 @@ async function mutateLocalVenue(venue: Venue, fn: (v: Venue) => Venue): Promise<
 export interface RegisterSalonInput {
   ownerId: string;
   name: string;
+  providerType?: 'salon' | 'freelancer';
+  mapsUrl?: string | null;
   categoryId: number;
   description: string;
   address: string;
@@ -91,6 +93,8 @@ export async function registerSalon(input: RegisterSalonInput): Promise<Venue> {
     category_id: input.categoryId,
     owner_id: input.ownerId,
     status: 'pending',
+    provider_type: input.providerType ?? 'salon',
+    maps_url: input.mapsUrl?.trim() || null,
     address: input.address,
     area: input.area,
     city: input.city,
@@ -144,6 +148,8 @@ export async function registerSalon(input: RegisterSalonInput): Promise<Venue> {
         category_id: venue.category_id,
         owner_id: input.ownerId,
         status: 'pending',
+        provider_type: venue.provider_type,
+        maps_url: venue.maps_url,
         address: venue.address,
         area: venue.area,
         city: venue.city,
@@ -180,7 +186,7 @@ export async function registerSalon(input: RegisterSalonInput): Promise<Venue> {
 
 export async function updateVenueInfo(
   venue: Venue,
-  patch: Partial<Pick<Venue, 'name' | 'description' | 'address' | 'area' | 'city' | 'category_id' | 'highlights'>>
+  patch: Partial<Pick<Venue, 'name' | 'description' | 'address' | 'area' | 'city' | 'category_id' | 'highlights' | 'maps_url' | 'provider_type'>>
 ): Promise<Venue> {
   const sb = getSupabase();
   if (sb && !venue.id.startsWith('venue-')) {

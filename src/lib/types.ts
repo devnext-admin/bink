@@ -70,6 +70,8 @@ export interface Venue {
   is_new: boolean;
   is_trending: boolean;
   highlights: string[];
+  provider_type?: 'salon' | 'freelancer';
+  maps_url?: string | null;
   images: VenueImage[];
   services: Service[];
   staff: Staff[];

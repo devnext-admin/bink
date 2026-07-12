@@ -15,6 +15,7 @@ import {
   seedCustomerDemo,
   seedOwnerDemo,
 } from '../lib/demo-seed';
+import { getSupabase } from '../lib/supabase';
 import { colors, font, radius } from '../lib/theme';
 
 export default function Auth() {
@@ -71,8 +72,23 @@ export default function Auth() {
     setBusy(true);
     const err = mode === 'signin' ? await signIn(email, password) : await signUp(name, email, password);
     setBusy(false);
-    if (err) setError(err);
-    else close();
+    if (err) {
+      setError(err);
+      return;
+    }
+    // Salon/freelancer owners land on their dashboard, like signing in on Fresha for business
+    const sb = getSupabase();
+    if (mode === 'signin' && sb) {
+      const uid = (await sb.auth.getUser()).data.user?.id;
+      if (uid) {
+        const { data: p } = await sb.from('profiles').select('role').eq('id', uid).maybeSingle();
+        if (p?.role === 'partner') {
+          router.replace('/business/dashboard');
+          return;
+        }
+      }
+    }
+    close();
   };
 
   return (

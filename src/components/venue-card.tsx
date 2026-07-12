@@ -65,7 +65,7 @@ export function VenueCard({ venue, width, badge }: VenueCardProps) {
           {venue.area}, {venue.city}
         </BText>
         <BText variant="small" numberOfLines={1}>
-          {category?.name}
+          {venue.provider_type === 'freelancer' ? 'Freelancer' : category?.name}
           {'  ·  '}
           {venue.rating_count.toLocaleString()} reviews
         </BText>

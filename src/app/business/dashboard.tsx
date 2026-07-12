@@ -825,6 +825,7 @@ function SettingsEditor({ venue, onChanged }: { venue: Venue; onChanged: () => v
   const [area, setArea] = useState(venue.area);
   const [city, setCity] = useState(venue.city);
   const [categoryId, setCategoryId] = useState(venue.category_id);
+  const [mapsUrl, setMapsUrl] = useState(venue.maps_url ?? '');
   const [highlights, setHighlights] = useState<string[]>(venue.highlights);
   const [busy, setBusy] = useState(false);
   const [saved, setSaved] = useState(false);
@@ -841,6 +842,7 @@ function SettingsEditor({ venue, onChanged }: { venue: Venue; onChanged: () => v
       area: area.trim(),
       city: city.trim() || venue.city,
       category_id: categoryId,
+      maps_url: mapsUrl.trim() || null,
       highlights,
     });
     setBusy(false);
@@ -879,6 +881,13 @@ function SettingsEditor({ venue, onChanged }: { venue: Venue; onChanged: () => v
           </View>
         </View>
         <Field label="Street address" value={address} onChangeText={setAddress} />
+        <Field
+          label="Google Maps link"
+          placeholder="https://maps.app.goo.gl/…"
+          value={mapsUrl}
+          onChangeText={setMapsUrl}
+          autoCapitalize="none"
+        />
         <View style={{ gap: 6 }}>
           <BText variant="smallMedium">Amenities shown on your page</BText>
           <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8 }}>

@@ -13,6 +13,7 @@ import { BText } from '../../components/ui/text';
 import { useAppData } from '../../lib/app-data-context';
 import { useAuth } from '../../lib/auth-context';
 import { registerSalon } from '../../lib/business';
+import { getSupabase } from '../../lib/supabase';
 import { colors, font, maxContentWidth, radius, shadow } from '../../lib/theme';
 import type { Venue } from '../../lib/types';
 import { useIsDesktop } from '../../lib/use-layout';
@@ -37,7 +38,7 @@ export default function BusinessLanding() {
   const router = useRouter();
   const isDesktop = useIsDesktop();
   const insets = useSafeAreaInsets();
-  const { user, setRole } = useAuth();
+  const { user, setRole, signUp } = useAuth();
   const { categories, allVenues, refresh } = useAppData();
 
   const myVenues = useMemo(
@@ -51,13 +52,20 @@ export default function BusinessLanding() {
   const [busy, setBusy] = useState(false);
 
   // Step 1 — business
+  const [providerType, setProviderType] = useState<'salon' | 'freelancer'>('salon');
   const [name, setName] = useState('');
   const [categoryId, setCategoryId] = useState<number | null>(null);
   const [description, setDescription] = useState('');
+  // Account (collected when the person isn't signed in yet)
+  const needsAccount = !user || user.isGuest;
+  const [ownerName, setOwnerName] = useState('');
+  const [ownerEmail, setOwnerEmail] = useState('');
+  const [ownerPassword, setOwnerPassword] = useState('');
   // Step 2 — location
   const [city, setCity] = useState('');
   const [area, setArea] = useState('');
   const [address, setAddress] = useState('');
+  const [mapsUrl, setMapsUrl] = useState('');
   // Step 3 — photos
   const [imageUrl, setImageUrl] = useState('');
   const [images, setImages] = useState<string[]>([]);
@@ -80,20 +88,20 @@ export default function BusinessLanding() {
     }))
   );
 
-  const startListing = () => {
-    if (!user) {
-      router.push('/auth');
-      return;
-    }
-    setShowWizard(true);
-  };
+  const startListing = () => setShowWizard(true);
 
   const validateStep = (): string | null => {
     if (step === 0) {
-      if (!name.trim()) return 'Please enter your business name.';
+      if (!name.trim()) return providerType === 'freelancer' ? 'Please enter your professional name.' : 'Please enter your business name.';
       if (!categoryId) return 'Please pick a category.';
+      if (needsAccount) {
+        if (!ownerName.trim()) return 'Please enter your name.';
+        if (!/^\S+@\S+\.\S+$/.test(ownerEmail.trim())) return 'Please enter a valid email address.';
+        if (ownerPassword.length < 6) return 'Password must be at least 6 characters.';
+      }
     }
     if (step === 1 && !city.trim()) return 'Please enter your city.';
+    if (step === 1 && mapsUrl.trim() && !mapsUrl.trim().startsWith('http')) return 'The Google Maps link should start with http.';
     return null;
   };
 
@@ -143,12 +151,38 @@ export default function BusinessLanding() {
 
   const submit = async () => {
     setBusy(true);
+    setError(null);
+
+    // Create the owner's login first, so the salon has an account to sign
+    // back into for appointments, messages and sales.
+    let ownerId = user?.id ?? null;
+    if (needsAccount) {
+      const err = await signUp(ownerName.trim(), ownerEmail.trim(), ownerPassword, 'partner');
+      if (err) {
+        setError(err);
+        setBusy(false);
+        return;
+      }
+      const sb = getSupabase();
+      ownerId = sb ? ((await sb.auth.getUser()).data.user?.id ?? null) : `demo-${ownerEmail.trim()}`;
+      if (!ownerId) {
+        setError('Could not create your account. Please try again.');
+        setBusy(false);
+        return;
+      }
+    }
+
     await registerSalon({
-      ownerId: user!.id,
+      ownerId: ownerId!,
+      providerType,
+      mapsUrl: mapsUrl.trim() || null,
       name: name.trim(),
       categoryId: categoryId!,
       description:
-        description.trim() || `Welcome to ${name.trim()} — quality treatments, easy booking on Bink.`,
+        description.trim() ||
+        (providerType === 'freelancer'
+          ? `${name.trim()} — independent professional, easy booking on Bink.`
+          : `Welcome to ${name.trim()} — quality treatments, easy booking on Bink.`),
       address: address.trim(),
       area: area.trim(),
       city: city.trim(),
@@ -158,7 +192,7 @@ export default function BusinessLanding() {
       staff: team,
       hours,
     });
-    if (user!.role !== 'admin') await setRole('partner');
+    if (!needsAccount && user && user.role !== 'admin' && user.role !== 'partner') await setRole('partner');
     await refresh();
     setBusy(false);
     router.replace('/business/dashboard');
@@ -169,7 +203,35 @@ export default function BusinessLanding() {
   if (step === 0) {
     stepBody = (
       <View style={{ gap: 16 }}>
-        <Field label="Business name" placeholder="e.g. Luna Beauty Lounge" value={name} onChangeText={setName} />
+        <View style={{ gap: 6 }}>
+          <BText variant="smallMedium">I&apos;m listing</BText>
+          <View style={{ flexDirection: 'row', gap: 10 }}>
+            {(
+              [
+                { key: 'salon', icon: 'storefront-outline', title: 'A salon / studio', sub: 'A place with chairs and a team' },
+                { key: 'freelancer', icon: 'person-outline', title: 'Myself — freelancer', sub: 'Independent professional' },
+              ] as const
+            ).map((opt) => (
+              <Pressable
+                key={opt.key}
+                onPress={() => setProviderType(opt.key)}
+                style={[styles.typeCard, providerType === opt.key && { borderColor: colors.accent, backgroundColor: colors.accentSoft }]}
+              >
+                <Ionicons name={opt.icon as any} size={20} color={providerType === opt.key ? colors.accent : colors.ink} />
+                <BText variant="smallMedium" color={providerType === opt.key ? colors.accent : colors.ink}>
+                  {opt.title}
+                </BText>
+                <BText variant="tiny">{opt.sub}</BText>
+              </Pressable>
+            ))}
+          </View>
+        </View>
+        <Field
+          label={providerType === 'freelancer' ? 'Your professional name' : 'Business name'}
+          placeholder={providerType === 'freelancer' ? 'e.g. Lama — Hair & Makeup' : 'e.g. Luna Beauty Lounge'}
+          value={name}
+          onChangeText={setName}
+        />
         <View style={{ gap: 6 }}>
           <BText variant="smallMedium">Category</BText>
           <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8 }}>
@@ -179,14 +241,34 @@ export default function BusinessLanding() {
           </View>
         </View>
         <Field
-          label="About your business"
-          placeholder="What makes your place special?"
+          label={providerType === 'freelancer' ? 'About you' : 'About your business'}
+          placeholder={providerType === 'freelancer' ? 'Your experience, specialties, how you work…' : 'What makes your place special?'}
           value={description}
           onChangeText={setDescription}
           multiline
           numberOfLines={4}
           style={{ minHeight: 100 }}
         />
+        {needsAccount && (
+          <View style={styles.accountBox}>
+            <BText variant="smallMedium">Create your Bink account</BText>
+            <BText variant="tiny" style={{ marginBottom: 8 }}>
+              You&apos;ll sign in with this to manage bookings, messages and sales.
+            </BText>
+            <View style={{ gap: 10 }}>
+              <Field label="Your name" placeholder="e.g. Lama" value={ownerName} onChangeText={setOwnerName} />
+              <Field
+                label="Email"
+                placeholder="you@example.com"
+                value={ownerEmail}
+                onChangeText={setOwnerEmail}
+                autoCapitalize="none"
+                keyboardType="email-address"
+              />
+              <Field label="Password" placeholder="At least 6 characters" value={ownerPassword} onChangeText={setOwnerPassword} secureTextEntry />
+            </View>
+          </View>
+        )}
       </View>
     );
   } else if (step === 1) {
@@ -201,6 +283,16 @@ export default function BusinessLanding() {
           </View>
         </View>
         <Field label="Street address" placeholder="Tahlia St, Building 12" value={address} onChangeText={setAddress} />
+        <Field
+          label="Google Maps link (optional)"
+          placeholder="https://maps.app.goo.gl/…"
+          value={mapsUrl}
+          onChangeText={setMapsUrl}
+          autoCapitalize="none"
+        />
+        <BText variant="tiny">
+          Paste your place&apos;s share link from Google Maps — customers get one-tap directions.
+        </BText>
       </View>
     );
   } else if (step === 2) {
@@ -371,8 +463,8 @@ export default function BusinessLanding() {
             Bink for business
           </BText>
           <BText variant="body" style={{ marginTop: 14, maxWidth: 560, textAlign: isDesktop ? 'center' : 'left' }}>
-            The booking platform that fills your chairs. List your salon or barbershop and start taking
-            online bookings today.
+            The booking platform that fills your calendar. List your salon, studio or yourself as a
+            freelancer and start taking online bookings today.
           </BText>
           <View style={{ marginTop: 28, flexDirection: 'row', gap: 12 }}>
             {myVenues.length > 0 ? (
@@ -430,7 +522,7 @@ export default function BusinessLanding() {
               {step === 5 && 'Set your opening hours'}
             </BText>
             <BText variant="small" style={{ marginTop: 4, marginBottom: 20 }}>
-              Step {step + 1} of {WIZARD_STEPS.length} — your salon goes live once the Bink team approves it.
+              Step {step + 1} of {WIZARD_STEPS.length} — your listing goes live once the Bink team approves it.
             </BText>
 
             {stepBody}
@@ -500,6 +592,21 @@ const styles = StyleSheet.create({
     height: 40,
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  typeCard: {
+    flex: 1,
+    borderWidth: 1.5,
+    borderColor: colors.border,
+    borderRadius: radius.md,
+    padding: 14,
+    gap: 4,
+  },
+  accountBox: {
+    borderWidth: 1,
+    borderColor: colors.divider,
+    borderRadius: radius.md,
+    padding: 16,
+    backgroundColor: colors.bgPage,
   },
   formCard: {
     backgroundColor: colors.white,

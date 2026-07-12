@@ -2,7 +2,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { Image } from 'expo-image';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import React, { useEffect, useMemo, useState } from 'react';
-import { Modal, Pressable, ScrollView, StyleSheet, View } from 'react-native';
+import { Linking, Modal, Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { ReviewCard } from '../../components/review-card';
 import { SectionRail } from '../../components/section-rail';
@@ -141,6 +141,12 @@ function ReviewsSection({ venue, columns = 2 }: { venue: Venue; columns?: number
   );
 }
 
+function directionsUrl(venue: Venue): string {
+  if (venue.maps_url) return venue.maps_url;
+  const q = encodeURIComponent(`${venue.name}, ${venue.address}, ${venue.area}, ${venue.city}`);
+  return `https://www.google.com/maps/search/?api=1&query=${q}`;
+}
+
 function AboutSection({ venue }: { venue: Venue }) {
   return (
     <View>
@@ -150,7 +156,9 @@ function AboutSection({ venue }: { venue: Venue }) {
       </BText>
       <BText variant="small" style={{ marginTop: 12 }}>
         {venue.address}, {venue.area}, {venue.city}, {venue.country}{' '}
-        <BText variant="link">Get directions</BText>
+        <BText variant="link" onPress={() => Linking.openURL(directionsUrl(venue))}>
+          Get directions
+        </BText>
       </BText>
     </View>
   );
@@ -288,9 +296,16 @@ function VenueDesktop({ venue }: { venue: Venue }) {
         {/* Title row */}
         <View style={{ flexDirection: 'row', alignItems: 'flex-end', justifyContent: 'space-between', marginTop: 12 }}>
           <View style={{ gap: 8, flex: 1 }}>
-            <BText style={{ fontFamily: font.extrabold, fontSize: 40, lineHeight: 48, color: colors.ink }}>
-              {venue.name}
-            </BText>
+            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12 }}>
+              <BText style={{ fontFamily: font.extrabold, fontSize: 40, lineHeight: 48, color: colors.ink }}>
+                {venue.name}
+              </BText>
+              {venue.provider_type === 'freelancer' && (
+                <View style={{ backgroundColor: colors.accentSoft, borderRadius: 999, paddingHorizontal: 12, height: 26, alignItems: 'center', justifyContent: 'center' }}>
+                  <BText style={{ fontFamily: font.semibold, fontSize: 12, color: colors.accent }}>Freelancer</BText>
+                </View>
+              )}
+            </View>
             <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
               <Rating value={venue.rating_avg} count={venue.rating_count} size={15} />
               <BText variant="body" color={colors.green} style={{ fontFamily: font.semibold }}>
@@ -299,7 +314,9 @@ function VenueDesktop({ venue }: { venue: Venue }) {
               <BText variant="body" color={colors.gray}>
                 until 10:00 PM · {venue.area}, {venue.city}
               </BText>
-              <BText variant="link">Get directions</BText>
+              <BText variant="link" onPress={() => Linking.openURL(directionsUrl(venue))}>
+                Get directions
+              </BText>
             </View>
           </View>
           <View style={{ flexDirection: 'row', gap: 8 }}>
@@ -371,7 +388,7 @@ function VenueDesktop({ venue }: { venue: Venue }) {
                   <BText variant="small" color={colors.ink}>
                     {venue.address}, {venue.area}, {venue.city}
                   </BText>
-                  <BText variant="link" style={{ marginTop: 4 }}>
+                  <BText variant="link" style={{ marginTop: 4 }} onPress={() => Linking.openURL(directionsUrl(venue))}>
                     Get directions
                   </BText>
                 </View>

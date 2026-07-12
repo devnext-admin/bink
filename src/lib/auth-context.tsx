@@ -16,7 +16,7 @@ interface AuthContextValue {
   user: AuthUser | null;
   loading: boolean;
   signIn: (email: string, password: string) => Promise<string | null>;
-  signUp: (name: string, email: string, password: string) => Promise<string | null>;
+  signUp: (name: string, email: string, password: string, role?: UserRole) => Promise<string | null>;
   continueAsGuest: (name?: string) => Promise<void>;
   signOut: () => Promise<void>;
   setRole: (role: UserRole) => Promise<void>;
@@ -142,18 +142,23 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   );
 
   const signUp = useCallback(
-    async (name: string, email: string, password: string) => {
+    async (name: string, email: string, password: string, role?: UserRole) => {
       const sb = getSupabase();
       if (!sb) {
-        await persistLocal({ id: `demo-${email}`, email, name, role: demoRole(email), isGuest: true });
+        await persistLocal({ id: `demo-${email}`, email, name, role: role ?? demoRole(email), isGuest: true });
         return null;
       }
-      const { error } = await sb.auth.signUp({
+      const { data, error } = await sb.auth.signUp({
         email,
         password,
-        options: { data: { full_name: name } },
+        options: { data: { full_name: name, ...(role ? { role } : {}) } },
       });
-      return error ? error.message : null;
+      if (error) return error.message;
+      // profiles.role defaults to 'customer' via trigger — lift it if needed
+      if (role && role !== 'customer' && data.user) {
+        await sb.from('profiles').update({ role }).eq('id', data.user.id);
+      }
+      return null;
     },
     [persistLocal]
   );
