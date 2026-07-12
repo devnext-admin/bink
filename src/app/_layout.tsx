@@ -8,6 +8,7 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { AppDataProvider } from '../lib/app-data-context';
 import { AuthProvider } from '../lib/auth-context';
 import { BookingProvider } from '../lib/booking-context';
+import { I18nProvider } from '../lib/i18n';
 import { colors } from '../lib/theme';
 
 SplashScreen.preventAutoHideAsync().catch(() => {});
@@ -23,6 +24,11 @@ export default function RootLayout() {
     Poppins_600SemiBold: require('../../assets/fonts/Poppins-SemiBold.ttf'),
     Poppins_700Bold: require('../../assets/fonts/Poppins-Bold.ttf'),
     Poppins_800ExtraBold: require('../../assets/fonts/Poppins-ExtraBold.ttf'),
+    // Poppins has no Arabic glyphs — Tajawal carries the brand in Arabic
+    Tajawal_400Regular: require('../../assets/fonts/Tajawal-Regular.ttf'),
+    Tajawal_500Medium: require('../../assets/fonts/Tajawal-Medium.ttf'),
+    Tajawal_700Bold: require('../../assets/fonts/Tajawal-Bold.ttf'),
+    Tajawal_800ExtraBold: require('../../assets/fonts/Tajawal-ExtraBold.ttf'),
   });
 
   useEffect(() => {
@@ -34,6 +40,7 @@ export default function RootLayout() {
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <SafeAreaProvider>
+        <I18nProvider>
         <AuthProvider>
           <AppDataProvider>
             <BookingProvider>
@@ -64,6 +71,7 @@ export default function RootLayout() {
             </BookingProvider>
           </AppDataProvider>
         </AuthProvider>
+        </I18nProvider>
       </SafeAreaProvider>
     </GestureHandlerRootView>
   );

@@ -11,6 +11,7 @@ import { BText } from '../components/ui/text';
 import { WebFooter } from '../components/web-footer';
 import { WebHeader } from '../components/web-header';
 import { useAuth } from '../lib/auth-context';
+import { useI18n } from '../lib/i18n';
 import { colors, radius } from '../lib/theme';
 import { useIsDesktop } from '../lib/use-layout';
 
@@ -28,6 +29,7 @@ export default function Settings() {
   const isDesktop = useIsDesktop();
   const insets = useSafeAreaInsets();
   const router = useRouter();
+  const { t, lang, setLang, isRTL } = useI18n();
   const { user, signOut } = useAuth();
   const [prefs, setPrefs] = useState<Prefs>(DEFAULTS);
 
@@ -46,40 +48,46 @@ export default function Settings() {
   const content = (
     <View style={{ gap: 24 }}>
       <View style={styles.card}>
-        <BText variant="h3">Notifications</BText>
+        <BText variant="h3">{t('Language')}</BText>
+        <LanguageRow label="English" selected={lang === 'en'} onPress={() => setLang('en')} />
+        <LanguageRow label="العربية" selected={lang === 'ar'} onPress={() => setLang('ar')} />
+      </View>
+
+      <View style={styles.card}>
+        <BText variant="h3">{t('Notifications')}</BText>
         <SettingRow
-          label="Booking reminders"
-          sub="Get reminded before your appointments"
+          label={t('Booking reminders')}
+          sub={t('Get reminded before your appointments')}
           value={prefs.bookingReminders}
           onToggle={() => toggle('bookingReminders')}
         />
         <SettingRow
-          label="Offers and promotions"
-          sub="Discounts and new salons near you"
+          label={t('Offers and promotions')}
+          sub={t('Discounts and new salons near you')}
           value={prefs.promoEmails}
           onToggle={() => toggle('promoEmails')}
         />
         <SettingRow
-          label="SMS updates"
-          sub="Booking confirmations by SMS"
+          label={t('SMS updates')}
+          sub={t('Booking confirmations by SMS')}
           value={prefs.smsUpdates}
           onToggle={() => toggle('smsUpdates')}
         />
       </View>
 
       <View style={styles.card}>
-        <BText variant="h3">About</BText>
+        <BText variant="h3">{t('About')}</BText>
         <View style={{ gap: 12, marginTop: 14 }}>
-          <InfoRow label="Version" value="1.0.0" />
-          <InfoRow label="Terms of service" value="bink.app/terms" />
-          <InfoRow label="Privacy policy" value="bink.app/privacy" />
+          <InfoRow label={t('Version')} value="1.0.0" />
+          <InfoRow label={t('Terms of service')} value="bink.app/terms" />
+          <InfoRow label={t('Privacy policy')} value="bink.app/privacy" />
         </View>
       </View>
 
       {user ? (
         <View style={{ alignItems: 'flex-start' }}>
           <Button
-            title="Log out"
+            title={t('Log out')}
             variant="secondary"
             onPress={async () => {
               await signOut();
@@ -92,7 +100,7 @@ export default function Settings() {
   );
 
   if (isDesktop) {
-    return <AccountLayout title="Settings">{content}</AccountLayout>;
+    return <AccountLayout title={t('Settings')}>{content}</AccountLayout>;
   }
 
   return (
@@ -102,14 +110,37 @@ export default function Settings() {
       >
         <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12, marginBottom: 20 }}>
           <Pressable onPress={() => router.back()} hitSlop={8}>
-            <Ionicons name="arrow-back" size={24} color={colors.ink} />
+            <Ionicons name={isRTL ? 'arrow-forward' : 'arrow-back'} size={24} color={colors.ink} />
           </Pressable>
-          <BText variant="h1">Settings</BText>
+          <BText variant="h1">{t('Settings')}</BText>
         </View>
         {content}
       </ScrollView>
       <BottomTabs />
     </View>
+  );
+}
+
+function LanguageRow({
+  label,
+  selected,
+  onPress,
+}: {
+  label: string;
+  selected: boolean;
+  onPress: () => void;
+}) {
+  return (
+    <Pressable onPress={onPress} style={styles.row}>
+      <View style={{ flex: 1 }}>
+        <BText variant="smallMedium">{label}</BText>
+      </View>
+      <Ionicons
+        name={selected ? 'radio-button-on' : 'radio-button-off'}
+        size={22}
+        color={selected ? colors.accent : colors.grayLight}
+      />
+    </Pressable>
   );
 }
 
@@ -130,12 +161,14 @@ function SettingRow({
         <BText variant="smallMedium">{label}</BText>
         <BText variant="tiny">{sub}</BText>
       </View>
+      <View style={{ direction: 'ltr' }}>
       <Switch
         value={value}
         onValueChange={onToggle}
         trackColor={{ false: colors.border, true: colors.accent }}
         thumbColor={colors.white}
       />
+      </View>
     </View>
   );
 }

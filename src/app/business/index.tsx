@@ -13,6 +13,7 @@ import { BText } from '../../components/ui/text';
 import { useAppData } from '../../lib/app-data-context';
 import { useAuth } from '../../lib/auth-context';
 import { registerSalon } from '../../lib/business';
+import { useI18n } from '../../lib/i18n';
 import { getSupabase } from '../../lib/supabase';
 import { colors, font, maxContentWidth, radius, shadow } from '../../lib/theme';
 import type { Venue } from '../../lib/types';
@@ -38,6 +39,7 @@ export default function BusinessLanding() {
   const router = useRouter();
   const isDesktop = useIsDesktop();
   const insets = useSafeAreaInsets();
+  const { t } = useI18n();
   const { user, setRole, signUp } = useAuth();
   const { categories, allVenues, refresh } = useAppData();
 
@@ -92,16 +94,16 @@ export default function BusinessLanding() {
 
   const validateStep = (): string | null => {
     if (step === 0) {
-      if (!name.trim()) return providerType === 'freelancer' ? 'Please enter your professional name.' : 'Please enter your business name.';
-      if (!categoryId) return 'Please pick a category.';
+      if (!name.trim()) return providerType === 'freelancer' ? t('Please enter your professional name.') : t('Please enter your business name.');
+      if (!categoryId) return t('Please pick a category.');
       if (needsAccount) {
-        if (!ownerName.trim()) return 'Please enter your name.';
-        if (!/^\S+@\S+\.\S+$/.test(ownerEmail.trim())) return 'Please enter a valid email address.';
-        if (ownerPassword.length < 6) return 'Password must be at least 6 characters.';
+        if (!ownerName.trim()) return t('Please enter your name.');
+        if (!/^\S+@\S+\.\S+$/.test(ownerEmail.trim())) return t('Please enter a valid email address.');
+        if (ownerPassword.length < 6) return t('Password must be at least 6 characters.');
       }
     }
-    if (step === 1 && !city.trim()) return 'Please enter your city.';
-    if (step === 1 && mapsUrl.trim() && !mapsUrl.trim().startsWith('http')) return 'The Google Maps link should start with http.';
+    if (step === 1 && !city.trim()) return t('Please enter your city.');
+    if (step === 1 && mapsUrl.trim() && !mapsUrl.trim().startsWith('http')) return t('The Google Maps link should start with http.');
     return null;
   };
 
@@ -166,7 +168,7 @@ export default function BusinessLanding() {
       const sb = getSupabase();
       ownerId = sb ? ((await sb.auth.getUser()).data.user?.id ?? null) : `demo-${ownerEmail.trim()}`;
       if (!ownerId) {
-        setError('Could not create your account. Please try again.');
+        setError(t('Could not create your account. Please try again.'));
         setBusy(false);
         return;
       }
@@ -204,7 +206,7 @@ export default function BusinessLanding() {
     stepBody = (
       <View style={{ gap: 16 }}>
         <View style={{ gap: 6 }}>
-          <BText variant="smallMedium">I&apos;m listing</BText>
+          <BText variant="smallMedium">{t("I'm listing")}</BText>
           <View style={{ flexDirection: 'row', gap: 10 }}>
             {(
               [
@@ -219,21 +221,21 @@ export default function BusinessLanding() {
               >
                 <Ionicons name={opt.icon as any} size={20} color={providerType === opt.key ? colors.accent : colors.ink} />
                 <BText variant="smallMedium" color={providerType === opt.key ? colors.accent : colors.ink}>
-                  {opt.title}
+                  {t(opt.title)}
                 </BText>
-                <BText variant="tiny">{opt.sub}</BText>
+                <BText variant="tiny">{t(opt.sub)}</BText>
               </Pressable>
             ))}
           </View>
         </View>
         <Field
-          label={providerType === 'freelancer' ? 'Your professional name' : 'Business name'}
-          placeholder={providerType === 'freelancer' ? 'e.g. Lama — Hair & Makeup' : 'e.g. Luna Beauty Lounge'}
+          label={providerType === 'freelancer' ? t('Your professional name') : t('Business name')}
+          placeholder={providerType === 'freelancer' ? t('e.g. Lama — Hair & Makeup') : t('e.g. Luna Beauty Lounge')}
           value={name}
           onChangeText={setName}
         />
         <View style={{ gap: 6 }}>
-          <BText variant="smallMedium">Category</BText>
+          <BText variant="smallMedium">{t('Category')}</BText>
           <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8 }}>
             {categories.map((c) => (
               <Chip key={c.id} label={c.name} selected={categoryId === c.id} onPress={() => setCategoryId(c.id)} />
@@ -241,8 +243,8 @@ export default function BusinessLanding() {
           </View>
         </View>
         <Field
-          label={providerType === 'freelancer' ? 'About you' : 'About your business'}
-          placeholder={providerType === 'freelancer' ? 'Your experience, specialties, how you work…' : 'What makes your place special?'}
+          label={providerType === 'freelancer' ? t('About you') : t('About your business')}
+          placeholder={providerType === 'freelancer' ? t('Your experience, specialties, how you work…') : t('What makes your place special?')}
           value={description}
           onChangeText={setDescription}
           multiline
@@ -251,21 +253,21 @@ export default function BusinessLanding() {
         />
         {needsAccount && (
           <View style={styles.accountBox}>
-            <BText variant="smallMedium">Create your Bink account</BText>
+            <BText variant="smallMedium">{t('Create your Bink account')}</BText>
             <BText variant="tiny" style={{ marginBottom: 8 }}>
-              You&apos;ll sign in with this to manage bookings, messages and sales.
+              {t("You'll sign in with this to manage bookings, messages and sales.")}
             </BText>
             <View style={{ gap: 10 }}>
-              <Field label="Your name" placeholder="e.g. Lama" value={ownerName} onChangeText={setOwnerName} />
+              <Field label={t('Your name')} placeholder={t('e.g. Lama')} value={ownerName} onChangeText={setOwnerName} />
               <Field
-                label="Email"
+                label={t('Email')}
                 placeholder="you@example.com"
                 value={ownerEmail}
                 onChangeText={setOwnerEmail}
                 autoCapitalize="none"
                 keyboardType="email-address"
               />
-              <Field label="Password" placeholder="At least 6 characters" value={ownerPassword} onChangeText={setOwnerPassword} secureTextEntry />
+              <Field label={t('Password')} placeholder={t('At least 6 characters')} value={ownerPassword} onChangeText={setOwnerPassword} secureTextEntry />
             </View>
           </View>
         )}
@@ -276,22 +278,22 @@ export default function BusinessLanding() {
       <View style={{ gap: 16 }}>
         <View style={{ flexDirection: isDesktop ? 'row' : 'column', gap: 16 }}>
           <View style={{ flex: 1 }}>
-            <Field label="City" placeholder="Riyadh" value={city} onChangeText={setCity} />
+            <Field label={t('City')} placeholder={t('Riyadh')} value={city} onChangeText={setCity} />
           </View>
           <View style={{ flex: 1 }}>
-            <Field label="Area / district" placeholder="Al Olaya" value={area} onChangeText={setArea} />
+            <Field label={t('Area / district')} placeholder={t('Al Olaya')} value={area} onChangeText={setArea} />
           </View>
         </View>
-        <Field label="Street address" placeholder="Tahlia St, Building 12" value={address} onChangeText={setAddress} />
+        <Field label={t('Street address')} placeholder={t('Tahlia St, Building 12')} value={address} onChangeText={setAddress} />
         <Field
-          label="Google Maps link (optional)"
+          label={t('Google Maps link (optional)')}
           placeholder="https://maps.app.goo.gl/…"
           value={mapsUrl}
           onChangeText={setMapsUrl}
           autoCapitalize="none"
         />
         <BText variant="tiny">
-          Paste your place&apos;s share link from Google Maps — customers get one-tap directions.
+          {t("Paste your place's share link from Google Maps — customers get one-tap directions.")}
         </BText>
       </View>
     );
@@ -301,15 +303,14 @@ export default function BusinessLanding() {
         <View style={styles.note}>
           <Ionicons name="information-circle-outline" size={16} color={colors.accent} />
           <BText variant="tiny" color={colors.accent} style={{ flex: 1 }}>
-            Photos must not show people, faces or body parts — interiors, tools and products only. You can
-            skip this step and add photos later; a default interior photo is used until then.
+            {t('Photos must not show people, faces or body parts — interiors, tools and products only. You can skip this step and add photos later; a default interior photo is used until then.')}
           </BText>
         </View>
         <View style={{ flexDirection: 'row', gap: 10, alignItems: 'flex-end' }}>
           <View style={{ flex: 1 }}>
-            <Field label="Photo URL" placeholder="https://…" value={imageUrl} onChangeText={setImageUrl} autoCapitalize="none" />
+            <Field label={t('Photo URL')} placeholder="https://…" value={imageUrl} onChangeText={setImageUrl} autoCapitalize="none" />
           </View>
-          <Button title="Add" size="sm" variant="secondary" onPress={addImage} />
+          <Button title={t('Add')} size="sm" variant="secondary" onPress={addImage} />
         </View>
         <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 10 }}>
           {images.map((url) => (
@@ -325,7 +326,7 @@ export default function BusinessLanding() {
             </View>
           ))}
           {!images.length && (
-            <BText variant="small">No photos yet — that’s okay for now.</BText>
+            <BText variant="small">{t('No photos yet — that’s okay for now.')}</BText>
           )}
         </View>
       </View>
@@ -335,15 +336,15 @@ export default function BusinessLanding() {
       <View style={{ gap: 16 }}>
         <View style={{ flexDirection: 'row', gap: 10, alignItems: 'flex-end' }}>
           <View style={{ flex: 2 }}>
-            <Field label="Service name" placeholder="e.g. Gel Manicure" value={svcName} onChangeText={setSvcName} />
+            <Field label={t('Service name')} placeholder={t('e.g. Gel Manicure')} value={svcName} onChangeText={setSvcName} />
           </View>
           <View style={{ flex: 1 }}>
-            <Field label="Minutes" keyboardType="numeric" value={svcDuration} onChangeText={setSvcDuration} />
+            <Field label={t('Minutes')} keyboardType="numeric" value={svcDuration} onChangeText={setSvcDuration} />
           </View>
           <View style={{ flex: 1 }}>
-            <Field label="Price" keyboardType="numeric" placeholder="150" value={svcPrice} onChangeText={setSvcPrice} />
+            <Field label={t('Price')} keyboardType="numeric" placeholder="150" value={svcPrice} onChangeText={setSvcPrice} />
           </View>
-          <Button title="Add" size="sm" variant="secondary" onPress={addDraftService} />
+          <Button title={t('Add')} size="sm" variant="secondary" onPress={addDraftService} />
         </View>
         {services.map((s, i) => (
           <View key={`${s.name}-${i}`} style={styles.draftRow}>
@@ -351,7 +352,7 @@ export default function BusinessLanding() {
               {s.name}
             </BText>
             <BText variant="small">
-              {s.duration_minutes} min · SAR {(s.price_cents / 100).toFixed(0)}
+              {t('{n} min', { n: s.duration_minutes })} · SAR {(s.price_cents / 100).toFixed(0)}
             </BText>
             <Pressable onPress={() => setServices((list) => list.filter((_, x) => x !== i))} hitSlop={6}>
               <Ionicons name="trash-outline" size={16} color={colors.danger} />
@@ -359,7 +360,7 @@ export default function BusinessLanding() {
           </View>
         ))}
         {!services.length && (
-          <BText variant="small">Add at least one service so customers can book you — or add them later.</BText>
+          <BText variant="small">{t('Add at least one service so customers can book you — or add them later.')}</BText>
         )}
       </View>
     );
@@ -368,12 +369,12 @@ export default function BusinessLanding() {
       <View style={{ gap: 16 }}>
         <View style={{ flexDirection: 'row', gap: 10, alignItems: 'flex-end' }}>
           <View style={{ flex: 1 }}>
-            <Field label="Name" placeholder="e.g. Sara" value={memberName} onChangeText={setMemberName} />
+            <Field label={t('Name')} placeholder={t('e.g. Sara')} value={memberName} onChangeText={setMemberName} />
           </View>
           <View style={{ flex: 1 }}>
-            <Field label="Role" placeholder="Stylist" value={memberRole} onChangeText={setMemberRole} />
+            <Field label={t('Role')} placeholder={t('Stylist')} value={memberRole} onChangeText={setMemberRole} />
           </View>
-          <Button title="Add" size="sm" variant="secondary" onPress={addMember} />
+          <Button title={t('Add')} size="sm" variant="secondary" onPress={addMember} />
         </View>
         {team.map((m, i) => (
           <View key={`${m.name}-${i}`} style={styles.draftRow}>
@@ -386,7 +387,7 @@ export default function BusinessLanding() {
             </Pressable>
           </View>
         ))}
-        {!team.length && <BText variant="small">Optional — clients can pick “Any professional” if you skip this.</BText>}
+        {!team.length && <BText variant="small">{t('Optional — clients can pick “Any professional” if you skip this.')}</BText>}
       </View>
     );
   } else {
@@ -397,11 +398,11 @@ export default function BusinessLanding() {
           return (
             <View key={w} style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
               <BText variant="smallMedium" style={{ width: 92 }}>
-                {WEEKDAY_NAMES[w]}
+                {t(WEEKDAY_NAMES[w])}
               </BText>
               {h.is_closed ? (
                 <BText variant="small" style={{ flex: 1 }}>
-                  Closed
+                  {t('Closed')}
                 </BText>
               ) : (
                 <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center', gap: 8 }}>
@@ -410,7 +411,7 @@ export default function BusinessLanding() {
                     onChangeText={(v) => patchHour(w, { open_time: v })}
                     style={{ minHeight: 38, width: 74, paddingHorizontal: 8 }}
                   />
-                  <BText variant="tiny">to</BText>
+                  <BText variant="tiny">{t('to')}</BText>
                   <Field
                     value={h.close_time ?? '22:00'}
                     onChangeText={(v) => patchHour(w, { close_time: v })}
@@ -423,7 +424,7 @@ export default function BusinessLanding() {
                 style={[styles.toggleBtn, { borderColor: h.is_closed ? colors.green : colors.border }]}
               >
                 <BText style={{ fontFamily: font.semibold, fontSize: 12, color: h.is_closed ? colors.green : colors.gray }}>
-                  {h.is_closed ? 'Open this day' : 'Mark closed'}
+                  {h.is_closed ? t('Open this day') : t('Mark closed')}
                 </BText>
               </Pressable>
             </View>
@@ -446,7 +447,7 @@ export default function BusinessLanding() {
         <View style={[styles.inner, { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }]}>
           <Logo />
           <Pressable onPress={() => router.push('/')} style={styles.backPill}>
-            <BText variant="smallMedium">For customers</BText>
+            <BText variant="smallMedium">{t('For customers')}</BText>
           </Pressable>
         </View>
         <View style={[styles.inner, { alignItems: isDesktop ? 'center' : 'flex-start', paddingTop: 48 }]}>
@@ -460,17 +461,16 @@ export default function BusinessLanding() {
               maxWidth: 720,
             }}
           >
-            Bink for business
+            {t('Bink for business')}
           </BText>
           <BText variant="body" style={{ marginTop: 14, maxWidth: 560, textAlign: isDesktop ? 'center' : 'left' }}>
-            The booking platform that fills your calendar. List your salon, studio or yourself as a
-            freelancer and start taking online bookings today.
+            {t('The booking platform that fills your calendar. List your salon, studio or yourself as a freelancer and start taking online bookings today.')}
           </BText>
           <View style={{ marginTop: 28, flexDirection: 'row', gap: 12 }}>
             {myVenues.length > 0 ? (
-              <Button title="Open your dashboard" size="lg" onPress={() => router.push('/business/dashboard')} />
+              <Button title={t('Open your dashboard')} size="lg" onPress={() => router.push('/business/dashboard')} />
             ) : (
-              !showWizard && <Button title="List your business" size="lg" onPress={startListing} />
+              !showWizard && <Button title={t('List your business')} size="lg" onPress={startListing} />
             )}
           </View>
         </View>
@@ -505,7 +505,7 @@ export default function BusinessLanding() {
                       color={i === step ? colors.ink : colors.gray}
                       style={i === step ? { fontFamily: font.bold } : undefined}
                     >
-                      {label}
+                      {t(label)}
                     </BText>
                   )}
                   {i < WIZARD_STEPS.length - 1 && <View style={styles.stepLine} />}
@@ -514,15 +514,18 @@ export default function BusinessLanding() {
             </View>
 
             <BText variant="h2" style={{ marginTop: 20 }}>
-              {step === 0 && 'Tell us about your business'}
-              {step === 1 && 'Where are you located?'}
-              {step === 2 && 'Add photos of your space'}
-              {step === 3 && 'What services do you offer?'}
-              {step === 4 && 'Introduce your team'}
-              {step === 5 && 'Set your opening hours'}
+              {step === 0 && t('Tell us about your business')}
+              {step === 1 && t('Where are you located?')}
+              {step === 2 && t('Add photos of your space')}
+              {step === 3 && t('What services do you offer?')}
+              {step === 4 && t('Introduce your team')}
+              {step === 5 && t('Set your opening hours')}
             </BText>
             <BText variant="small" style={{ marginTop: 4, marginBottom: 20 }}>
-              Step {step + 1} of {WIZARD_STEPS.length} — your listing goes live once the Bink team approves it.
+              {t('Step {n} of {m} — your listing goes live once the Bink team approves it.', {
+                n: step + 1,
+                m: WIZARD_STEPS.length,
+              })}
             </BText>
 
             {stepBody}
@@ -534,10 +537,10 @@ export default function BusinessLanding() {
             ) : null}
 
             <View style={{ flexDirection: 'row', gap: 10, marginTop: 24 }}>
-              <Button title={step === 0 ? 'Cancel' : 'Back'} variant="secondary" onPress={back} />
+              <Button title={step === 0 ? t('Cancel') : t('Back')} variant="secondary" onPress={back} />
               <View style={{ flex: 1 }}>
                 <Button
-                  title={lastStep ? 'Submit for review' : 'Continue'}
+                  title={lastStep ? t('Submit for review') : t('Continue')}
                   fullWidth
                   loading={busy}
                   onPress={lastStep ? submit : next}
@@ -551,7 +554,7 @@ export default function BusinessLanding() {
       {/* Perks */}
       <View style={[styles.inner, { paddingTop: 64, paddingBottom: 80 }]}>
         <BText variant="h1" style={{ textAlign: isDesktop ? 'center' : 'left' }}>
-          Everything you need to grow
+          {t('Everything you need to grow')}
         </BText>
         <View style={{ flexDirection: isDesktop ? 'row' : 'column', gap: 16, marginTop: 32 }}>
           {PERKS.map((p) => (
@@ -560,17 +563,17 @@ export default function BusinessLanding() {
                 <Ionicons name={p.icon as any} size={22} color={colors.accent} />
               </View>
               <BText variant="h3" style={{ marginTop: 14 }}>
-                {p.title}
+                {t(p.title)}
               </BText>
               <BText variant="small" style={{ marginTop: 6 }}>
-                {p.body}
+                {t(p.body)}
               </BText>
             </View>
           ))}
         </View>
         {!showWizard && myVenues.length === 0 && (
           <View style={{ alignItems: 'center', marginTop: 40 }}>
-            <Button title="List your business" size="lg" onPress={startListing} />
+            <Button title={t('List your business')} size="lg" onPress={startListing} />
           </View>
         )}
       </View>

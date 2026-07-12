@@ -28,6 +28,7 @@ import {
   updateVenueInfo,
 } from '../../lib/business';
 import { formatDateLong, formatDuration, formatPrice, formatTimeOfDate } from '../../lib/format';
+import { formatDate, useI18n } from '../../lib/i18n';
 import { Conversation, getConversationsForVenue } from '../../lib/messages';
 import { setBookingStatus } from '../../lib/ops';
 import { escrowSummary, getVenueTransactions, refundBooking, salesSummary } from '../../lib/payments';
@@ -51,6 +52,7 @@ export default function BusinessDashboard() {
   const router = useRouter();
   const isDesktop = useIsDesktop();
   const insets = useSafeAreaInsets();
+  const { t } = useI18n();
   const { user, loading } = useAuth();
   const { allVenues, refresh } = useAppData();
 
@@ -87,15 +89,15 @@ export default function BusinessDashboard() {
       <View style={[styles.emptyWrap, { paddingTop: insets.top + 40 }]}>
         <Logo />
         <BText variant="h2" style={{ marginTop: 32 }}>
-          No business yet
+          {t('No business yet')}
         </BText>
         <BText variant="small" style={{ marginTop: 8, textAlign: 'center', maxWidth: 320 }}>
           {user
-            ? 'List your salon on Bink to get your business dashboard.'
-            : 'Log in and list your salon to get your business dashboard.'}
+            ? t('List your salon on Bink to get your business dashboard.')
+            : t('Log in and list your salon to get your business dashboard.')}
         </BText>
         <View style={{ marginTop: 20 }}>
-          <Button title="List your business" onPress={() => router.replace('/business')} />
+          <Button title={t('List your business')} onPress={() => router.replace('/business')} />
         </View>
       </View>
     );
@@ -117,7 +119,7 @@ export default function BusinessDashboard() {
           <View style={styles.pendingBanner}>
             <Ionicons name="time-outline" size={18} color={colors.warning} />
             <BText variant="small" color={colors.warning} style={{ flex: 1 }}>
-              Your listing is pending review by the Bink team. It is not visible to customers yet.
+              {t('Your listing is pending review by the Bink team. It is not visible to customers yet.')}
             </BText>
           </View>
         )}
@@ -125,38 +127,38 @@ export default function BusinessDashboard() {
           <View style={[styles.pendingBanner, { backgroundColor: colors.dangerBg }]}>
             <Ionicons name="alert-circle-outline" size={18} color={colors.danger} />
             <BText variant="small" color={colors.danger} style={{ flex: 1 }}>
-              Your listing is suspended. Contact Bink support for details.
+              {t('Your listing is suspended. Contact Bink support for details.')}
             </BText>
           </View>
         )}
         <View style={{ flexDirection: isDesktop ? 'row' : 'column', gap: 12 }}>
-          <StatCard label="Upcoming bookings" value={String(upcoming.length)} icon="calendar-outline" />
-          <StatCard label="Total revenue" value={formatPrice(revenue, currency)} icon="cash-outline" />
+          <StatCard label={t('Upcoming bookings')} value={String(upcoming.length)} icon="calendar-outline" />
+          <StatCard label={t('Total revenue')} value={formatPrice(revenue, currency)} icon="cash-outline" />
           <StatCard
-            label="Rating"
-            value={venue!.rating_count ? `${venue!.rating_avg.toFixed(1)} ★` : 'No reviews yet'}
+            label={t('Rating')}
+            value={venue!.rating_count ? `${venue!.rating_avg.toFixed(1)} ★` : t('No reviews yet')}
             icon="star-outline"
           />
-          <StatCard label="Services listed" value={String(venue!.services.length)} icon="pricetags-outline" />
+          <StatCard label={t('Services listed')} value={String(venue!.services.length)} icon="pricetags-outline" />
         </View>
         <View style={styles.card}>
-          <BText variant="h3">Next appointments</BText>
+          <BText variant="h3">{t('Next appointments')}</BText>
           {upcoming.length === 0 ? (
             <BText variant="small" style={{ marginTop: 10 }}>
-              Nothing booked yet. Share your Bink page to start filling the calendar.
+              {t('Nothing booked yet. Share your Bink page to start filling the calendar.')}
             </BText>
           ) : (
             upcoming.slice(0, 5).map((b) => <BookingRow key={b.id} booking={b} />)
           )}
         </View>
         <View style={styles.card}>
-          <BText variant="h3">Your public page</BText>
+          <BText variant="h3">{t('Your public page')}</BText>
           <BText variant="small" style={{ marginTop: 6 }}>
             bink.app/venue/{venue!.slug}
           </BText>
           <View style={{ flexDirection: 'row', marginTop: 12 }}>
             <Button
-              title="Preview listing"
+              title={t('Preview listing')}
               variant="secondary"
               size="sm"
               onPress={() => router.push(`/venue/${venue!.slug}`)}
@@ -168,10 +170,10 @@ export default function BusinessDashboard() {
   } else if (section === 'bookings') {
     body = (
       <View style={styles.card}>
-        <BText variant="h3">All bookings</BText>
+        <BText variant="h3">{t('All bookings')}</BText>
         {bookings.length === 0 ? (
           <BText variant="small" style={{ marginTop: 10 }}>
-            No bookings yet.
+            {t('No bookings yet.')}
           </BText>
         ) : (
           bookings.map((b) => <BookingRow key={b.id} booking={b} onRefund={reload} />)
@@ -186,46 +188,44 @@ export default function BusinessDashboard() {
     body = (
       <View style={{ gap: 16 }}>
         <View style={{ flexDirection: isDesktop ? 'row' : 'column', gap: 12 }}>
-          <StatCard label="Gross sales" value={formatPrice(summary.gross_cents, summary.currency)} icon="trending-up-outline" />
-          <StatCard label="In escrow" value={formatPrice(escrow.held_cents, escrow.currency)} icon="lock-closed-outline" />
-          <StatCard label="Released to you" value={formatPrice(escrow.released_cents, escrow.currency)} icon="checkmark-done-outline" />
-          <StatCard label="Refunds" value={formatPrice(summary.refunds_cents, summary.currency)} icon="return-down-back-outline" />
+          <StatCard label={t('Gross sales')} value={formatPrice(summary.gross_cents, summary.currency)} icon="trending-up-outline" />
+          <StatCard label={t('In escrow')} value={formatPrice(escrow.held_cents, escrow.currency)} icon="lock-closed-outline" />
+          <StatCard label={t('Released to you')} value={formatPrice(escrow.released_cents, escrow.currency)} icon="checkmark-done-outline" />
+          <StatCard label={t('Refunds')} value={formatPrice(summary.refunds_cents, summary.currency)} icon="return-down-back-outline" />
         </View>
         <View style={styles.escrowExplain}>
           <Ionicons name="lock-closed-outline" size={16} color={colors.info} />
           <BText variant="tiny" color={colors.info} style={{ flex: 1 }}>
-            Online payments are held by Bink in escrow. They are released to you once you mark the booking
-            completed and the customer confirms their visit.
+            {t('Online payments are held by Bink in escrow. They are released to you once you mark the booking completed and the customer confirms their visit.')}
           </BText>
         </View>
         <View style={styles.card}>
-          <BText variant="h3">Transactions</BText>
+          <BText variant="h3">{t('Transactions')}</BText>
           {transactions.length === 0 ? (
             <BText variant="small" style={{ marginTop: 10 }}>
-              No online payments yet. Card and Apple Pay payments will appear here; pay-at-venue bookings are
-              listed under Bookings.
+              {t('No online payments yet. Card and Apple Pay payments will appear here; pay-at-venue bookings are listed under Bookings.')}
             </BText>
           ) : (
-            transactions.map((t) => (
-              <View key={t.id} style={styles.bookingRow}>
+            transactions.map((tx) => (
+              <View key={tx.id} style={styles.bookingRow}>
                 <View style={{ flex: 1 }}>
                   <BText variant="smallMedium">
-                    {t.customer_name || 'Customer'} ·{' '}
-                    {t.method === 'apple_pay' ? 'Apple Pay' : t.method === 'card' ? 'Card' : 'At venue'}
+                    {tx.customer_name || t('Customer')} ·{' '}
+                    {tx.method === 'apple_pay' ? 'Apple Pay' : tx.method === 'card' ? t('Card') : t('At venue')}
                   </BText>
                   <BText variant="tiny">
-                    {formatDateLong(t.created_at)} · {t.gateway}
-                    {t.gateway_ref ? ` · ${t.gateway_ref}` : ''}
+                    {formatDateLong(tx.created_at)} · {tx.gateway}
+                    {tx.gateway_ref ? ` · ${tx.gateway_ref}` : ''}
                   </BText>
                 </View>
                 <BText
                   variant="smallMedium"
-                  color={t.status === 'refunded' ? colors.danger : colors.ink}
-                  style={t.status === 'refunded' ? { textDecorationLine: 'line-through' } : undefined}
+                  color={tx.status === 'refunded' ? colors.danger : colors.ink}
+                  style={tx.status === 'refunded' ? { textDecorationLine: 'line-through' } : undefined}
                 >
-                  {formatPrice(t.amount_cents, t.currency)}
+                  {formatPrice(tx.amount_cents, tx.currency)}
                 </BText>
-                <TxStatusPill status={t.status === 'succeeded' && t.escrow_status ? t.escrow_status : t.status} />
+                <TxStatusPill status={tx.status === 'succeeded' && tx.escrow_status ? tx.escrow_status : tx.status} />
               </View>
             ))
           )}
@@ -263,7 +263,7 @@ export default function BusinessDashboard() {
                 color: active ? colors.white : colors.ink,
               }}
             >
-              {s.label}
+              {t(s.label)}
             </BText>
           </Pressable>
         );
@@ -279,7 +279,7 @@ export default function BusinessDashboard() {
           <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12 }}>
             <Logo size={22} />
             <View style={styles.bizTag}>
-              <BText style={{ fontFamily: font.bold, fontSize: 11, color: colors.accent }}>BUSINESS</BText>
+              <BText style={{ fontFamily: font.bold, fontSize: 11, color: colors.accent }}>{t('BUSINESS')}</BText>
             </View>
           </View>
           <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
@@ -328,6 +328,7 @@ export default function BusinessDashboard() {
 
 // ---------------------------------------------------------------------------
 function StatusTag({ status }: { status: string }) {
+  const { t } = useI18n();
   const map: Record<string, { label: string; color: string; bg: string }> = {
     approved: { label: 'Live', color: colors.green, bg: colors.greenBg },
     pending: { label: 'Pending review', color: colors.warning, bg: colors.warningBg },
@@ -336,7 +337,7 @@ function StatusTag({ status }: { status: string }) {
   const m = map[status] ?? map.approved;
   return (
     <View style={{ backgroundColor: m.bg, borderRadius: radius.pill, paddingHorizontal: 8, paddingVertical: 2 }}>
-      <BText style={{ fontFamily: font.semibold, fontSize: 11, color: m.color }}>{m.label}</BText>
+      <BText style={{ fontFamily: font.semibold, fontSize: 11, color: m.color }}>{t(m.label)}</BText>
     </View>
   );
 }
@@ -356,24 +357,25 @@ function StatCard({ label, value, icon }: { label: string; value: string; icon: 
 }
 
 function BookingRow({ booking, onRefund }: { booking: Booking; onRefund?: () => void }) {
+  const { t } = useI18n();
   const [refunding, setRefunding] = useState(false);
   const canManage = onRefund && (booking.status === 'confirmed' || booking.status === 'pending');
   return (
     <View style={[styles.bookingRow, { flexWrap: 'wrap' }]}>
       <View style={{ flex: 1, minWidth: 220 }}>
         <BText variant="smallMedium">
-          {booking.customer_name || 'Guest customer'} · {booking.items.map((i) => i.service_name).join(', ')}
+          {booking.customer_name || t('Guest customer')} · {booking.items.map((i) => i.service_name).join(', ')}
         </BText>
         <BText variant="tiny" style={{ marginTop: 2 }}>
-          {formatDateLong(booking.starts_at)} at {formatTimeOfDate(booking.starts_at)}
-          {booking.staff_name ? ` · with ${booking.staff_name}` : ''}
-          {booking.status === 'completed' ? ' · completed' : ''}
-          {booking.status === 'no_show' ? ' · no-show' : ''}
-          {booking.status === 'cancelled' ? ' · cancelled' : ''}
+          {t('{date} at {time}', { date: formatDateLong(booking.starts_at), time: formatTimeOfDate(booking.starts_at) })}
+          {booking.staff_name ? ` · ${t('with {name}', { name: booking.staff_name })}` : ''}
+          {booking.status === 'completed' ? ` · ${t('completed')}` : ''}
+          {booking.status === 'no_show' ? ` · ${t('no-show')}` : ''}
+          {booking.status === 'cancelled' ? ` · ${t('cancelled')}` : ''}
         </BText>
         {booking.notes ? (
           <BText variant="tiny" color={colors.accent} style={{ marginTop: 2 }}>
-            Note: {booking.notes}
+            {t('Note:')} {booking.notes}
           </BText>
         ) : null}
       </View>
@@ -391,7 +393,7 @@ function BookingRow({ booking, onRefund }: { booking: Booking; onRefund?: () => 
       {canManage ? (
         <View style={{ flexDirection: 'row', gap: 6 }}>
           <SmallPillBtn
-            label="Complete"
+            label={t('Complete')}
             color={colors.green}
             onPress={async () => {
               await setBookingStatus(booking.id, 'completed');
@@ -399,7 +401,7 @@ function BookingRow({ booking, onRefund }: { booking: Booking; onRefund?: () => 
             }}
           />
           <SmallPillBtn
-            label="No-show"
+            label={t('No-show')}
             color={colors.gray}
             onPress={async () => {
               await setBookingStatus(booking.id, 'no_show');
@@ -420,7 +422,7 @@ function BookingRow({ booking, onRefund }: { booking: Booking; onRefund?: () => 
           style={styles.refundBtn}
         >
           <BText style={{ fontFamily: font.semibold, fontSize: 12, color: colors.danger }}>
-            {refunding ? 'Refunding…' : 'Refund'}
+            {refunding ? t('Refunding…') : t('Refund')}
           </BText>
         </Pressable>
       ) : null}
@@ -429,6 +431,7 @@ function BookingRow({ booking, onRefund }: { booking: Booking; onRefund?: () => 
 }
 
 function VenueMessages({ venue }: { venue: Venue }) {
+  const { t } = useI18n();
   const [conversations, setConversations] = useState<Conversation[]>([]);
   const [active, setActive] = useState<Conversation | null>(null);
 
@@ -466,7 +469,7 @@ function VenueMessages({ venue }: { venue: Venue }) {
         ) : (
           <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', padding: 24, gap: 10 }}>
             <Ionicons name="chatbubbles-outline" size={40} color={colors.grayLight} />
-            <BText variant="small">Select a conversation to reply to your customers.</BText>
+            <BText variant="small">{t('Select a conversation to reply to your customers.')}</BText>
           </View>
         )}
       </View>
@@ -523,6 +526,7 @@ function AnalyticsSection({
   venue: Venue;
   isDesktop: boolean;
 }) {
+  const { t, lang } = useI18n();
   const active = bookings.filter((b) => b.status !== 'cancelled' && b.status !== 'no_show');
 
   // Revenue: last 7 days
@@ -532,7 +536,7 @@ function AnalyticsSection({
     d.setDate(d.getDate() - i);
     const key = d.toDateString();
     days.push({
-      label: d.toLocaleDateString('en-US', { weekday: 'short', day: 'numeric' }),
+      label: formatDate(lang, d, { weekday: 'short', day: 'numeric' }),
       value: active
         .filter((b) => new Date(b.starts_at).toDateString() === key)
         .reduce((c, b) => c + b.total_cents, 0),
@@ -562,38 +566,38 @@ function AnalyticsSection({
     value: active.filter((b) => b.staff_id === m.id).length,
   }));
   const anyPro = active.filter((b) => !b.staff_id).length;
-  if (anyPro) team.push({ label: 'Any professional', value: anyPro });
+  if (anyPro) team.push({ label: t('Any professional'), value: anyPro });
 
   return (
     <View style={{ gap: 16 }}>
       <View style={{ flexDirection: isDesktop ? 'row' : 'column', gap: 16 }}>
         <View style={[styles.card, { flex: 1 }]}>
-          <BText variant="h3">Revenue — last 7 days</BText>
+          <BText variant="h3">{t('Revenue — last 7 days')}</BText>
           <BarChart data={days} unit="money" />
         </View>
         <View style={[styles.card, { flex: 1 }]}>
-          <BText variant="h3">Peak hours</BText>
+          <BText variant="h3">{t('Peak hours')}</BText>
           <BarChart data={hours} />
         </View>
       </View>
       <View style={{ flexDirection: isDesktop ? 'row' : 'column', gap: 16 }}>
         <View style={[styles.card, { flex: 1 }]}>
-          <BText variant="h3">Top services</BText>
+          <BText variant="h3">{t('Top services')}</BText>
           {topServices.length ? (
             <BarChart data={topServices} />
           ) : (
             <BText variant="small" style={{ marginTop: 10 }}>
-              No bookings yet.
+              {t('No bookings yet.')}
             </BText>
           )}
         </View>
         <View style={[styles.card, { flex: 1 }]}>
-          <BText variant="h3">Team performance</BText>
+          <BText variant="h3">{t('Team performance')}</BText>
           {team.length ? (
             <BarChart data={team} />
           ) : (
             <BText variant="small" style={{ marginTop: 10 }}>
-              Add team members to see their bookings.
+              {t('Add team members to see their bookings.')}
             </BText>
           )}
         </View>
@@ -603,6 +607,7 @@ function AnalyticsSection({
 }
 
 function TxStatusPill({ status }: { status: string }) {
+  const { t } = useI18n();
   const map: Record<string, { label: string; color: string; bg: string }> = {
     succeeded: { label: 'Succeeded', color: colors.green, bg: colors.greenBg },
     held: { label: 'In escrow', color: colors.info, bg: colors.infoBg },
@@ -614,12 +619,13 @@ function TxStatusPill({ status }: { status: string }) {
   const m = map[status] ?? map.pending;
   return (
     <View style={{ backgroundColor: m.bg, borderRadius: radius.pill, paddingHorizontal: 8, paddingVertical: 3 }}>
-      <BText style={{ fontFamily: font.semibold, fontSize: 11, color: m.color }}>{m.label}</BText>
+      <BText style={{ fontFamily: font.semibold, fontSize: 11, color: m.color }}>{t(m.label)}</BText>
     </View>
   );
 }
 
 function ServicesEditor({ venue, onChanged }: { venue: Venue; onChanged: () => void }) {
+  const { t } = useI18n();
   const [editingId, setEditingId] = useState<string | null>(null);
   const [name, setName] = useState('');
   const [group, setGroup] = useState('Featured');
@@ -666,38 +672,38 @@ function ServicesEditor({ venue, onChanged }: { venue: Venue; onChanged: () => v
   return (
     <View style={{ gap: 16 }}>
       <View style={styles.card}>
-        <BText variant="h3">{editingId ? 'Edit service' : 'Add a service'}</BText>
+        <BText variant="h3">{editingId ? t('Edit service') : t('Add a service')}</BText>
         <View style={{ gap: 12, marginTop: 16 }}>
-          <Field label="Service name" placeholder="e.g. Gel Manicure" value={name} onChangeText={setName} />
+          <Field label={t('Service name')} placeholder={t('e.g. Gel Manicure')} value={name} onChangeText={setName} />
           <View style={{ flexDirection: 'row', gap: 12 }}>
             <View style={{ flex: 1 }}>
-              <Field label="Group" placeholder="Featured" value={group} onChangeText={setGroup} />
+              <Field label={t('Group')} placeholder={t('Featured')} value={group} onChangeText={setGroup} />
             </View>
             <View style={{ flex: 1 }}>
-              <Field label="Duration (min)" keyboardType="numeric" value={duration} onChangeText={setDuration} />
+              <Field label={t('Duration (min)')} keyboardType="numeric" value={duration} onChangeText={setDuration} />
             </View>
             <View style={{ flex: 1 }}>
-              <Field label="Price" keyboardType="numeric" placeholder="150" value={price} onChangeText={setPrice} />
+              <Field label={t('Price')} keyboardType="numeric" placeholder="150" value={price} onChangeText={setPrice} />
             </View>
             <View style={{ flex: 1 }}>
-              <Field label="Discount %" keyboardType="numeric" value={discount} onChangeText={setDiscount} />
+              <Field label={t('Discount %')} keyboardType="numeric" value={discount} onChangeText={setDiscount} />
             </View>
           </View>
           <View style={{ flexDirection: 'row', gap: 10 }}>
-            <Button title={editingId ? 'Save changes' : 'Add service'} loading={busy} onPress={save} />
-            {editingId ? <Button title="Cancel" variant="secondary" onPress={resetForm} /> : null}
+            <Button title={editingId ? t('Save changes') : t('Add service')} loading={busy} onPress={save} />
+            {editingId ? <Button title={t('Cancel')} variant="secondary" onPress={resetForm} /> : null}
           </View>
         </View>
       </View>
       <View style={styles.card}>
-        <BText variant="h3">Your services ({venue.services.length})</BText>
+        <BText variant="h3">{t('Your services ({n})', { n: venue.services.length })}</BText>
         {venue.services.map((s) => (
           <View key={s.id} style={styles.bookingRow}>
             <View style={{ flex: 1 }}>
               <BText variant="smallMedium">{s.name}</BText>
               <BText variant="tiny">
                 {s.group_name} · {formatDuration(s.duration_minutes)} · {formatPrice(s.price_cents, s.currency)}
-                {s.discount_pct ? ` · ${s.discount_pct}% off` : ''}
+                {s.discount_pct ? ` · ${t('{pct}% off', { pct: s.discount_pct })}` : ''}
               </BText>
             </View>
             <Pressable onPress={() => startEdit(s)} hitSlop={8}>
@@ -717,7 +723,7 @@ function ServicesEditor({ venue, onChanged }: { venue: Venue; onChanged: () => v
         ))}
         {venue.services.length === 0 && (
           <BText variant="small" style={{ marginTop: 10 }}>
-            Add your first service so customers can book you.
+            {t('Add your first service so customers can book you.')}
           </BText>
         )}
       </View>
@@ -726,6 +732,7 @@ function ServicesEditor({ venue, onChanged }: { venue: Venue; onChanged: () => v
 }
 
 function StaffEditor({ venue, onChanged }: { venue: Venue; onChanged: () => void }) {
+  const { t } = useI18n();
   const [editingId, setEditingId] = useState<string | null>(null);
   const [name, setName] = useState('');
   const [role, setRole] = useState('');
@@ -759,20 +766,20 @@ function StaffEditor({ venue, onChanged }: { venue: Venue; onChanged: () => void
   return (
     <View style={{ gap: 16 }}>
       <View style={styles.card}>
-        <BText variant="h3">{editingId ? 'Edit team member' : 'Add a team member'}</BText>
+        <BText variant="h3">{editingId ? t('Edit team member') : t('Add a team member')}</BText>
         <View style={{ flexDirection: 'row', gap: 12, marginTop: 16, alignItems: 'flex-end' }}>
           <View style={{ flex: 1 }}>
-            <Field label="Name" placeholder="e.g. Sara" value={name} onChangeText={setName} />
+            <Field label={t('Name')} placeholder={t('e.g. Sara')} value={name} onChangeText={setName} />
           </View>
           <View style={{ flex: 1 }}>
-            <Field label="Role" placeholder="Stylist" value={role} onChangeText={setRole} />
+            <Field label={t('Role')} placeholder={t('Stylist')} value={role} onChangeText={setRole} />
           </View>
-          <Button title={editingId ? 'Save' : 'Add'} loading={busy} onPress={save} />
-          {editingId ? <Button title="Cancel" variant="secondary" onPress={resetForm} /> : null}
+          <Button title={editingId ? t('Save') : t('Add')} loading={busy} onPress={save} />
+          {editingId ? <Button title={t('Cancel')} variant="secondary" onPress={resetForm} /> : null}
         </View>
       </View>
       <View style={styles.card}>
-        <BText variant="h3">Your team ({venue.staff.length})</BText>
+        <BText variant="h3">{t('Your team ({n})', { n: venue.staff.length })}</BText>
         {venue.staff.map((m) => (
           <View key={m.id} style={styles.bookingRow}>
             <View style={{ flex: 1 }}>
@@ -796,7 +803,7 @@ function StaffEditor({ venue, onChanged }: { venue: Venue; onChanged: () => void
         ))}
         {venue.staff.length === 0 && (
           <BText variant="small" style={{ marginTop: 10 }}>
-            Add your team so clients can choose their favorite professional.
+            {t('Add your team so clients can choose their favorite professional.')}
           </BText>
         )}
       </View>
@@ -818,6 +825,7 @@ const HIGHLIGHT_OPTIONS = [
 ];
 
 function SettingsEditor({ venue, onChanged }: { venue: Venue; onChanged: () => void }) {
+  const { t } = useI18n();
   const { categories } = useAppData();
   const [name, setName] = useState(venue.name);
   const [description, setDescription] = useState(venue.description);
@@ -853,11 +861,11 @@ function SettingsEditor({ venue, onChanged }: { venue: Venue; onChanged: () => v
 
   return (
     <View style={styles.card}>
-      <BText variant="h3">Business details</BText>
+      <BText variant="h3">{t('Business details')}</BText>
       <View style={{ gap: 12, marginTop: 16 }}>
-        <Field label="Business name" value={name} onChangeText={setName} />
+        <Field label={t('Business name')} value={name} onChangeText={setName} />
         <Field
-          label="About"
+          label={t('About')}
           value={description}
           onChangeText={setDescription}
           multiline
@@ -865,7 +873,7 @@ function SettingsEditor({ venue, onChanged }: { venue: Venue; onChanged: () => v
           style={{ minHeight: 100 }}
         />
         <View style={{ gap: 6 }}>
-          <BText variant="smallMedium">Category</BText>
+          <BText variant="smallMedium">{t('Category')}</BText>
           <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8 }}>
             {categories.map((c) => (
               <Chip key={c.id} label={c.name} selected={categoryId === c.id} onPress={() => setCategoryId(c.id)} />
@@ -874,29 +882,29 @@ function SettingsEditor({ venue, onChanged }: { venue: Venue; onChanged: () => v
         </View>
         <View style={{ flexDirection: 'row', gap: 12 }}>
           <View style={{ flex: 1 }}>
-            <Field label="City" value={city} onChangeText={setCity} />
+            <Field label={t('City')} value={city} onChangeText={setCity} />
           </View>
           <View style={{ flex: 1 }}>
-            <Field label="Area" value={area} onChangeText={setArea} />
+            <Field label={t('Area')} value={area} onChangeText={setArea} />
           </View>
         </View>
-        <Field label="Street address" value={address} onChangeText={setAddress} />
+        <Field label={t('Street address')} value={address} onChangeText={setAddress} />
         <Field
-          label="Google Maps link"
+          label={t('Google Maps link')}
           placeholder="https://maps.app.goo.gl/…"
           value={mapsUrl}
           onChangeText={setMapsUrl}
           autoCapitalize="none"
         />
         <View style={{ gap: 6 }}>
-          <BText variant="smallMedium">Amenities shown on your page</BText>
+          <BText variant="smallMedium">{t('Amenities shown on your page')}</BText>
           <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8 }}>
             {HIGHLIGHT_OPTIONS.map((h) => (
-              <Chip key={h} label={h} selected={highlights.includes(h)} onPress={() => toggleHighlight(h)} />
+              <Chip key={h} label={t(h)} selected={highlights.includes(h)} onPress={() => toggleHighlight(h)} />
             ))}
           </View>
         </View>
-        <Button title={saved ? 'Saved ✓' : 'Save changes'} loading={busy} onPress={save} />
+        <Button title={saved ? t('Saved ✓') : t('Save changes')} loading={busy} onPress={save} />
       </View>
       <HoursEditor venue={venue} onChanged={onChanged} />
       <GalleryEditor venue={venue} onChanged={onChanged} />
@@ -907,6 +915,7 @@ function SettingsEditor({ venue, onChanged }: { venue: Venue; onChanged: () => v
 const WEEKDAY_NAMES = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
 function HoursEditor({ venue, onChanged }: { venue: Venue; onChanged: () => void }) {
+  const { t } = useI18n();
   const [hours, setHours] = useState(() =>
     [0, 1, 2, 3, 4, 5, 6].map(
       (w) => venue.hours.find((h) => h.weekday === w) ?? { weekday: w, open_time: '10:00', close_time: '22:00', is_closed: false }
@@ -929,18 +938,18 @@ function HoursEditor({ venue, onChanged }: { venue: Venue; onChanged: () => void
 
   return (
     <View style={[styles.card, { marginTop: 16 }]}>
-      <BText variant="h3">Opening hours</BText>
+      <BText variant="h3">{t('Opening hours')}</BText>
       <View style={{ gap: 10, marginTop: 16 }}>
         {[1, 2, 3, 4, 5, 6, 0].map((w) => {
           const h = hours.find((x) => x.weekday === w)!;
           return (
             <View key={w} style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
               <BText variant="smallMedium" style={{ width: 92 }}>
-                {WEEKDAY_NAMES[w]}
+                {t(WEEKDAY_NAMES[w])}
               </BText>
               {h.is_closed ? (
                 <BText variant="small" style={{ flex: 1 }}>
-                  Closed
+                  {t('Closed')}
                 </BText>
               ) : (
                 <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center', gap: 8 }}>
@@ -949,7 +958,7 @@ function HoursEditor({ venue, onChanged }: { venue: Venue; onChanged: () => void
                     onChangeText={(v) => patch(w, { open_time: v })}
                     style={{ minHeight: 38, width: 74, paddingHorizontal: 8 }}
                   />
-                  <BText variant="tiny">to</BText>
+                  <BText variant="tiny">{t('to')}</BText>
                   <Field
                     value={h.close_time ?? '22:00'}
                     onChangeText={(v) => patch(w, { close_time: v })}
@@ -962,7 +971,7 @@ function HoursEditor({ venue, onChanged }: { venue: Venue; onChanged: () => void
                 style={[styles.refundBtn, { borderColor: h.is_closed ? colors.green : colors.border }]}
               >
                 <BText style={{ fontFamily: font.semibold, fontSize: 12, color: h.is_closed ? colors.green : colors.gray }}>
-                  {h.is_closed ? 'Open this day' : 'Mark closed'}
+                  {h.is_closed ? t('Open this day') : t('Mark closed')}
                 </BText>
               </Pressable>
             </View>
@@ -970,19 +979,20 @@ function HoursEditor({ venue, onChanged }: { venue: Venue; onChanged: () => void
         })}
       </View>
       <View style={{ marginTop: 16, alignItems: 'flex-start' }}>
-        <Button title={saved ? 'Saved ✓' : 'Save hours'} size="sm" loading={busy} onPress={save} />
+        <Button title={saved ? t('Saved ✓') : t('Save hours')} size="sm" loading={busy} onPress={save} />
       </View>
     </View>
   );
 }
 
 function GalleryEditor({ venue, onChanged }: { venue: Venue; onChanged: () => void }) {
+  const { t } = useI18n();
   const [url, setUrl] = useState('');
   const [busy, setBusy] = useState(false);
 
   return (
     <View style={[styles.card, { marginTop: 16 }]}>
-      <BText variant="h3">Gallery ({venue.images.length})</BText>
+      <BText variant="h3">{t('Gallery ({n})', { n: venue.images.length })}</BText>
       <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 10, marginTop: 14 }}>
         {venue.images.map((im) => (
           <View key={im.url} style={{ position: 'relative' }}>
@@ -1008,10 +1018,10 @@ function GalleryEditor({ venue, onChanged }: { venue: Venue; onChanged: () => vo
       </View>
       <View style={{ flexDirection: 'row', gap: 10, marginTop: 14, alignItems: 'flex-end' }}>
         <View style={{ flex: 1 }}>
-          <Field label="Image URL" placeholder="https://…" value={url} onChangeText={setUrl} autoCapitalize="none" />
+          <Field label={t('Image URL')} placeholder="https://…" value={url} onChangeText={setUrl} autoCapitalize="none" />
         </View>
         <Button
-          title="Add photo"
+          title={t('Add photo')}
           size="sm"
           loading={busy}
           onPress={async () => {

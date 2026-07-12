@@ -9,7 +9,8 @@ import { BText } from '../components/ui/text';
 import { WebFooter } from '../components/web-footer';
 import { WebHeader } from '../components/web-header';
 import { useAuth } from '../lib/auth-context';
-import { formatDateLong, formatPrice } from '../lib/format';
+import { formatPrice } from '../lib/format';
+import { formatDate, useI18n } from '../lib/i18n';
 import { getMyInvoices } from '../lib/payments';
 import { colors, font, radius } from '../lib/theme';
 import type { Invoice } from '../lib/types';
@@ -19,6 +20,7 @@ export default function Invoices() {
   const isDesktop = useIsDesktop();
   const insets = useSafeAreaInsets();
   const router = useRouter();
+  const { t, lang, isRTL } = useI18n();
   const { user } = useAuth();
   const [invoices, setInvoices] = useState<Invoice[]>([]);
   const [open, setOpen] = useState<string | null>(null);
@@ -39,10 +41,10 @@ export default function Invoices() {
         <View style={styles.empty}>
           <Ionicons name="receipt-outline" size={44} color={colors.grayLight} />
           <BText variant="h3" style={{ marginTop: 16 }}>
-            No invoices yet
+            {t('No invoices yet')}
           </BText>
           <BText variant="small" style={{ marginTop: 6, textAlign: 'center' }}>
-            Tax invoices are issued automatically when you pay online.
+            {t('Tax invoices are issued automatically when you pay online.')}
           </BText>
         </View>
       ) : (
@@ -57,7 +59,8 @@ export default function Invoices() {
                 <View style={{ flex: 1 }}>
                   <BText variant="title">{inv.number}</BText>
                   <BText variant="tiny">
-                    {inv.venue_name ?? 'Bink booking'} · {formatDateLong(inv.issued_at)}
+                    {inv.venue_name ?? t('Bink booking')} ·{' '}
+                    {formatDate(lang, inv.issued_at, { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}
                   </BText>
                 </View>
                 <BText variant="title">{formatPrice(inv.total_cents, inv.currency)}</BText>
@@ -79,20 +82,20 @@ export default function Invoices() {
                   ))}
                   <View style={styles.divider} />
                   <View style={styles.line}>
-                    <BText variant="small">Subtotal (excl. VAT)</BText>
+                    <BText variant="small">{t('Subtotal (excl. VAT)')}</BText>
                     <BText variant="small" color={colors.ink}>
                       {formatPrice(inv.subtotal_cents, inv.currency)}
                     </BText>
                   </View>
                   <View style={styles.line}>
-                    <BText variant="small">VAT ({inv.vat_rate}%)</BText>
+                    <BText variant="small">{t('VAT ({rate}%)', { rate: inv.vat_rate })}</BText>
                     <BText variant="small" color={colors.ink}>
                       {formatPrice(inv.vat_cents, inv.currency)}
                     </BText>
                   </View>
                   <View style={styles.line}>
                     <BText variant="smallMedium" style={{ fontFamily: font.bold }}>
-                      Total
+                      {t('Total')}
                     </BText>
                     <BText variant="smallMedium" style={{ fontFamily: font.bold }}>
                       {formatPrice(inv.total_cents, inv.currency)}
@@ -108,7 +111,7 @@ export default function Invoices() {
   );
 
   if (isDesktop) {
-    return <AccountLayout title="Invoices">{list}</AccountLayout>;
+    return <AccountLayout title={t('Invoices')}>{list}</AccountLayout>;
   }
 
   return (
@@ -122,9 +125,9 @@ export default function Invoices() {
       >
         <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12, marginBottom: 20 }}>
           <Pressable onPress={() => router.back()} hitSlop={8}>
-            <Ionicons name="arrow-back" size={24} color={colors.ink} />
+            <Ionicons name={isRTL ? 'arrow-forward' : 'arrow-back'} size={24} color={colors.ink} />
           </Pressable>
-          <BText variant="h1">Invoices</BText>
+          <BText variant="h1">{t('Invoices')}</BText>
         </View>
         {list}
       </ScrollView>

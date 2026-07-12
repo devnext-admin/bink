@@ -1,5 +1,6 @@
 import React from 'react';
-import { Text as RNText, TextProps, TextStyle } from 'react-native';
+import { StyleSheet, Text as RNText, TextProps, TextStyle } from 'react-native';
+import { useI18n } from '../../lib/i18n';
 import { colors, font } from '../../lib/theme';
 
 type Variant =
@@ -34,6 +35,20 @@ interface BTextProps extends TextProps {
   color?: string;
 }
 
+// Poppins has no Arabic glyphs — swap to the matching Tajawal weight in Arabic.
+const AR_FONT: Record<string, string> = {
+  Poppins_400Regular: 'Tajawal_400Regular',
+  Poppins_500Medium: 'Tajawal_500Medium',
+  Poppins_600SemiBold: 'Tajawal_700Bold',
+  Poppins_700Bold: 'Tajawal_700Bold',
+  Poppins_800ExtraBold: 'Tajawal_800ExtraBold',
+};
+
 export function BText({ variant = 'body', color, style, ...rest }: BTextProps) {
-  return <RNText {...rest} style={[variants[variant], color ? { color } : null, style]} />;
+  const { lang } = useI18n();
+  let flat = StyleSheet.flatten([variants[variant], color ? { color } : null, style]) as TextStyle;
+  if (lang === 'ar' && flat.fontFamily && AR_FONT[flat.fontFamily]) {
+    flat = { ...flat, fontFamily: AR_FONT[flat.fontFamily] };
+  }
+  return <RNText {...rest} style={flat} />;
 }

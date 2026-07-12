@@ -1,5 +1,6 @@
 import React from 'react';
 import { View } from 'react-native';
+import { formatDate, useI18n } from '../lib/i18n';
 import { colors } from '../lib/theme';
 import type { Review } from '../lib/types';
 import { Avatar } from './ui/avatar';
@@ -7,7 +8,8 @@ import { RatingStars } from './ui/rating';
 import { BText } from './ui/text';
 
 export function ReviewCard({ review }: { review: Review }) {
-  const date = new Date(review.created_at).toLocaleDateString('en-US', {
+  const { lang } = useI18n();
+  const date = formatDate(lang, review.created_at, {
     weekday: 'short',
     month: 'short',
     day: 'numeric',

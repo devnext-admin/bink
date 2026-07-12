@@ -15,6 +15,7 @@ import { useAuth } from '../../lib/auth-context';
 import { useBooking } from '../../lib/booking-context';
 import { createBooking } from '../../lib/data';
 import { formatDuration, formatPrice } from '../../lib/format';
+import { useI18n } from '../../lib/i18n';
 import { getBusyIntervals, isSlotFree, validatePromo, type BusyInterval } from '../../lib/ops';
 import { markPayAtVenue, payForBooking, paymentsGateway } from '../../lib/payments';
 import { colors, font, radius, shadow } from '../../lib/theme';
@@ -57,6 +58,7 @@ const TIME_SLOTS = Array.from({ length: 22 }, (_, i) => {
 export default function BookingScreen() {
   const { slug } = useLocalSearchParams<{ slug: string }>();
   const router = useRouter();
+  const { t, isRTL } = useI18n();
   const isDesktop = useIsDesktop();
   const insets = useSafeAreaInsets();
   const { allVenues } = useAppData();
@@ -102,7 +104,7 @@ export default function BookingScreen() {
       setPromo(p);
       setPromoInput('');
     } else {
-      setPromoError('This code is invalid or expired.');
+      setPromoError(t('This code is invalid or expired.'));
     }
   };
 
@@ -157,7 +159,7 @@ export default function BookingScreen() {
         // Booking stays confirmed as pay-at-venue if the charge fails
         await markPayAtVenue(created.id);
         setPaid(false);
-        setPayError(e?.message ?? 'Payment failed — your booking is confirmed as pay at venue.');
+        setPayError(e?.message ?? t('Payment failed — your booking is confirmed as pay at venue.'));
       }
       setSubmitting(false);
       setConfirmedId(created.id);
@@ -177,10 +179,10 @@ export default function BookingScreen() {
   if (step === 'services') {
     content = (
       <View>
-        <BText variant="h1">Select services</BText>
+        <BText variant="h1">{t('Select services')}</BText>
         <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ gap: 8, paddingVertical: 16 }}>
           {groups.map((g) => (
-            <Chip key={g} label={g} selected={group === g} onPress={() => setGroup(g)} />
+            <Chip key={g} label={t(g)} selected={group === g} onPress={() => setGroup(g)} />
           ))}
         </ScrollView>
         <View style={{ gap: 12 }}>
@@ -200,11 +202,11 @@ export default function BookingScreen() {
   } else if (step === 'professional') {
     content = (
       <View>
-        <BText variant="h1">Select professional</BText>
+        <BText variant="h1">{t('Select professional')}</BText>
         <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 12, marginTop: 20 }}>
           <ProCard
-            label="Any professional"
-            sub="for maximum availability"
+            label={t('Any professional')}
+            sub={t('for maximum availability')}
             icon
             selected={!booking.staff}
             onPress={() => booking.setStaff(null)}
@@ -225,7 +227,7 @@ export default function BookingScreen() {
   } else if (step === 'time') {
     content = (
       <View>
-        <BText variant="h1">Select time</BText>
+        <BText variant="h1">{t('Select time')}</BText>
         <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ gap: 8, paddingVertical: 20 }}>
           {days.map((d) => {
             const selected = booking.date === d.date;
@@ -236,7 +238,7 @@ export default function BookingScreen() {
                 style={[styles.dayCell, selected && { backgroundColor: colors.accent, borderColor: colors.accent }]}
               >
                 <BText variant="tiny" color={selected ? 'rgba(255,255,255,0.7)' : colors.gray}>
-                  {d.day}
+                  {t(d.day)}
                 </BText>
                 <BText
                   style={{ fontFamily: font.bold, fontSize: 18, color: selected ? colors.white : colors.ink }}
@@ -244,7 +246,7 @@ export default function BookingScreen() {
                   {d.num}
                 </BText>
                 <BText variant="tiny" color={selected ? 'rgba(255,255,255,0.7)' : colors.gray}>
-                  {d.month}
+                  {t(d.month)}
                 </BText>
               </Pressable>
             );
@@ -286,7 +288,7 @@ export default function BookingScreen() {
         </View>
         {!booking.date ? (
           <BText variant="small" style={{ marginTop: 16 }}>
-            Pick a date first, then choose a time.
+            {t('Pick a date first, then choose a time.')}
           </BText>
         ) : null}
       </View>
@@ -294,11 +296,11 @@ export default function BookingScreen() {
   } else if (step === 'confirm') {
     content = (
       <View>
-        <BText variant="h1">Review and confirm</BText>
+        <BText variant="h1">{t('Review and confirm')}</BText>
         <View style={{ gap: 12, marginTop: 20 }}>
-          <InfoRow icon="calendar-outline" text={`${booking.date} at ${booking.time}`} />
-          <InfoRow icon="time-outline" text={`${formatDuration(booking.totalMinutes)} total duration`} />
-          <InfoRow icon="person-outline" text={booking.staff ? `${booking.staff.name} — ${booking.staff.role}` : 'Any professional'} />
+          <InfoRow icon="calendar-outline" text={t('{date} at {time}', { date: booking.date!, time: booking.time! })} />
+          <InfoRow icon="time-outline" text={t('{duration} total duration', { duration: formatDuration(booking.totalMinutes) })} />
+          <InfoRow icon="person-outline" text={booking.staff ? `${booking.staff.name} — ${booking.staff.role}` : t('Any professional')} />
           <InfoRow icon="location-outline" text={`${venue.name}, ${venue.area}, ${venue.city}`} />
         </View>
         <View style={{ marginTop: 28, gap: 12 }}>
@@ -317,7 +319,7 @@ export default function BookingScreen() {
             <View style={styles.confirmRow}>
               <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center', gap: 8 }}>
                 <BText variant="smallMedium" color={colors.green}>
-                  {promo.code} · {promo.pct_off}% off
+                  {promo.code} · {t('{pct}% off', { pct: promo.pct_off })}
                 </BText>
                 <Pressable onPress={() => setPromo(null)} hitSlop={6}>
                   <Ionicons name="close-circle" size={16} color={colors.gray} />
@@ -330,7 +332,7 @@ export default function BookingScreen() {
           ) : (
             <View style={[styles.confirmRow, { gap: 10 }]}>
               <TextInput
-                placeholder="Promo code"
+                placeholder={t('Promo code')}
                 placeholderTextColor={colors.gray}
                 value={promoInput}
                 onChangeText={setPromoInput}
@@ -338,7 +340,7 @@ export default function BookingScreen() {
                 style={styles.promoInput}
               />
               <Pressable onPress={applyPromo} style={styles.promoBtn}>
-                <BText style={{ fontFamily: font.semibold, fontSize: 13, color: colors.ink }}>Apply</BText>
+                <BText style={{ fontFamily: font.semibold, fontSize: 13, color: colors.ink }}>{t('Apply')}</BText>
               </Pressable>
             </View>
           )}
@@ -349,15 +351,15 @@ export default function BookingScreen() {
           ) : null}
           <View style={[styles.confirmRow, { borderBottomWidth: 0 }]}>
             <BText variant="h3" style={{ flex: 1 }}>
-              Total
+              {t('Total')}
             </BText>
             <BText variant="h3">{formatPrice(finalTotal, booking.currency)}</BText>
           </View>
         </View>
         <View style={{ marginTop: 24 }}>
-          <BText variant="h3">Notes for the salon</BText>
+          <BText variant="h3">{t('Notes for the salon')}</BText>
           <TextInput
-            placeholder="Anything they should know? Allergies, preferences, parking…"
+            placeholder={t('Anything they should know? Allergies, preferences, parking…')}
             placeholderTextColor={colors.gray}
             value={notes}
             onChangeText={setNotes}
@@ -366,26 +368,26 @@ export default function BookingScreen() {
           />
         </View>
         <View style={{ marginTop: 28 }}>
-          <BText variant="h3">Payment</BText>
+          <BText variant="h3">{t('Payment')}</BText>
           <View style={{ gap: 10, marginTop: 14 }}>
             <PayOption
               icon="cash-outline"
-              title="Pay at venue"
-              sub="No payment needed today"
+              title={t('Pay at venue')}
+              sub={t('No payment needed today')}
               selected={payMethod === 'pay_at_venue'}
               onPress={() => setPayMethod('pay_at_venue')}
             />
             <PayOption
               icon="card-outline"
-              title="Pay by card"
-              sub={paymentsGateway === 'demo' ? 'Test gateway — no real charge' : 'mada, Visa, Mastercard'}
+              title={t('Pay by card')}
+              sub={paymentsGateway === 'demo' ? t('Test gateway — no real charge') : t('mada, Visa, Mastercard')}
               selected={payMethod === 'card'}
               onPress={() => setPayMethod('card')}
             />
             <PayOption
               icon="logo-apple"
-              title="Apple Pay"
-              sub={paymentsGateway === 'demo' ? 'Test gateway — no real charge' : 'Pay with Apple Pay'}
+              title={t('Apple Pay')}
+              sub={paymentsGateway === 'demo' ? t('Test gateway — no real charge') : t('Pay with Apple Pay')}
               selected={payMethod === 'apple_pay'}
               onPress={() => setPayMethod('apple_pay')}
             />
@@ -394,16 +396,17 @@ export default function BookingScreen() {
             <View style={styles.payNote}>
               <Ionicons name="shield-checkmark-outline" size={18} color={colors.ink} />
               <BText variant="small" color={colors.ink}>
-                {formatPrice(finalTotal, booking.currency)} is charged now and held securely in escrow by
-                Bink. It is only released to the salon after your visit is completed and you confirm it.
-                Includes 15% VAT — a tax invoice is issued automatically.
+                {t(
+                  '{amount} is charged now and held securely in escrow by Bink. It is only released to the salon after your visit is completed and you confirm it. Includes 15% VAT — a tax invoice is issued automatically.',
+                  { amount: formatPrice(finalTotal, booking.currency) }
+                )}
               </BText>
             </View>
           ) : null}
         </View>
         {!user ? (
           <BText variant="small" style={{ marginTop: 16 }}>
-            Booking as guest. You can create an account from the Profile tab to keep your appointments synced.
+            {t('Booking as guest. You can create an account from the Profile tab to keep your appointments synced.')}
           </BText>
         ) : null}
       </View>
@@ -415,22 +418,22 @@ export default function BookingScreen() {
           <Ionicons name="checkmark" size={40} color={colors.white} />
         </View>
         <BText variant="h1" style={{ marginTop: 24, textAlign: 'center' }}>
-          Booking confirmed
+          {t('Booking confirmed')}
         </BText>
         <BText variant="body" style={{ marginTop: 8, textAlign: 'center', maxWidth: 400 }}>
-          {venue.name} · {booking.date} at {booking.time}. We can’t wait to see you!
+          {venue.name} · {t('{date} at {time}', { date: booking.date!, time: booking.time! })}. {t('We can’t wait to see you!')}
         </BText>
         {paid ? (
           <View style={[styles.paidPill, { backgroundColor: colors.greenBg }]}>
             <Ionicons name="checkmark-circle" size={16} color={colors.green} />
             <BText variant="smallMedium" color={colors.green}>
-              Paid {formatPrice(booking.totalCents, booking.currency)} · tax invoice issued
+              {t('Paid {amount} · tax invoice issued', { amount: formatPrice(booking.totalCents, booking.currency) })}
             </BText>
           </View>
         ) : (
           <View style={[styles.paidPill, { backgroundColor: colors.bgSubtle }]}>
             <Ionicons name="cash-outline" size={16} color={colors.ink} />
-            <BText variant="smallMedium">Pay at venue</BText>
+            <BText variant="smallMedium">{t('Pay at venue')}</BText>
           </View>
         )}
         {payError ? (
@@ -440,7 +443,7 @@ export default function BookingScreen() {
         ) : null}
         <View style={{ flexDirection: 'row', gap: 12, marginTop: 32 }}>
           <Button
-            title="View appointments"
+            title={t('View appointments')}
             onPress={() => {
               booking.reset();
               router.dismissAll?.();
@@ -448,7 +451,7 @@ export default function BookingScreen() {
             }}
           />
           <Button
-            title="Done"
+            title={t('Done')}
             variant="secondary"
             onPress={() => {
               booking.reset();
@@ -482,7 +485,7 @@ export default function BookingScreen() {
       </View>
       <View style={styles.summaryDivider} />
       {booking.services.length === 0 ? (
-        <BText variant="small">No services selected</BText>
+        <BText variant="small">{t('No services selected')}</BText>
       ) : (
         <View style={{ gap: 10 }}>
           {booking.services.map((s) => (
@@ -502,9 +505,9 @@ export default function BookingScreen() {
       )}
       <View style={styles.summaryDivider} />
       <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-        <BText variant="title">Total</BText>
+        <BText variant="title">{t('Total')}</BText>
         <BText variant="title">
-          {booking.services.length ? formatPrice(finalTotal, booking.currency) : 'free'}
+          {booking.services.length ? formatPrice(finalTotal, booking.currency) : t('free')}
         </BText>
       </View>
       <View style={{ marginTop: 20 }}>
@@ -512,9 +515,9 @@ export default function BookingScreen() {
           title={
             step === 'confirm'
               ? payMethod === 'pay_at_venue'
-                ? 'Confirm booking'
-                : `Pay ${formatPrice(finalTotal, booking.currency)}`
-              : 'Continue'
+                ? t('Confirm booking')
+                : t('Pay {amount}', { amount: formatPrice(finalTotal, booking.currency) })
+              : t('Continue')
           }
           fullWidth
           size="lg"
@@ -543,9 +546,9 @@ export default function BookingScreen() {
                     style={{ fontFamily: i === stepIndex ? font.bold : font.regular }}
                     color={i <= stepIndex ? colors.ink : colors.gray}
                   >
-                    {s.label}
+                    {t(s.label)}
                   </BText>
-                  {i < STEPS.length - 1 && <Ionicons name="chevron-forward" size={12} color={colors.gray} />}
+                  {i < STEPS.length - 1 && <Ionicons name={isRTL ? 'chevron-back' : 'chevron-forward'} size={12} color={colors.gray} />}
                 </React.Fragment>
               ))}
             </View>
@@ -580,7 +583,7 @@ export default function BookingScreen() {
         </Pressable>
         {step !== 'done' && (
           <BText variant="smallMedium">
-            {STEPS[stepIndex]?.label} · step {stepIndex + 1} of {STEPS.length}
+            {t(STEPS[stepIndex]?.label ?? '')} · {t('step {n} of {m}', { n: stepIndex + 1, m: STEPS.length })}
           </BText>
         )}
         <Pressable
@@ -600,15 +603,15 @@ export default function BookingScreen() {
         <View style={[styles.mobileBottom, { paddingBottom: Math.max(insets.bottom, 12) }]}>
           <View style={{ flex: 1 }}>
             <BText variant="title">
-              {booking.services.length ? formatPrice(booking.totalCents, booking.currency) : 'Select services'}
+              {booking.services.length ? formatPrice(booking.totalCents, booking.currency) : t('Select services')}
             </BText>
             <BText variant="tiny">
-              {booking.services.length} service{booking.services.length === 1 ? '' : 's'}
+              {booking.services.length === 1 ? t('1 service') : t('{n} services', { n: booking.services.length })}
               {booking.totalMinutes ? ` · ${formatDuration(booking.totalMinutes)}` : ''}
             </BText>
           </View>
           <Button
-            title={step === 'confirm' ? (payMethod === 'pay_at_venue' ? 'Confirm' : 'Pay now') : 'Continue'}
+            title={step === 'confirm' ? (payMethod === 'pay_at_venue' ? t('Confirm') : t('Pay now')) : t('Continue')}
             size="lg"
             disabled={!canContinue}
             loading={submitting}

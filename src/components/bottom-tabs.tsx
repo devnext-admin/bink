@@ -3,6 +3,7 @@ import { usePathname, useRouter } from 'expo-router';
 import React from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useI18n } from '../lib/i18n';
 import { colors, font } from '../lib/theme';
 import { BText } from './ui/text';
 
@@ -18,6 +19,7 @@ export function BottomTabs() {
   const router = useRouter();
   const pathname = usePathname();
   const insets = useSafeAreaInsets();
+  const { t } = useI18n();
 
   return (
     <View style={[styles.bar, { paddingBottom: Math.max(insets.bottom, 8) }]}>
@@ -42,7 +44,7 @@ export function BottomTabs() {
                 color: active ? colors.accent : colors.gray,
               }}
             >
-              {tab.label}
+              {t(tab.label)}
             </BText>
           </Pressable>
         );

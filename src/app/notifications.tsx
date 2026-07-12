@@ -10,6 +10,7 @@ import { WebFooter } from '../components/web-footer';
 import { WebHeader } from '../components/web-header';
 import { useAppData } from '../lib/app-data-context';
 import { useAuth } from '../lib/auth-context';
+import { formatDate, useI18n, type Lang } from '../lib/i18n';
 import { AppNotification, getNotifications, markAllRead } from '../lib/notifications';
 import { colors, radius } from '../lib/theme';
 import { useIsDesktop } from '../lib/use-layout';
@@ -35,18 +36,23 @@ function iconFor(title: string) {
   );
 }
 
-function timeAgo(iso: string) {
+function timeAgo(
+  iso: string,
+  lang: Lang,
+  t: (s: string, vars?: Record<string, string | number>) => string
+) {
   const mins = Math.max(1, Math.round((Date.now() - new Date(iso).getTime()) / 60000));
-  if (mins < 60) return `${mins}m ago`;
+  if (mins < 60) return t('{n}m ago', { n: mins });
   const hours = Math.round(mins / 60);
-  if (hours < 24) return `${hours}h ago`;
-  return new Date(iso).toLocaleDateString('en-US', { day: 'numeric', month: 'short' });
+  if (hours < 24) return t('{n}h ago', { n: hours });
+  return formatDate(lang, iso, { day: 'numeric', month: 'short' });
 }
 
 export default function Notifications() {
   const isDesktop = useIsDesktop();
   const insets = useSafeAreaInsets();
   const router = useRouter();
+  const { t, lang, isRTL } = useI18n();
   const { user } = useAuth();
   const { allVenues } = useAppData();
   const [items, setItems] = useState<AppNotification[]>([]);
@@ -74,10 +80,10 @@ export default function Notifications() {
         <View style={styles.empty}>
           <Ionicons name="notifications-outline" size={44} color={colors.grayLight} />
           <BText variant="h3" style={{ marginTop: 16 }}>
-            No notifications yet
+            {t('No notifications yet')}
           </BText>
           <BText variant="small" style={{ marginTop: 6, textAlign: 'center' }}>
-            Booking updates, payments and salon news will appear here.
+            {t('Booking updates, payments and salon news will appear here.')}
           </BText>
         </View>
       ) : (
@@ -93,7 +99,7 @@ export default function Notifications() {
                   <BText variant="smallMedium" style={{ flex: 1 }}>
                     {n.title}
                   </BText>
-                  <BText variant="tiny">{timeAgo(n.created_at)}</BText>
+                  <BText variant="tiny">{timeAgo(n.created_at, lang, t)}</BText>
                 </View>
                 {n.body ? (
                   <BText variant="small" style={{ marginTop: 2 }}>
@@ -102,7 +108,7 @@ export default function Notifications() {
                 ) : null}
                 {n.audience === 'venue' ? (
                   <BText variant="tiny" color={colors.accent} style={{ marginTop: 4 }}>
-                    {allVenues.find((v) => v.id === n.venue_id)?.name ?? 'Your salon'}
+                    {allVenues.find((v) => v.id === n.venue_id)?.name ?? t('Your salon')}
                   </BText>
                 ) : null}
               </View>
@@ -114,7 +120,7 @@ export default function Notifications() {
   );
 
   if (isDesktop) {
-    return <AccountLayout title="Notifications">{list}</AccountLayout>;
+    return <AccountLayout title={t('Notifications')}>{list}</AccountLayout>;
   }
 
   return (
@@ -124,9 +130,9 @@ export default function Notifications() {
       >
         <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12, marginBottom: 20 }}>
           <Pressable onPress={() => router.back()} hitSlop={8}>
-            <Ionicons name="arrow-back" size={24} color={colors.ink} />
+            <Ionicons name={isRTL ? 'arrow-forward' : 'arrow-back'} size={24} color={colors.ink} />
           </Pressable>
-          <BText variant="h1">Notifications</BText>
+          <BText variant="h1">{t('Notifications')}</BText>
         </View>
         {list}
       </ScrollView>

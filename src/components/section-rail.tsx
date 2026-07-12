@@ -7,7 +7,7 @@ import { VenueCard } from './venue-card';
 interface SectionRailProps {
   title: string;
   venues: Venue[];
-  badge?: (venue: Venue) => 'Featured' | 'New' | 'Deals' | null;
+  badge?: (venue: Venue) => string | null;
   cardWidth?: number;
   paddingHorizontal?: number;
 }

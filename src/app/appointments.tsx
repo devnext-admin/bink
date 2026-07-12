@@ -15,7 +15,8 @@ import { WebHeader } from '../components/web-header';
 import { useAppData } from '../lib/app-data-context';
 import { useAuth } from '../lib/auth-context';
 import { cancelBooking, getBookings } from '../lib/data';
-import { formatDateLong, formatPrice, formatTimeOfDate } from '../lib/format';
+import { formatPrice, formatTimeOfDate } from '../lib/format';
+import { formatDate, useI18n, type Lang } from '../lib/i18n';
 import { rescheduleBooking, submitReview } from '../lib/ops';
 import { confirmServiceByCustomer } from '../lib/payments';
 import { colors, font, radius } from '../lib/theme';
@@ -27,14 +28,14 @@ const RESCHEDULE_SLOTS = Array.from({ length: 22 }, (_, i) => {
   return `${String(Math.floor(minutes / 60)).padStart(2, '0')}:${String(minutes % 60).padStart(2, '0')}`;
 });
 
-function nextDays(count: number) {
+function nextDays(count: number, lang: Lang) {
   const out: { date: string; label: string }[] = [];
   const now = new Date();
   for (let i = 1; i <= count; i++) {
     const d = new Date(now.getFullYear(), now.getMonth(), now.getDate() + i);
     out.push({
       date: `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`,
-      label: d.toLocaleDateString('en-US', { weekday: 'short', day: 'numeric', month: 'short' }),
+      label: formatDate(lang, d, { weekday: 'short', day: 'numeric', month: 'short' }),
     });
   }
   return out;
@@ -44,6 +45,7 @@ export default function Appointments() {
   const isDesktop = useIsDesktop();
   const insets = useSafeAreaInsets();
   const router = useRouter();
+  const { t, lang } = useI18n();
   const { allVenues } = useAppData();
   const { user } = useAuth();
   const [bookings, setBookings] = useState<Booking[]>([]);
@@ -115,21 +117,21 @@ export default function Appointments() {
   const list = (
     <View style={{ gap: 16 }}>
       <View style={{ flexDirection: 'row', gap: 8 }}>
-        <Chip label="Upcoming" selected={filter === 'upcoming'} onPress={() => setFilter('upcoming')} />
-        <Chip label="Past" selected={filter === 'past'} onPress={() => setFilter('past')} />
+        <Chip label={t('Upcoming')} selected={filter === 'upcoming'} onPress={() => setFilter('upcoming')} />
+        <Chip label={t('Past')} selected={filter === 'past'} onPress={() => setFilter('past')} />
       </View>
 
       {loaded && visible.length === 0 ? (
         <View style={styles.empty}>
           <Ionicons name="calendar-outline" size={44} color={colors.grayLight} />
           <BText variant="h3" style={{ marginTop: 16 }}>
-            No {filter} appointments
+            {filter === 'upcoming' ? t('No upcoming appointments') : t('No past appointments')}
           </BText>
           <BText variant="small" style={{ marginTop: 6, textAlign: 'center' }}>
-            When you book a treatment it will show up here.
+            {t('When you book a treatment it will show up here.')}
           </BText>
           <View style={{ marginTop: 20 }}>
-            <Button title="Find a salon" onPress={() => router.push('/search')} />
+            <Button title={t('Find a salon')} onPress={() => router.push('/search')} />
           </View>
         </View>
       ) : (
@@ -147,7 +149,8 @@ export default function Appointments() {
                 <BText variant="title">{b.venue_name}</BText>
                 <BText variant="small">{b.venue_area}</BText>
                 <BText variant="smallMedium" style={{ marginTop: 4 }}>
-                  {formatDateLong(b.starts_at)} · {formatTimeOfDate(b.starts_at)}
+                  {formatDate(lang, b.starts_at, { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })} ·{' '}
+                  {formatTimeOfDate(b.starts_at)}
                 </BText>
               </View>
               <View style={{ gap: 4, alignItems: 'flex-end' }}>
@@ -178,7 +181,7 @@ export default function Appointments() {
               ))}
               <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop: 4 }}>
                 <BText variant="smallMedium" style={{ fontFamily: font.bold }}>
-                  Total
+                  {t('Total')}
                 </BText>
                 <BText variant="smallMedium" style={{ fontFamily: font.bold }}>
                   {formatPrice(b.total_cents, b.currency)}
@@ -189,7 +192,7 @@ export default function Appointments() {
               <View style={{ marginTop: 16 }}>
                 <View style={{ flexDirection: 'row', gap: 10 }}>
                   <Button
-                    title={reschedId === b.id ? 'Close' : 'Reschedule'}
+                    title={reschedId === b.id ? t('Close') : t('Reschedule')}
                     variant="secondary"
                     size="sm"
                     onPress={() => {
@@ -197,9 +200,9 @@ export default function Appointments() {
                       setReschedDate(null);
                     }}
                   />
-                  <Button title="Cancel booking" variant="secondary" size="sm" onPress={() => onCancel(b.id)} />
+                  <Button title={t('Cancel booking')} variant="secondary" size="sm" onPress={() => onCancel(b.id)} />
                   <Button
-                    title="Message"
+                    title={t('Message')}
                     variant="secondary"
                     size="sm"
                     onPress={() => {
@@ -210,9 +213,9 @@ export default function Appointments() {
                 </View>
                 {reschedId === b.id && (
                   <View style={{ marginTop: 14, gap: 10 }}>
-                    <BText variant="smallMedium">Pick a new day</BText>
+                    <BText variant="smallMedium">{t('Pick a new day')}</BText>
                     <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ gap: 8 }}>
-                      {nextDays(14).map((d) => (
+                      {nextDays(14, lang).map((d) => (
                         <Chip
                           key={d.date}
                           label={d.label}
@@ -240,11 +243,10 @@ export default function Appointments() {
             !b.customer_confirmed_at ? (
               <View style={styles.escrowNote}>
                 <BText variant="tiny" color={colors.info} style={{ flex: 1 }}>
-                  Your payment is held in escrow by Bink. Confirm the service was completed to release it to
-                  the salon.
+                  {t('Your payment is held in escrow by Bink. Confirm the service was completed to release it to the salon.')}
                 </BText>
                 <Button
-                  title="Confirm visit"
+                  title={t('Confirm visit')}
                   size="sm"
                   onPress={async () => {
                     await confirmServiceByCustomer(b.id);
@@ -255,12 +257,12 @@ export default function Appointments() {
             ) : null}
             {filter === 'past' && (b.status === 'completed' || b.status === 'confirmed') && !b.rated ? (
               <View style={{ flexDirection: 'row', gap: 10, marginTop: 16 }}>
-                <Button title="Rate your visit" size="sm" onPress={() => setRateBooking(b)} />
+                <Button title={t('Rate your visit')} size="sm" onPress={() => setRateBooking(b)} />
               </View>
             ) : null}
             {b.rated ? (
               <BText variant="tiny" color={colors.green} style={{ marginTop: 12 }}>
-                ✓ Thanks for your review
+                {t('✓ Thanks for your review')}
               </BText>
             ) : null}
           </View>
@@ -273,7 +275,7 @@ export default function Appointments() {
     <Modal visible={!!rateBooking} transparent animationType="fade" onRequestClose={() => setRateBooking(null)}>
       <View style={styles.modalBackdrop}>
         <View style={styles.modalCard}>
-          <BText variant="h2">How was your visit?</BText>
+          <BText variant="h2">{t('How was your visit?')}</BText>
           <BText variant="small" style={{ marginTop: 4 }}>
             {rateBooking?.venue_name}
           </BText>
@@ -285,7 +287,7 @@ export default function Appointments() {
             ))}
           </View>
           <TextInput
-            placeholder="Tell others about your experience (optional)"
+            placeholder={t('Tell others about your experience (optional)')}
             placeholderTextColor={colors.gray}
             value={comment}
             onChangeText={setComment}
@@ -294,9 +296,9 @@ export default function Appointments() {
           />
           <View style={{ flexDirection: 'row', gap: 10, marginTop: 16 }}>
             <View style={{ flex: 1 }}>
-              <Button title="Submit review" fullWidth loading={savingReview} onPress={onSubmitReview} />
+              <Button title={t('Submit review')} fullWidth loading={savingReview} onPress={onSubmitReview} />
             </View>
-            <Button title="Later" variant="secondary" onPress={() => setRateBooking(null)} />
+            <Button title={t('Later')} variant="secondary" onPress={() => setRateBooking(null)} />
           </View>
         </View>
       </View>
@@ -306,7 +308,7 @@ export default function Appointments() {
   if (isDesktop) {
     return (
       <>
-        <AccountLayout title="Appointments">{list}</AccountLayout>
+        <AccountLayout title={t('Appointments')}>{list}</AccountLayout>
         {ratingModal}
       </>
     );
@@ -322,7 +324,7 @@ export default function Appointments() {
         }}
       >
         <BText variant="h1" style={{ marginBottom: 20 }}>
-          Appointments
+          {t('Appointments')}
         </BText>
         {list}
       </ScrollView>
@@ -333,6 +335,7 @@ export default function Appointments() {
 }
 
 function StatusPill({ status }: { status: Booking['status'] }) {
+  const { t } = useI18n();
   const statusMap: Record<string, { label: string; color: string; bg: string }> = {
     confirmed: { label: 'Confirmed', color: colors.green, bg: colors.greenBg },
     pending: { label: 'Pending', color: colors.warning, bg: colors.warningBg },
@@ -343,7 +346,7 @@ function StatusPill({ status }: { status: Booking['status'] }) {
   const map = statusMap[status] ?? statusMap.confirmed;
   return (
     <View style={{ backgroundColor: map.bg, borderRadius: radius.pill, paddingHorizontal: 10, height: 24, justifyContent: 'center' }}>
-      <BText style={{ fontFamily: font.semibold, fontSize: 12, color: map.color }}>{map.label}</BText>
+      <BText style={{ fontFamily: font.semibold, fontSize: 12, color: map.color }}>{t(map.label)}</BText>
     </View>
   );
 }

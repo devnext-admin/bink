@@ -17,6 +17,7 @@ import { WebHeader } from '../../components/web-header';
 import { useAppData } from '../../lib/app-data-context';
 import { useBooking } from '../../lib/booking-context';
 import { formatTime, weekdayName } from '../../lib/format';
+import { useI18n } from '../../lib/i18n';
 import { getLocalReviews, ratingWithLocal } from '../../lib/ops';
 import { colors, font, maxContentWidth, radius, shadow } from '../../lib/theme';
 import type { Review, Service, Venue } from '../../lib/types';
@@ -63,6 +64,7 @@ function useServiceGroups(venue: Venue) {
 
 function ServicesSection({ venue, compact }: { venue: Venue; compact?: boolean }) {
   const router = useRouter();
+  const { t } = useI18n();
   const { startBooking } = useBooking();
   const { group, setGroup, groups, visible } = useServiceGroups(venue);
 
@@ -73,14 +75,14 @@ function ServicesSection({ venue, compact }: { venue: Venue; compact?: boolean }
 
   return (
     <View>
-      <BText variant="h2">Services</BText>
+      <BText variant="h2">{t('Services')}</BText>
       <ScrollView
         horizontal
         showsHorizontalScrollIndicator={false}
         contentContainerStyle={{ gap: 8, paddingVertical: 16 }}
       >
         {groups.map((g) => (
-          <Chip key={g} label={g} selected={group === g} onPress={() => setGroup(g)} />
+          <Chip key={g} label={t(g)} selected={group === g} onPress={() => setGroup(g)} />
         ))}
       </ScrollView>
       <View style={{ gap: 12 }}>
@@ -93,9 +95,10 @@ function ServicesSection({ venue, compact }: { venue: Venue; compact?: boolean }
 }
 
 function TeamSection({ venue }: { venue: Venue }) {
+  const { t } = useI18n();
   return (
     <View>
-      <BText variant="h2">Team</BText>
+      <BText variant="h2">{t('Team')}</BText>
       <ScrollView
         horizontal
         showsHorizontalScrollIndicator={false}
@@ -110,6 +113,7 @@ function TeamSection({ venue }: { venue: Venue }) {
 }
 
 function ReviewsSection({ venue, columns = 2 }: { venue: Venue; columns?: number }) {
+  const { t } = useI18n();
   const [localReviews, setLocalReviews] = useState<Review[]>([]);
   useEffect(() => {
     getLocalReviews(venue.id).then(setLocalReviews);
@@ -120,7 +124,7 @@ function ReviewsSection({ venue, columns = 2 }: { venue: Venue; columns?: number
 
   return (
     <View>
-      <BText variant="h2">Reviews</BText>
+      <BText variant="h2">{t('Reviews')}</BText>
       <View style={{ marginTop: 16, gap: 6 }}>
         <RatingStars value={avg} size={28} />
         <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
@@ -148,16 +152,17 @@ function directionsUrl(venue: Venue): string {
 }
 
 function AboutSection({ venue }: { venue: Venue }) {
+  const { t } = useI18n();
   return (
     <View>
-      <BText variant="h2">About</BText>
+      <BText variant="h2">{t('About')}</BText>
       <BText variant="body" style={{ marginTop: 12 }}>
         {venue.description}
       </BText>
       <BText variant="small" style={{ marginTop: 12 }}>
         {venue.address}, {venue.area}, {venue.city}, {venue.country}{' '}
         <BText variant="link" onPress={() => Linking.openURL(directionsUrl(venue))}>
-          Get directions
+          {t('Get directions')}
         </BText>
       </BText>
     </View>
@@ -165,6 +170,7 @@ function AboutSection({ venue }: { venue: Venue }) {
 }
 
 function HoursAndInfoSection({ venue, stacked }: { venue: Venue; stacked?: boolean }) {
+  const { t } = useI18n();
   // Demo data uses weekday 0 = Sunday; show Monday first like Fresha
   const ordered = [1, 2, 3, 4, 5, 6, 0]
     .map((w) => venue.hours.find((h) => h.weekday === w))
@@ -173,7 +179,7 @@ function HoursAndInfoSection({ venue, stacked }: { venue: Venue; stacked?: boole
   return (
     <View style={{ flexDirection: stacked ? 'column' : 'row', gap: stacked ? 32 : 64 }}>
       <View style={{ flex: stacked ? undefined : 1 }}>
-        <BText variant="h2">Opening times</BText>
+        <BText variant="h2">{t('Opening times')}</BText>
         <View style={{ marginTop: 16, gap: 10 }}>
           {ordered.map((h) => (
             <View key={h!.weekday} style={styles.hourRow}>
@@ -181,22 +187,22 @@ function HoursAndInfoSection({ venue, stacked }: { venue: Venue; stacked?: boole
                 <View
                   style={[styles.dot, { backgroundColor: h!.is_closed ? colors.border : colors.green }]}
                 />
-                <BText variant="bodyMedium">{weekdayName(h!.weekday)}</BText>
+                <BText variant="bodyMedium">{t(weekdayName(h!.weekday))}</BText>
               </View>
               <BText variant="body" color={h!.is_closed ? colors.gray : colors.ink}>
-                {h!.is_closed ? 'Closed' : `${formatTime(h!.open_time!)} - ${formatTime(h!.close_time!)}`}
+                {h!.is_closed ? t('Closed') : `${formatTime(h!.open_time!)} - ${formatTime(h!.close_time!)}`}
               </BText>
             </View>
           ))}
         </View>
       </View>
       <View style={{ flex: stacked ? undefined : 1 }}>
-        <BText variant="h2">Additional information</BText>
+        <BText variant="h2">{t('Additional information')}</BText>
         <View style={{ marginTop: 16, gap: 14 }}>
           {venue.highlights.map((h) => (
             <View key={h} style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
               <Ionicons name={(HIGHLIGHT_ICONS[h] ?? 'checkmark-circle-outline') as any} size={18} color={colors.ink} />
-              <BText variant="body">{h}</BText>
+              <BText variant="body">{t(h)}</BText>
             </View>
           ))}
         </View>
@@ -206,22 +212,24 @@ function HoursAndInfoSection({ venue, stacked }: { venue: Venue; stacked?: boole
 }
 
 function NearbySection({ venue }: { venue: Venue }) {
+  const { t } = useI18n();
   const { venues } = useAppData();
   const nearby = venues.filter((v) => v.id !== venue.id && v.city === venue.city).slice(0, 8);
   if (!nearby.length) return null;
-  return <SectionRail title="Salons nearby" venues={nearby} cardWidth={256} />;
+  return <SectionRail title={t('Salons nearby')} venues={nearby} cardWidth={256} />;
 }
 
 // ---------------------------------------------------------------------------
 // Full-gallery viewer
 // ---------------------------------------------------------------------------
 function GalleryViewer({ venue, open, onClose }: { venue: Venue; open: boolean; onClose: () => void }) {
+  const { t } = useI18n();
   return (
     <Modal visible={open} animationType="slide" onRequestClose={onClose}>
       <View style={{ flex: 1, backgroundColor: colors.white }}>
         <View style={galleryStyles.top}>
           <BText variant="h2">
-            {venue.name} — photos ({venue.images.length})
+            {t('{name} — photos ({n})', { name: venue.name, n: venue.images.length })}
           </BText>
           <Pressable onPress={onClose} hitSlop={10} style={galleryStyles.close}>
             <Ionicons name="close" size={22} color={colors.ink} />
@@ -269,6 +277,7 @@ const galleryStyles = StyleSheet.create({
 // ---------------------------------------------------------------------------
 function VenueDesktop({ venue }: { venue: Venue }) {
   const router = useRouter();
+  const { t } = useI18n();
   const { startBooking } = useBooking();
   const { categoryOf } = useAppData();
   const category = categoryOf(venue);
@@ -285,7 +294,7 @@ function VenueDesktop({ venue }: { venue: Venue }) {
       <View style={styles.desktopContent}>
         {/* Breadcrumb */}
         <View style={{ flexDirection: 'row', gap: 6, marginTop: 20 }}>
-          {['Home', category?.name ?? 'Venues', venue.city, venue.name].map((c, i, a) => (
+          {[t('Home'), category ? t(category.name) : t('Venues'), venue.city, venue.name].map((c, i, a) => (
             <BText key={c} variant="small" color={i === a.length - 1 ? colors.ink : colors.gray}>
               {c}
               {i < a.length - 1 ? '  ·' : ''}
@@ -302,20 +311,20 @@ function VenueDesktop({ venue }: { venue: Venue }) {
               </BText>
               {venue.provider_type === 'freelancer' && (
                 <View style={{ backgroundColor: colors.accentSoft, borderRadius: 999, paddingHorizontal: 12, height: 26, alignItems: 'center', justifyContent: 'center' }}>
-                  <BText style={{ fontFamily: font.semibold, fontSize: 12, color: colors.accent }}>Freelancer</BText>
+                  <BText style={{ fontFamily: font.semibold, fontSize: 12, color: colors.accent }}>{t('Freelancer')}</BText>
                 </View>
               )}
             </View>
             <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
               <Rating value={venue.rating_avg} count={venue.rating_count} size={15} />
               <BText variant="body" color={colors.green} style={{ fontFamily: font.semibold }}>
-                Open
+                {t('Open')}
               </BText>
               <BText variant="body" color={colors.gray}>
-                until 10:00 PM · {venue.area}, {venue.city}
+                {t('until {time}', { time: '10:00 PM' })} · {venue.area}, {venue.city}
               </BText>
               <BText variant="link" onPress={() => Linking.openURL(directionsUrl(venue))}>
-                Get directions
+                {t('Get directions')}
               </BText>
             </View>
           </View>
@@ -346,7 +355,7 @@ function VenueDesktop({ venue }: { venue: Venue }) {
           </View>
           <Pressable onPress={() => setGalleryOpen(true)} style={styles.seeAllPhotos}>
             <Ionicons name="images-outline" size={14} color={colors.ink} />
-            <BText variant="smallMedium">See all photos</BText>
+            <BText variant="smallMedium">{t('See all photos')}</BText>
           </Pressable>
         </View>
         <GalleryViewer venue={venue} open={galleryOpen} onClose={() => setGalleryOpen(false)} />
@@ -364,10 +373,10 @@ function VenueDesktop({ venue }: { venue: Venue }) {
           {/* Sticky booking card */}
           <View style={{ width: 360 }}>
             <View style={[styles.bookCard, shadow.card]}>
-              <Button title="Book now" size="lg" fullWidth onPress={book} />
+              <Button title={t('Book now')} size="lg" fullWidth onPress={book} />
               <View style={{ marginTop: 10 }}>
                 <Button
-                  title="Message salon"
+                  title={t('Message salon')}
                   variant="secondary"
                   fullWidth
                   onPress={() => router.push(`/messages?venue=${venue.slug}`)}
@@ -377,9 +386,9 @@ function VenueDesktop({ venue }: { venue: Venue }) {
                 <Ionicons name="time-outline" size={18} color={colors.ink} />
                 <BText variant="small">
                   <BText variant="smallMedium" color={colors.green}>
-                    Open
+                    {t('Open')}
                   </BText>{' '}
-                  until 10:00 PM
+                  {t('until {time}', { time: '10:00 PM' })}
                 </BText>
               </View>
               <View style={{ flexDirection: 'row', gap: 10, marginTop: 14 }}>
@@ -389,7 +398,7 @@ function VenueDesktop({ venue }: { venue: Venue }) {
                     {venue.address}, {venue.area}, {venue.city}
                   </BText>
                   <BText variant="link" style={{ marginTop: 4 }} onPress={() => Linking.openURL(directionsUrl(venue))}>
-                    Get directions
+                    {t('Get directions')}
                   </BText>
                 </View>
               </View>
@@ -411,6 +420,7 @@ function VenueDesktop({ venue }: { venue: Venue }) {
 // ---------------------------------------------------------------------------
 function VenueMobile({ venue }: { venue: Venue }) {
   const router = useRouter();
+  const { t } = useI18n();
   const insets = useSafeAreaInsets();
   const { startBooking } = useBooking();
   const [galleryOpen, setGalleryOpen] = useState(false);
@@ -454,9 +464,9 @@ function VenueMobile({ venue }: { venue: Venue }) {
           <Rating value={venue.rating_avg} count={venue.rating_count} size={15} />
           <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
             <BText variant="small" color={colors.green} style={{ fontFamily: font.semibold }}>
-              Open
+              {t('Open')}
             </BText>
-            <BText variant="small">until 10:00 PM</BText>
+            <BText variant="small">{t('until {time}', { time: '10:00 PM' })}</BText>
           </View>
           <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
             <Ionicons name="location-outline" size={14} color={colors.gray} />
@@ -479,13 +489,13 @@ function VenueMobile({ venue }: { venue: Venue }) {
       {/* Sticky book bar */}
       <View style={[styles.stickyBar, { paddingBottom: Math.max(insets.bottom, 12) }]}>
         <View style={{ flex: 1 }}>
-          <BText variant="smallMedium">{venue.services.length} services available</BText>
+          <BText variant="smallMedium">{t('{n} services available', { n: venue.services.length })}</BText>
           <Rating value={venue.rating_avg} count={venue.rating_count} size={12} />
         </View>
         <Pressable onPress={() => router.push(`/messages?venue=${venue.slug}`)} style={styles.msgBtn} hitSlop={6}>
           <Ionicons name="chatbubble-ellipses-outline" size={20} color={colors.ink} />
         </Pressable>
-        <Button title="Book now" size="lg" onPress={book} />
+        <Button title={t('Book now')} size="lg" onPress={book} />
       </View>
     </View>
   );

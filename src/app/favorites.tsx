@@ -9,6 +9,7 @@ import { Button } from '../components/ui/button';
 import { BText } from '../components/ui/text';
 import { VenueCard } from '../components/venue-card';
 import { useAppData } from '../lib/app-data-context';
+import { useI18n } from '../lib/i18n';
 import { colors } from '../lib/theme';
 import { useIsDesktop } from '../lib/use-layout';
 
@@ -16,6 +17,7 @@ export default function Favorites() {
   const isDesktop = useIsDesktop();
   const insets = useSafeAreaInsets();
   const router = useRouter();
+  const { t, isRTL } = useI18n();
   const { venues, favorites } = useAppData();
   const favVenues = venues.filter((v) => favorites.includes(v.id));
 
@@ -29,19 +31,19 @@ export default function Favorites() {
     <View style={styles.empty}>
       <Ionicons name="heart-outline" size={44} color={colors.grayLight} />
       <BText variant="h3" style={{ marginTop: 16 }}>
-        No favorites yet
+        {t('No favorites yet')}
       </BText>
       <BText variant="small" style={{ marginTop: 6, textAlign: 'center' }}>
-        Tap the heart on any salon to save it here.
+        {t('Tap the heart on any salon to save it here.')}
       </BText>
       <View style={{ marginTop: 20 }}>
-        <Button title="Find a salon" onPress={() => router.push('/search')} />
+        <Button title={t('Find a salon')} onPress={() => router.push('/search')} />
       </View>
     </View>
   );
 
   if (isDesktop) {
-    return <AccountLayout title="Favorites">{content}</AccountLayout>;
+    return <AccountLayout title={t('Favorites')}>{content}</AccountLayout>;
   }
 
   return (
@@ -51,9 +53,9 @@ export default function Favorites() {
       >
         <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12, marginBottom: 20 }}>
           <Pressable onPress={() => router.back()} hitSlop={8}>
-            <Ionicons name="arrow-back" size={24} color={colors.ink} />
+            <Ionicons name={isRTL ? 'arrow-forward' : 'arrow-back'} size={24} color={colors.ink} />
           </Pressable>
-          <BText variant="h1">Favorites</BText>
+          <BText variant="h1">{t('Favorites')}</BText>
         </View>
         {content}
       </ScrollView>

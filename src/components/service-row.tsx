@@ -2,6 +2,7 @@ import { Ionicons } from '@expo/vector-icons';
 import React from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
 import { formatDuration, formatPrice } from '../lib/format';
+import { useI18n } from '../lib/i18n';
 import { colors, font, radius } from '../lib/theme';
 import type { Service } from '../lib/types';
 import { BText } from './ui/text';
@@ -15,6 +16,7 @@ interface ServiceRowProps {
 }
 
 export function ServiceRow({ service, mode = 'book', selected, showDescription, onAction }: ServiceRowProps) {
+  const { t } = useI18n();
   const discounted = service.discount_pct > 0;
   const finalPrice = Math.round(service.price_cents * (1 - service.discount_pct / 100));
 
@@ -45,7 +47,7 @@ export function ServiceRow({ service, mode = 'book', selected, showDescription, 
                 {formatPrice(service.price_cents, service.currency)}
               </BText>
               <BText variant="small" color={colors.green} style={{ fontFamily: font.semibold }}>
-                Save {service.discount_pct}%
+                {t('Save {pct}%', { pct: service.discount_pct })}
               </BText>
             </>
           ) : null}
@@ -54,7 +56,7 @@ export function ServiceRow({ service, mode = 'book', selected, showDescription, 
 
       {mode === 'book' ? (
         <View style={styles.bookBtn}>
-          <BText style={{ fontFamily: font.semibold, fontSize: 14, color: colors.ink }}>Book</BText>
+          <BText style={{ fontFamily: font.semibold, fontSize: 14, color: colors.ink }}>{t('Book')}</BText>
         </View>
       ) : (
         <View style={[styles.addBtn, selected && { backgroundColor: colors.accent, borderColor: colors.accent }]}>

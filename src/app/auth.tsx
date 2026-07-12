@@ -15,12 +15,14 @@ import {
   seedCustomerDemo,
   seedOwnerDemo,
 } from '../lib/demo-seed';
+import { useI18n } from '../lib/i18n';
 import { getSupabase } from '../lib/supabase';
 import { colors, font, radius } from '../lib/theme';
 
 export default function Auth() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
+  const { t } = useI18n();
   const { signIn, signUp, continueAsGuest } = useAuth();
   const { refresh } = useAppData();
   const [demoBusy, setDemoBusy] = useState<string | null>(null);
@@ -66,7 +68,7 @@ export default function Auth() {
   const submit = async () => {
     setError(null);
     if (!email || !password || (mode === 'signup' && !name)) {
-      setError('Please fill in all fields.');
+      setError(t('Please fill in all fields.'));
       return;
     }
     setBusy(true);
@@ -104,10 +106,10 @@ export default function Auth() {
         <View style={{ alignItems: 'center', marginBottom: 8 }}>
           <Logo size={32} />
           <BText variant="h2" style={{ marginTop: 16 }}>
-            {mode === 'signin' ? 'Welcome back' : 'Create your account'}
+            {mode === 'signin' ? t('Welcome back') : t('Create your account')}
           </BText>
           <BText variant="small" style={{ marginTop: 4, textAlign: 'center' }}>
-            Book unforgettable salon experiences
+            {t('Book unforgettable salon experiences')}
           </BText>
         </View>
 
@@ -115,14 +117,14 @@ export default function Auth() {
           <View style={styles.demoNote}>
             <Ionicons name="information-circle-outline" size={16} color={colors.accent} />
             <BText variant="tiny" color={colors.accent}>
-              Demo mode — any email and password works
+              {t('Demo mode — any email and password works')}
             </BText>
           </View>
         )}
 
         {mode === 'signup' && (
           <TextInput
-            placeholder="Full name"
+            placeholder={t('Full name')}
             placeholderTextColor={colors.gray}
             value={name}
             onChangeText={setName}
@@ -130,7 +132,7 @@ export default function Auth() {
           />
         )}
         <TextInput
-          placeholder="Email address"
+          placeholder={t('Email address')}
           placeholderTextColor={colors.gray}
           autoCapitalize="none"
           keyboardType="email-address"
@@ -139,7 +141,7 @@ export default function Auth() {
           style={styles.input}
         />
         <TextInput
-          placeholder="Password"
+          placeholder={t('Password')}
           placeholderTextColor={colors.gray}
           secureTextEntry
           value={password}
@@ -154,14 +156,14 @@ export default function Auth() {
         ) : null}
 
         <Button
-          title={mode === 'signin' ? 'Log in' : 'Sign up'}
+          title={mode === 'signin' ? t('Log in') : t('Sign up')}
           size="lg"
           fullWidth
           loading={busy}
           onPress={submit}
         />
         <Button
-          title="Continue as guest"
+          title={t('Continue as guest')}
           variant="secondary"
           size="lg"
           fullWidth
@@ -175,27 +177,27 @@ export default function Auth() {
           <View style={{ gap: 10 }}>
             <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12, marginTop: 4 }}>
               <View style={styles.hr} />
-              <BText variant="tiny">or explore a ready-made demo</BText>
+              <BText variant="tiny">{t('or explore a ready-made demo')}</BText>
               <View style={styles.hr} />
             </View>
             <DemoButton
               icon="person-outline"
-              title="Demo customer"
-              sub="Bookings, escrow, chat & reviews pre-loaded"
+              title={t('Demo customer')}
+              sub={t('Bookings, escrow, chat & reviews pre-loaded')}
               loading={demoBusy === 'customer'}
               onPress={() => enterDemo('customer')}
             />
             <DemoButton
               icon="storefront-outline"
-              title="Demo salon owner"
-              sub="A live salon with sales, messages & analytics"
+              title={t('Demo salon owner')}
+              sub={t('A live salon with sales, messages & analytics')}
               loading={demoBusy === 'owner'}
               onPress={() => enterDemo('owner')}
             />
             <DemoButton
               icon="shield-checkmark-outline"
-              title="Demo admin"
-              sub="Approvals, users, payments & platform stats"
+              title={t('Demo admin')}
+              sub={t('Approvals, users, payments & platform stats')}
               loading={demoBusy === 'admin'}
               onPress={() => enterDemo('admin')}
             />
@@ -204,9 +206,9 @@ export default function Auth() {
 
         <Pressable onPress={() => setMode(mode === 'signin' ? 'signup' : 'signin')}>
           <BText variant="small" style={{ textAlign: 'center' }}>
-            {mode === 'signin' ? "Don't have an account? " : 'Already have an account? '}
+            {mode === 'signin' ? t("Don't have an account?") : t('Already have an account?')}{' '}
             <BText variant="small" color={colors.accent} style={{ fontFamily: font.bold }}>
-              {mode === 'signin' ? 'Sign up' : 'Log in'}
+              {mode === 'signin' ? t('Sign up') : t('Log in')}
             </BText>
           </BText>
         </Pressable>
@@ -228,6 +230,7 @@ function DemoButton({
   loading: boolean;
   onPress: () => void;
 }) {
+  const { isRTL } = useI18n();
   return (
     <Pressable
       onPress={onPress}
@@ -241,7 +244,7 @@ function DemoButton({
         <BText variant="smallMedium">{title}</BText>
         <BText variant="tiny">{sub}</BText>
       </View>
-      <Ionicons name={loading ? 'hourglass-outline' : 'arrow-forward'} size={16} color={colors.gray} />
+      <Ionicons name={loading ? 'hourglass-outline' : isRTL ? 'arrow-back' : 'arrow-forward'} size={16} color={colors.gray} />
     </Pressable>
   );
 }

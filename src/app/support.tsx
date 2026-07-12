@@ -8,6 +8,7 @@ import { BottomTabs, TAB_BAR_HEIGHT } from '../components/bottom-tabs';
 import { BText } from '../components/ui/text';
 import { WebFooter } from '../components/web-footer';
 import { WebHeader } from '../components/web-header';
+import { useI18n } from '../lib/i18n';
 import { colors, radius } from '../lib/theme';
 import { useIsDesktop } from '../lib/use-layout';
 
@@ -42,6 +43,7 @@ export default function Support() {
   const isDesktop = useIsDesktop();
   const insets = useSafeAreaInsets();
   const router = useRouter();
+  const { t, isRTL } = useI18n();
   const [open, setOpen] = useState<number | null>(0);
 
   const content = (
@@ -51,13 +53,13 @@ export default function Support() {
           <Pressable key={f.q} onPress={() => setOpen(open === i ? null : i)} style={styles.faq}>
             <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
               <BText variant="title" style={{ flex: 1 }}>
-                {f.q}
+                {t(f.q)}
               </BText>
               <Ionicons name={open === i ? 'chevron-up' : 'chevron-down'} size={16} color={colors.gray} />
             </View>
             {open === i && (
               <BText variant="small" style={{ marginTop: 10 }}>
-                {f.a}
+                {t(f.a)}
               </BText>
             )}
           </Pressable>
@@ -65,7 +67,7 @@ export default function Support() {
       </View>
 
       <View style={styles.contactCard}>
-        <BText variant="h3">Still need help?</BText>
+        <BText variant="h3">{t('Still need help?')}</BText>
         <View style={{ gap: 12, marginTop: 14 }}>
           <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
             <Ionicons name="mail-outline" size={18} color={colors.ink} />
@@ -73,7 +75,7 @@ export default function Support() {
           </View>
           <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
             <Ionicons name="logo-whatsapp" size={18} color={colors.ink} />
-            <BText variant="body">+966 5X XXX XXXX (9 AM – 9 PM, Sun–Thu)</BText>
+            <BText variant="body">{t('+966 5X XXX XXXX (9 AM – 9 PM, Sun–Thu)')}</BText>
           </View>
         </View>
       </View>
@@ -81,7 +83,7 @@ export default function Support() {
   );
 
   if (isDesktop) {
-    return <AccountLayout title="Help and support">{content}</AccountLayout>;
+    return <AccountLayout title={t('Help and support')}>{content}</AccountLayout>;
   }
 
   return (
@@ -91,9 +93,9 @@ export default function Support() {
       >
         <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12, marginBottom: 20 }}>
           <Pressable onPress={() => router.back()} hitSlop={8}>
-            <Ionicons name="arrow-back" size={24} color={colors.ink} />
+            <Ionicons name={isRTL ? 'arrow-forward' : 'arrow-back'} size={24} color={colors.ink} />
           </Pressable>
-          <BText variant="h1">Help and support</BText>
+          <BText variant="h1">{t('Help and support')}</BText>
         </View>
         {content}
       </ScrollView>

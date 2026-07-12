@@ -1,6 +1,7 @@
 import { Ionicons } from '@expo/vector-icons';
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
+import { useI18n } from '../lib/i18n';
 import { colors, maxContentWidth } from '../lib/theme';
 import { Logo } from './logo';
 import { BText } from './ui/text';
@@ -14,6 +15,7 @@ const COLUMNS: { title: string; links: string[] }[] = [
 const SOCIAL = ['Facebook', 'X (Twitter)', 'LinkedIn', 'Instagram'];
 
 export function WebFooter() {
+  const { t } = useI18n();
   return (
     <View style={styles.wrap}>
       <View style={styles.inner}>
@@ -21,7 +23,7 @@ export function WebFooter() {
           <Logo color={colors.white} />
           <View style={styles.appPill}>
             <BText variant="smallMedium" color={colors.white}>
-              Get the app
+              {t('Get the app')}
             </BText>
             <Ionicons name="logo-apple" size={16} color={colors.white} />
             <Ionicons name="logo-google-playstore" size={14} color={colors.white} />
@@ -30,18 +32,18 @@ export function WebFooter() {
         {COLUMNS.map((col) => (
           <View key={col.title} style={{ flex: 1, gap: 12 }}>
             <BText variant="smallMedium" color={colors.white}>
-              {col.title}
+              {t(col.title)}
             </BText>
             {col.links.map((l) => (
               <BText key={l} variant="small" color="rgba(255,255,255,0.7)">
-                {l}
+                {t(l)}
               </BText>
             ))}
           </View>
         ))}
         <View style={{ flex: 1, gap: 12 }}>
           <BText variant="smallMedium" color={colors.white}>
-            Find us on social
+            {t('Find us on social')}
           </BText>
           {SOCIAL.map((s) => (
             <View key={s} style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
@@ -57,11 +59,11 @@ export function WebFooter() {
         <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
           <Ionicons name="globe-outline" size={14} color="rgba(255,255,255,0.7)" />
           <BText variant="small" color="rgba(255,255,255,0.7)">
-            English
+            {t('English')}
           </BText>
         </View>
         <BText variant="small" color="rgba(255,255,255,0.7)">
-          © 2026 Bink
+          {t('© 2026 Bink')}
         </BText>
       </View>
     </View>

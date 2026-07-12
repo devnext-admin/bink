@@ -12,6 +12,7 @@ import { WebFooter } from '../components/web-footer';
 import { WebHeader } from '../components/web-header';
 import { useAppData } from '../lib/app-data-context';
 import { useAuth } from '../lib/auth-context';
+import { useI18n } from '../lib/i18n';
 import { Conversation, getConversationsForUser } from '../lib/messages';
 import { colors, radius } from '../lib/theme';
 import { useIsDesktop } from '../lib/use-layout';
@@ -20,6 +21,7 @@ export default function Messages() {
   const isDesktop = useIsDesktop();
   const insets = useSafeAreaInsets();
   const router = useRouter();
+  const { t, isRTL } = useI18n();
   const { user } = useAuth();
   const { allVenues } = useAppData();
   const params = useLocalSearchParams<{ venue?: string }>();
@@ -61,13 +63,13 @@ export default function Messages() {
         <View style={styles.gate}>
           <Ionicons name="chatbubble-ellipses-outline" size={44} color={colors.grayLight} />
           <BText variant="h2" style={{ marginTop: 16 }}>
-            Messages
+            {t('Messages')}
           </BText>
           <BText variant="small" style={{ marginTop: 6, textAlign: 'center', maxWidth: 320 }}>
-            Log in to message salons and see their replies.
+            {t('Log in to message salons and see their replies.')}
           </BText>
           <View style={{ marginTop: 20 }}>
-            <Button title="Log in or sign up" onPress={() => router.push('/auth')} />
+            <Button title={t('Log in or sign up')} onPress={() => router.push('/auth')} />
           </View>
         </View>
         {!isDesktop && <BottomTabs />}
@@ -96,17 +98,17 @@ export default function Messages() {
     <View style={styles.emptyThread}>
       <Ionicons name="chatbubbles-outline" size={44} color={colors.grayLight} />
       <BText variant="h3" style={{ marginTop: 14 }}>
-        No conversation selected
+        {t('No conversation selected')}
       </BText>
       <BText variant="small" style={{ marginTop: 6, textAlign: 'center', maxWidth: 320 }}>
-        Pick a conversation, or start one from a salon page or one of your appointments.
+        {t('Pick a conversation, or start one from a salon page or one of your appointments.')}
       </BText>
     </View>
   );
 
   if (isDesktop) {
     return (
-      <AccountLayout title="Messages" wide>
+      <AccountLayout title={t('Messages')} wide>
         <View style={{ minHeight: 520 }}>
           <View style={styles.panes}>
             <ScrollView style={styles.listPane}>{list}</ScrollView>
@@ -115,7 +117,7 @@ export default function Messages() {
                 <View style={styles.threadHeader}>
                   <BText variant="title">{active.venueName}</BText>
                   <Pressable onPress={() => router.push(`/venue/${allVenues.find((v) => v.id === active.venueId)?.slug}`)} hitSlop={8}>
-                    <BText variant="link">View salon</BText>
+                    <BText variant="link">{t('View salon')}</BText>
                   </Pressable>
                 </View>
               )}
@@ -133,10 +135,10 @@ export default function Messages() {
       <View style={{ paddingTop: insets.top + 12, paddingHorizontal: 20, paddingBottom: 12, flexDirection: 'row', alignItems: 'center', gap: 12 }}>
         {active ? (
           <Pressable onPress={() => setActive(null)} hitSlop={8}>
-            <Ionicons name="arrow-back" size={24} color={colors.ink} />
+            <Ionicons name={isRTL ? 'arrow-forward' : 'arrow-back'} size={24} color={colors.ink} />
           </Pressable>
         ) : null}
-        <BText variant="h1">{active ? active.venueName : 'Messages'}</BText>
+        <BText variant="h1">{active ? active.venueName : t('Messages')}</BText>
       </View>
       {active ? (
         <View style={{ flex: 1, paddingBottom: TAB_BAR_HEIGHT }}>{thread}</View>

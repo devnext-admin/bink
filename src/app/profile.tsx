@@ -13,6 +13,7 @@ import { WebFooter } from '../components/web-footer';
 import { WebHeader } from '../components/web-header';
 import { useAppData } from '../lib/app-data-context';
 import { useAuth } from '../lib/auth-context';
+import { useI18n } from '../lib/i18n';
 import { colors, radius } from '../lib/theme';
 import { useIsDesktop } from '../lib/use-layout';
 
@@ -31,6 +32,7 @@ export default function Profile() {
   const isDesktop = useIsDesktop();
   const insets = useSafeAreaInsets();
   const router = useRouter();
+  const { t, isRTL } = useI18n();
   const { user, signOut, updateName } = useAuth();
   const { venues, allVenues, favorites } = useAppData();
   const [editingName, setEditingName] = useState(false);
@@ -51,7 +53,7 @@ export default function Profile() {
     <View style={{ gap: 24 }}>
       {user ? (
         <View style={{ flexDirection: 'row', alignItems: 'center', gap: 16 }}>
-          <Avatar name={user.name ?? user.email ?? 'You'} size={64} />
+          <Avatar name={user.name ?? user.email ?? t('You')} size={64} />
           <View style={{ flex: 1 }}>
             {editingName ? (
               <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
@@ -60,7 +62,7 @@ export default function Profile() {
                   onChangeText={setNameDraft}
                   autoFocus
                   style={styles.nameInput}
-                  placeholder="Your name"
+                  placeholder={t('Your name')}
                   placeholderTextColor={colors.gray}
                 />
                 <Pressable
@@ -78,7 +80,7 @@ export default function Profile() {
               </View>
             ) : (
               <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
-                <BText variant="h2">{user.name ?? 'Welcome'}</BText>
+                <BText variant="h2">{user.name ?? t('Welcome')}</BText>
                 <Pressable
                   onPress={() => {
                     setNameDraft(user.name ?? '');
@@ -90,17 +92,17 @@ export default function Profile() {
                 </Pressable>
               </View>
             )}
-            <BText variant="small">{user.email ?? (user.isGuest ? 'Guest account' : '')}</BText>
+            <BText variant="small">{user.email ?? (user.isGuest ? t('Guest account') : '')}</BText>
           </View>
         </View>
       ) : (
         <View style={styles.signInCard}>
-          <BText variant="h2">Your beauty, booked</BText>
+          <BText variant="h2">{t('Your beauty, booked')}</BText>
           <BText variant="small" style={{ marginTop: 6 }}>
-            Sign up to keep your appointments and favorites in one place.
+            {t('Sign up to keep your appointments and favorites in one place.')}
           </BText>
           <View style={{ flexDirection: 'row', gap: 10, marginTop: 16 }}>
-            <Button title="Log in or sign up" onPress={() => router.push('/auth')} />
+            <Button title={t('Log in or sign up')} onPress={() => router.push('/auth')} />
           </View>
         </View>
       )}
@@ -120,9 +122,9 @@ export default function Profile() {
             >
               <Ionicons name={m.icon as any} size={20} color={colors.ink} />
               <BText variant="bodyMedium" style={{ flex: 1 }}>
-                {m.label}
+                {t(m.label)}
               </BText>
-              <Ionicons name="chevron-forward" size={16} color={colors.gray} />
+              <Ionicons name={isRTL ? 'chevron-back' : 'chevron-forward'} size={16} color={colors.gray} />
             </Pressable>
           ))}
         </View>
@@ -131,7 +133,7 @@ export default function Profile() {
       {favVenues.length ? (
         <View>
           <BText variant="h2" style={{ marginBottom: 16 }}>
-            Favorites
+            {t('Favorites')}
           </BText>
           <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 16 }}>
             {favVenues.map((v) => (
@@ -143,14 +145,14 @@ export default function Profile() {
 
       {user ? (
         <View style={{ alignItems: 'flex-start' }}>
-          <Button title="Log out" variant="secondary" onPress={signOut} />
+          <Button title={t('Log out')} variant="secondary" onPress={signOut} />
         </View>
       ) : null}
     </View>
   );
 
   if (isDesktop) {
-    return <AccountLayout title="Profile">{content}</AccountLayout>;
+    return <AccountLayout title={t('Profile')}>{content}</AccountLayout>;
   }
 
   return (
@@ -163,7 +165,7 @@ export default function Profile() {
         }}
       >
         <BText variant="h1" style={{ marginBottom: 20 }}>
-          Profile
+          {t('Profile')}
         </BText>
         {content}
       </ScrollView>

@@ -1,5 +1,6 @@
 import React from 'react';
 import { View } from 'react-native';
+import { useI18n } from '../lib/i18n';
 import { colors, font, radius } from '../lib/theme';
 import { BText } from './ui/text';
 
@@ -10,6 +11,7 @@ export function PaymentPill({
   status: string;
   escrow?: 'held' | 'released' | 'refunded';
 }) {
+  const { t } = useI18n();
   const map: Record<string, { label: string; color: string; bg: string }> = {
     paid: { label: 'Paid', color: colors.green, bg: colors.greenBg },
     unpaid: { label: 'Pay at venue', color: colors.gray, bg: colors.bgSubtle },
@@ -30,7 +32,7 @@ export function PaymentPill({
         alignSelf: 'flex-start',
       }}
     >
-      <BText style={{ fontFamily: font.semibold, fontSize: 11, color: m.color }}>{m.label}</BText>
+      <BText style={{ fontFamily: font.semibold, fontSize: 11, color: m.color }}>{t(m.label)}</BText>
     </View>
   );
 }

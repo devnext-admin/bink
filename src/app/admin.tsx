@@ -12,6 +12,7 @@ import { useAuth } from '../lib/auth-context';
 import { AdminUserRow, getAllBookings, getAllUsers, setVenueStatus } from '../lib/business';
 import { formatDateLong, formatPrice, formatTimeOfDate } from '../lib/format';
 import { createCategory } from '../lib/data';
+import { formatDate, useI18n } from '../lib/i18n';
 import { createPromo, getPromoCodes, togglePromo } from '../lib/ops';
 import { getAllTransactions, salesSummary } from '../lib/payments';
 import { colors, font, radius } from '../lib/theme';
@@ -32,6 +33,7 @@ export default function Admin() {
   const router = useRouter();
   const isDesktop = useIsDesktop();
   const insets = useSafeAreaInsets();
+  const { t, lang } = useI18n();
   const { user, loading } = useAuth();
   const { allVenues, categories, refresh } = useAppData();
 
@@ -76,15 +78,16 @@ export default function Admin() {
       <View style={[styles.gate, { paddingTop: insets.top + 60 }]}>
         <Ionicons name="lock-closed-outline" size={40} color={colors.grayLight} />
         <BText variant="h2" style={{ marginTop: 20 }}>
-          Bink internal
+          {t('Bink internal')}
         </BText>
         <BText variant="small" style={{ marginTop: 8, textAlign: 'center', maxWidth: 340 }}>
-          This area is for the Bink team only. Sign in with an admin account to continue.
-          {'\n\n'}Demo tip: log in with any email starting with admin@ (e.g. admin@bink.com).
+          {t('This area is for the Bink team only. Sign in with an admin account to continue.')}
+          {'\n\n'}
+          {t('Demo tip: log in with any email starting with admin@ (e.g. admin@bink.com).')}
         </BText>
         <View style={{ flexDirection: 'row', gap: 10, marginTop: 24 }}>
-          <Button title="Log in" onPress={() => router.push('/auth')} />
-          <Button title="Back home" variant="secondary" onPress={() => router.replace('/')} />
+          <Button title={t('Log in')} onPress={() => router.push('/auth')} />
+          <Button title={t('Back home')} variant="secondary" onPress={() => router.replace('/')} />
         </View>
       </View>
     );
@@ -98,15 +101,15 @@ export default function Admin() {
     body = (
       <View style={{ gap: 16 }}>
         <View style={{ flexDirection: isDesktop ? 'row' : 'column', gap: 12 }}>
-          <StatCard label="Total salons" value={String(stats.salons)} icon="storefront-outline" />
-          <StatCard label="Pending approval" value={String(stats.pending)} icon="time-outline" accent={stats.pending > 0} />
-          <StatCard label="Registered users" value={String(stats.users)} icon="people-outline" />
-          <StatCard label="Bookings" value={String(stats.bookings)} icon="calendar-outline" />
-          <StatCard label="Booking value" value={formatPrice(stats.revenue, stats.currency)} icon="cash-outline" />
-          <StatCard label="Paid online" value={formatPrice(stats.onlinePaid, stats.currency)} icon="card-outline" />
+          <StatCard label={t('Total salons')} value={String(stats.salons)} icon="storefront-outline" />
+          <StatCard label={t('Pending approval')} value={String(stats.pending)} icon="time-outline" accent={stats.pending > 0} />
+          <StatCard label={t('Registered users')} value={String(stats.users)} icon="people-outline" />
+          <StatCard label={t('Bookings')} value={String(stats.bookings)} icon="calendar-outline" />
+          <StatCard label={t('Booking value')} value={formatPrice(stats.revenue, stats.currency)} icon="cash-outline" />
+          <StatCard label={t('Paid online')} value={formatPrice(stats.onlinePaid, stats.currency)} icon="card-outline" />
         </View>
         <View style={styles.card}>
-          <BText variant="h3">Top salons by reviews</BText>
+          <BText variant="h3">{t('Top salons by reviews')}</BText>
           {topVenues.map((v) => (
             <View key={v.id} style={styles.row}>
               <View style={{ flex: 1 }}>
@@ -126,7 +129,7 @@ export default function Admin() {
   } else if (tab === 'salons') {
     body = (
       <View style={styles.card}>
-        <BText variant="h3">All salons ({allVenues.length})</BText>
+        <BText variant="h3">{t('All salons ({n})', { n: allVenues.length })}</BText>
         {allVenues.map((v) => {
           const status = v.status ?? 'approved';
           return (
@@ -140,15 +143,15 @@ export default function Admin() {
                 <BText variant="tiny">
                   {v.area ? `${v.area}, ` : ''}
                   {v.city} · {categories.find((c) => c.id === v.category_id)?.name ?? '—'} ·{' '}
-                  {v.services.length} services
-                  {v.owner_id ? ' · partner-owned' : ''}
+                  {t('{n} services', { n: v.services.length })}
+                  {v.owner_id ? ` · ${t('partner-owned')}` : ''}
                 </BText>
               </View>
               <StatusTag status={status} />
               <View style={{ flexDirection: 'row', gap: 6 }}>
                 {status !== 'approved' && (
                   <SmallAction
-                    label="Approve"
+                    label={t('Approve')}
                     color={colors.green}
                     onPress={async () => {
                       await setVenueStatus(v, 'approved');
@@ -158,7 +161,7 @@ export default function Admin() {
                 )}
                 {status !== 'suspended' && (
                   <SmallAction
-                    label="Suspend"
+                    label={t('Suspend')}
                     color={colors.danger}
                     onPress={async () => {
                       await setVenueStatus(v, 'suspended');
@@ -175,10 +178,10 @@ export default function Admin() {
   } else if (tab === 'users') {
     body = (
       <View style={styles.card}>
-        <BText variant="h3">Users ({users.length})</BText>
+        <BText variant="h3">{t('Users ({n})', { n: users.length })}</BText>
         {users.length === 0 ? (
           <BText variant="small" style={{ marginTop: 10 }}>
-            No registered users yet. Users appear here as they sign up.
+            {t('No registered users yet. Users appear here as they sign up.')}
           </BText>
         ) : (
           users.map((u) => (
@@ -186,7 +189,10 @@ export default function Admin() {
               <View style={{ flex: 1 }}>
                 <BText variant="smallMedium">{u.name ?? '—'}</BText>
                 <BText variant="tiny">
-                  {u.email ?? 'no email'} · joined {new Date(u.joined_at).toLocaleDateString('en-US')}
+                  {u.email ?? t('no email')} ·{' '}
+                  {t('joined {date}', {
+                    date: formatDate(lang, u.joined_at, { year: 'numeric', month: 'numeric', day: 'numeric' }),
+                  })}
                 </BText>
               </View>
               <RoleTag role={u.role} />
@@ -199,17 +205,17 @@ export default function Admin() {
     body = (
       <View style={{ gap: 16 }}>
         <View style={styles.card}>
-          <BText variant="h3">Add category</BText>
+          <BText variant="h3">{t('Add category')}</BText>
           <View style={{ flexDirection: 'row', gap: 10, marginTop: 14, alignItems: 'center' }}>
             <TextInput
-              placeholder="e.g. Kids Salon"
+              placeholder={t('e.g. Kids Salon')}
               placeholderTextColor={colors.gray}
               value={newCategory}
               onChangeText={setNewCategory}
               style={styles.input}
             />
             <Button
-              title="Add"
+              title={t('Add')}
               size="sm"
               onPress={async () => {
                 if (!newCategory.trim()) return;
@@ -221,13 +227,13 @@ export default function Admin() {
           </View>
         </View>
         <View style={styles.card}>
-          <BText variant="h3">Categories ({categories.length})</BText>
+          <BText variant="h3">{t('Categories ({n})', { n: categories.length })}</BText>
           {categories.map((c) => (
             <View key={c.slug} style={styles.row}>
               <View style={{ flex: 1 }}>
                 <BText variant="smallMedium">{c.name}</BText>
                 <BText variant="tiny">
-                  {c.slug} · {allVenues.filter((v) => v.category_id === c.id).length} salons
+                  {c.slug} · {t('{n} salons', { n: allVenues.filter((v) => v.category_id === c.id).length })}
                 </BText>
               </View>
             </View>
@@ -239,10 +245,10 @@ export default function Admin() {
     body = (
       <View style={{ gap: 16 }}>
         <View style={styles.card}>
-          <BText variant="h3">Create promo code</BText>
+          <BText variant="h3">{t('Create promo code')}</BText>
           <View style={{ flexDirection: 'row', gap: 10, marginTop: 14, alignItems: 'center' }}>
             <TextInput
-              placeholder="CODE"
+              placeholder={t('CODE')}
               placeholderTextColor={colors.gray}
               autoCapitalize="characters"
               value={newPromoCode}
@@ -250,7 +256,7 @@ export default function Admin() {
               style={[styles.input, { flex: 1 }]}
             />
             <TextInput
-              placeholder="% off"
+              placeholder={t('% off')}
               placeholderTextColor={colors.gray}
               keyboardType="numeric"
               value={newPromoPct}
@@ -258,7 +264,7 @@ export default function Admin() {
               style={[styles.input, { width: 80, flex: 0 }]}
             />
             <Button
-              title="Create"
+              title={t('Create')}
               size="sm"
               onPress={async () => {
                 const pct = parseInt(newPromoPct, 10);
@@ -271,19 +277,23 @@ export default function Admin() {
           </View>
         </View>
         <View style={styles.card}>
-          <BText variant="h3">Promo codes ({promos.length})</BText>
+          <BText variant="h3">{t('Promo codes ({n})', { n: promos.length })}</BText>
           {promos.map((p) => (
             <View key={p.code} style={styles.row}>
               <View style={{ flex: 1 }}>
                 <BText variant="smallMedium">{p.code}</BText>
                 <BText variant="tiny">
-                  {p.pct_off}% off
-                  {p.expires_at ? ` · expires ${new Date(p.expires_at).toLocaleDateString('en-US')}` : ' · no expiry'}
+                  {t('{pct}% off', { pct: p.pct_off })}
+                  {p.expires_at
+                    ? ` · ${t('expires {date}', {
+                        date: formatDate(lang, p.expires_at, { year: 'numeric', month: 'numeric', day: 'numeric' }),
+                      })}`
+                    : ` · ${t('no expiry')}`}
                 </BText>
               </View>
               <StatusTag status={p.is_active ? 'approved' : 'suspended'} />
               <SmallAction
-                label={p.is_active ? 'Disable' : 'Enable'}
+                label={p.is_active ? t('Disable') : t('Enable')}
                 color={p.is_active ? colors.danger : colors.green}
                 onPress={async () => {
                   await togglePromo(p.code, !p.is_active);
@@ -299,24 +309,25 @@ export default function Admin() {
     body = (
       <View style={styles.card}>
         <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
-          <BText variant="h3">Bookings ({bookings.length})</BText>
+          <BText variant="h3">{t('Bookings ({n})', { n: bookings.length })}</BText>
           {Platform.OS === 'web' && bookings.length > 0 ? (
-            <SmallAction label="Export CSV" color={colors.ink} onPress={() => exportBookingsCsv(bookings)} />
+            <SmallAction label={t('Export CSV')} color={colors.ink} onPress={() => exportBookingsCsv(bookings)} />
           ) : null}
         </View>
         {bookings.length === 0 ? (
           <BText variant="small" style={{ marginTop: 10 }}>
-            No bookings yet.
+            {t('No bookings yet.')}
           </BText>
         ) : (
           bookings.map((b) => (
             <View key={b.id} style={styles.row}>
               <View style={{ flex: 1 }}>
                 <BText variant="smallMedium">
-                  {b.venue_name || allVenues.find((v) => v.id === b.venue_id)?.name || 'Venue'}
+                  {b.venue_name || allVenues.find((v) => v.id === b.venue_id)?.name || t('Venue')}
                 </BText>
                 <BText variant="tiny">
-                  {b.customer_name || 'Guest'} · {formatDateLong(b.starts_at)} at {formatTimeOfDate(b.starts_at)} ·{' '}
+                  {b.customer_name || t('Guest')} ·{' '}
+                  {t('{date} at {time}', { date: formatDateLong(b.starts_at), time: formatTimeOfDate(b.starts_at) })} ·{' '}
                   {b.items.map((i) => i.service_name).join(', ')}
                 </BText>
               </View>
@@ -337,7 +348,7 @@ export default function Admin() {
           <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12 }}>
             <Logo size={22} />
             <View style={styles.adminTag}>
-              <BText style={{ fontFamily: font.bold, fontSize: 11, color: colors.white }}>ADMIN</BText>
+              <BText style={{ fontFamily: font.bold, fontSize: 11, color: colors.white }}>{t('ADMIN')}</BText>
             </View>
           </View>
           <Pressable onPress={() => router.push('/')} hitSlop={8}>
@@ -349,15 +360,15 @@ export default function Admin() {
       <ScrollView contentContainerStyle={{ paddingBottom: 60 }}>
         <View style={styles.contentWrap}>
           <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8, marginBottom: 20 }}>
-            {TABS.map((t) => {
-              const active = tab === t.key;
+            {TABS.map((tb) => {
+              const active = tab === tb.key;
               return (
                 <Pressable
-                  key={t.key}
-                  onPress={() => setTab(t.key)}
+                  key={tb.key}
+                  onPress={() => setTab(tb.key)}
                   style={[styles.tabItem, active && { backgroundColor: colors.ink, borderColor: colors.ink }]}
                 >
-                  <Ionicons name={t.icon as any} size={15} color={active ? colors.white : colors.ink} />
+                  <Ionicons name={tb.icon as any} size={15} color={active ? colors.white : colors.ink} />
                   <BText
                     style={{
                       fontFamily: active ? font.bold : font.medium,
@@ -365,7 +376,7 @@ export default function Admin() {
                       color: active ? colors.white : colors.ink,
                     }}
                   >
-                    {t.label}
+                    {t(tb.label)}
                   </BText>
                 </Pressable>
               );
@@ -393,6 +404,7 @@ function StatCard({ label, value, icon, accent }: { label: string; value: string
 }
 
 function StatusTag({ status }: { status: string }) {
+  const { t } = useI18n();
   const map: Record<string, { label: string; color: string; bg: string }> = {
     approved: { label: 'Live', color: colors.green, bg: colors.greenBg },
     pending: { label: 'Pending', color: colors.warning, bg: colors.warningBg },
@@ -404,12 +416,13 @@ function StatusTag({ status }: { status: string }) {
   const m = map[status] ?? map.approved;
   return (
     <View style={{ backgroundColor: m.bg, borderRadius: radius.pill, paddingHorizontal: 8, paddingVertical: 3 }}>
-      <BText style={{ fontFamily: font.semibold, fontSize: 11, color: m.color }}>{m.label}</BText>
+      <BText style={{ fontFamily: font.semibold, fontSize: 11, color: m.color }}>{t(m.label)}</BText>
     </View>
   );
 }
 
 function RoleTag({ role }: { role: string }) {
+  const { t } = useI18n();
   const map: Record<string, { color: string; bg: string }> = {
     admin: { color: colors.white, bg: colors.ink },
     partner: { color: colors.accent, bg: colors.accentSoft },
@@ -418,7 +431,7 @@ function RoleTag({ role }: { role: string }) {
   const m = map[role] ?? map.customer;
   return (
     <View style={{ backgroundColor: m.bg, borderRadius: radius.pill, paddingHorizontal: 10, paddingVertical: 3 }}>
-      <BText style={{ fontFamily: font.semibold, fontSize: 11, color: m.color }}>{role}</BText>
+      <BText style={{ fontFamily: font.semibold, fontSize: 11, color: m.color }}>{t(role)}</BText>
     </View>
   );
 }

@@ -2,16 +2,18 @@ import { Ionicons } from '@expo/vector-icons';
 import React, { useEffect, useRef, useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, TextInput, View } from 'react-native';
 import { ChatMessage, Conversation, getThread, markThreadRead, sendMessage } from '../lib/messages';
+import { Lang, useI18n } from '../lib/i18n';
 import { colors, font, radius } from '../lib/theme';
 import { Avatar } from './ui/avatar';
 import { BText } from './ui/text';
 
-function timeShort(iso: string) {
+function timeShort(iso: string, lang: Lang) {
   const d = new Date(iso);
   const today = new Date().toDateString() === d.toDateString();
+  const locale = lang === 'ar' ? 'ar-u-ca-gregory-nu-latn' : 'en-US';
   return today
-    ? d.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' })
-    : d.toLocaleDateString('en-US', { day: 'numeric', month: 'short' });
+    ? d.toLocaleTimeString(locale, { hour: 'numeric', minute: '2-digit' })
+    : d.toLocaleDateString(locale, { day: 'numeric', month: 'short' });
 }
 
 export function ConversationList({
@@ -25,17 +27,18 @@ export function ConversationList({
   activeKey?: string | null;
   onSelect: (c: Conversation) => void;
 }) {
+  const { t, lang } = useI18n();
   if (!conversations.length) {
     return (
       <View style={{ alignItems: 'center', paddingVertical: 48, paddingHorizontal: 20 }}>
         <Ionicons name="chatbubble-ellipses-outline" size={40} color={colors.grayLight} />
         <BText variant="smallMedium" style={{ marginTop: 12 }}>
-          No messages yet
+          {t('No messages yet')}
         </BText>
         <BText variant="tiny" style={{ marginTop: 4, textAlign: 'center' }}>
           {perspective === 'customer'
-            ? 'Message a salon from its page or one of your appointments.'
-            : 'Customer messages will appear here.'}
+            ? t('Message a salon from its page or one of your appointments.')
+            : t('Customer messages will appear here.')}
         </BText>
       </View>
     );
@@ -44,7 +47,7 @@ export function ConversationList({
     <View>
       {conversations.map((c) => {
         const key = `${c.venue_id}|${c.user_id}`;
-        const title = perspective === 'customer' ? c.venue_name : c.user_name || 'Customer';
+        const title = perspective === 'customer' ? c.venue_name : c.user_name || t('Customer');
         return (
           <Pressable
             key={key}
@@ -61,7 +64,7 @@ export function ConversationList({
                 <BText variant="smallMedium" numberOfLines={1} style={{ flex: 1 }}>
                   {title}
                 </BText>
-                <BText variant="tiny">{timeShort(c.last_at)}</BText>
+                <BText variant="tiny">{timeShort(c.last_at, lang)}</BText>
               </View>
               <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
                 <BText variant="tiny" numberOfLines={1} style={{ flex: 1 }}>
@@ -96,6 +99,7 @@ export function ChatThread({
   userName: string;
   perspective: 'customer' | 'venue';
 }) {
+  const { t, lang } = useI18n();
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [draft, setDraft] = useState('');
   const [sending, setSending] = useState(false);
@@ -141,8 +145,8 @@ export function ChatThread({
             <Ionicons name="chatbubbles-outline" size={40} color={colors.grayLight} />
             <BText variant="small">
               {perspective === 'customer'
-                ? `Say hello to ${venueName} — ask about services, timing or anything else.`
-                : `Start the conversation with ${userName || 'this customer'}.`}
+                ? t('Say hello to {name} — ask about services, timing or anything else.', { name: venueName })
+                : t('Start the conversation with {name}.', { name: userName || t('this customer') })}
             </BText>
           </View>
         )}
@@ -163,7 +167,7 @@ export function ChatThread({
                     textAlign: 'right',
                   }}
                 >
-                  {timeShort(m.created_at)}
+                  {timeShort(m.created_at, lang)}
                 </BText>
               </View>
             </View>
@@ -172,7 +176,7 @@ export function ChatThread({
       </ScrollView>
       <View style={styles.inputRow}>
         <TextInput
-          placeholder="Write a message…"
+          placeholder={t('Write a message…')}
           placeholderTextColor={colors.gray}
           value={draft}
           onChangeText={setDraft}

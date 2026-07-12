@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
 import { useAppData } from '../lib/app-data-context';
 import { useAuth } from '../lib/auth-context';
+import { useI18n } from '../lib/i18n';
 import { colors, font, radius, shadow } from '../lib/theme';
 import { Logo } from './logo';
 import { NotificationsBell } from './notifications-bell';
@@ -18,6 +19,7 @@ interface WebHeaderProps {
 
 export function WebHeader({ transparent, showSearch }: WebHeaderProps) {
   const router = useRouter();
+  const { t } = useI18n();
   const { user, signOut } = useAuth();
   const { allVenues } = useAppData();
   const [menuOpen, setMenuOpen] = useState(false);
@@ -67,7 +69,7 @@ export function WebHeader({ transparent, showSearch }: WebHeaderProps) {
           <View style={{ flex: 1 }} />
         )}
         <View style={{ flexDirection: 'row', alignItems: 'center', gap: 14 }}>
-          <HeaderPill label="For business" onPress={() => router.push('/business')} />
+          <HeaderPill label={t('For business')} onPress={() => router.push('/business')} />
           {user ? (
             <>
               <NotificationsBell />
@@ -75,18 +77,18 @@ export function WebHeader({ transparent, showSearch }: WebHeaderProps) {
                 onPress={() => setMenuOpen((o) => !o)}
                 style={({ hovered }: any) => [styles.avatarBtn, hovered && { backgroundColor: colors.bgSubtle }]}
               >
-                <Avatar name={user.name ?? user.email ?? 'You'} size={32} />
+                <Avatar name={user.name ?? user.email ?? t('You')} size={32} />
                 <Ionicons name={menuOpen ? 'chevron-up' : 'chevron-down'} size={14} color={colors.ink} />
               </Pressable>
             </>
           ) : (
             <>
-              <HeaderPill label="Log in" onPress={() => router.push('/auth')} />
+              <HeaderPill label={t('Log in')} onPress={() => router.push('/auth')} />
               <Pressable
                 onPress={() => router.push('/auth?mode=signup' as any)}
                 style={({ hovered }: any) => [styles.signupBtn, hovered && { backgroundColor: colors.accentDark }]}
               >
-                <BText style={{ fontFamily: font.bold, fontSize: 14, color: colors.white }}>Sign up</BText>
+                <BText style={{ fontFamily: font.bold, fontSize: 14, color: colors.white }}>{t('Sign up')}</BText>
               </Pressable>
             </>
           )}
@@ -99,13 +101,13 @@ export function WebHeader({ transparent, showSearch }: WebHeaderProps) {
           <Pressable style={styles.backdrop} onPress={() => setMenuOpen(false)} />
           <View style={[styles.menu, shadow.floating]}>
             <View style={styles.menuHeader}>
-              <Avatar name={user.name ?? user.email ?? 'You'} size={40} />
+              <Avatar name={user.name ?? user.email ?? t('You')} size={40} />
               <View style={{ flex: 1 }}>
                 <BText variant="smallMedium" numberOfLines={1}>
-                  {user.name ?? 'Welcome'}
+                  {user.name ?? t('Welcome')}
                 </BText>
                 <BText variant="tiny" numberOfLines={1}>
-                  {user.email ?? 'Guest account'}
+                  {user.email ?? t('Guest account')}
                 </BText>
               </View>
             </View>
@@ -120,7 +122,7 @@ export function WebHeader({ transparent, showSearch }: WebHeaderProps) {
                   variant="smallMedium"
                   color={item.label === 'Log out' ? colors.danger : colors.ink}
                 >
-                  {item.label}
+                  {t(item.label)}
                 </BText>
               </Pressable>
             ))}

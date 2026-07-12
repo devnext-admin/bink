@@ -4,6 +4,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import React, { useEffect, useState } from 'react';
 import { Modal, Pressable, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useI18n } from '../lib/i18n';
 import { colors, radius } from '../lib/theme';
 import { Logo } from './logo';
 import { Button } from './ui/button';
@@ -32,6 +33,7 @@ const SLIDES = [
 // First-launch intro shown once on mobile.
 export function Onboarding() {
   const insets = useSafeAreaInsets();
+  const { t } = useI18n();
   const [visible, setVisible] = useState(false);
   const [slide, setSlide] = useState(0);
 
@@ -61,7 +63,7 @@ export function Onboarding() {
         <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
           <Logo size={26} />
           <Pressable onPress={finish} hitSlop={8}>
-            <BText variant="smallMedium">Skip</BText>
+            <BText variant="smallMedium">{t('Skip')}</BText>
           </Pressable>
         </View>
 
@@ -70,10 +72,10 @@ export function Onboarding() {
             <Ionicons name={s.icon as any} size={44} color={colors.accent} />
           </View>
           <BText variant="h1" style={{ textAlign: 'center' }}>
-            {s.title}
+            {t(s.title)}
           </BText>
           <BText variant="body" style={{ textAlign: 'center', maxWidth: 300 }}>
-            {s.body}
+            {t(s.body)}
           </BText>
         </View>
 
@@ -87,7 +89,7 @@ export function Onboarding() {
             ))}
           </View>
           <Button
-            title={last ? 'Get started' : 'Next'}
+            title={t(last ? 'Get started' : 'Next')}
             size="lg"
             fullWidth
             onPress={() => (last ? finish() : setSlide(slide + 1))}

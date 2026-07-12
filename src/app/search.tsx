@@ -11,10 +11,12 @@ import { WebFooter } from '../components/web-footer';
 import { WebHeader } from '../components/web-header';
 import { useAppData } from '../lib/app-data-context';
 import { searchVenues } from '../lib/data';
+import { useI18n } from '../lib/i18n';
 import { colors, font, maxContentWidth, radius } from '../lib/theme';
 import { useIsDesktop } from '../lib/use-layout';
 
 export default function Search() {
+  const { t } = useI18n();
   const isDesktop = useIsDesktop();
   const params = useLocalSearchParams<{ q?: string; category?: string }>();
   const { venues, categories } = useAppData();
@@ -46,20 +48,20 @@ export default function Search() {
   const chips = (
     <View style={{ gap: 8 }}>
       <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ gap: 8 }}>
-        <Chip label="All" selected={!categorySlug} onPress={() => setCategorySlug(undefined)} />
+        <Chip label={t('All')} selected={!categorySlug} onPress={() => setCategorySlug(undefined)} />
         {categories.map((c) => (
           <Chip
             key={c.slug}
-            label={c.name}
+            label={t(c.name)}
             selected={categorySlug === c.slug}
             onPress={() => setCategorySlug(categorySlug === c.slug ? undefined : c.slug)}
           />
         ))}
       </ScrollView>
       <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ gap: 8 }}>
-        <Chip label="Top rated" selected={sortBy === 'rating'} onPress={() => setSortBy(sortBy === 'rating' ? 'recommended' : 'rating')} />
-        <Chip label="Most reviewed" selected={sortBy === 'reviews'} onPress={() => setSortBy(sortBy === 'reviews' ? 'recommended' : 'reviews')} />
-        <Chip label="Lowest price" selected={sortBy === 'price'} onPress={() => setSortBy(sortBy === 'price' ? 'recommended' : 'price')} />
+        <Chip label={t('Top rated')} selected={sortBy === 'rating'} onPress={() => setSortBy(sortBy === 'rating' ? 'recommended' : 'rating')} />
+        <Chip label={t('Most reviewed')} selected={sortBy === 'reviews'} onPress={() => setSortBy(sortBy === 'reviews' ? 'recommended' : 'reviews')} />
+        <Chip label={t('Lowest price')} selected={sortBy === 'price'} onPress={() => setSortBy(sortBy === 'price' ? 'recommended' : 'price')} />
         <Chip label="﷼" selected={priceBand === 1} onPress={() => setPriceBand(priceBand === 1 ? 0 : 1)} />
         <Chip label="﷼﷼" selected={priceBand === 2} onPress={() => setPriceBand(priceBand === 2 ? 0 : 2)} />
         <Chip label="﷼﷼﷼" selected={priceBand === 3} onPress={() => setPriceBand(priceBand === 3 ? 0 : 3)} />
@@ -71,7 +73,7 @@ export default function Search() {
     <View style={styles.searchField}>
       <Ionicons name="search" size={18} color={colors.ink} />
       <TextInput
-        placeholder="Search treatments, salons or cities"
+        placeholder={t('Search treatments, salons or cities')}
         placeholderTextColor={colors.gray}
         value={query}
         onChangeText={setQuery}
@@ -92,8 +94,13 @@ export default function Search() {
           <View style={{ maxWidth: 560 }}>{searchInput}</View>
           <View style={{ marginTop: 16 }}>{chips}</View>
           <BText variant="h2" style={{ marginTop: 32 }}>
-            {results.length} salon{results.length === 1 ? '' : 's'}
-            {query ? ` for “${query}”` : ' near you'}
+            {query
+              ? results.length === 1
+                ? t('1 salon for “{q}”', { q: query })
+                : t('{n} salons for “{q}”', { n: results.length, q: query })
+              : results.length === 1
+                ? t('1 salon near you')
+                : t('{n} salons near you', { n: results.length })}
           </BText>
           <View style={styles.grid}>
             {results.map((v) => (
@@ -102,7 +109,7 @@ export default function Search() {
           </View>
           {!results.length && (
             <BText variant="body" style={{ marginTop: 24 }}>
-              No salons found. Try a different treatment or city.
+              {t('No salons found. Try a different treatment or city.')}
             </BText>
           )}
         </View>
@@ -114,7 +121,7 @@ export default function Search() {
   return (
     <View style={{ flex: 1, backgroundColor: colors.white }}>
       <View style={{ paddingTop: insets.top + 12, paddingHorizontal: 20, gap: 12 }}>
-        <BText variant="h1">Search</BText>
+        <BText variant="h1">{t('Search')}</BText>
         {searchInput}
         {chips}
       </View>
@@ -123,7 +130,7 @@ export default function Search() {
         showsVerticalScrollIndicator={false}
       >
         <BText variant="small">
-          {results.length} salon{results.length === 1 ? '' : 's'} found
+          {results.length === 1 ? t('1 salon found') : t('{n} salons found', { n: results.length })}
         </BText>
         {results.map((v) => (
           <VenueCard key={v.id} venue={v} />

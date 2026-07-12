@@ -4,6 +4,7 @@ import React from 'react';
 import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import { useAppData } from '../lib/app-data-context';
 import { useAuth } from '../lib/auth-context';
+import { useI18n } from '../lib/i18n';
 import { colors, font, radius } from '../lib/theme';
 import { BText } from './ui/text';
 import { WebHeader } from './web-header';
@@ -36,6 +37,7 @@ export function AccountLayout({
 }) {
   const router = useRouter();
   const pathname = usePathname();
+  const { t } = useI18n();
   const { user } = useAuth();
   const { allVenues } = useAppData();
   const ownsVenues = user ? allVenues.some((v) => v.owner_id === user.id) : false;
@@ -47,7 +49,7 @@ export function AccountLayout({
         {/* Sidebar */}
         <View style={styles.sidebar}>
           <BText variant="h2" style={{ paddingHorizontal: 14, marginBottom: 16 }}>
-            {user?.name ?? 'Your account'}
+            {user?.name ?? t('Your account')}
           </BText>
           {NAV.map((item) => {
             const active = pathname === item.href;
@@ -69,7 +71,7 @@ export function AccountLayout({
                     color: active ? colors.accent : colors.ink,
                   }}
                 >
-                  {item.label}
+                  {t(item.label)}
                 </BText>
               </Pressable>
             );
@@ -81,7 +83,7 @@ export function AccountLayout({
           >
             <Ionicons name="storefront-outline" size={18} color={colors.ink} />
             <BText style={{ fontFamily: font.regular, fontSize: 15, color: colors.ink }}>
-              {ownsVenues ? 'Business dashboard' : 'Bink for Business'}
+              {t(ownsVenues ? 'Business dashboard' : 'Bink for Business')}
             </BText>
           </Pressable>
           {user?.role === 'admin' && (
@@ -90,7 +92,7 @@ export function AccountLayout({
               style={({ hovered }: any) => [styles.navItem, hovered && { backgroundColor: colors.bgPage }]}
             >
               <Ionicons name="shield-checkmark-outline" size={18} color={colors.ink} />
-              <BText style={{ fontFamily: font.regular, fontSize: 15, color: colors.ink }}>Admin</BText>
+              <BText style={{ fontFamily: font.regular, fontSize: 15, color: colors.ink }}>{t('Admin')}</BText>
             </Pressable>
           )}
         </View>

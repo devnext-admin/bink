@@ -4,6 +4,7 @@ import { useRouter } from 'expo-router';
 import React from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
 import { useAppData } from '../lib/app-data-context';
+import { useI18n } from '../lib/i18n';
 import { colors, font, radius } from '../lib/theme';
 import type { Venue } from '../lib/types';
 import { Rating } from './ui/rating';
@@ -12,11 +13,12 @@ import { BText } from './ui/text';
 interface VenueCardProps {
   venue: Venue;
   width?: number; // undefined = fill container
-  badge?: 'Featured' | 'New' | 'Deals' | null;
+  badge?: string | null; // e.g. 'Featured' | 'New' | 'Deals' (may arrive pre-translated)
 }
 
 export function VenueCard({ venue, width, badge }: VenueCardProps) {
   const router = useRouter();
+  const { t } = useI18n();
   const { favorites, toggleFav, categoryOf } = useAppData();
   const isFav = favorites.includes(venue.id);
   const category = categoryOf(venue);
@@ -35,7 +37,7 @@ export function VenueCard({ venue, width, badge }: VenueCardProps) {
         />
         {badge ? (
           <View style={styles.badge}>
-            <BText style={{ fontFamily: font.semibold, fontSize: 12, color: colors.ink }}>{badge}</BText>
+            <BText style={{ fontFamily: font.semibold, fontSize: 12, color: colors.ink }}>{t(badge)}</BText>
           </View>
         ) : null}
         <Pressable
@@ -65,9 +67,9 @@ export function VenueCard({ venue, width, badge }: VenueCardProps) {
           {venue.area}, {venue.city}
         </BText>
         <BText variant="small" numberOfLines={1}>
-          {venue.provider_type === 'freelancer' ? 'Freelancer' : category?.name}
+          {venue.provider_type === 'freelancer' ? t('Freelancer') : category?.name}
           {'  ·  '}
-          {venue.rating_count.toLocaleString()} reviews
+          {t('{count} reviews', { count: venue.rating_count.toLocaleString() })}
         </BText>
       </View>
     </Pressable>

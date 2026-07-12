@@ -2,12 +2,14 @@ import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import React, { useState } from 'react';
 import { Pressable, StyleSheet, TextInput, View } from 'react-native';
+import { useI18n } from '../lib/i18n';
 import { colors, font, radius, shadow } from '../lib/theme';
 import { BText } from './ui/text';
 
 // Desktop hero search: single white pill, segmented inputs, round black button.
 export function HeroSearchDesktop() {
   const router = useRouter();
+  const { t } = useI18n();
   const [query, setQuery] = useState('');
   const [location, setLocation] = useState('');
 
@@ -18,7 +20,7 @@ export function HeroSearchDesktop() {
       <View style={styles.segment}>
         <Ionicons name="search" size={18} color={colors.ink} />
         <TextInput
-          placeholder="All treatments"
+          placeholder={t('All treatments')}
           placeholderTextColor={colors.ink}
           value={query}
           onChangeText={setQuery}
@@ -30,7 +32,7 @@ export function HeroSearchDesktop() {
       <View style={styles.segment}>
         <Ionicons name="location-outline" size={18} color={colors.ink} />
         <TextInput
-          placeholder="Current location"
+          placeholder={t('Current location')}
           placeholderTextColor={colors.ink}
           value={location}
           onChangeText={setLocation}
@@ -41,10 +43,10 @@ export function HeroSearchDesktop() {
       <View style={styles.dividerV} />
       <View style={[styles.segment, { flex: 0.7 }]}>
         <Ionicons name="calendar-outline" size={18} color={colors.ink} />
-        <BText variant="body">Any time</BText>
+        <BText variant="body">{t('Any time')}</BText>
       </View>
       <Pressable onPress={submit} style={({ hovered }: any) => [styles.searchBtn, hovered && { backgroundColor: colors.accentDark }]}>
-        <BText style={{ fontFamily: font.bold, fontSize: 15, color: colors.white }}>Search</BText>
+        <BText style={{ fontFamily: font.bold, fontSize: 15, color: colors.white }}>{t('Search')}</BText>
       </Pressable>
     </View>
   );
@@ -53,6 +55,7 @@ export function HeroSearchDesktop() {
 // Mobile hero search: stacked rounded fields + full-width black button.
 export function HeroSearchMobile() {
   const router = useRouter();
+  const { t } = useI18n();
   const [query, setQuery] = useState('');
 
   const submit = () => router.push({ pathname: '/search', params: query ? { q: query } : {} });
@@ -62,7 +65,7 @@ export function HeroSearchMobile() {
       <View style={styles.mobileField}>
         <Ionicons name="search" size={18} color={colors.ink} />
         <TextInput
-          placeholder="All treatments"
+          placeholder={t('All treatments')}
           placeholderTextColor={colors.ink}
           value={query}
           onChangeText={setQuery}
@@ -73,15 +76,15 @@ export function HeroSearchMobile() {
       <View style={styles.dividerH} />
       <View style={styles.mobileField}>
         <Ionicons name="location-outline" size={18} color={colors.ink} />
-        <BText variant="body">Current location</BText>
+        <BText variant="body">{t('Current location')}</BText>
       </View>
       <View style={styles.dividerH} />
       <View style={styles.mobileField}>
         <Ionicons name="calendar-outline" size={18} color={colors.ink} />
-        <BText variant="body">Any time</BText>
+        <BText variant="body">{t('Any time')}</BText>
       </View>
       <Pressable onPress={submit} style={styles.mobileBtn}>
-        <BText style={{ fontFamily: font.bold, fontSize: 16, color: colors.white }}>Search Bink</BText>
+        <BText style={{ fontFamily: font.bold, fontSize: 16, color: colors.white }}>{t('Search Bink')}</BText>
       </Pressable>
     </View>
   );
@@ -90,21 +93,22 @@ export function HeroSearchMobile() {
 // Compact pill for headers (venue page, search page).
 export function CompactSearch({ onPress }: { onPress?: () => void }) {
   const router = useRouter();
+  const { t } = useI18n();
   return (
     <Pressable
       onPress={onPress ?? (() => router.push('/search'))}
       style={({ hovered }: any) => [styles.compact, hovered && { backgroundColor: colors.bgSubtle }]}
     >
       <BText variant="small" color={colors.ink} numberOfLines={1} style={styles.compactSegment}>
-        All treatments
+        {t('All treatments')}
       </BText>
       <View style={styles.compactDivider} />
       <BText variant="small" color={colors.ink} numberOfLines={1} style={styles.compactSegment}>
-        Current location
+        {t('Current location')}
       </BText>
       <View style={styles.compactDivider} />
       <BText variant="small" color={colors.ink} numberOfLines={1} style={styles.compactSegment}>
-        Any time
+        {t('Any time')}
       </BText>
       <View style={styles.compactBtn}>
         <Ionicons name="search" size={14} color={colors.white} />
