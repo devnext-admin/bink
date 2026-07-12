@@ -45,5 +45,9 @@ export function Logo({ size = 26, color = colors.ink }: { size?: number; color?:
 }
 
 const styles = StyleSheet.create({
-  row: { flexDirection: 'row', alignItems: 'flex-end' },
+  row: {
+    flexDirection: 'row',
+    alignItems: 'flex-end',
+    ...(typeof window !== 'undefined' ? ({ outlineStyle: 'none' } as any) : null),
+  },
 });

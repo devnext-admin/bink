@@ -62,9 +62,9 @@ export default function Search() {
         <Chip label={t('Top rated')} selected={sortBy === 'rating'} onPress={() => setSortBy(sortBy === 'rating' ? 'recommended' : 'rating')} />
         <Chip label={t('Most reviewed')} selected={sortBy === 'reviews'} onPress={() => setSortBy(sortBy === 'reviews' ? 'recommended' : 'reviews')} />
         <Chip label={t('Lowest price')} selected={sortBy === 'price'} onPress={() => setSortBy(sortBy === 'price' ? 'recommended' : 'price')} />
-        <Chip label="﷼" selected={priceBand === 1} onPress={() => setPriceBand(priceBand === 1 ? 0 : 1)} />
-        <Chip label="﷼﷼" selected={priceBand === 2} onPress={() => setPriceBand(priceBand === 2 ? 0 : 2)} />
-        <Chip label="﷼﷼﷼" selected={priceBand === 3} onPress={() => setPriceBand(priceBand === 3 ? 0 : 3)} />
+        <Chip label={"\u200E0–100 ﷼"} selected={priceBand === 1} onPress={() => setPriceBand(priceBand === 1 ? 0 : 1)} />
+        <Chip label={"\u200E100–250 ﷼"} selected={priceBand === 2} onPress={() => setPriceBand(priceBand === 2 ? 0 : 2)} />
+        <Chip label={"\u200E250+ ﷼"} selected={priceBand === 3} onPress={() => setPriceBand(priceBand === 3 ? 0 : 3)} />
       </ScrollView>
     </View>
   );

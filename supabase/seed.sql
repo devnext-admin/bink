@@ -16,7 +16,7 @@ insert into public.venues (id, slug, name, description, category_id, address, ar
 insert into public.venue_images (venue_id, url, sort_order) values
   ('00000000-0000-4000-8000-000000000001', 'https://images.unsplash.com/photo-1633681926022-84c23e8cb2d6?w=1200&q=80&auto=format&fit=crop', 0),
   ('00000000-0000-4000-8000-000000000001', 'https://images.unsplash.com/photo-1571875257727-256c39da42af?w=1200&q=80&auto=format&fit=crop', 1),
-  ('00000000-0000-4000-8000-000000000001', 'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=1200&q=80&auto=format&fit=crop', 2);
+  ('00000000-0000-4000-8000-000000000001', 'https://images.unsplash.com/photo-1583209814683-c023dd293cc6?w=1200&q=80&auto=format&fit=crop', 2);
 insert into public.services (id, venue_id, name, description, group_name, duration_minutes, price_cents, currency, discount_pct, is_featured, sort_order) values
   ('00000000-0000-4000-9001-000000000001', '00000000-0000-4000-8000-000000000001', 'Classic Lash Extensions', 'Achieve the most natural look with our classic lash extensions, individually applied to enhance length, curl and thickness.', 'Featured', 120, 55000, 'SAR', 0, true, 0),
   ('00000000-0000-4000-9001-000000000002', '00000000-0000-4000-8000-000000000001', 'Brow Shaping', 'Define and sculpt your brows with precision threading, leaving you with clean and beautifully shaped eyebrows.', 'Featured', 20, 5000, 'SAR', 0, true, 1),
@@ -46,11 +46,11 @@ insert into public.opening_hours (venue_id, weekday, open_time, close_time, is_c
   ('00000000-0000-4000-8000-000000000001', 6, '10:00', '22:00', false);
 
 insert into public.venues (id, slug, name, description, category_id, address, area, city, country, rating_avg, rating_count, is_featured, is_new, is_trending, highlights) values
-  ('00000000-0000-4000-8000-000000000002', 'the-fade-room', 'The Fade Room', 'A modern barbershop for the modern gentleman. Precision fades, classic cuts, hot towel shaves and beard sculpting from award-winning barbers in a relaxed, stylish space.', 2, 'Prince Turki St, Corniche', 'Corniche', 'Al Khobar', 'Saudi Arabia', 5, 114, true, false, false, array['Instant confirmation', 'Pay by app', 'Walk-ins welcome']::text[]);
+  ('00000000-0000-4000-8000-000000000002', 'the-fade-room', 'The Fade Room', 'A modern barbershop for the modern gentleman. Precision fades, classic cuts, hot towel shaves and beard sculpting from award-winning barbers in a relaxed, stylish space.', 2, 'Prince Turki St', 'Corniche', 'Al Khobar', 'Saudi Arabia', 5, 114, true, false, false, array['Instant confirmation', 'Pay by app', 'Walk-ins welcome']::text[]);
 insert into public.venue_images (venue_id, url, sort_order) values
   ('00000000-0000-4000-8000-000000000002', 'https://images.unsplash.com/photo-1585747860715-2ba37e788b70?w=1200&q=80&auto=format&fit=crop', 0),
   ('00000000-0000-4000-8000-000000000002', 'https://images.unsplash.com/photo-1560066984-138dadb4c035?w=1200&q=80&auto=format&fit=crop', 1),
-  ('00000000-0000-4000-8000-000000000002', 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?w=1200&q=80&auto=format&fit=crop', 2);
+  ('00000000-0000-4000-8000-000000000002', 'https://images.unsplash.com/photo-1631729371254-42c2892f0e6e?w=1200&q=80&auto=format&fit=crop', 2);
 insert into public.services (id, venue_id, name, description, group_name, duration_minutes, price_cents, currency, discount_pct, is_featured, sort_order) values
   ('00000000-0000-4000-9002-000000000001', '00000000-0000-4000-8000-000000000002', 'Skin Fade + Beard Sculpt', 'Our signature combo: a razor-sharp skin fade with a fully sculpted beard finish.', 'Featured', 60, 12000, 'SAR', 10, true, 0),
   ('00000000-0000-4000-9002-000000000002', '00000000-0000-4000-8000-000000000002', 'Classic Haircut', 'Consultation, cut and style with premium products.', 'Featured', 45, 9000, 'SAR', 0, true, 1),
@@ -114,7 +114,7 @@ insert into public.venues (id, slug, name, description, category_id, address, ar
 insert into public.venue_images (venue_id, url, sort_order) values
   ('00000000-0000-4000-8000-000000000004', 'https://images.unsplash.com/photo-1583209814683-c023dd293cc6?w=1200&q=80&auto=format&fit=crop', 0),
   ('00000000-0000-4000-8000-000000000004', 'https://images.unsplash.com/photo-1556228720-195a672e8a03?w=1200&q=80&auto=format&fit=crop', 1),
-  ('00000000-0000-4000-8000-000000000004', 'https://images.unsplash.com/photo-1501785888041-af3ef285b470?w=1200&q=80&auto=format&fit=crop', 2);
+  ('00000000-0000-4000-8000-000000000004', 'https://images.unsplash.com/photo-1633681926022-84c23e8cb2d6?w=1200&q=80&auto=format&fit=crop', 2);
 insert into public.services (id, venue_id, name, description, group_name, duration_minutes, price_cents, currency, discount_pct, is_featured, sort_order) values
   ('00000000-0000-4000-9004-000000000001', '00000000-0000-4000-8000-000000000004', 'Gel Manicure', 'Long-lasting gel polish with meticulous cuticle care and shaping.', 'Featured', 60, 15000, 'SAR', 0, true, 0),
   ('00000000-0000-4000-9004-000000000002', '00000000-0000-4000-8000-000000000004', 'Luxury Spa Pedicure', 'A pampering pedicure with sugar scrub, mask and hot towels.', 'Featured', 75, 20000, 'SAR', 15, true, 1),
@@ -147,7 +147,7 @@ insert into public.venues (id, slug, name, description, category_id, address, ar
 insert into public.venue_images (venue_id, url, sort_order) values
   ('00000000-0000-4000-8000-000000000005', 'https://images.unsplash.com/photo-1560066984-138dadb4c035?w=1200&q=80&auto=format&fit=crop', 0),
   ('00000000-0000-4000-8000-000000000005', 'https://images.unsplash.com/photo-1600948836101-f9ffda59d250?w=1200&q=80&auto=format&fit=crop', 1),
-  ('00000000-0000-4000-8000-000000000005', 'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=1200&q=80&auto=format&fit=crop', 2);
+  ('00000000-0000-4000-8000-000000000005', 'https://images.unsplash.com/photo-1633681926022-84c23e8cb2d6?w=1200&q=80&auto=format&fit=crop', 2);
 insert into public.services (id, venue_id, name, description, group_name, duration_minutes, price_cents, currency, discount_pct, is_featured, sort_order) values
   ('00000000-0000-4000-9005-000000000001', '00000000-0000-4000-8000-000000000005', 'Cut & Blow Dry', 'Consultation, precision cut and a bouncy blow dry finish.', 'Featured', 60, 18000, 'SAR', 0, true, 0),
   ('00000000-0000-4000-9005-000000000002', '00000000-0000-4000-8000-000000000005', 'Full Balayage', 'Hand-painted colour melt with toner and treatment.', 'Featured', 180, 75000, 'SAR', 10, true, 1),
@@ -210,7 +210,7 @@ insert into public.venues (id, slug, name, description, category_id, address, ar
 insert into public.venue_images (venue_id, url, sort_order) values
   ('00000000-0000-4000-8000-000000000007', 'https://images.unsplash.com/photo-1556228720-195a672e8a03?w=1200&q=80&auto=format&fit=crop', 0),
   ('00000000-0000-4000-8000-000000000007', 'https://images.unsplash.com/photo-1583209814683-c023dd293cc6?w=1200&q=80&auto=format&fit=crop', 1),
-  ('00000000-0000-4000-8000-000000000007', 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?w=1200&q=80&auto=format&fit=crop', 2);
+  ('00000000-0000-4000-8000-000000000007', 'https://images.unsplash.com/photo-1540555700478-4be289fbecef?w=1200&q=80&auto=format&fit=crop', 2);
 insert into public.services (id, venue_id, name, description, group_name, duration_minutes, price_cents, currency, discount_pct, is_featured, sort_order) values
   ('00000000-0000-4000-9007-000000000001', '00000000-0000-4000-8000-000000000007', 'Russian Manicure + Gel', 'Ultra-precise dry manicure with flawless gel application.', 'Featured', 90, 22000, 'SAR', 0, true, 0),
   ('00000000-0000-4000-9007-000000000002', '00000000-0000-4000-8000-000000000007', 'BIAB Natural Overlay', 'Strengthen and grow your natural nails with builder gel.', 'Featured', 75, 19000, 'SAR', 0, true, 1),
@@ -273,7 +273,7 @@ insert into public.venues (id, slug, name, description, category_id, address, ar
 insert into public.venue_images (venue_id, url, sort_order) values
   ('00000000-0000-4000-8000-000000000009', 'https://images.unsplash.com/photo-1571875257727-256c39da42af?w=1200&q=80&auto=format&fit=crop', 0),
   ('00000000-0000-4000-8000-000000000009', 'https://images.unsplash.com/photo-1500840216050-6ffa99d75160?w=1200&q=80&auto=format&fit=crop', 1),
-  ('00000000-0000-4000-8000-000000000009', 'https://images.unsplash.com/photo-1501785888041-af3ef285b470?w=1200&q=80&auto=format&fit=crop', 2);
+  ('00000000-0000-4000-8000-000000000009', 'https://images.unsplash.com/photo-1583209814683-c023dd293cc6?w=1200&q=80&auto=format&fit=crop', 2);
 insert into public.services (id, venue_id, name, description, group_name, duration_minutes, price_cents, currency, discount_pct, is_featured, sort_order) values
   ('00000000-0000-4000-9009-000000000001', '00000000-0000-4000-8000-000000000009', 'Brow Threading', 'Clean, precise brow shaping with traditional threading.', 'Featured', 15, 4000, 'SAR', 0, true, 0),
   ('00000000-0000-4000-9009-000000000002', '00000000-0000-4000-8000-000000000009', 'Brow Lamination + Tint', 'Brushed-up, fuller brows with a perfectly matched tint.', 'Featured', 60, 22000, 'SAR', 10, true, 1),
@@ -334,7 +334,7 @@ insert into public.venues (id, slug, name, description, category_id, address, ar
 insert into public.venue_images (venue_id, url, sort_order) values
   ('00000000-0000-4000-8000-000000000011', 'https://images.unsplash.com/photo-1585747860715-2ba37e788b70?w=1200&q=80&auto=format&fit=crop', 0),
   ('00000000-0000-4000-8000-000000000011', 'https://images.unsplash.com/photo-1560066984-138dadb4c035?w=1200&q=80&auto=format&fit=crop', 1),
-  ('00000000-0000-4000-8000-000000000011', 'https://images.unsplash.com/photo-1501785888041-af3ef285b470?w=1200&q=80&auto=format&fit=crop', 2);
+  ('00000000-0000-4000-8000-000000000011', 'https://images.unsplash.com/photo-1600948836101-f9ffda59d250?w=1200&q=80&auto=format&fit=crop', 2);
 insert into public.services (id, venue_id, name, description, group_name, duration_minutes, price_cents, currency, discount_pct, is_featured, sort_order) values
   ('00000000-0000-4000-9011-000000000001', '00000000-0000-4000-8000-000000000011', 'Executive Cut & Style', 'Tailored cut, wash and style with premium finish.', 'Featured', 60, 15000, 'SAR', 0, true, 0),
   ('00000000-0000-4000-9011-000000000002', '00000000-0000-4000-8000-000000000011', 'Royal Shave', 'Hot towels, straight razor, facial massage — the full ritual.', 'Featured', 45, 11000, 'SAR', 0, true, 1),
@@ -366,7 +366,7 @@ insert into public.venues (id, slug, name, description, category_id, address, ar
 insert into public.venue_images (venue_id, url, sort_order) values
   ('00000000-0000-4000-8000-000000000012', 'https://images.unsplash.com/photo-1571875257727-256c39da42af?w=1200&q=80&auto=format&fit=crop', 0),
   ('00000000-0000-4000-8000-000000000012', 'https://images.unsplash.com/photo-1540555700478-4be289fbecef?w=1200&q=80&auto=format&fit=crop', 1),
-  ('00000000-0000-4000-8000-000000000012', 'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=1200&q=80&auto=format&fit=crop', 2);
+  ('00000000-0000-4000-8000-000000000012', 'https://images.unsplash.com/photo-1596178065887-1198b6148b2b?w=1200&q=80&auto=format&fit=crop', 2);
 insert into public.services (id, venue_id, name, description, group_name, duration_minutes, price_cents, currency, discount_pct, is_featured, sort_order) values
   ('00000000-0000-4000-9012-000000000001', '00000000-0000-4000-8000-000000000012', 'Blow Dry & Style', 'Wash and professional blow dry, straight or curled.', 'Featured', 45, 12000, 'SAR', 0, true, 0),
   ('00000000-0000-4000-9012-000000000002', '00000000-0000-4000-8000-000000000012', 'Full Face Makeup', 'Occasion-ready glam by our senior makeup artists.', 'Featured', 60, 35000, 'SAR', 0, true, 1),
