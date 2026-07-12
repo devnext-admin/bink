@@ -18,7 +18,7 @@ import { cancelBooking, getBookings } from '../lib/data';
 import { formatDateLong, formatPrice, formatTimeOfDate } from '../lib/format';
 import { rescheduleBooking, submitReview } from '../lib/ops';
 import { confirmServiceByCustomer } from '../lib/payments';
-import { colors, font, maxContentWidth, radius } from '../lib/theme';
+import { colors, font, radius } from '../lib/theme';
 import type { Booking } from '../lib/types';
 import { useIsDesktop } from '../lib/use-layout';
 
@@ -57,11 +57,11 @@ export default function Appointments() {
   const [savingReview, setSavingReview] = useState(false);
 
   const refresh = useCallback(() => {
-    getBookings().then((b) => {
+    getBookings(user?.id ?? null).then((b) => {
       setBookings(b);
       setLoaded(true);
     });
-  }, []);
+  }, [user?.id]);
 
   useFocusEffect(
     useCallback(() => {
@@ -349,14 +349,6 @@ function StatusPill({ status }: { status: Booking['status'] }) {
 }
 
 const styles = StyleSheet.create({
-  desktopContent: {
-    width: '100%',
-    maxWidth: maxContentWidth + 48,
-    alignSelf: 'center',
-    paddingHorizontal: 24,
-    paddingTop: 40,
-    minHeight: 600,
-  },
   card: {
     borderWidth: 1,
     borderColor: colors.divider,

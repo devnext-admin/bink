@@ -11,7 +11,7 @@ import { WebHeader } from '../components/web-header';
 import { useAuth } from '../lib/auth-context';
 import { formatDateLong, formatPrice } from '../lib/format';
 import { getMyInvoices } from '../lib/payments';
-import { colors, font, maxContentWidth, radius } from '../lib/theme';
+import { colors, font, radius } from '../lib/theme';
 import type { Invoice } from '../lib/types';
 import { useIsDesktop } from '../lib/use-layout';
 
@@ -134,14 +134,6 @@ export default function Invoices() {
 }
 
 const styles = StyleSheet.create({
-  desktopContent: {
-    width: '100%',
-    maxWidth: maxContentWidth + 48,
-    alignSelf: 'center',
-    paddingHorizontal: 24,
-    paddingTop: 40,
-    minHeight: 600,
-  },
   card: {
     borderWidth: 1,
     borderColor: colors.divider,

@@ -274,7 +274,9 @@ export async function getMyInvoices(userId?: string | null): Promise<Invoice[]> 
       .order('issued_at', { ascending: false });
     if (!error && data?.length) return data.map((i: any) => ({ ...i, venue_name: i.venue?.name }));
   }
-  return readList<Invoice>(INV_KEY);
+  const all = await readList<Invoice>(INV_KEY);
+  if (userId === undefined) return all;
+  return all.filter((i) => (i.user_id ?? null) === userId || (userId != null && i.user_id == null));
 }
 
 export function salesSummary(transactions: Transaction[]) {

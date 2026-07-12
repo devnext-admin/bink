@@ -8,7 +8,7 @@ import { BottomTabs, TAB_BAR_HEIGHT } from '../components/bottom-tabs';
 import { BText } from '../components/ui/text';
 import { WebFooter } from '../components/web-footer';
 import { WebHeader } from '../components/web-header';
-import { colors, maxContentWidth, radius } from '../lib/theme';
+import { colors, radius } from '../lib/theme';
 import { useIsDesktop } from '../lib/use-layout';
 
 const FAQS = [
@@ -103,14 +103,6 @@ export default function Support() {
 }
 
 const styles = StyleSheet.create({
-  desktopContent: {
-    width: '100%',
-    maxWidth: maxContentWidth + 48,
-    alignSelf: 'center',
-    paddingHorizontal: 24,
-    paddingTop: 40,
-    minHeight: 600,
-  },
   faq: {
     borderWidth: 1,
     borderColor: colors.divider,

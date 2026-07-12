@@ -13,7 +13,7 @@ import { WebFooter } from '../components/web-footer';
 import { WebHeader } from '../components/web-header';
 import { useAppData } from '../lib/app-data-context';
 import { useAuth } from '../lib/auth-context';
-import { colors, maxContentWidth, radius } from '../lib/theme';
+import { colors, radius } from '../lib/theme';
 import { useIsDesktop } from '../lib/use-layout';
 
 const BASE_MENU = [
@@ -170,14 +170,6 @@ export default function Profile() {
 }
 
 const styles = StyleSheet.create({
-  desktopContent: {
-    width: '100%',
-    maxWidth: maxContentWidth + 48,
-    alignSelf: 'center',
-    paddingHorizontal: 24,
-    paddingTop: 40,
-    minHeight: 600,
-  },
   signInCard: {
     backgroundColor: colors.bgPage,
     borderRadius: radius.lg,

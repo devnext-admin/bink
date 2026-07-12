@@ -11,7 +11,7 @@ import { WebHeader } from '../components/web-header';
 import { useAppData } from '../lib/app-data-context';
 import { useAuth } from '../lib/auth-context';
 import { AppNotification, getNotifications, markAllRead } from '../lib/notifications';
-import { colors, maxContentWidth, radius } from '../lib/theme';
+import { colors, radius } from '../lib/theme';
 import { useIsDesktop } from '../lib/use-layout';
 
 const TYPE_ICONS: { match: string; icon: string; bg: string; tint: string }[] = [
@@ -136,14 +136,6 @@ export default function Notifications() {
 }
 
 const styles = StyleSheet.create({
-  desktopContent: {
-    width: '100%',
-    maxWidth: maxContentWidth + 48,
-    alignSelf: 'center',
-    paddingHorizontal: 24,
-    paddingTop: 40,
-    minHeight: 600,
-  },
   card: {
     flexDirection: 'row',
     gap: 12,

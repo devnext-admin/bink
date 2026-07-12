@@ -89,7 +89,7 @@ export async function seedCustomerDemo() {
       user_id: CUSTOMER_ID,
       customer_name: 'Deema',
       venue_name: 'The Fade Room',
-      venue_area: 'Downtown, Dubai',
+      venue_area: 'Corniche, Al Khobar',
       staff_id: null,
       staff_name: null,
       starts_at: at(5, 18, 30),
@@ -98,7 +98,7 @@ export async function seedCustomerDemo() {
       payment_status: 'unpaid',
       payment_method: 'pay_at_venue',
       total_cents: 9000,
-      currency: 'AED',
+      currency: 'SAR',
       items: [{ service_id: 'demo-s2', service_name: 'Classic Haircut', duration_minutes: 45, price_cents: 9000 }],
     },
     {
@@ -108,7 +108,7 @@ export async function seedCustomerDemo() {
       user_id: CUSTOMER_ID,
       customer_name: 'Deema',
       venue_name: 'The Blowout Bar',
-      venue_area: 'Jumeirah, Dubai',
+      venue_area: 'Ash Shati, Jeddah',
       staff_id: null,
       staff_name: 'Anong',
       starts_at: at(-2, 15, 0),
@@ -117,7 +117,7 @@ export async function seedCustomerDemo() {
       payment_status: 'paid',
       payment_method: 'apple_pay',
       total_cents: 14000,
-      currency: 'AED',
+      currency: 'SAR',
       items: [{ service_id: 'demo-s3', service_name: 'Signature Blowout', duration_minutes: 45, price_cents: 14000 }],
     },
     {
@@ -168,7 +168,7 @@ export async function seedCustomerDemo() {
       user_id: CUSTOMER_ID,
       customer_name: 'Deema',
       amount_cents: 14000,
-      currency: 'AED',
+      currency: 'SAR',
       method: 'apple_pay',
       status: 'succeeded',
       escrow_status: 'held',
@@ -293,7 +293,7 @@ export async function seedCustomerDemo() {
   await upsert<Invoice>('bink.invoices', (i) => i.id.startsWith('inv-demo-c'), invoices);
   await upsert<ChatMessage>('bink.messages', (m) => m.id.startsWith('msg-demo-c'), messages);
   await upsert<AppNotification>('bink.notifications', (n) => n.id.startsWith('ntf-demo-c'), notifications);
-  await AsyncStorage.setItem('bink.favorites', JSON.stringify([VELVET_NAILS, FADE_ROOM, BLOWOUT_BAR]));
+  await AsyncStorage.setItem(`bink.favorites:${CUSTOMER_ID}`, JSON.stringify([VELVET_NAILS, FADE_ROOM, BLOWOUT_BAR]));
 }
 
 // ---------------------------------------------------------------------------

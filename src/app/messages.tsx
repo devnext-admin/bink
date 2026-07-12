@@ -13,7 +13,7 @@ import { WebHeader } from '../components/web-header';
 import { useAppData } from '../lib/app-data-context';
 import { useAuth } from '../lib/auth-context';
 import { Conversation, getConversationsForUser } from '../lib/messages';
-import { colors, maxContentWidth, radius } from '../lib/theme';
+import { colors, radius } from '../lib/theme';
 import { useIsDesktop } from '../lib/use-layout';
 
 export default function Messages() {
@@ -34,6 +34,13 @@ export default function Messages() {
       if (v) setActive({ venueId: v.id, venueName: v.name });
     }
   }, [params.venue, allVenues.length]);
+
+  // Desktop: open the most recent conversation by default
+  React.useEffect(() => {
+    if (isDesktop && !active && !params.venue && conversations.length) {
+      setActive({ venueId: conversations[0].venue_id, venueName: conversations[0].venue_name });
+    }
+  }, [isDesktop, conversations.length]);
 
   const refresh = useCallback(() => {
     if (user) getConversationsForUser(user.id).then(setConversations);
@@ -142,15 +149,6 @@ export default function Messages() {
 }
 
 const styles = StyleSheet.create({
-  desktopContent: {
-    flex: 1,
-    width: '100%',
-    maxWidth: maxContentWidth + 48,
-    alignSelf: 'center',
-    paddingHorizontal: 24,
-    paddingTop: 32,
-    paddingBottom: 32,
-  },
   panes: {
     flex: 1,
     flexDirection: 'row',

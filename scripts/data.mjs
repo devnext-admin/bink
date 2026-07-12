@@ -56,7 +56,7 @@ const venueDefs = [
   },
   {
     n: 2, slug: 'the-fade-room', name: 'The Fade Room', cat: 2,
-    area: 'Downtown', city: 'Dubai', country: 'UAE', address: 'Sheikh Mohammed bin Rashid Blvd',
+    area: 'Corniche', city: 'Al Khobar', country: 'Saudi Arabia', address: 'Prince Turki St, Corniche',
     flags: { featured: true },
     desc: 'A modern barbershop for the modern gentleman. Precision fades, classic cuts, hot towel shaves and beard sculpting from award-winning barbers in a relaxed, stylish space.',
     highlights: ['Instant confirmation', 'Pay by app', 'Walk-ins welcome'],
@@ -73,9 +73,9 @@ const venueDefs = [
   },
   {
     n: 3, slug: 'the-blowout-bar', name: 'The Blowout Bar', cat: 1,
-    area: 'Jumeirah', city: 'Dubai', country: 'UAE', address: 'Jumeirah Beach Rd, Villa 24',
+    area: 'Ash Shati', city: 'Jeddah', country: 'Saudi Arabia', address: 'Prince Faisal Bin Fahd Rd',
     flags: { featured: true },
-    desc: 'Dubai’s destination for perfect hair, fast. Signature blowouts, glossy styling, braids and treatments — walk in polished, walk out camera-ready.',
+    desc: 'Jeddah’s destination for perfect hair, fast. Signature blowouts, glossy styling, braids and treatments — walk in polished, walk out camera-ready.',
     highlights: ['Instant confirmation', 'Walk-ins welcome', 'Parking available'],
     images: ['photo-1600948836101-f9ffda59d250', 'photo-1500840216050-6ffa99d75160', 'photo-1596178065887-1198b6148b2b'],
     services: [
@@ -108,7 +108,7 @@ const venueDefs = [
   },
   {
     n: 5, slug: 'marble-and-mane', name: 'Marble & Mane Hair Studio', cat: 1,
-    area: 'Jumeirah', city: 'Dubai', country: 'UAE', address: 'City Walk, Building 5',
+    area: 'Hittin', city: 'Riyadh', country: 'Saudi Arabia', address: 'Prince Turki Al Awwal Rd',
     flags: { featured: true },
     desc: 'A destination hair studio for cuts, colour and transformations. Our stylists train internationally and specialise in balayage, precision cutting and healthy-hair treatments.',
     highlights: ['Instant confirmation', 'Pay by app', 'Complimentary drinks'],
@@ -157,7 +157,7 @@ const venueDefs = [
   },
   {
     n: 8, slug: 'smooth-and-co-waxing', name: 'Smooth & Co Waxing Salon', cat: 5,
-    area: 'Al Barsha', city: 'Dubai', country: 'UAE', address: 'Al Barsha 1, Mall of the Emirates area',
+    area: 'Ash Shati', city: 'Dammam', country: 'Saudi Arabia', address: 'Prince Mohammed Bin Fahd Rd',
     flags: { isNew: true },
     desc: 'The waxing specialists. Gentle low-temperature wax, spotless private rooms and therapists who make it quick, clean and comfortable.',
     highlights: ['Instant confirmation', 'Pay by app', 'Private rooms', 'Woman-owned'],

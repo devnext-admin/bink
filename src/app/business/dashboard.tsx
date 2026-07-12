@@ -31,7 +31,7 @@ import { formatDateLong, formatDuration, formatPrice, formatTimeOfDate } from '.
 import { Conversation, getConversationsForVenue } from '../../lib/messages';
 import { setBookingStatus } from '../../lib/ops';
 import { escrowSummary, getVenueTransactions, refundBooking, salesSummary } from '../../lib/payments';
-import { colors, font, maxContentWidth, radius } from '../../lib/theme';
+import { colors, font, radius } from '../../lib/theme';
 import type { Booking, Transaction, Venue } from '../../lib/types';
 import { useIsDesktop } from '../../lib/use-layout';
 
@@ -438,6 +438,11 @@ function VenueMessages({ venue }: { venue: Venue }) {
     const t = setInterval(load, 5000);
     return () => clearInterval(t);
   }, [venue.id]);
+
+  // Open the most recent conversation by default
+  useEffect(() => {
+    if (!active && conversations.length) setActive(conversations[0]);
+  }, [conversations.length]);
 
   return (
     <View style={[styles.card, { padding: 0, overflow: 'hidden', minHeight: 460, flexDirection: 'row' }]}>
@@ -1023,9 +1028,7 @@ const styles = StyleSheet.create({
   },
   headerInner: {
     width: '100%',
-    maxWidth: maxContentWidth + 48,
-    alignSelf: 'center',
-    paddingHorizontal: 24,
+    paddingHorizontal: 32,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
@@ -1038,9 +1041,7 @@ const styles = StyleSheet.create({
   },
   contentWrap: {
     width: '100%',
-    maxWidth: maxContentWidth + 48,
-    alignSelf: 'center',
-    paddingHorizontal: 24,
+    paddingHorizontal: 32,
     paddingTop: 24,
   },
   sideNav: { width: 200, gap: 4 },

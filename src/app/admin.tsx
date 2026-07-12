@@ -14,7 +14,7 @@ import { formatDateLong, formatPrice, formatTimeOfDate } from '../lib/format';
 import { createCategory } from '../lib/data';
 import { createPromo, getPromoCodes, togglePromo } from '../lib/ops';
 import { getAllTransactions, salesSummary } from '../lib/payments';
-import { colors, font, maxContentWidth, radius } from '../lib/theme';
+import { colors, font, radius } from '../lib/theme';
 import type { Booking } from '../lib/types';
 import { useIsDesktop } from '../lib/use-layout';
 
@@ -468,9 +468,7 @@ const styles = StyleSheet.create({
   },
   headerInner: {
     width: '100%',
-    maxWidth: maxContentWidth + 48,
-    alignSelf: 'center',
-    paddingHorizontal: 24,
+    paddingHorizontal: 32,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
@@ -483,9 +481,7 @@ const styles = StyleSheet.create({
   },
   contentWrap: {
     width: '100%',
-    maxWidth: maxContentWidth + 48,
-    alignSelf: 'center',
-    paddingHorizontal: 24,
+    paddingHorizontal: 32,
     paddingTop: 24,
   },
   tabItem: {

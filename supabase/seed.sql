@@ -46,18 +46,18 @@ insert into public.opening_hours (venue_id, weekday, open_time, close_time, is_c
   ('00000000-0000-4000-8000-000000000001', 6, '10:00', '22:00', false);
 
 insert into public.venues (id, slug, name, description, category_id, address, area, city, country, rating_avg, rating_count, is_featured, is_new, is_trending, highlights) values
-  ('00000000-0000-4000-8000-000000000002', 'the-fade-room', 'The Fade Room', 'A modern barbershop for the modern gentleman. Precision fades, classic cuts, hot towel shaves and beard sculpting from award-winning barbers in a relaxed, stylish space.', 2, 'Sheikh Mohammed bin Rashid Blvd', 'Downtown', 'Dubai', 'UAE', 5, 114, true, false, false, array['Instant confirmation', 'Pay by app', 'Walk-ins welcome']::text[]);
+  ('00000000-0000-4000-8000-000000000002', 'the-fade-room', 'The Fade Room', 'A modern barbershop for the modern gentleman. Precision fades, classic cuts, hot towel shaves and beard sculpting from award-winning barbers in a relaxed, stylish space.', 2, 'Prince Turki St, Corniche', 'Corniche', 'Al Khobar', 'Saudi Arabia', 5, 114, true, false, false, array['Instant confirmation', 'Pay by app', 'Walk-ins welcome']::text[]);
 insert into public.venue_images (venue_id, url, sort_order) values
   ('00000000-0000-4000-8000-000000000002', 'https://images.unsplash.com/photo-1585747860715-2ba37e788b70?w=1200&q=80&auto=format&fit=crop', 0),
   ('00000000-0000-4000-8000-000000000002', 'https://images.unsplash.com/photo-1560066984-138dadb4c035?w=1200&q=80&auto=format&fit=crop', 1),
   ('00000000-0000-4000-8000-000000000002', 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?w=1200&q=80&auto=format&fit=crop', 2);
 insert into public.services (id, venue_id, name, description, group_name, duration_minutes, price_cents, currency, discount_pct, is_featured, sort_order) values
-  ('00000000-0000-4000-9002-000000000001', '00000000-0000-4000-8000-000000000002', 'Skin Fade + Beard Sculpt', 'Our signature combo: a razor-sharp skin fade with a fully sculpted beard finish.', 'Featured', 60, 12000, 'AED', 10, true, 0),
-  ('00000000-0000-4000-9002-000000000002', '00000000-0000-4000-8000-000000000002', 'Classic Haircut', 'Consultation, cut and style with premium products.', 'Featured', 45, 9000, 'AED', 0, true, 1),
-  ('00000000-0000-4000-9002-000000000003', '00000000-0000-4000-8000-000000000002', 'Hot Towel Shave', 'Traditional straight-razor shave with hot towels and soothing balm.', 'Featured', 30, 7000, 'AED', 0, true, 2),
-  ('00000000-0000-4000-9002-000000000004', '00000000-0000-4000-8000-000000000002', 'Beard Trim & Line Up', 'Precision beard shaping with sharp lines and natural fades.', 'Beard', 25, 5000, 'AED', 0, false, 3),
-  ('00000000-0000-4000-9002-000000000005', '00000000-0000-4000-8000-000000000002', 'Kids Haircut', 'Patient, friendly cuts for the little gentlemen.', 'Hair', 30, 6000, 'AED', 0, false, 4),
-  ('00000000-0000-4000-9002-000000000006', '00000000-0000-4000-8000-000000000002', 'Head Shave', 'Clean full head shave with hot lather and aftercare.', 'Hair', 30, 6500, 'AED', 0, false, 5);
+  ('00000000-0000-4000-9002-000000000001', '00000000-0000-4000-8000-000000000002', 'Skin Fade + Beard Sculpt', 'Our signature combo: a razor-sharp skin fade with a fully sculpted beard finish.', 'Featured', 60, 12000, 'SAR', 10, true, 0),
+  ('00000000-0000-4000-9002-000000000002', '00000000-0000-4000-8000-000000000002', 'Classic Haircut', 'Consultation, cut and style with premium products.', 'Featured', 45, 9000, 'SAR', 0, true, 1),
+  ('00000000-0000-4000-9002-000000000003', '00000000-0000-4000-8000-000000000002', 'Hot Towel Shave', 'Traditional straight-razor shave with hot towels and soothing balm.', 'Featured', 30, 7000, 'SAR', 0, true, 2),
+  ('00000000-0000-4000-9002-000000000004', '00000000-0000-4000-8000-000000000002', 'Beard Trim & Line Up', 'Precision beard shaping with sharp lines and natural fades.', 'Beard', 25, 5000, 'SAR', 0, false, 3),
+  ('00000000-0000-4000-9002-000000000005', '00000000-0000-4000-8000-000000000002', 'Kids Haircut', 'Patient, friendly cuts for the little gentlemen.', 'Hair', 30, 6000, 'SAR', 0, false, 4),
+  ('00000000-0000-4000-9002-000000000006', '00000000-0000-4000-8000-000000000002', 'Head Shave', 'Clean full head shave with hot lather and aftercare.', 'Hair', 30, 6500, 'SAR', 0, false, 5);
 insert into public.staff (id, venue_id, name, role, rating) values
   ('00000000-0000-4000-a002-000000000001', '00000000-0000-4000-8000-000000000002', 'Omar', 'Master barber', 5),
   ('00000000-0000-4000-a002-000000000002', '00000000-0000-4000-8000-000000000002', 'Khalid', 'Barber', 4.8),
@@ -79,18 +79,18 @@ insert into public.opening_hours (venue_id, weekday, open_time, close_time, is_c
   ('00000000-0000-4000-8000-000000000002', 6, '10:00', '22:00', false);
 
 insert into public.venues (id, slug, name, description, category_id, address, area, city, country, rating_avg, rating_count, is_featured, is_new, is_trending, highlights) values
-  ('00000000-0000-4000-8000-000000000003', 'the-blowout-bar', 'The Blowout Bar', 'Dubai’s destination for perfect hair, fast. Signature blowouts, glossy styling, braids and treatments — walk in polished, walk out camera-ready.', 1, 'Jumeirah Beach Rd, Villa 24', 'Jumeirah', 'Dubai', 'UAE', 4.7, 151, true, false, false, array['Instant confirmation', 'Walk-ins welcome', 'Parking available']::text[]);
+  ('00000000-0000-4000-8000-000000000003', 'the-blowout-bar', 'The Blowout Bar', 'Jeddah’s destination for perfect hair, fast. Signature blowouts, glossy styling, braids and treatments — walk in polished, walk out camera-ready.', 1, 'Prince Faisal Bin Fahd Rd', 'Ash Shati', 'Jeddah', 'Saudi Arabia', 4.7, 151, true, false, false, array['Instant confirmation', 'Walk-ins welcome', 'Parking available']::text[]);
 insert into public.venue_images (venue_id, url, sort_order) values
   ('00000000-0000-4000-8000-000000000003', 'https://images.unsplash.com/photo-1600948836101-f9ffda59d250?w=1200&q=80&auto=format&fit=crop', 0),
   ('00000000-0000-4000-8000-000000000003', 'https://images.unsplash.com/photo-1500840216050-6ffa99d75160?w=1200&q=80&auto=format&fit=crop', 1),
   ('00000000-0000-4000-8000-000000000003', 'https://images.unsplash.com/photo-1596178065887-1198b6148b2b?w=1200&q=80&auto=format&fit=crop', 2);
 insert into public.services (id, venue_id, name, description, group_name, duration_minutes, price_cents, currency, discount_pct, is_featured, sort_order) values
-  ('00000000-0000-4000-9003-000000000001', '00000000-0000-4000-8000-000000000003', 'Signature Blowout', 'Wash, blow dry and finish — smooth, bouncy or beach waves.', 'Featured', 45, 14000, 'AED', 0, true, 0),
-  ('00000000-0000-4000-9003-000000000002', '00000000-0000-4000-8000-000000000003', 'Express Blowout', 'In a rush? Dry styling in half an hour.', 'Featured', 30, 10000, 'AED', 0, true, 1),
-  ('00000000-0000-4000-9003-000000000003', '00000000-0000-4000-8000-000000000003', 'Glass Hair Gloss', 'High-shine gloss treatment with sleek finish.', 'Styling', 60, 22000, 'AED', 0, false, 2),
-  ('00000000-0000-4000-9003-000000000004', '00000000-0000-4000-8000-000000000003', 'Braided Updo', 'Event-ready braids and updos by our stylists.', 'Styling', 60, 18000, 'AED', 0, false, 3),
-  ('00000000-0000-4000-9003-000000000005', '00000000-0000-4000-8000-000000000003', 'Deep Repair Treatment', 'Intense mask and scalp massage for tired hair.', 'Treatments', 45, 16000, 'AED', 0, false, 4),
-  ('00000000-0000-4000-9003-000000000006', '00000000-0000-4000-8000-000000000003', 'Silk Press', 'Smooth, natural silk press with heat protection.', 'Styling', 90, 28000, 'AED', 0, false, 5);
+  ('00000000-0000-4000-9003-000000000001', '00000000-0000-4000-8000-000000000003', 'Signature Blowout', 'Wash, blow dry and finish — smooth, bouncy or beach waves.', 'Featured', 45, 14000, 'SAR', 0, true, 0),
+  ('00000000-0000-4000-9003-000000000002', '00000000-0000-4000-8000-000000000003', 'Express Blowout', 'In a rush? Dry styling in half an hour.', 'Featured', 30, 10000, 'SAR', 0, true, 1),
+  ('00000000-0000-4000-9003-000000000003', '00000000-0000-4000-8000-000000000003', 'Glass Hair Gloss', 'High-shine gloss treatment with sleek finish.', 'Styling', 60, 22000, 'SAR', 0, false, 2),
+  ('00000000-0000-4000-9003-000000000004', '00000000-0000-4000-8000-000000000003', 'Braided Updo', 'Event-ready braids and updos by our stylists.', 'Styling', 60, 18000, 'SAR', 0, false, 3),
+  ('00000000-0000-4000-9003-000000000005', '00000000-0000-4000-8000-000000000003', 'Deep Repair Treatment', 'Intense mask and scalp massage for tired hair.', 'Treatments', 45, 16000, 'SAR', 0, false, 4),
+  ('00000000-0000-4000-9003-000000000006', '00000000-0000-4000-8000-000000000003', 'Silk Press', 'Smooth, natural silk press with heat protection.', 'Styling', 90, 28000, 'SAR', 0, false, 5);
 insert into public.staff (id, venue_id, name, role, rating) values
   ('00000000-0000-4000-a003-000000000001', '00000000-0000-4000-8000-000000000003', 'Anong', 'Senior stylist', 4.8),
   ('00000000-0000-4000-a003-000000000002', '00000000-0000-4000-8000-000000000003', 'Mei', 'Stylist', 4.8999999999999995),
@@ -143,18 +143,18 @@ insert into public.opening_hours (venue_id, weekday, open_time, close_time, is_c
   ('00000000-0000-4000-8000-000000000004', 6, '10:00', '22:00', false);
 
 insert into public.venues (id, slug, name, description, category_id, address, area, city, country, rating_avg, rating_count, is_featured, is_new, is_trending, highlights) values
-  ('00000000-0000-4000-8000-000000000005', 'marble-and-mane', 'Marble & Mane Hair Studio', 'A destination hair studio for cuts, colour and transformations. Our stylists train internationally and specialise in balayage, precision cutting and healthy-hair treatments.', 1, 'City Walk, Building 5', 'Jumeirah', 'Dubai', 'UAE', 4.6, 225, true, false, false, array['Instant confirmation', 'Pay by app', 'Complimentary drinks']::text[]);
+  ('00000000-0000-4000-8000-000000000005', 'marble-and-mane', 'Marble & Mane Hair Studio', 'A destination hair studio for cuts, colour and transformations. Our stylists train internationally and specialise in balayage, precision cutting and healthy-hair treatments.', 1, 'Prince Turki Al Awwal Rd', 'Hittin', 'Riyadh', 'Saudi Arabia', 4.6, 225, true, false, false, array['Instant confirmation', 'Pay by app', 'Complimentary drinks']::text[]);
 insert into public.venue_images (venue_id, url, sort_order) values
   ('00000000-0000-4000-8000-000000000005', 'https://images.unsplash.com/photo-1560066984-138dadb4c035?w=1200&q=80&auto=format&fit=crop', 0),
   ('00000000-0000-4000-8000-000000000005', 'https://images.unsplash.com/photo-1600948836101-f9ffda59d250?w=1200&q=80&auto=format&fit=crop', 1),
   ('00000000-0000-4000-8000-000000000005', 'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=1200&q=80&auto=format&fit=crop', 2);
 insert into public.services (id, venue_id, name, description, group_name, duration_minutes, price_cents, currency, discount_pct, is_featured, sort_order) values
-  ('00000000-0000-4000-9005-000000000001', '00000000-0000-4000-8000-000000000005', 'Cut & Blow Dry', 'Consultation, precision cut and a bouncy blow dry finish.', 'Featured', 60, 18000, 'AED', 0, true, 0),
-  ('00000000-0000-4000-9005-000000000002', '00000000-0000-4000-8000-000000000005', 'Full Balayage', 'Hand-painted colour melt with toner and treatment.', 'Featured', 180, 75000, 'AED', 10, true, 1),
-  ('00000000-0000-4000-9005-000000000003', '00000000-0000-4000-8000-000000000005', 'Root Colour', 'Full root coverage with premium ammonia-free colour.', 'Colour', 90, 30000, 'AED', 0, false, 2),
-  ('00000000-0000-4000-9005-000000000004', '00000000-0000-4000-8000-000000000005', 'Keratin Smoothing', 'Frizz-free, glossy hair for up to 4 months.', 'Treatments', 150, 60000, 'AED', 0, false, 3),
-  ('00000000-0000-4000-9005-000000000005', '00000000-0000-4000-8000-000000000005', 'Olaplex Repair Ritual', 'Bond-building treatment for stronger, healthier hair.', 'Treatments', 45, 20000, 'AED', 0, false, 4),
-  ('00000000-0000-4000-9005-000000000006', '00000000-0000-4000-8000-000000000005', 'Bridal Hair Trial', 'Full bridal styling session with our senior stylist.', 'Styling', 90, 35000, 'AED', 0, false, 5);
+  ('00000000-0000-4000-9005-000000000001', '00000000-0000-4000-8000-000000000005', 'Cut & Blow Dry', 'Consultation, precision cut and a bouncy blow dry finish.', 'Featured', 60, 18000, 'SAR', 0, true, 0),
+  ('00000000-0000-4000-9005-000000000002', '00000000-0000-4000-8000-000000000005', 'Full Balayage', 'Hand-painted colour melt with toner and treatment.', 'Featured', 180, 75000, 'SAR', 10, true, 1),
+  ('00000000-0000-4000-9005-000000000003', '00000000-0000-4000-8000-000000000005', 'Root Colour', 'Full root coverage with premium ammonia-free colour.', 'Colour', 90, 30000, 'SAR', 0, false, 2),
+  ('00000000-0000-4000-9005-000000000004', '00000000-0000-4000-8000-000000000005', 'Keratin Smoothing', 'Frizz-free, glossy hair for up to 4 months.', 'Treatments', 150, 60000, 'SAR', 0, false, 3),
+  ('00000000-0000-4000-9005-000000000005', '00000000-0000-4000-8000-000000000005', 'Olaplex Repair Ritual', 'Bond-building treatment for stronger, healthier hair.', 'Treatments', 45, 20000, 'SAR', 0, false, 4),
+  ('00000000-0000-4000-9005-000000000006', '00000000-0000-4000-8000-000000000005', 'Bridal Hair Trial', 'Full bridal styling session with our senior stylist.', 'Styling', 90, 35000, 'SAR', 0, false, 5);
 insert into public.staff (id, venue_id, name, role, rating) values
   ('00000000-0000-4000-a005-000000000001', '00000000-0000-4000-8000-000000000005', 'Elena', 'Creative director', 5),
   ('00000000-0000-4000-a005-000000000002', '00000000-0000-4000-8000-000000000005', 'Sophie', 'Colour specialist', 4.8),
@@ -237,17 +237,17 @@ insert into public.opening_hours (venue_id, weekday, open_time, close_time, is_c
   ('00000000-0000-4000-8000-000000000007', 6, '10:00', '22:00', false);
 
 insert into public.venues (id, slug, name, description, category_id, address, area, city, country, rating_avg, rating_count, is_featured, is_new, is_trending, highlights) values
-  ('00000000-0000-4000-8000-000000000008', 'smooth-and-co-waxing', 'Smooth & Co Waxing Salon', 'The waxing specialists. Gentle low-temperature wax, spotless private rooms and therapists who make it quick, clean and comfortable.', 5, 'Al Barsha 1, Mall of the Emirates area', 'Al Barsha', 'Dubai', 'UAE', 4.7, 336, false, true, false, array['Instant confirmation', 'Pay by app', 'Private rooms', 'Woman-owned']::text[]);
+  ('00000000-0000-4000-8000-000000000008', 'smooth-and-co-waxing', 'Smooth & Co Waxing Salon', 'The waxing specialists. Gentle low-temperature wax, spotless private rooms and therapists who make it quick, clean and comfortable.', 5, 'Prince Mohammed Bin Fahd Rd', 'Ash Shati', 'Dammam', 'Saudi Arabia', 4.7, 336, false, true, false, array['Instant confirmation', 'Pay by app', 'Private rooms', 'Woman-owned']::text[]);
 insert into public.venue_images (venue_id, url, sort_order) values
   ('00000000-0000-4000-8000-000000000008', 'https://images.unsplash.com/photo-1507652313519-d4e9174996dd?w=1200&q=80&auto=format&fit=crop', 0),
   ('00000000-0000-4000-8000-000000000008', 'https://images.unsplash.com/photo-1540555700478-4be289fbecef?w=1200&q=80&auto=format&fit=crop', 1),
   ('00000000-0000-4000-8000-000000000008', 'https://images.unsplash.com/photo-1596178065887-1198b6148b2b?w=1200&q=80&auto=format&fit=crop', 2);
 insert into public.services (id, venue_id, name, description, group_name, duration_minutes, price_cents, currency, discount_pct, is_featured, sort_order) values
-  ('00000000-0000-4000-9008-000000000001', '00000000-0000-4000-8000-000000000008', 'Full Body Wax', 'Head-to-toe smoothness with gentle, low-temp wax.', 'Featured', 90, 32000, 'AED', 0, true, 0),
-  ('00000000-0000-4000-9008-000000000002', '00000000-0000-4000-8000-000000000008', 'Full Legs Wax', 'Silky legs in under an hour.', 'Featured', 40, 14000, 'AED', 0, true, 1),
-  ('00000000-0000-4000-9008-000000000003', '00000000-0000-4000-8000-000000000008', 'Underarm Wax', 'Quick and gentle underarm waxing.', 'Waxing', 15, 5000, 'AED', 0, false, 2),
-  ('00000000-0000-4000-9008-000000000004', '00000000-0000-4000-8000-000000000008', 'Full Arms Wax', 'Complete arm waxing with soothing aftercare.', 'Waxing', 30, 10000, 'AED', 0, false, 3),
-  ('00000000-0000-4000-9008-000000000005', '00000000-0000-4000-8000-000000000008', 'Full Face Threading', 'Precise full-face hair removal with thread.', 'Threading', 30, 9000, 'AED', 0, false, 4);
+  ('00000000-0000-4000-9008-000000000001', '00000000-0000-4000-8000-000000000008', 'Full Body Wax', 'Head-to-toe smoothness with gentle, low-temp wax.', 'Featured', 90, 32000, 'SAR', 0, true, 0),
+  ('00000000-0000-4000-9008-000000000002', '00000000-0000-4000-8000-000000000008', 'Full Legs Wax', 'Silky legs in under an hour.', 'Featured', 40, 14000, 'SAR', 0, true, 1),
+  ('00000000-0000-4000-9008-000000000003', '00000000-0000-4000-8000-000000000008', 'Underarm Wax', 'Quick and gentle underarm waxing.', 'Waxing', 15, 5000, 'SAR', 0, false, 2),
+  ('00000000-0000-4000-9008-000000000004', '00000000-0000-4000-8000-000000000008', 'Full Arms Wax', 'Complete arm waxing with soothing aftercare.', 'Waxing', 30, 10000, 'SAR', 0, false, 3),
+  ('00000000-0000-4000-9008-000000000005', '00000000-0000-4000-8000-000000000008', 'Full Face Threading', 'Precise full-face hair removal with thread.', 'Threading', 30, 9000, 'SAR', 0, false, 4);
 insert into public.staff (id, venue_id, name, role, rating) values
   ('00000000-0000-4000-a008-000000000001', '00000000-0000-4000-8000-000000000008', 'Grace', 'Wax specialist', 5),
   ('00000000-0000-4000-a008-000000000002', '00000000-0000-4000-8000-000000000008', 'Marta', 'Wax specialist', 4.8),

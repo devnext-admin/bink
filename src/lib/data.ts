@@ -233,7 +233,11 @@ async function notifyBookingCreated(booking: Booking, input: CreateBookingInput)
   });
 }
 
-export async function getBookings(): Promise<Booking[]> {
+/**
+ * All bookings (venue dashboards, admin, availability) when called without an
+ * argument; pass a user id (or null for guests) to scope to that customer.
+ */
+export async function getBookings(forUserId?: string | null): Promise<Booking[]> {
   const sb = getSupabase();
   const user = sb ? (await sb.auth.getUser()).data.user : null;
 
@@ -261,7 +265,10 @@ export async function getBookings(): Promise<Booking[]> {
     }
   }
 
-  return getLocalBookings();
+  const all = await getLocalBookings();
+  if (forUserId === undefined) return all;
+  // Own bookings, plus legacy ones saved before accounts existed (no user_id).
+  return all.filter((b: any) => (b.user_id ?? null) === forUserId || (forUserId != null && b.user_id == null));
 }
 
 export async function cancelBooking(id: string): Promise<void> {
@@ -292,19 +299,22 @@ export async function cancelBooking(id: string): Promise<void> {
 // ---------------------------------------------------------------------------
 const LOCAL_FAVS_KEY = 'bink.favorites';
 
-export async function getFavoriteIds(): Promise<string[]> {
+// Signed-in users get their own list; guests share the device-level one.
+const favsKey = (userId?: string | null) => (userId ? `${LOCAL_FAVS_KEY}:${userId}` : LOCAL_FAVS_KEY);
+
+export async function getFavoriteIds(userId?: string | null): Promise<string[]> {
   try {
-    const raw = await AsyncStorage.getItem(LOCAL_FAVS_KEY);
+    const raw = await AsyncStorage.getItem(favsKey(userId));
     return raw ? JSON.parse(raw) : [];
   } catch {
     return [];
   }
 }
 
-export async function toggleFavorite(venueId: string): Promise<string[]> {
-  const favs = await getFavoriteIds();
+export async function toggleFavorite(venueId: string, userId?: string | null): Promise<string[]> {
+  const favs = await getFavoriteIds(userId);
   const next = favs.includes(venueId) ? favs.filter((id) => id !== venueId) : [...favs, venueId];
-  await AsyncStorage.setItem(LOCAL_FAVS_KEY, JSON.stringify(next));
+  await AsyncStorage.setItem(favsKey(userId), JSON.stringify(next));
   const sb = getSupabase();
   const user = sb ? (await sb.auth.getUser()).data.user : null;
   if (sb && user) {
