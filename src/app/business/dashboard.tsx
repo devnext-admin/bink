@@ -1,6 +1,6 @@
 import { Ionicons } from '@expo/vector-icons';
 import { Image } from 'expo-image';
-import { useRouter } from 'expo-router';
+import { useLocalSearchParams, useRouter } from 'expo-router';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -20,8 +20,12 @@ import {
   addVenueImage,
   deleteService,
   deleteStaff,
+  getMyStaffAccess,
   getVenueBookings,
+  inviteTeamMember,
   removeVenueImage,
+  setStaffServices,
+  StaffAccess,
   updateService,
   updateStaff,
   updateVenueHours,
@@ -30,7 +34,8 @@ import {
 import { formatDateLong, formatDuration, formatPrice, formatTimeOfDate } from '../../lib/format';
 import { formatDate, useI18n } from '../../lib/i18n';
 import { Conversation, getConversationsForVenue } from '../../lib/messages';
-import { setBookingStatus } from '../../lib/ops';
+import { rescheduleBooking, setBookingStatus } from '../../lib/ops';
+import { pushNotification } from '../../lib/notifications';
 import { escrowSummary, getVenueTransactions, refundBooking, salesSummary } from '../../lib/payments';
 import { colors, font, radius } from '../../lib/theme';
 import type { Booking, Transaction, Venue } from '../../lib/types';
@@ -55,17 +60,70 @@ export default function BusinessDashboard() {
   const { t } = useI18n();
   const { user, loading } = useAuth();
   const { allVenues, refresh } = useAppData();
+  const params = useLocalSearchParams<{ venue?: string }>();
 
   const myVenues = useMemo(
     () => (user ? allVenues.filter((v) => v.owner_id === user.id) : []),
     [allVenues, user]
   );
+
+  // Team-member links for the signed-in user (staff.user_id = auth uid)
+  const [staffAccess, setStaffAccess] = useState<StaffAccess[]>([]);
+  const [staffLoaded, setStaffLoaded] = useState(false);
+  useEffect(() => {
+    if (user && !user.isGuest) {
+      getMyStaffAccess()
+        .then(setStaffAccess)
+        .finally(() => setStaffLoaded(true));
+    } else {
+      setStaffLoaded(true);
+    }
+  }, [user?.id]);
+
+  // Admins can emulate any business via /business/dashboard?venue=<id>
+  const isAdmin = user?.role === 'admin';
+  const emulated = isAdmin && params.venue ? allVenues.find((v) => v.id === params.venue) ?? null : null;
+
+  const accessibleVenues = useMemo(() => {
+    const list = emulated ? [emulated] : [...myVenues];
+    for (const v of allVenues) {
+      if (staffAccess.some((a) => a.venueId === v.id) && !list.some((x) => x.id === v.id)) list.push(v);
+    }
+    return list;
+  }, [emulated, myVenues, allVenues, staffAccess]);
+
   const [venueId, setVenueId] = useState<string | null>(null);
-  const venue = myVenues.find((v) => v.id === venueId) ?? myVenues[0] ?? null;
+  const venue = accessibleVenues.find((v) => v.id === venueId) ?? accessibleVenues[0] ?? null;
+
+  // 'owner' | 'admin' | 'manager' | 'member'
+  const access: 'owner' | 'admin' | 'manager' | 'member' = !venue
+    ? 'owner'
+    : emulated && venue.id === emulated.id
+      ? 'admin'
+      : venue.owner_id === user?.id
+        ? 'owner'
+        : staffAccess.find((a) => a.venueId === venue.id)?.venueRole === 'manager'
+          ? 'manager'
+          : 'member';
+  const canManage = access !== 'member';
+  const memberStaffId = access === 'member'
+    ? staffAccess.find((a) => a.venueId === venue?.id)?.staffId ?? null
+    : null;
 
   const [section, setSection] = useState<Section>('overview');
+  useEffect(() => {
+    // Members land on their bookings; sections they can't see snap back
+    if (!canManage && !['bookings', 'messages', 'services'].includes(section)) setSection('bookings');
+  }, [canManage]);
+
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [transactions, setTransactions] = useState<Transaction[]>([]);
+  const [messageTarget, setMessageTarget] = useState<{ userId: string; userName: string } | null>(null);
+  const openChatWith = (b: Booking) => {
+    if (!b.user_id) return;
+    setMessageTarget({ userId: b.user_id, userName: b.customer_name ?? t('Customer') });
+    setSection('messages');
+  };
 
   useEffect(() => {
     if (venue) {
@@ -82,9 +140,9 @@ export default function BusinessDashboard() {
     }
   }, [refresh, venue?.id]);
 
-  if (loading) return null;
+  if (loading || (user && !staffLoaded)) return null;
 
-  if (!user || myVenues.length === 0) {
+  if (!user || accessibleVenues.length === 0) {
     return (
       <View style={[styles.emptyWrap, { paddingTop: insets.top + 40 }]}>
         <Logo />
@@ -103,10 +161,18 @@ export default function BusinessDashboard() {
     );
   }
 
-  const revenue = bookings
+  // Team members only see the work assigned to them
+  const visibleBookings = canManage
+    ? bookings
+    : bookings.filter((b) => b.staff_id === memberStaffId);
+  const memberCustomerIds = canManage
+    ? null
+    : [...new Set(visibleBookings.map((b) => b.user_id).filter(Boolean))] as string[];
+
+  const revenue = visibleBookings
     .filter((b) => b.status !== 'cancelled')
     .reduce((c, b) => c + b.total_cents, 0);
-  const upcoming = bookings.filter(
+  const upcoming = visibleBookings.filter(
     (b) => new Date(b.starts_at).getTime() >= Date.now() && b.status !== 'cancelled'
   );
   const currency = venue!.services[0]?.currency ?? 'SAR';
@@ -148,7 +214,7 @@ export default function BusinessDashboard() {
               {t('Nothing booked yet. Share your Bink page to start filling the calendar.')}
             </BText>
           ) : (
-            upcoming.slice(0, 5).map((b) => <BookingRow key={b.id} booking={b} />)
+            upcoming.slice(0, 5).map((b) => <BookingRow key={b.id} booking={b} venue={venue!} onMessage={openChatWith} onChanged={reload} />)
           )}
         </View>
         <View style={styles.card}>
@@ -170,18 +236,35 @@ export default function BusinessDashboard() {
   } else if (section === 'bookings') {
     body = (
       <View style={styles.card}>
-        <BText variant="h3">{t('All bookings')}</BText>
-        {bookings.length === 0 ? (
+        <BText variant="h3">{canManage ? t('All bookings') : t('Your bookings')}</BText>
+        {visibleBookings.length === 0 ? (
           <BText variant="small" style={{ marginTop: 10 }}>
             {t('No bookings yet.')}
           </BText>
         ) : (
-          bookings.map((b) => <BookingRow key={b.id} booking={b} onRefund={reload} />)
+          visibleBookings.map((b) => (
+            <BookingRow
+              key={b.id}
+              booking={b}
+              venue={venue!}
+              onRefund={canManage ? reload : undefined}
+              onChanged={reload}
+              onMessage={openChatWith}
+              canOperate
+            />
+          ))
         )}
       </View>
     );
   } else if (section === 'messages') {
-    body = <VenueMessages venue={venue!} />;
+    body = (
+      <VenueMessages
+        venue={venue!}
+        allowedUserIds={memberCustomerIds}
+        target={messageTarget}
+        onTargetConsumed={() => setMessageTarget(null)}
+      />
+    );
   } else if (section === 'sales') {
     const summary = salesSummary(transactions);
     const escrow = escrowSummary(transactions);
@@ -235,16 +318,44 @@ export default function BusinessDashboard() {
   } else if (section === 'analytics') {
     body = <AnalyticsSection bookings={bookings} venue={venue!} isDesktop={isDesktop} />;
   } else if (section === 'services') {
-    body = <ServicesEditor venue={venue!} onChanged={reload} />;
+    if (canManage) {
+      body = <ServicesEditor venue={venue!} onChanged={reload} />;
+    } else {
+      const me = venue!.staff.find((m) => m.id === memberStaffId);
+      const mine = (me?.service_ids?.length
+        ? venue!.services.filter((sv) => me.service_ids!.includes(sv.id))
+        : venue!.services);
+      body = (
+        <View style={styles.card}>
+          <BText variant="h3">{t('Services you provide')}</BText>
+          {!me?.service_ids?.length && (
+            <BText variant="tiny" style={{ marginTop: 4 }}>
+              {t('No specific services assigned yet — you can be booked for any service.')}
+            </BText>
+          )}
+          {mine.map((sv) => (
+            <View key={sv.id} style={styles.bookingRow}>
+              <View style={{ flex: 1 }}>
+                <BText variant="smallMedium">{sv.name}</BText>
+                <BText variant="tiny">
+                  {sv.group_name} · {formatDuration(sv.duration_minutes)} · {formatPrice(sv.price_cents, sv.currency)}
+                </BText>
+              </View>
+            </View>
+          ))}
+        </View>
+      );
+    }
   } else if (section === 'staff') {
     body = <StaffEditor venue={venue!} onChanged={reload} />;
   } else {
     body = <SettingsEditor venue={venue!} onChanged={reload} />;
   }
 
+  const memberSections: Section[] = ['bookings', 'messages', 'services'];
   const nav = (
     <View style={isDesktop ? styles.sideNav : styles.topNav}>
-      {SECTIONS.map((s) => {
+      {SECTIONS.filter((s) => canManage || memberSections.includes(s.key)).map((s) => {
         const active = section === s.key;
         return (
           <Pressable
@@ -315,9 +426,22 @@ export default function BusinessDashboard() {
                     {venue!.city}
                   </BText>
                   <StatusTag status={venue!.status ?? 'approved'} />
+                  {access === 'member' && (
+                    <View style={{ backgroundColor: colors.infoBg, borderRadius: radius.pill, paddingHorizontal: 8, paddingVertical: 2 }}>
+                      <BText style={{ fontFamily: font.semibold, fontSize: 11, color: colors.info }}>{t('Team member')}</BText>
+                    </View>
+                  )}
                 </View>
               </View>
             </View>
+            {access === 'admin' && (
+              <View style={styles.emulateBanner}>
+                <Ionicons name="shield-checkmark-outline" size={16} color={colors.info} />
+                <BText variant="tiny" color={colors.info} style={{ flex: 1 }}>
+                  {t('Admin view — you are managing this business on behalf of its owner.')}
+                </BText>
+              </View>
+            )}
             {body}
           </View>
         </View>
@@ -356,10 +480,46 @@ function StatCard({ label, value, icon }: { label: string; value: string; icon: 
   );
 }
 
-function BookingRow({ booking, onRefund }: { booking: Booking; onRefund?: () => void }) {
-  const { t } = useI18n();
+function BookingRow({
+  booking,
+  venue,
+  onRefund,
+  onChanged,
+  onMessage,
+  canOperate,
+}: {
+  booking: Booking;
+  venue?: Venue;
+  onRefund?: () => void;
+  onChanged?: () => void;
+  onMessage?: (b: Booking) => void;
+  canOperate?: boolean;
+}) {
+  const { t, lang } = useI18n();
   const [refunding, setRefunding] = useState(false);
-  const canManage = onRefund && (booking.status === 'confirmed' || booking.status === 'pending');
+  const [resched, setResched] = useState(false);
+  const [reschedDay, setReschedDay] = useState<Date | null>(null);
+  const canManage = (onRefund || canOperate) && (booking.status === 'confirmed' || booking.status === 'pending');
+  const durationMin = Math.max(
+    15,
+    Math.round((new Date(booking.ends_at).getTime() - new Date(booking.starts_at).getTime()) / 60000)
+  );
+
+  const doReschedule = async (slot: Date) => {
+    await rescheduleBooking(booking.id, slot, durationMin);
+    if (booking.user_id) {
+      await pushNotification({
+        audience: 'customer',
+        userId: booking.user_id,
+        venueId: booking.venue_id,
+        title: 'Appointment rescheduled',
+        body: `${venue?.name ?? 'The salon'} moved your appointment to ${formatDateLong(slot.toISOString())} · ${formatTimeOfDate(slot.toISOString())}.`,
+      });
+    }
+    setResched(false);
+    setReschedDay(null);
+    onChanged?.();
+  };
   return (
     <View style={[styles.bookingRow, { flexWrap: 'wrap' }]}>
       <View style={{ flex: 1, minWidth: 220 }}>
@@ -391,13 +551,13 @@ function BookingRow({ booking, onRefund }: { booking: Booking; onRefund?: () => 
         }
       />
       {canManage ? (
-        <View style={{ flexDirection: 'row', gap: 6 }}>
+        <View style={{ flexDirection: 'row', gap: 6, flexWrap: 'wrap' }}>
           <SmallPillBtn
             label={t('Complete')}
             color={colors.green}
             onPress={async () => {
               await setBookingStatus(booking.id, 'completed');
-              onRefund!();
+              (onRefund ?? onChanged)?.();
             }}
           />
           <SmallPillBtn
@@ -405,11 +565,46 @@ function BookingRow({ booking, onRefund }: { booking: Booking; onRefund?: () => 
             color={colors.gray}
             onPress={async () => {
               await setBookingStatus(booking.id, 'no_show');
-              onRefund!();
+              (onRefund ?? onChanged)?.();
             }}
           />
+          <SmallPillBtn label={resched ? t('Close') : t('Reschedule')} color={colors.ink} onPress={() => setResched(!resched)} />
         </View>
       ) : null}
+      {onMessage && booking.user_id ? (
+        <SmallPillBtn label={t('Message')} color={colors.accent} onPress={() => onMessage(booking)} />
+      ) : null}
+      {resched && (
+        <View style={{ width: '100%', marginTop: 10, gap: 10 }}>
+          <BText variant="smallMedium">{t('Pick a new day')}</BText>
+          <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ gap: 6 }}>
+            {Array.from({ length: 14 }, (_, i) => {
+              const d = new Date();
+              d.setDate(d.getDate() + 1 + i);
+              d.setHours(0, 0, 0, 0);
+              const sel = reschedDay?.toDateString() === d.toDateString();
+              return (
+                <Chip
+                  key={i}
+                  label={formatDate(lang, d, { weekday: 'short', day: 'numeric', month: 'short' })}
+                  selected={sel}
+                  onPress={() => setReschedDay(d)}
+                />
+              );
+            })}
+          </ScrollView>
+          {reschedDay && (
+            <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 6 }}>
+              {Array.from({ length: 12 }, (_, i) => {
+                const slot = new Date(reschedDay);
+                slot.setHours(10 + Math.floor(i / 2), (i % 2) * 30, 0, 0);
+                const label = `${String(slot.getHours()).padStart(2, '0')}:${String(slot.getMinutes()).padStart(2, '0')}`;
+                return <Chip key={label} label={label} onPress={() => doReschedule(slot)} />;
+              })}
+            </View>
+          )}
+        </View>
+      )}
       {onRefund && booking.payment_status === 'paid' ? (
         <Pressable
           disabled={refunding}
@@ -430,17 +625,46 @@ function BookingRow({ booking, onRefund }: { booking: Booking; onRefund?: () => 
   );
 }
 
-function VenueMessages({ venue }: { venue: Venue }) {
+function VenueMessages({
+  venue,
+  allowedUserIds,
+  target,
+  onTargetConsumed,
+}: {
+  venue: Venue;
+  allowedUserIds?: string[] | null;
+  target?: { userId: string; userName: string } | null;
+  onTargetConsumed?: () => void;
+}) {
   const { t } = useI18n();
   const [conversations, setConversations] = useState<Conversation[]>([]);
   const [active, setActive] = useState<Conversation | null>(null);
 
   useEffect(() => {
-    const load = () => getConversationsForVenue(venue.id).then(setConversations);
+    const load = () =>
+      getConversationsForVenue(venue.id).then((all) =>
+        setConversations(allowedUserIds ? all.filter((c) => allowedUserIds.includes(c.user_id)) : all)
+      );
     load();
     const t = setInterval(load, 5000);
     return () => clearInterval(t);
-  }, [venue.id]);
+  }, [venue.id, allowedUserIds?.join(',')]);
+
+  // "Message" from a booking opens (or starts) that customer's thread
+  useEffect(() => {
+    if (target) {
+      setActive({
+        venue_id: venue.id,
+        venue_name: venue.name,
+        user_id: target.userId,
+        user_name: target.userName,
+        last_text: '',
+        last_at: new Date().toISOString(),
+        unread: 0,
+      });
+      onTargetConsumed?.();
+    }
+  }, [target?.userId]);
 
   // Open the most recent conversation by default
   useEffect(() => {
@@ -736,44 +960,110 @@ function StaffEditor({ venue, onChanged }: { venue: Venue; onChanged: () => void
   const [editingId, setEditingId] = useState<string | null>(null);
   const [name, setName] = useState('');
   const [role, setRole] = useState('');
+  const [email, setEmail] = useState('');
+  const [venueRole, setVenueRole] = useState<'manager' | 'member'>('member');
+  const [serviceIds, setServiceIds] = useState<string[]>([]);
   const [busy, setBusy] = useState(false);
+  const [inviting, setInviting] = useState<string | null>(null);
+  const [inviteError, setInviteError] = useState<string | null>(null);
+
+  const toggleServiceId = (id: string) =>
+    setServiceIds((list) => (list.includes(id) ? list.filter((x) => x !== id) : [...list, id]));
 
   const resetForm = () => {
     setEditingId(null);
     setName('');
     setRole('');
+    setEmail('');
+    setVenueRole('member');
+    setServiceIds([]);
   };
 
   const startEdit = (m: Venue['staff'][number]) => {
     setEditingId(m.id);
     setName(m.name);
     setRole(m.role);
+    setEmail(m.email ?? '');
+    setVenueRole(m.venue_role ?? 'member');
+    setServiceIds(m.service_ids ?? []);
   };
 
   const save = async () => {
     if (!name.trim()) return;
     setBusy(true);
+    let staffId = editingId;
     if (editingId) {
-      await updateStaff(venue, editingId, { name: name.trim(), role: role.trim() || 'Specialist' });
+      await updateStaff(venue, editingId, {
+        name: name.trim(),
+        role: role.trim() || 'Specialist',
+        email: email.trim() || null,
+        venue_role: venueRole,
+      });
     } else {
-      await addStaff(venue, name.trim(), role.trim() || 'Specialist');
+      const updated = await addStaff(venue, name.trim(), role.trim() || 'Specialist', email.trim() || null, venueRole);
+      staffId = updated.staff[updated.staff.length - 1]?.id ?? null;
     }
+    if (staffId) await setStaffServices(staffId, serviceIds);
     resetForm();
     setBusy(false);
     onChanged();
+  };
+
+  const sendInvite = async (staffId: string) => {
+    setInviting(staffId);
+    setInviteError(null);
+    const err = await inviteTeamMember(staffId);
+    setInviting(null);
+    if (err) setInviteError(err);
+    else onChanged();
   };
 
   return (
     <View style={{ gap: 16 }}>
       <View style={styles.card}>
         <BText variant="h3">{editingId ? t('Edit team member') : t('Add a team member')}</BText>
-        <View style={{ flexDirection: 'row', gap: 12, marginTop: 16, alignItems: 'flex-end' }}>
+        <View style={{ flexDirection: 'row', gap: 12, marginTop: 16 }}>
           <View style={{ flex: 1 }}>
             <Field label={t('Name')} placeholder={t('e.g. Sara')} value={name} onChangeText={setName} />
           </View>
           <View style={{ flex: 1 }}>
             <Field label={t('Role')} placeholder={t('Stylist')} value={role} onChangeText={setRole} />
           </View>
+        </View>
+        <View style={{ marginTop: 12 }}>
+          <Field
+            label={t('Email (for their own sign-in)')}
+            placeholder="team@salon.com"
+            value={email}
+            onChangeText={setEmail}
+            autoCapitalize="none"
+            keyboardType="email-address"
+          />
+        </View>
+        <View style={{ gap: 6, marginTop: 12 }}>
+          <BText variant="smallMedium">{t('Access level')}</BText>
+          <View style={{ flexDirection: 'row', gap: 8 }}>
+            <Chip label={t('Team member — sees only their own work')} selected={venueRole === 'member'} onPress={() => setVenueRole('member')} />
+            <Chip label={t('Manager — sees everything')} selected={venueRole === 'manager'} onPress={() => setVenueRole('manager')} />
+          </View>
+        </View>
+        {venue.services.length > 0 && (
+          <View style={{ gap: 6, marginTop: 12 }}>
+            <BText variant="smallMedium">{t('Services they provide')}</BText>
+            <BText variant="tiny">{t('Leave empty if they can be booked for any service.')}</BText>
+            <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8 }}>
+              {venue.services.map((sv) => (
+                <Chip key={sv.id} label={sv.name} selected={serviceIds.includes(sv.id)} onPress={() => toggleServiceId(sv.id)} />
+              ))}
+            </View>
+          </View>
+        )}
+        {inviteError ? (
+          <BText variant="small" color={colors.danger} style={{ marginTop: 10 }}>
+            {inviteError}
+          </BText>
+        ) : null}
+        <View style={{ flexDirection: 'row', gap: 10, marginTop: 16 }}>
           <Button title={editingId ? t('Save') : t('Add')} loading={busy} onPress={save} />
           {editingId ? <Button title={t('Cancel')} variant="secondary" onPress={resetForm} /> : null}
         </View>
@@ -783,9 +1073,36 @@ function StaffEditor({ venue, onChanged }: { venue: Venue; onChanged: () => void
         {venue.staff.map((m) => (
           <View key={m.id} style={styles.bookingRow}>
             <View style={{ flex: 1 }}>
-              <BText variant="smallMedium">{m.name}</BText>
-              <BText variant="tiny">{m.role}</BText>
+              <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
+                <BText variant="smallMedium">{m.name}</BText>
+                {m.venue_role === 'manager' && (
+                  <View style={{ backgroundColor: colors.accentSoft, borderRadius: radius.pill, paddingHorizontal: 8, paddingVertical: 2 }}>
+                    <BText style={{ fontFamily: font.semibold, fontSize: 11, color: colors.accent }}>{t('Manager')}</BText>
+                  </View>
+                )}
+                {m.invite_status === 'invited' && (
+                  <View style={{ backgroundColor: colors.warningBg, borderRadius: radius.pill, paddingHorizontal: 8, paddingVertical: 2 }}>
+                    <BText style={{ fontFamily: font.semibold, fontSize: 11, color: colors.warning }}>{t('Invited')}</BText>
+                  </View>
+                )}
+                {m.invite_status === 'joined' && (
+                  <View style={{ backgroundColor: colors.greenBg, borderRadius: radius.pill, paddingHorizontal: 8, paddingVertical: 2 }}>
+                    <BText style={{ fontFamily: font.semibold, fontSize: 11, color: colors.green }}>{t('Has account')}</BText>
+                  </View>
+                )}
+              </View>
+              <BText variant="tiny">
+                {m.role}
+                {m.email ? ` · ${m.email}` : ''}
+              </BText>
             </View>
+            {m.email && !m.user_id ? (
+              <SmallPillBtn
+                label={inviting === m.id ? t('Sending…') : t('Email invite')}
+                color={colors.accent}
+                onPress={() => sendInvite(m.id)}
+              />
+            ) : null}
             <Pressable onPress={() => startEdit(m)} hitSlop={8}>
               <Ionicons name="pencil-outline" size={18} color={colors.ink} />
             </Pressable>
@@ -824,6 +1141,40 @@ const HIGHLIGHT_OPTIONS = [
   'Bridal packages',
 ];
 
+function Collapse({
+  title,
+  subtitle,
+  open,
+  onToggle,
+  children,
+}: {
+  title: string;
+  subtitle?: string;
+  open: boolean;
+  onToggle: () => void;
+  children: React.ReactNode;
+}) {
+  return (
+    <View style={[styles.card, { padding: 0, overflow: 'hidden' }]}>
+      <Pressable
+        onPress={onToggle}
+        style={({ hovered }: any) => [styles.collapseHeader, hovered && { backgroundColor: colors.bgPage }]}
+      >
+        <View style={{ flex: 1 }}>
+          <BText variant="title">{title}</BText>
+          {subtitle ? (
+            <BText variant="tiny" style={{ marginTop: 2 }}>
+              {subtitle}
+            </BText>
+          ) : null}
+        </View>
+        <Ionicons name={open ? 'chevron-up' : 'chevron-down'} size={18} color={colors.gray} />
+      </Pressable>
+      {open && <View style={{ paddingHorizontal: 20, paddingBottom: 20 }}>{children}</View>}
+    </View>
+  );
+}
+
 function SettingsEditor({ venue, onChanged }: { venue: Venue; onChanged: () => void }) {
   const { t } = useI18n();
   const { categories } = useAppData();
@@ -835,8 +1186,13 @@ function SettingsEditor({ venue, onChanged }: { venue: Venue; onChanged: () => v
   const [categoryId, setCategoryId] = useState(venue.category_id);
   const [mapsUrl, setMapsUrl] = useState(venue.maps_url ?? '');
   const [highlights, setHighlights] = useState<string[]>(venue.highlights);
+  const [cancelPolicy, setCancelPolicy] = useState(venue.cancellation_policy ?? '');
+  const [cancelFee, setCancelFee] = useState(String(venue.cancellation_fee_pct ?? 0));
+  const [deposit, setDeposit] = useState(venue.deposit_cents ? String(venue.deposit_cents / 100) : '');
   const [busy, setBusy] = useState(false);
   const [saved, setSaved] = useState(false);
+  const [open, setOpen] = useState<string>('details');
+  const toggle = (key: string) => setOpen((cur) => (cur === key ? '' : key));
 
   const toggleHighlight = (h: string) =>
     setHighlights((list) => (list.includes(h) ? list.filter((x) => x !== h) : [...list, h]));
@@ -852,6 +1208,9 @@ function SettingsEditor({ venue, onChanged }: { venue: Venue; onChanged: () => v
       category_id: categoryId,
       maps_url: mapsUrl.trim() || null,
       highlights,
+      cancellation_policy: cancelPolicy.trim(),
+      cancellation_fee_pct: Math.min(100, Math.max(0, parseInt(cancelFee, 10) || 0)),
+      deposit_cents: Math.max(0, Math.round((parseFloat(deposit) || 0) * 100)),
     });
     setBusy(false);
     setSaved(true);
@@ -859,55 +1218,104 @@ function SettingsEditor({ venue, onChanged }: { venue: Venue; onChanged: () => v
     onChanged();
   };
 
+  const saveBtn = <Button title={saved ? t('Saved ✓') : t('Save changes')} loading={busy} onPress={save} />;
+
   return (
-    <View style={styles.card}>
-      <BText variant="h3">{t('Business details')}</BText>
-      <View style={{ gap: 12, marginTop: 16 }}>
-        <Field label={t('Business name')} value={name} onChangeText={setName} />
-        <Field
-          label={t('About')}
-          value={description}
-          onChangeText={setDescription}
-          multiline
-          numberOfLines={4}
-          style={{ minHeight: 100 }}
-        />
-        <View style={{ gap: 6 }}>
-          <BText variant="smallMedium">{t('Category')}</BText>
-          <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8 }}>
-            {categories.map((c) => (
-              <Chip key={c.id} label={c.name} selected={categoryId === c.id} onPress={() => setCategoryId(c.id)} />
-            ))}
+    <View style={{ gap: 12 }}>
+      <Collapse title={t('Business details')} subtitle={t('Name, about and category')} open={open === 'details'} onToggle={() => toggle('details')}>
+        <View style={{ gap: 12 }}>
+          <Field label={t('Business name')} value={name} onChangeText={setName} />
+          <Field
+            label={t('About')}
+            value={description}
+            onChangeText={setDescription}
+            multiline
+            numberOfLines={4}
+            style={{ minHeight: 100 }}
+          />
+          <View style={{ gap: 6 }}>
+            <BText variant="smallMedium">{t('Category')}</BText>
+            <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8 }}>
+              {categories.map((c) => (
+                <Chip key={c.id} label={t(c.name)} selected={categoryId === c.id} onPress={() => setCategoryId(c.id)} />
+              ))}
+            </View>
           </View>
+          {saveBtn}
         </View>
-        <View style={{ flexDirection: 'row', gap: 12 }}>
-          <View style={{ flex: 1 }}>
-            <Field label={t('City')} value={city} onChangeText={setCity} />
+      </Collapse>
+
+      <Collapse title={t('Location')} subtitle={t('Address and directions')} open={open === 'location'} onToggle={() => toggle('location')}>
+        <View style={{ gap: 12 }}>
+          <View style={{ flexDirection: 'row', gap: 12 }}>
+            <View style={{ flex: 1 }}>
+              <Field label={t('City')} value={city} onChangeText={setCity} />
+            </View>
+            <View style={{ flex: 1 }}>
+              <Field label={t('Area')} value={area} onChangeText={setArea} />
+            </View>
           </View>
-          <View style={{ flex: 1 }}>
-            <Field label={t('Area')} value={area} onChangeText={setArea} />
-          </View>
+          <Field label={t('Street address')} value={address} onChangeText={setAddress} />
+          <Field
+            label={t('Google Maps link')}
+            placeholder="https://maps.app.goo.gl/…"
+            value={mapsUrl}
+            onChangeText={setMapsUrl}
+            autoCapitalize="none"
+          />
+          {saveBtn}
         </View>
-        <Field label={t('Street address')} value={address} onChangeText={setAddress} />
-        <Field
-          label={t('Google Maps link')}
-          placeholder="https://maps.app.goo.gl/…"
-          value={mapsUrl}
-          onChangeText={setMapsUrl}
-          autoCapitalize="none"
-        />
-        <View style={{ gap: 6 }}>
-          <BText variant="smallMedium">{t('Amenities shown on your page')}</BText>
+      </Collapse>
+
+      <Collapse
+        title={t('Booking policies')}
+        subtitle={t('Cancellation rules and reservation deposit')}
+        open={open === 'policies'}
+        onToggle={() => toggle('policies')}
+      >
+        <View style={{ gap: 12 }}>
+          <Field
+            label={t('Cancellation policy')}
+            placeholder={t('e.g. Free cancellation up to 24 hours before your appointment.')}
+            value={cancelPolicy}
+            onChangeText={setCancelPolicy}
+            multiline
+            numberOfLines={3}
+            style={{ minHeight: 80 }}
+          />
+          <View style={{ flexDirection: 'row', gap: 12 }}>
+            <View style={{ flex: 1 }}>
+              <Field label={t('Cancellation fee (% of paid amount)')} keyboardType="numeric" value={cancelFee} onChangeText={setCancelFee} />
+            </View>
+            <View style={{ flex: 1 }}>
+              <Field label={t('Reservation deposit (SAR)')} keyboardType="numeric" placeholder="0" value={deposit} onChangeText={setDeposit} />
+            </View>
+          </View>
+          <BText variant="tiny">
+            {t('The deposit is charged when customers reserve with “pay at venue” and is held in escrow like any online payment. Set 0 to disable.')}
+          </BText>
+          {saveBtn}
+        </View>
+      </Collapse>
+
+      <Collapse title={t('Amenities')} subtitle={t('Shown on your public page')} open={open === 'amenities'} onToggle={() => toggle('amenities')}>
+        <View style={{ gap: 12 }}>
           <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8 }}>
             {HIGHLIGHT_OPTIONS.map((h) => (
               <Chip key={h} label={t(h)} selected={highlights.includes(h)} onPress={() => toggleHighlight(h)} />
             ))}
           </View>
+          {saveBtn}
         </View>
-        <Button title={saved ? t('Saved ✓') : t('Save changes')} loading={busy} onPress={save} />
-      </View>
-      <HoursEditor venue={venue} onChanged={onChanged} />
-      <GalleryEditor venue={venue} onChanged={onChanged} />
+      </Collapse>
+
+      <Collapse title={t('Opening hours')} subtitle={t('Weekly schedule')} open={open === 'hours'} onToggle={() => toggle('hours')}>
+        <HoursEditor venue={venue} onChanged={onChanged} />
+      </Collapse>
+
+      <Collapse title={t('Gallery')} subtitle={t('Photos on your page')} open={open === 'gallery'} onToggle={() => toggle('gallery')}>
+        <GalleryEditor venue={venue} onChanged={onChanged} />
+      </Collapse>
     </View>
   );
 }
@@ -1098,6 +1506,22 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     borderBottomWidth: 1,
     borderBottomColor: colors.divider,
+  },
+  collapseHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+    paddingHorizontal: 20,
+    paddingVertical: 16,
+  },
+  emulateBanner: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    backgroundColor: colors.infoBg,
+    borderRadius: radius.md,
+    padding: 10,
+    marginBottom: 4,
   },
   refundBtn: {
     borderWidth: 1,

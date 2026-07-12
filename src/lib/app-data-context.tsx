@@ -2,6 +2,7 @@ import React, { createContext, useCallback, useContext, useEffect, useMemo, useS
 import { getLocalVenues } from './business';
 import { useAuth } from './auth-context';
 import { getCategories, getFavoriteIds, getVenues, toggleFavorite } from './data';
+import { isSupabaseConfigured } from './supabase';
 import type { Category, Venue } from './types';
 
 interface AppDataValue {
@@ -31,9 +32,16 @@ export function AppDataProvider({ children }: { children: React.ReactNode }) {
       getCategories(),
       getFavoriteIds(user?.id),
     ]);
-    // Locally-edited copies override their base venue; new local venues prepend
-    const overridden = new Set(locals.map((v) => v.id));
-    setAllVenues([...locals, ...base.filter((v) => !overridden.has(v.id))]);
+    if (isSupabaseConfigured) {
+      // Cloud is the source of truth — local copies only add venues the
+      // cloud doesn't know about (demo-mode leftovers), never shadow it.
+      const baseIds = new Set(base.map((v) => v.id));
+      setAllVenues([...locals.filter((v) => !baseIds.has(v.id)), ...base]);
+    } else {
+      // Demo mode: locally-edited copies override their base venue
+      const overridden = new Set(locals.map((v) => v.id));
+      setAllVenues([...locals, ...base.filter((v) => !overridden.has(v.id))]);
+    }
     setCategories(c);
     setFavorites(f);
     setLoading(false);

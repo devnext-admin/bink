@@ -29,6 +29,11 @@ export interface Staff {
   venue_id: string;
   name: string;
   role: string;
+  email?: string | null;
+  user_id?: string | null;
+  venue_role?: 'manager' | 'member';
+  invite_status?: 'none' | 'invited' | 'joined';
+  service_ids?: string[];
   avatar_url?: string | null;
   rating: number;
 }
@@ -72,6 +77,9 @@ export interface Venue {
   highlights: string[];
   provider_type?: 'salon' | 'freelancer';
   maps_url?: string | null;
+  cancellation_policy?: string;
+  cancellation_fee_pct?: number;
+  deposit_cents?: number;
   images: VenueImage[];
   services: Service[];
   staff: Staff[];
@@ -143,6 +151,7 @@ export interface Booking {
   promo_code?: string | null;
   rated?: boolean;
   customer_confirmed_at?: string | null;
+  deposit_cents?: number;
   venue_name: string;
   venue_image?: string;
   venue_area?: string;

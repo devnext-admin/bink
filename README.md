@@ -121,6 +121,16 @@ redirect if required → `payments-webhook` settles the transaction, marks the
 booking paid and issues the invoice. Refunds go through `refund-payment`
 (venue-owner/admin only). Tap can be swapped in later behind the same functions.
 
+## Team accounts
+
+Salon owners add team members under **Team** with an email, an access level
+(**Manager** sees everything; **Team member** sees only their own bookings,
+messages and services) and the services they provide. "Email invite" sends a
+Supabase invite email; the link lands on `/welcome` where the member sets a
+password (edge function `invite-team-member`). Note: Supabase's built-in
+SMTP is rate-limited (a few emails/hour) — configure custom SMTP in the
+dashboard for production volumes.
+
 ## Cloud Supabase
 
 Live project: `yxidiwkswariavopixmf` (ThreeLines org, eu-central-1). `.env`

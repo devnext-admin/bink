@@ -186,7 +186,7 @@ export async function registerSalon(input: RegisterSalonInput): Promise<Venue> {
 
 export async function updateVenueInfo(
   venue: Venue,
-  patch: Partial<Pick<Venue, 'name' | 'description' | 'address' | 'area' | 'city' | 'category_id' | 'highlights' | 'maps_url' | 'provider_type'>>
+  patch: Partial<Pick<Venue, 'name' | 'description' | 'address' | 'area' | 'city' | 'category_id' | 'highlights' | 'maps_url' | 'provider_type' | 'cancellation_policy' | 'cancellation_fee_pct' | 'deposit_cents'>>
 ): Promise<Venue> {
   const sb = getSupabase();
   if (sb && !venue.id.startsWith('venue-')) {
@@ -198,7 +198,7 @@ export async function updateVenueInfo(
 export async function updateStaff(
   venue: Venue,
   staffId: string,
-  patch: Partial<Pick<Staff, 'name' | 'role'>>
+  patch: Partial<Pick<Staff, 'name' | 'role' | 'email' | 'venue_role'>>
 ): Promise<Venue> {
   const sb = getSupabase();
   if (sb && !staffId.startsWith('staff-')) {
@@ -330,18 +330,86 @@ export async function deleteService(venue: Venue, serviceId: string): Promise<Ve
   }));
 }
 
-export async function addStaff(venue: Venue, name: string, role: string): Promise<Venue> {
-  const member: Staff = { id: uid('staff'), venue_id: venue.id, name, role, rating: 5.0 };
+export async function addStaff(
+  venue: Venue,
+  name: string,
+  role: string,
+  email?: string | null,
+  venueRole: 'manager' | 'member' = 'member'
+): Promise<Venue> {
+  const member: Staff = {
+    id: uid('staff'),
+    venue_id: venue.id,
+    name,
+    role,
+    rating: 5.0,
+    email: email?.trim() || null,
+    venue_role: venueRole,
+    invite_status: 'none',
+    service_ids: [],
+  };
   const sb = getSupabase();
   if (sb && !venue.id.startsWith('venue-')) {
     const { data } = await sb
       .from('staff')
-      .insert({ venue_id: venue.id, name, role })
+      .insert({ venue_id: venue.id, name, role, email: member.email, venue_role: venueRole })
       .select('id')
       .single();
     if (data) member.id = data.id;
   }
   return mutateLocalVenue(venue, (v) => ({ ...v, staff: [...v.staff, member] }));
+}
+
+/** Email an account invite to a team member (cloud only). */
+export async function inviteTeamMember(staffId: string): Promise<string | null> {
+  const sb = getSupabase();
+  if (!sb || staffId.startsWith('staff-')) return 'Invites need the cloud backend.';
+  const { data, error } = await sb.functions.invoke('invite-team-member', {
+    body: { staff_id: staffId },
+  });
+  if (error) {
+    try {
+      const body = await (error as any).context?.json?.();
+      if (body?.error) return body.error as string;
+    } catch {}
+    return error.message;
+  }
+  return data?.error ?? null;
+}
+
+/** Which services a team member provides. */
+export async function setStaffServices(staffId: string, serviceIds: string[]): Promise<void> {
+  const sb = getSupabase();
+  if (!sb || staffId.startsWith('staff-')) return;
+  await sb.from('staff_services').delete().eq('staff_id', staffId);
+  if (serviceIds.length) {
+    await sb.from('staff_services').insert(serviceIds.map((service_id) => ({ staff_id: staffId, service_id })));
+  }
+}
+
+export interface StaffAccess {
+  staffId: string;
+  venueId: string;
+  venueRole: 'manager' | 'member';
+  staffName: string;
+}
+
+/** The venues the signed-in user works at as a team member. */
+export async function getMyStaffAccess(): Promise<StaffAccess[]> {
+  const sb = getSupabase();
+  if (!sb) return [];
+  const user = (await sb.auth.getUser()).data.user;
+  if (!user) return [];
+  const { data } = await sb
+    .from('staff')
+    .select('id, venue_id, venue_role, name')
+    .eq('user_id', user.id);
+  return (data ?? []).map((r: any) => ({
+    staffId: r.id,
+    venueId: r.venue_id,
+    venueRole: r.venue_role ?? 'member',
+    staffName: r.name,
+  }));
 }
 
 export async function deleteStaff(venue: Venue, staffId: string): Promise<Venue> {

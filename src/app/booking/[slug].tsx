@@ -17,7 +17,7 @@ import { createBooking } from '../../lib/data';
 import { formatDuration, formatPrice } from '../../lib/format';
 import { useI18n } from '../../lib/i18n';
 import { getBusyIntervals, isSlotFree, validatePromo, type BusyInterval } from '../../lib/ops';
-import { markPayAtVenue, payForBooking, paymentsGateway } from '../../lib/payments';
+import { markPayAtVenue, payDeposit, payForBooking, paymentsGateway } from '../../lib/payments';
 import { colors, font, radius, shadow } from '../../lib/theme';
 import type { PaymentMethod, PromoCode } from '../../lib/types';
 import { useIsDesktop } from '../../lib/use-layout';
@@ -92,6 +92,7 @@ export default function BookingScreen() {
   const groups = [...new Set(venue.services.map((s) => s.group_name))];
   const visibleServices = venue.services.filter((s) => s.group_name === group);
   const stepIndex = STEPS.findIndex((s) => s.key === step);
+  const depositCents = venue?.deposit_cents ?? 0;
   const finalTotal = promo
     ? Math.round(booking.totalCents * (1 - promo.pct_off / 100))
     : booking.totalCents;
@@ -145,6 +146,16 @@ export default function BookingScreen() {
       try {
         if (payMethod === 'pay_at_venue') {
           await markPayAtVenue(created.id);
+          if (depositCents > 0) {
+            await payDeposit({
+              bookingId: created.id,
+              venueId: venue!.id,
+              venueName: venue!.name,
+              depositCents,
+              currency: booking.currency,
+              userId: user?.id ?? null,
+            });
+          }
           setPaid(false);
         } else {
           await payForBooking({
@@ -373,7 +384,13 @@ export default function BookingScreen() {
             <PayOption
               icon="cash-outline"
               title={t('Pay at venue')}
-              sub={t('No payment needed today')}
+              sub={
+                depositCents > 0
+                  ? t('Reservation deposit {amount} charged now — the rest at the venue', {
+                      amount: formatPrice(depositCents, booking.currency),
+                    })
+                  : t('No payment needed today')
+              }
               selected={payMethod === 'pay_at_venue'}
               onPress={() => setPayMethod('pay_at_venue')}
             />
@@ -515,7 +532,9 @@ export default function BookingScreen() {
           title={
             step === 'confirm'
               ? payMethod === 'pay_at_venue'
-                ? t('Confirm booking')
+                ? depositCents > 0
+                  ? t('Reserve for {amount}', { amount: formatPrice(depositCents, booking.currency) })
+                  : t('Confirm booking')
                 : t('Pay {amount}', { amount: formatPrice(finalTotal, booking.currency) })
               : t('Continue')
           }

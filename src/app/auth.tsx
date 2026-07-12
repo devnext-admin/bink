@@ -31,7 +31,7 @@ export default function Auth() {
   // In cloud mode these are real pre-seeded accounts; in demo mode the data
   // is seeded locally and any password works.
   const DEMO_PASSWORD = 'binkdemo123';
-  const enterDemo = async (persona: 'customer' | 'owner' | 'admin') => {
+  const enterDemo = async (persona: 'customer' | 'owner' | 'staffer' | 'admin') => {
     setDemoBusy(persona);
     if (!isSupabaseConfigured) {
       if (persona === 'customer') await seedCustomerDemo();
@@ -42,7 +42,13 @@ export default function Auth() {
       }
     }
     const email =
-      persona === 'customer' ? DEMO_CUSTOMER_EMAIL : persona === 'owner' ? DEMO_OWNER_EMAIL : DEMO_ADMIN_EMAIL;
+      persona === 'customer'
+        ? DEMO_CUSTOMER_EMAIL
+        : persona === 'owner'
+          ? DEMO_OWNER_EMAIL
+          : persona === 'staffer'
+            ? 'staff@bink.com'
+            : DEMO_ADMIN_EMAIL;
     const err = await signIn(email, DEMO_PASSWORD);
     if (err) {
       setError(err);
@@ -50,7 +56,9 @@ export default function Auth() {
       return;
     }
     await refresh();
-    router.replace(persona === 'customer' ? '/appointments' : persona === 'owner' ? '/business/dashboard' : '/admin');
+    router.replace(
+      persona === 'customer' ? '/appointments' : persona === 'admin' ? '/admin' : '/business/dashboard'
+    );
     setDemoBusy(null);
   };
   const params = useLocalSearchParams<{ mode?: string }>();
@@ -193,6 +201,13 @@ export default function Auth() {
               sub={t('A live salon with sales, messages & analytics')}
               loading={demoBusy === 'owner'}
               onPress={() => enterDemo('owner')}
+            />
+            <DemoButton
+              icon="cut-outline"
+              title={t('Demo team member')}
+              sub={t('A stylist who sees only her own bookings')}
+              loading={demoBusy === 'staffer'}
+              onPress={() => enterDemo('staffer')}
             />
             <DemoButton
               icon="shield-checkmark-outline"

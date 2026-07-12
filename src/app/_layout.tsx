@@ -62,6 +62,7 @@ export default function RootLayout() {
                 <Stack.Screen name="settings" />
                 <Stack.Screen name="profile" />
                 <Stack.Screen name="auth" options={{ presentation: 'modal' }} />
+                <Stack.Screen name="welcome" />
                 <Stack.Screen name="venue/[slug]" />
                 <Stack.Screen name="booking/[slug]" options={{ presentation: 'fullScreenModal' }} />
                 <Stack.Screen name="business/index" />

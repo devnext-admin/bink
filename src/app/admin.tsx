@@ -149,6 +149,11 @@ export default function Admin() {
               </View>
               <StatusTag status={status} />
               <View style={{ flexDirection: 'row', gap: 6 }}>
+                <SmallAction
+                  label={t('Open dashboard')}
+                  color={colors.info}
+                  onPress={() => router.push(`/business/dashboard?venue=${v.id}` as any)}
+                />
                 {status !== 'approved' && (
                   <SmallAction
                     label={t('Approve')}

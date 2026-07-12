@@ -15,7 +15,7 @@ const VENUE_SELECT = `
   *,
   images:venue_images (url, sort_order),
   services (*),
-  staff (*),
+  staff (*, staff_services (service_id)),
   reviews (*),
   hours:opening_hours (weekday, open_time, close_time, is_closed)
 `;
@@ -26,7 +26,10 @@ function normalizeVenue(v: any): Venue {
     rating_avg: Number(v.rating_avg),
     images: [...(v.images ?? [])].sort((a, b) => a.sort_order - b.sort_order),
     services: [...(v.services ?? [])].sort((a, b) => a.sort_order - b.sort_order),
-    staff: v.staff ?? [],
+    staff: (v.staff ?? []).map((m: any) => ({
+      ...m,
+      service_ids: (m.staff_services ?? []).map((x: any) => x.service_id),
+    })),
     reviews: [...(v.reviews ?? [])].sort((a, b) => b.created_at.localeCompare(a.created_at)),
     hours: [...(v.hours ?? [])].sort((a, b) => a.weekday - b.weekday),
   };
@@ -269,6 +272,7 @@ export async function getBookings(forUserId?: string | null): Promise<Booking[]>
         notes: b.notes,
         customer_confirmed_at: b.customer_confirmed_at,
         rated: (b.reviews?.length ?? 0) > 0,
+        deposit_cents: b.deposit_cents ?? 0,
         items: b.items ?? [],
       }));
     }

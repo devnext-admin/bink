@@ -195,6 +195,70 @@ export async function payForBooking(input: PayForBookingInput): Promise<Transact
   return tx;
 }
 
+/**
+ * Charge a reservation deposit for a pay-at-venue booking (demo gateway).
+ * The deposit is held in escrow like any online payment.
+ */
+export async function payDeposit(input: {
+  bookingId: string;
+  venueId: string;
+  venueName: string;
+  depositCents: number;
+  currency: string;
+  userId?: string | null;
+}): Promise<void> {
+  const sb = getSupabase();
+  await new Promise((r) => setTimeout(r, 400));
+  if (sb && !input.bookingId.startsWith('local-')) {
+    const user = (await sb.auth.getUser()).data.user;
+    if (user) {
+      await sb.from('transactions').insert({
+        booking_id: input.bookingId,
+        venue_id: input.venueId,
+        user_id: user.id,
+        amount_cents: input.depositCents,
+        currency: input.currency,
+        method: 'card',
+        status: 'succeeded',
+        escrow_status: 'held',
+        gateway: 'demo',
+        gateway_ref: uid('demo-dep'),
+      });
+      await sb
+        .from('bookings')
+        .update({ deposit_cents: input.depositCents, payment_method: 'pay_at_venue' })
+        .eq('id', input.bookingId);
+      await pushNotification({
+        audience: 'customer',
+        userId: user.id,
+        venueId: input.venueId,
+        title: 'Reservation deposit held',
+        body: `${(input.depositCents / 100).toFixed(2)} ${input.currency} secures your booking at ${input.venueName}. The rest is paid at the venue.`,
+      });
+      return;
+    }
+  }
+  const tx: Transaction = {
+    id: uid('tx'),
+    booking_id: input.bookingId,
+    venue_id: input.venueId,
+    venue_name: input.venueName,
+    user_id: input.userId ?? null,
+    customer_name: null,
+    amount_cents: input.depositCents,
+    currency: input.currency,
+    method: 'card',
+    status: 'succeeded',
+    escrow_status: 'held',
+    gateway: 'demo',
+    gateway_ref: uid('demo-dep'),
+    created_at: new Date().toISOString(),
+  };
+  const txs = await readList<Transaction>(TX_KEY);
+  await writeList(TX_KEY, [tx, ...txs]);
+  await patchLocalBooking(input.bookingId, { deposit_cents: input.depositCents } as any);
+}
+
 /** Record the chosen method on a pay-at-venue booking (no charge today). */
 export async function markPayAtVenue(bookingId: string) {
   const sb = getSupabase();

@@ -79,9 +79,19 @@ export default function Appointments() {
     b.status === 'no_show';
   const visible = bookings.filter((b) => (filter === 'upcoming' ? !isPast(b) : isPast(b)));
 
-  const onCancel = async (id: string) => {
-    await cancelBooking(id);
+  const [cancelTarget, setCancelTarget] = useState<Booking | null>(null);
+  const [cancelling, setCancelling] = useState(false);
+  const confirmCancel = async () => {
+    if (!cancelTarget) return;
+    setCancelling(true);
+    await cancelBooking(cancelTarget.id);
+    setCancelling(false);
+    setCancelTarget(null);
     refresh();
+  };
+  const onCancel = (id: string) => {
+    const b = bookings.find((x) => x.id === id);
+    if (b) setCancelTarget(b);
   };
 
   const onReschedule = async (booking: Booking, time: string) => {
@@ -271,6 +281,57 @@ export default function Appointments() {
     </View>
   );
 
+  const cancelModal = (
+    <Modal visible={!!cancelTarget} transparent animationType="fade" onRequestClose={() => setCancelTarget(null)}>
+      <View style={styles.modalBackdrop}>
+        <View style={styles.modalCard}>
+          <Ionicons name="alert-circle-outline" size={30} color={colors.danger} />
+          <BText variant="h3" style={{ marginTop: 10 }}>
+            {t('Cancel this booking?')}
+          </BText>
+          {cancelTarget && (
+            <>
+              <BText variant="small" style={{ marginTop: 6, textAlign: 'center' }}>
+                {cancelTarget.venue_name} ·{' '}
+                {formatDate(lang, cancelTarget.starts_at, { weekday: 'long', month: 'long', day: 'numeric' })}
+              </BText>
+              {(() => {
+                const v = allVenues.find((x) => x.id === cancelTarget.venue_id);
+                const feePct = v?.cancellation_fee_pct ?? 0;
+                const paidBase =
+                  cancelTarget.payment_status === 'paid'
+                    ? cancelTarget.total_cents
+                    : cancelTarget.deposit_cents ?? 0;
+                const fee = Math.round((paidBase * feePct) / 100);
+                return (
+                  <>
+                    {v?.cancellation_policy ? (
+                      <View style={styles.policyBox}>
+                        <BText variant="tiny">{v.cancellation_policy}</BText>
+                      </View>
+                    ) : null}
+                    {fee > 0 ? (
+                      <BText variant="small" color={colors.danger} style={{ marginTop: 10, textAlign: 'center' }}>
+                        {t('A cancellation fee of {amount} ({pct}% of what you paid) may apply.', {
+                          amount: `SAR ${(fee / 100).toFixed(0)}`,
+                          pct: feePct,
+                        })}
+                      </BText>
+                    ) : null}
+                  </>
+                );
+              })()}
+            </>
+          )}
+          <View style={{ flexDirection: 'row', gap: 10, marginTop: 18 }}>
+            <Button title={t('Keep booking')} variant="secondary" onPress={() => setCancelTarget(null)} />
+            <Button title={t('Yes, cancel it')} loading={cancelling} onPress={confirmCancel} />
+          </View>
+        </View>
+      </View>
+    </Modal>
+  );
+
   const ratingModal = (
     <Modal visible={!!rateBooking} transparent animationType="fade" onRequestClose={() => setRateBooking(null)}>
       <View style={styles.modalBackdrop}>
@@ -310,6 +371,7 @@ export default function Appointments() {
       <>
         <AccountLayout title={t('Appointments')}>{list}</AccountLayout>
         {ratingModal}
+        {cancelModal}
       </>
     );
   }
@@ -330,6 +392,7 @@ export default function Appointments() {
       </ScrollView>
       <BottomTabs />
       {ratingModal}
+        {cancelModal}
     </View>
   );
 }
@@ -352,6 +415,14 @@ function StatusPill({ status }: { status: Booking['status'] }) {
 }
 
 const styles = StyleSheet.create({
+  policyBox: {
+    backgroundColor: colors.bgPage,
+    borderRadius: radius.md,
+    padding: 12,
+    marginTop: 12,
+    width: '100%',
+  },
+
   card: {
     borderWidth: 1,
     borderColor: colors.divider,
