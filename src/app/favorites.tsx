@@ -22,7 +22,7 @@ export default function Favorites() {
   const content = favVenues.length ? (
     <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 20 }}>
       {favVenues.map((v) => (
-        <VenueCard key={v.id} venue={v} width={isDesktop ? 260 : undefined} />
+        <VenueCard key={v.id} venue={v} width={isDesktop ? 226 : undefined} />
       ))}
     </View>
   ) : (

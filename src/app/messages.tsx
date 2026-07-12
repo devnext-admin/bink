@@ -106,7 +106,7 @@ export default function Messages() {
 
   if (isDesktop) {
     return (
-      <AccountLayout title="Messages">
+      <AccountLayout title="Messages" wide>
         <View style={{ minHeight: 520 }}>
           <View style={styles.panes}>
             <ScrollView style={styles.listPane}>{list}</ScrollView>

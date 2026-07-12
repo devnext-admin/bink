@@ -19,8 +19,21 @@ const NAV = [
   { href: '/support', label: 'Help and support', icon: 'help-circle-outline' },
 ] as const;
 
-/** Desktop account shell: header + left sidebar nav + content, Fresha-style. */
-export function AccountLayout({ title, children }: { title: string; children: React.ReactNode }) {
+/**
+ * Desktop account shell: header + left sidebar nav + content, Fresha-style.
+ * The shell spans the full viewport; the content column stays at a readable
+ * width, centered in the space right of the sidebar. `wide` is for two-pane
+ * screens like Messages.
+ */
+export function AccountLayout({
+  title,
+  children,
+  wide,
+}: {
+  title: string;
+  children: React.ReactNode;
+  wide?: boolean;
+}) {
   const router = useRouter();
   const pathname = usePathname();
   const { user } = useAuth();
@@ -84,10 +97,12 @@ export function AccountLayout({ title, children }: { title: string; children: Re
 
         {/* Content */}
         <ScrollView style={{ flex: 1 }} contentContainerStyle={styles.content}>
-          <BText variant="h1" style={{ marginBottom: 24 }}>
-            {title}
-          </BText>
-          {children}
+          <View style={[styles.inner, wide && styles.innerWide]}>
+            <BText variant="h1" style={{ marginBottom: 24 }}>
+              {title}
+            </BText>
+            {children}
+          </View>
         </ScrollView>
       </View>
     </View>
@@ -120,10 +135,11 @@ const styles = StyleSheet.create({
   sideDivider: { height: 1, backgroundColor: colors.divider, marginVertical: 12, marginHorizontal: 14 },
   content: {
     paddingTop: 40,
-    paddingLeft: 48,
-    paddingRight: 48,
+    paddingHorizontal: 48,
     paddingBottom: 60,
     width: '100%',
-    maxWidth: 1400,
+    alignItems: 'center',
   },
+  inner: { width: '100%', maxWidth: 720 },
+  innerWide: { maxWidth: 1160 },
 });

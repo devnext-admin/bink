@@ -105,34 +105,37 @@ export default function Profile() {
         </View>
       )}
 
-      <View style={styles.menuCard}>
-        {MENU.map((m, i) => (
-          <Pressable
-            key={m.label}
-            onPress={() => (m.href ? router.push(m.href as any) : null)}
-            style={({ hovered }: any) => [
-              styles.menuRow,
-              i < MENU.length - 1 && { borderBottomWidth: 1, borderBottomColor: colors.divider },
-              hovered && { backgroundColor: colors.bgPage },
-            ]}
-          >
-            <Ionicons name={m.icon as any} size={20} color={colors.ink} />
-            <BText variant="bodyMedium" style={{ flex: 1 }}>
-              {m.label}
-            </BText>
-            <Ionicons name="chevron-forward" size={16} color={colors.gray} />
-          </Pressable>
-        ))}
-      </View>
+      {/* The sidebar already covers navigation on desktop */}
+      {!isDesktop && (
+        <View style={styles.menuCard}>
+          {MENU.map((m, i) => (
+            <Pressable
+              key={m.label}
+              onPress={() => (m.href ? router.push(m.href as any) : null)}
+              style={({ hovered }: any) => [
+                styles.menuRow,
+                i < MENU.length - 1 && { borderBottomWidth: 1, borderBottomColor: colors.divider },
+                hovered && { backgroundColor: colors.bgPage },
+              ]}
+            >
+              <Ionicons name={m.icon as any} size={20} color={colors.ink} />
+              <BText variant="bodyMedium" style={{ flex: 1 }}>
+                {m.label}
+              </BText>
+              <Ionicons name="chevron-forward" size={16} color={colors.gray} />
+            </Pressable>
+          ))}
+        </View>
+      )}
 
       {favVenues.length ? (
         <View>
           <BText variant="h2" style={{ marginBottom: 16 }}>
             Favorites
           </BText>
-          <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 20 }}>
+          <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 16 }}>
             {favVenues.map((v) => (
-              <VenueCard key={v.id} venue={v} width={isDesktop ? 268 : undefined} />
+              <VenueCard key={v.id} venue={v} width={isDesktop ? 226 : undefined} />
             ))}
           </View>
         </View>
