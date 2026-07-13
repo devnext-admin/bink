@@ -52,6 +52,10 @@ export function BText({ variant = 'body', color, style, ...rest }: BTextProps) {
     // Arabic needs taller lines: Tajawal's ascenders/diacritics clip at Poppins metrics
     const size = flat.fontSize ?? 16;
     flat = { ...flat, lineHeight: Math.max(flat.lineHeight ?? 0, Math.round(size * 1.6)) };
+    // Latin content (venue names, emails) auto-detects as LTR and would
+    // left-align inside the RTL layout — pin everything to the right so
+    // mixed-language blocks stay on one edge.
+    if (flat.textAlign === undefined) flat = { ...flat, textAlign: 'right' };
   }
   return <RNText {...rest} style={flat} />;
 }
