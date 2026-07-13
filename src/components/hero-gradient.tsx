@@ -8,10 +8,20 @@ import { colors } from '../lib/theme';
  * translucent glows layered at different angles for an aurora-like depth
  * (a flat single gradient reads cheap at hero sizes).
  */
-export function HeroGradient({ style, children }: { style?: ViewStyle | ViewStyle[]; children: React.ReactNode }) {
+export function HeroGradient({
+  style,
+  children,
+  variant = 'bold',
+}: {
+  style?: ViewStyle | ViewStyle[];
+  children: React.ReactNode;
+  /** 'bold' is the marketing hero; 'soft' for secondary surfaces. */
+  variant?: 'bold' | 'soft';
+}) {
+  const soft = variant === 'soft';
   return (
     <LinearGradient
-      colors={[...colors.heroGradient]}
+      colors={[...(soft ? colors.heroGradientSoft : colors.heroGradient)]}
       locations={[0, 0.45, 1]}
       start={{ x: 0, y: 0 }}
       end={{ x: 1, y: 1 }}
@@ -19,7 +29,7 @@ export function HeroGradient({ style, children }: { style?: ViewStyle | ViewStyl
     >
       {/* Rose glow sweeping from the top corner */}
       <LinearGradient
-        colors={['rgba(255,56,92,0.40)', 'rgba(255,56,92,0.14)', 'rgba(255,255,255,0)']}
+        colors={soft ? ['rgba(255,56,92,0.14)', 'rgba(255,56,92,0.05)', 'rgba(255,255,255,0)'] : ['rgba(255,56,92,0.40)', 'rgba(255,56,92,0.14)', 'rgba(255,255,255,0)']}
         locations={[0, 0.35, 0.7]}
         start={{ x: 0.15, y: 0 }}
         end={{ x: 0.9, y: 1 }}
@@ -28,7 +38,7 @@ export function HeroGradient({ style, children }: { style?: ViewStyle | ViewStyl
       />
       {/* Peach glow rising from the opposite corner */}
       <LinearGradient
-        colors={['rgba(255,255,255,0)', 'rgba(255,138,76,0.18)', 'rgba(255,122,60,0.36)']}
+        colors={soft ? ['rgba(255,255,255,0)', 'rgba(255,138,76,0.07)', 'rgba(255,150,100,0.14)'] : ['rgba(255,255,255,0)', 'rgba(255,138,76,0.18)', 'rgba(255,122,60,0.36)']}
         locations={[0.35, 0.75, 1]}
         start={{ x: 0, y: 0.2 }}
         end={{ x: 1, y: 1 }}
@@ -37,7 +47,7 @@ export function HeroGradient({ style, children }: { style?: ViewStyle | ViewStyl
       />
       {/* Soft white bloom in the center so hero text sits on a calm area */}
       <LinearGradient
-        colors={['rgba(255,255,255,0)', 'rgba(255,255,255,0.18)', 'rgba(255,255,255,0)']}
+        colors={soft ? ['rgba(255,255,255,0)', 'rgba(255,255,255,0.45)', 'rgba(255,255,255,0)'] : ['rgba(255,255,255,0)', 'rgba(255,255,255,0.18)', 'rgba(255,255,255,0)']}
         locations={[0.15, 0.5, 0.85]}
         start={{ x: 0.5, y: 0 }}
         end={{ x: 0.5, y: 1 }}

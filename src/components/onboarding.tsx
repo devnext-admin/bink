@@ -55,6 +55,7 @@ export function Onboarding() {
   return (
     <Modal visible transparent={false} animationType="fade">
       <HeroGradient
+        variant="soft"
         style={[styles.wrap, { paddingTop: insets.top + 24, paddingBottom: Math.max(insets.bottom, 24) }]}
       >
         <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>

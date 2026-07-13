@@ -439,6 +439,7 @@ export default function BusinessLanding() {
   return (
     <ScrollView style={{ flex: 1, backgroundColor: colors.white }}>
       <HeroGradient
+        variant="soft"
         style={{ paddingTop: insets.top + 16, paddingBottom: 56 }}
       >
         <View style={[styles.inner, { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }]}>

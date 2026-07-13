@@ -28,6 +28,7 @@ export const colors = {
   infoBg: '#EAF4FF',
   overlay: 'rgba(0, 0, 0, 0.4)',
   heroGradient: ['#FF9EBB', '#FFE2DB', '#FFB488'] as const,
+  heroGradientSoft: ['#FFD9E3', '#FFF4F0', '#FFE3D4'] as const,
   pink: '#FF385C',
 } as const;
 
