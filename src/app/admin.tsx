@@ -6,25 +6,38 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Logo } from '../components/logo';
 import { PaymentPill } from '../components/payment-pill';
 import { Button } from '../components/ui/button';
+import { Chip } from '../components/ui/chip';
 import { BText } from '../components/ui/text';
 import { useAppData } from '../lib/app-data-context';
 import { useAuth } from '../lib/auth-context';
-import { AdminUserRow, getAllBookings, getAllUsers, setVenueStatus } from '../lib/business';
-import { formatDateLong, formatPrice, formatTimeOfDate } from '../lib/format';
+import {
+  AdminReviewRow,
+  AdminUserRow,
+  adminDeleteReview,
+  adminSetUserRole,
+  getAllBookings,
+  getAllReviews,
+  getAllUsers,
+  setVenueStatus,
+  updateVenueInfo,
+} from '../lib/business';
 import { createCategory } from '../lib/data';
+import { formatDateLong, formatPrice, formatTimeOfDate } from '../lib/format';
 import { formatDate, useI18n } from '../lib/i18n';
 import { createPromo, getPromoCodes, togglePromo } from '../lib/ops';
-import { getAllTransactions, salesSummary } from '../lib/payments';
+import { escrowSummary, getAllTransactions, refundBooking, salesSummary } from '../lib/payments';
 import { colors, font, radius } from '../lib/theme';
-import type { Booking } from '../lib/types';
+import type { Booking, Transaction } from '../lib/types';
 import { useIsDesktop } from '../lib/use-layout';
 
-type Tab = 'overview' | 'salons' | 'users' | 'bookings' | 'categories' | 'promos';
+type Tab = 'overview' | 'salons' | 'users' | 'bookings' | 'payments' | 'reviews' | 'categories' | 'promos';
 const TABS: { key: Tab; label: string; icon: string }[] = [
   { key: 'overview', label: 'Overview', icon: 'stats-chart-outline' },
   { key: 'salons', label: 'Salons', icon: 'storefront-outline' },
   { key: 'users', label: 'Users', icon: 'people-outline' },
   { key: 'bookings', label: 'Bookings', icon: 'calendar-outline' },
+  { key: 'payments', label: 'Payments', icon: 'card-outline' },
+  { key: 'reviews', label: 'Reviews', icon: 'star-outline' },
   { key: 'categories', label: 'Categories', icon: 'pricetags-outline' },
   { key: 'promos', label: 'Promos', icon: 'ticket-outline' },
 ];
@@ -40,17 +53,23 @@ export default function Admin() {
   const [tab, setTab] = useState<Tab>('overview');
   const [users, setUsers] = useState<AdminUserRow[]>([]);
   const [bookings, setBookings] = useState<Booking[]>([]);
-  const [transactions, setTransactions] = useState<any[]>([]);
+  const [transactions, setTransactions] = useState<Transaction[]>([]);
+  const [reviews, setReviews] = useState<AdminReviewRow[]>([]);
   const [promos, setPromos] = useState<any[]>([]);
   const [newPromoCode, setNewPromoCode] = useState('');
   const [newPromoPct, setNewPromoPct] = useState('10');
   const [newCategory, setNewCategory] = useState('');
+  const [salonQuery, setSalonQuery] = useState('');
+  const [salonStatus, setSalonStatus] = useState<'all' | 'approved' | 'pending' | 'suspended'>('all');
+  const [userQuery, setUserQuery] = useState('');
+  const [bookingStatus, setBookingStatus] = useState<'all' | 'confirmed' | 'completed' | 'cancelled'>('all');
 
   const load = useCallback(() => {
     getAllUsers().then(setUsers);
     getAllBookings().then(setBookings);
     getAllTransactions().then(setTransactions);
     getPromoCodes().then(setPromos);
+    getAllReviews().then(setReviews);
   }, []);
 
   useEffect(() => {
@@ -60,6 +79,7 @@ export default function Admin() {
   const stats = useMemo(() => {
     const activeBookings = bookings.filter((b) => b.status !== 'cancelled');
     const sales = salesSummary(transactions);
+    const escrow = escrowSummary(transactions);
     return {
       salons: allVenues.length,
       pending: allVenues.filter((v) => v.status === 'pending').length,
@@ -67,6 +87,9 @@ export default function Admin() {
       bookings: activeBookings.length,
       revenue: activeBookings.reduce((c, b) => c + b.total_cents, 0),
       onlinePaid: sales.net_cents,
+      escrowHeld: escrow.held_cents,
+      escrowReleased: escrow.released_cents,
+      refunds: sales.refunds_cents,
       currency: activeBookings[0]?.currency ?? 'SAR',
     };
   }, [allVenues, users, bookings, transactions]);
@@ -82,8 +105,6 @@ export default function Admin() {
         </BText>
         <BText variant="small" style={{ marginTop: 8, textAlign: 'center', maxWidth: 340 }}>
           {t('This area is for the Bink team only. Sign in with an admin account to continue.')}
-          {'\n\n'}
-          {t('Demo tip: log in with any email starting with admin@ (e.g. admin@bink.com).')}
         </BText>
         <View style={{ flexDirection: 'row', gap: 10, marginTop: 24 }}>
           <Button title={t('Log in')} onPress={() => router.push('/auth')} />
@@ -93,105 +114,202 @@ export default function Admin() {
     );
   }
 
+  const pendingVenues = allVenues.filter((v) => v.status === 'pending');
+
   let body: React.ReactNode = null;
   if (tab === 'overview') {
-    const topVenues = [...allVenues]
-      .sort((a, b) => b.rating_count - a.rating_count)
-      .slice(0, 5);
+    const topVenues = [...allVenues].sort((a, b) => b.rating_count - a.rating_count).slice(0, 5);
+    const recent = bookings.slice(0, 5);
     body = (
       <View style={{ gap: 16 }}>
-        <View style={{ flexDirection: isDesktop ? 'row' : 'column', gap: 12 }}>
+        <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 12 }}>
           <StatCard label={t('Total salons')} value={String(stats.salons)} icon="storefront-outline" />
           <StatCard label={t('Pending approval')} value={String(stats.pending)} icon="time-outline" accent={stats.pending > 0} />
           <StatCard label={t('Registered users')} value={String(stats.users)} icon="people-outline" />
           <StatCard label={t('Bookings')} value={String(stats.bookings)} icon="calendar-outline" />
+        </View>
+        <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 12 }}>
           <StatCard label={t('Booking value')} value={formatPrice(stats.revenue, stats.currency)} icon="cash-outline" />
           <StatCard label={t('Paid online')} value={formatPrice(stats.onlinePaid, stats.currency)} icon="card-outline" />
+          <StatCard label={t('In escrow')} value={formatPrice(stats.escrowHeld, stats.currency)} icon="lock-closed-outline" />
+          <StatCard label={t('Refunds')} value={formatPrice(stats.refunds, stats.currency)} icon="return-down-back-outline" />
         </View>
-        <View style={styles.card}>
-          <BText variant="h3">{t('Top salons by reviews')}</BText>
-          {topVenues.map((v) => (
-            <View key={v.id} style={styles.row}>
-              <View style={{ flex: 1 }}>
-                <BText variant="smallMedium">{v.name}</BText>
-                <BText variant="tiny">
-                  {v.city} · {categories.find((c) => c.id === v.category_id)?.name ?? '—'}
+
+        {pendingVenues.length > 0 && (
+          <View style={[styles.card, { borderColor: '#F0C36D', backgroundColor: '#FFFDF7' }]}>
+            <BText variant="h3">{t('Waiting for your approval')}</BText>
+            {pendingVenues.map((v) => (
+              <View key={v.id} style={styles.row}>
+                <View style={{ flex: 1 }}>
+                  <BText variant="smallMedium">{v.name}</BText>
+                  <BText variant="tiny">
+                    {v.city} · {t(categories.find((c) => c.id === v.category_id)?.name ?? '—')}
+                    {v.provider_type === 'freelancer' ? ` · ${t('Freelancer')}` : ''}
+                  </BText>
+                </View>
+                <SmallAction label={t('Review listing')} color={colors.info} onPress={() => router.push(`/business/dashboard?venue=${v.id}` as any)} />
+                <SmallAction
+                  label={t('Approve')}
+                  color={colors.green}
+                  onPress={async () => {
+                    await setVenueStatus(v, 'approved');
+                    await refresh();
+                  }}
+                />
+              </View>
+            ))}
+          </View>
+        )}
+
+        <View style={{ flexDirection: isDesktop ? 'row' : 'column', gap: 16 }}>
+          <View style={[styles.card, { flex: 1 }]}>
+            <BText variant="h3">{t('Latest bookings')}</BText>
+            {recent.map((b) => (
+              <View key={b.id} style={styles.row}>
+                <View style={{ flex: 1 }}>
+                  <BText variant="smallMedium" numberOfLines={1}>
+                    {b.venue_name || allVenues.find((v) => v.id === b.venue_id)?.name || t('Venue')}
+                  </BText>
+                  <BText variant="tiny" numberOfLines={1}>
+                    {b.customer_name || t('Guest')} · {formatDateLong(b.starts_at)}
+                  </BText>
+                </View>
+                <BText variant="smallMedium">{formatPrice(b.total_cents, b.currency)}</BText>
+              </View>
+            ))}
+          </View>
+          <View style={[styles.card, { flex: 1 }]}>
+            <BText variant="h3">{t('Top salons by reviews')}</BText>
+            {topVenues.map((v) => (
+              <View key={v.id} style={styles.row}>
+                <View style={{ flex: 1 }}>
+                  <BText variant="smallMedium" numberOfLines={1}>
+                    {v.name}
+                  </BText>
+                  <BText variant="tiny" numberOfLines={1}>
+                    {v.city} · {t(categories.find((c) => c.id === v.category_id)?.name ?? '—')}
+                  </BText>
+                </View>
+                <BText variant="smallMedium">
+                  {v.rating_avg.toFixed(1)} ★ ({v.rating_count.toLocaleString()})
                 </BText>
               </View>
-              <BText variant="smallMedium">
-                {v.rating_avg.toFixed(1)} ★ ({v.rating_count.toLocaleString()})
-              </BText>
-            </View>
-          ))}
+            ))}
+          </View>
         </View>
       </View>
     );
   } else if (tab === 'salons') {
+    const q = salonQuery.trim().toLowerCase();
+    const filtered = allVenues.filter((v) => {
+      const status = v.status ?? 'approved';
+      if (salonStatus !== 'all' && status !== salonStatus) return false;
+      if (q && !`${v.name} ${v.city} ${v.area}`.toLowerCase().includes(q)) return false;
+      return true;
+    });
     body = (
-      <View style={styles.card}>
-        <BText variant="h3">{t('All salons ({n})', { n: allVenues.length })}</BText>
-        {allVenues.map((v) => {
-          const status = v.status ?? 'approved';
-          return (
-            <View key={v.id} style={styles.row}>
-              <View style={{ flex: 1 }}>
-                <Pressable onPress={() => router.push(`/venue/${v.slug}`)}>
-                  <BText variant="smallMedium" color={colors.accent}>
-                    {v.name}
-                  </BText>
-                </Pressable>
-                <BText variant="tiny">
-                  {v.area ? `${v.area}, ` : ''}
-                  {v.city} · {categories.find((c) => c.id === v.category_id)?.name ?? '—'} ·{' '}
-                  {t('{n} services', { n: v.services.length })}
-                  {v.owner_id ? ` · ${t('partner-owned')}` : ''}
-                </BText>
-              </View>
-              <StatusTag status={status} />
-              <View style={{ flexDirection: 'row', gap: 6 }}>
-                <SmallAction
-                  label={t('Open dashboard')}
-                  color={colors.info}
-                  onPress={() => router.push(`/business/dashboard?venue=${v.id}` as any)}
+      <View style={{ gap: 16 }}>
+        <View style={styles.card}>
+          <View style={{ flexDirection: isDesktop ? 'row' : 'column', gap: 10, alignItems: isDesktop ? 'center' : 'stretch' }}>
+            <TextInput
+              placeholder={t('Search salons…')}
+              placeholderTextColor={colors.gray}
+              value={salonQuery}
+              onChangeText={setSalonQuery}
+              style={[styles.input, { flex: 1 }]}
+            />
+            <View style={{ flexDirection: 'row', gap: 6 }}>
+              {(['all', 'approved', 'pending', 'suspended'] as const).map((st) => (
+                <Chip
+                  key={st}
+                  label={st === 'all' ? t('All') : t(st === 'approved' ? 'Live' : st === 'pending' ? 'Pending' : 'Suspended')}
+                  selected={salonStatus === st}
+                  onPress={() => setSalonStatus(st)}
                 />
-                {status !== 'approved' && (
-                  <SmallAction
-                    label={t('Approve')}
-                    color={colors.green}
-                    onPress={async () => {
-                      await setVenueStatus(v, 'approved');
-                      await refresh();
-                    }}
-                  />
-                )}
-                {status !== 'suspended' && (
-                  <SmallAction
-                    label={t('Suspend')}
-                    color={colors.danger}
-                    onPress={async () => {
-                      await setVenueStatus(v, 'suspended');
-                      await refresh();
-                    }}
-                  />
-                )}
-              </View>
+              ))}
             </View>
-          );
-        })}
+          </View>
+        </View>
+        <View style={styles.card}>
+          <BText variant="h3">{t('All salons ({n})', { n: filtered.length })}</BText>
+          {filtered.map((v) => {
+            const status = v.status ?? 'approved';
+            return (
+              <View key={v.id} style={[styles.row, { flexWrap: 'wrap' }]}>
+                <Pressable
+                  onPress={async () => {
+                    await updateVenueInfo(v, { is_featured: !v.is_featured });
+                    await refresh();
+                  }}
+                  hitSlop={8}
+                >
+                  <Ionicons name={v.is_featured ? 'star' : 'star-outline'} size={18} color={v.is_featured ? colors.star : colors.grayLight} />
+                </Pressable>
+                <View style={{ flex: 1, minWidth: 200 }}>
+                  <Pressable onPress={() => router.push(`/venue/${v.slug}`)}>
+                    <BText variant="smallMedium" color={colors.accent}>
+                      {v.name}
+                    </BText>
+                  </Pressable>
+                  <BText variant="tiny">
+                    {v.area ? `${v.area}, ` : ''}
+                    {v.city} · {t(categories.find((c) => c.id === v.category_id)?.name ?? '—')} ·{' '}
+                    {t('{n} services', { n: v.services.length })}
+                    {v.provider_type === 'freelancer' ? ` · ${t('Freelancer')}` : ''}
+                  </BText>
+                </View>
+                <StatusTag status={status} />
+                <View style={{ flexDirection: 'row', gap: 6 }}>
+                  <SmallAction label={t('Open dashboard')} color={colors.info} onPress={() => router.push(`/business/dashboard?venue=${v.id}` as any)} />
+                  {status !== 'approved' && (
+                    <SmallAction
+                      label={t('Approve')}
+                      color={colors.green}
+                      onPress={async () => {
+                        await setVenueStatus(v, 'approved');
+                        await refresh();
+                      }}
+                    />
+                  )}
+                  {status !== 'suspended' && (
+                    <SmallAction
+                      label={t('Suspend')}
+                      color={colors.danger}
+                      onPress={async () => {
+                        await setVenueStatus(v, 'suspended');
+                        await refresh();
+                      }}
+                    />
+                  )}
+                </View>
+              </View>
+            );
+          })}
+        </View>
       </View>
     );
   } else if (tab === 'users') {
+    const q = userQuery.trim().toLowerCase();
+    const filtered = users.filter((u) => !q || `${u.name ?? ''} ${u.email ?? ''}`.toLowerCase().includes(q));
     body = (
-      <View style={styles.card}>
-        <BText variant="h3">{t('Users ({n})', { n: users.length })}</BText>
-        {users.length === 0 ? (
-          <BText variant="small" style={{ marginTop: 10 }}>
-            {t('No registered users yet. Users appear here as they sign up.')}
+      <View style={{ gap: 16 }}>
+        <View style={styles.card}>
+          <TextInput
+            placeholder={t('Search users…')}
+            placeholderTextColor={colors.gray}
+            value={userQuery}
+            onChangeText={setUserQuery}
+            style={styles.input}
+          />
+        </View>
+        <View style={styles.card}>
+          <BText variant="h3">{t('Users ({n})', { n: filtered.length })}</BText>
+          <BText variant="tiny" style={{ marginTop: 4 }}>
+            {t('Tap a role to change what a user can do.')}
           </BText>
-        ) : (
-          users.map((u) => (
-            <View key={u.id} style={styles.row}>
-              <View style={{ flex: 1 }}>
+          {filtered.map((u) => (
+            <View key={u.id} style={[styles.row, { flexWrap: 'wrap' }]}>
+              <View style={{ flex: 1, minWidth: 180 }}>
                 <BText variant="smallMedium">{u.name ?? '—'}</BText>
                 <BText variant="tiny">
                   {u.email ?? t('no email')} ·{' '}
@@ -200,7 +318,119 @@ export default function Admin() {
                   })}
                 </BText>
               </View>
-              <RoleTag role={u.role} />
+              {u.id === user.id ? (
+                <RoleTag role={u.role} />
+              ) : (
+                <View style={{ flexDirection: 'row', gap: 6 }}>
+                  {(['customer', 'partner', 'admin'] as const).map((r) => (
+                    <Chip
+                      key={r}
+                      label={t(r)}
+                      selected={u.role === r}
+                      onPress={async () => {
+                        if (u.role === r) return;
+                        await adminSetUserRole(u.id, r);
+                        load();
+                      }}
+                    />
+                  ))}
+                </View>
+              )}
+            </View>
+          ))}
+        </View>
+      </View>
+    );
+  } else if (tab === 'payments') {
+    body = (
+      <View style={{ gap: 16 }}>
+        <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 12 }}>
+          <StatCard label={t('Paid online')} value={formatPrice(stats.onlinePaid, stats.currency)} icon="card-outline" />
+          <StatCard label={t('In escrow')} value={formatPrice(stats.escrowHeld, stats.currency)} icon="lock-closed-outline" />
+          <StatCard label={t('Released to salons')} value={formatPrice(stats.escrowReleased, stats.currency)} icon="checkmark-done-outline" />
+          <StatCard label={t('Refunds')} value={formatPrice(stats.refunds, stats.currency)} icon="return-down-back-outline" />
+        </View>
+        <View style={styles.card}>
+          <BText variant="h3">{t('All transactions ({n})', { n: transactions.length })}</BText>
+          {transactions.length === 0 ? (
+            <BText variant="small" style={{ marginTop: 10 }}>
+              {t('No online payments yet. Card and Apple Pay payments will appear here; pay-at-venue bookings are listed under Bookings.')}
+            </BText>
+          ) : (
+            transactions.map((tx) => (
+              <View key={tx.id} style={[styles.row, { flexWrap: 'wrap' }]}>
+                <View style={{ flex: 1, minWidth: 220 }}>
+                  <BText variant="smallMedium" numberOfLines={1}>
+                    {tx.venue_name || allVenues.find((v) => v.id === tx.venue_id)?.name || t('Venue')}
+                  </BText>
+                  <BText variant="tiny" numberOfLines={1}>
+                    {formatDateLong(tx.created_at)} · {tx.method === 'apple_pay' ? 'Apple Pay' : tx.method === 'card' ? t('Card') : t('At venue')} · {tx.gateway}
+                  </BText>
+                </View>
+                <BText
+                  variant="smallMedium"
+                  color={tx.status === 'refunded' ? colors.danger : colors.ink}
+                  style={tx.status === 'refunded' ? { textDecorationLine: 'line-through' } : undefined}
+                >
+                  {formatPrice(tx.amount_cents, tx.currency)}
+                </BText>
+                <TxStatusPill status={tx.status === 'succeeded' && tx.escrow_status ? tx.escrow_status : tx.status} />
+                {tx.status === 'succeeded' && tx.escrow_status === 'held' && tx.booking_id ? (
+                  <SmallAction
+                    label={t('Refund')}
+                    color={colors.danger}
+                    onPress={async () => {
+                      await refundBooking(tx.booking_id!);
+                      load();
+                    }}
+                  />
+                ) : null}
+              </View>
+            ))
+          )}
+        </View>
+      </View>
+    );
+  } else if (tab === 'reviews') {
+    body = (
+      <View style={styles.card}>
+        <BText variant="h3">{t('Latest reviews ({n})', { n: reviews.length })}</BText>
+        <BText variant="tiny" style={{ marginTop: 4 }}>
+          {t('Removing a review recalculates the salon rating automatically.')}
+        </BText>
+        {reviews.length === 0 ? (
+          <BText variant="small" style={{ marginTop: 10 }}>
+            {t('No reviews yet.')}
+          </BText>
+        ) : (
+          reviews.map((r) => (
+            <View key={r.id} style={[styles.row, { alignItems: 'flex-start' }]}>
+              <View style={{ flex: 1 }}>
+                <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
+                  <BText variant="smallMedium">{r.author_name}</BText>
+                  <BText variant="tiny">· {r.venue_name}</BText>
+                  <BText variant="tiny" color={colors.star}>
+                    {'★'.repeat(r.rating)}
+                  </BText>
+                </View>
+                {r.comment ? (
+                  <BText variant="small" style={{ marginTop: 4 }}>
+                    {r.comment}
+                  </BText>
+                ) : null}
+                <BText variant="tiny" style={{ marginTop: 4 }}>
+                  {formatDate(lang, r.created_at, { year: 'numeric', month: 'long', day: 'numeric' })}
+                </BText>
+              </View>
+              <SmallAction
+                label={t('Remove')}
+                color={colors.danger}
+                onPress={async () => {
+                  await adminDeleteReview(r.id);
+                  load();
+                  await refresh();
+                }}
+              />
             </View>
           ))
         )}
@@ -236,7 +466,7 @@ export default function Admin() {
           {categories.map((c) => (
             <View key={c.slug} style={styles.row}>
               <View style={{ flex: 1 }}>
-                <BText variant="smallMedium">{c.name}</BText>
+                <BText variant="smallMedium">{t(c.name)}</BText>
                 <BText variant="tiny">
                   {c.slug} · {t('{n} salons', { n: allVenues.filter((v) => v.category_id === c.id).length })}
                 </BText>
@@ -311,40 +541,90 @@ export default function Admin() {
       </View>
     );
   } else {
+    const filtered = bookings.filter((b) => bookingStatus === 'all' || b.status === bookingStatus);
     body = (
-      <View style={styles.card}>
-        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
-          <BText variant="h3">{t('Bookings ({n})', { n: bookings.length })}</BText>
-          {Platform.OS === 'web' && bookings.length > 0 ? (
-            <SmallAction label={t('Export CSV')} color={colors.ink} onPress={() => exportBookingsCsv(bookings)} />
-          ) : null}
+      <View style={{ gap: 16 }}>
+        <View style={styles.card}>
+          <View style={{ flexDirection: 'row', gap: 6, flexWrap: 'wrap', alignItems: 'center' }}>
+            {(['all', 'confirmed', 'completed', 'cancelled'] as const).map((st) => (
+              <Chip
+                key={st}
+                label={st === 'all' ? t('All') : t(st === 'confirmed' ? 'Confirmed' : st === 'completed' ? 'Completed' : 'Cancelled')}
+                selected={bookingStatus === st}
+                onPress={() => setBookingStatus(st)}
+              />
+            ))}
+            <View style={{ flex: 1 }} />
+            {Platform.OS === 'web' && filtered.length > 0 ? (
+              <SmallAction label={t('Export CSV')} color={colors.ink} onPress={() => exportBookingsCsv(filtered)} />
+            ) : null}
+          </View>
         </View>
-        {bookings.length === 0 ? (
-          <BText variant="small" style={{ marginTop: 10 }}>
-            {t('No bookings yet.')}
-          </BText>
-        ) : (
-          bookings.map((b) => (
-            <View key={b.id} style={styles.row}>
-              <View style={{ flex: 1 }}>
-                <BText variant="smallMedium">
-                  {b.venue_name || allVenues.find((v) => v.id === b.venue_id)?.name || t('Venue')}
-                </BText>
-                <BText variant="tiny">
-                  {b.customer_name || t('Guest')} ·{' '}
-                  {t('{date} at {time}', { date: formatDateLong(b.starts_at), time: formatTimeOfDate(b.starts_at) })} ·{' '}
-                  {b.items.map((i) => i.service_name).join(', ')}
-                </BText>
+        <View style={styles.card}>
+          <BText variant="h3">{t('Bookings ({n})', { n: filtered.length })}</BText>
+          {filtered.length === 0 ? (
+            <BText variant="small" style={{ marginTop: 10 }}>
+              {t('No bookings yet.')}
+            </BText>
+          ) : (
+            filtered.map((b) => (
+              <View key={b.id} style={styles.row}>
+                <View style={{ flex: 1 }}>
+                  <BText variant="smallMedium">
+                    {b.venue_name || allVenues.find((v) => v.id === b.venue_id)?.name || t('Venue')}
+                  </BText>
+                  <BText variant="tiny">
+                    {b.customer_name || t('Guest')} ·{' '}
+                    {t('{date} at {time}', { date: formatDateLong(b.starts_at), time: formatTimeOfDate(b.starts_at) })} ·{' '}
+                    {b.items.map((i) => i.service_name).join(', ')}
+                  </BText>
+                </View>
+                <BText variant="smallMedium">{formatPrice(b.total_cents, b.currency)}</BText>
+                <PaymentPill status={b.payment_status ?? 'unpaid'} />
+                <StatusTag status={b.status} />
               </View>
-              <BText variant="smallMedium">{formatPrice(b.total_cents, b.currency)}</BText>
-              <PaymentPill status={b.payment_status ?? 'unpaid'} />
-              <StatusTag status={b.status} />
-            </View>
-          ))
-        )}
+            ))
+          )}
+        </View>
       </View>
     );
   }
+
+  const nav = (
+    <View style={isDesktop ? styles.sideNav : styles.topNav}>
+      {TABS.map((tb) => {
+        const active = tab === tb.key;
+        const badge = tb.key === 'salons' && pendingVenues.length > 0;
+        return (
+          <Pressable
+            key={tb.key}
+            onPress={() => setTab(tb.key)}
+            style={[
+              isDesktop ? styles.sideNavItem : styles.topNavItem,
+              active && { backgroundColor: colors.ink },
+            ]}
+          >
+            <Ionicons name={tb.icon as any} size={16} color={active ? colors.white : colors.ink} />
+            <BText
+              style={{
+                fontFamily: active ? font.bold : font.medium,
+                fontSize: 14,
+                color: active ? colors.white : colors.ink,
+                flex: isDesktop ? 1 : undefined,
+              }}
+            >
+              {t(tb.label)}
+            </BText>
+            {badge && (
+              <View style={styles.navBadge}>
+                <BText style={{ fontFamily: font.bold, fontSize: 10, color: colors.white }}>{pendingVenues.length}</BText>
+              </View>
+            )}
+          </Pressable>
+        );
+      })}
+    </View>
+  );
 
   return (
     <View style={{ flex: 1, backgroundColor: colors.bgPage }}>
@@ -363,31 +643,9 @@ export default function Admin() {
       </View>
 
       <ScrollView contentContainerStyle={{ paddingBottom: 60 }}>
-        <View style={styles.contentWrap}>
-          <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8, marginBottom: 20 }}>
-            {TABS.map((tb) => {
-              const active = tab === tb.key;
-              return (
-                <Pressable
-                  key={tb.key}
-                  onPress={() => setTab(tb.key)}
-                  style={[styles.tabItem, active && { backgroundColor: colors.ink, borderColor: colors.ink }]}
-                >
-                  <Ionicons name={tb.icon as any} size={15} color={active ? colors.white : colors.ink} />
-                  <BText
-                    style={{
-                      fontFamily: active ? font.bold : font.medium,
-                      fontSize: 14,
-                      color: active ? colors.white : colors.ink,
-                    }}
-                  >
-                    {t(tb.label)}
-                  </BText>
-                </Pressable>
-              );
-            })}
-          </View>
-          {body}
+        <View style={[styles.contentWrap, isDesktop && { flexDirection: 'row', gap: 28 }]}>
+          {nav}
+          <View style={{ flex: 1, gap: 16 }}>{body}</View>
         </View>
       </ScrollView>
     </View>
@@ -417,8 +675,27 @@ function StatusTag({ status }: { status: string }) {
     confirmed: { label: 'Confirmed', color: colors.green, bg: colors.greenBg },
     completed: { label: 'Completed', color: colors.gray, bg: colors.bgSubtle },
     cancelled: { label: 'Cancelled', color: colors.danger, bg: colors.dangerBg },
+    no_show: { label: 'No-show', color: colors.gray, bg: colors.bgSubtle },
   };
   const m = map[status] ?? map.approved;
+  return (
+    <View style={{ backgroundColor: m.bg, borderRadius: radius.pill, paddingHorizontal: 8, paddingVertical: 3 }}>
+      <BText style={{ fontFamily: font.semibold, fontSize: 11, color: m.color }}>{t(m.label)}</BText>
+    </View>
+  );
+}
+
+function TxStatusPill({ status }: { status: string }) {
+  const { t } = useI18n();
+  const map: Record<string, { label: string; color: string; bg: string }> = {
+    held: { label: 'In escrow', color: colors.info, bg: colors.infoBg },
+    released: { label: 'Released', color: colors.green, bg: colors.greenBg },
+    succeeded: { label: 'Succeeded', color: colors.green, bg: colors.greenBg },
+    pending: { label: 'Pending', color: colors.warning, bg: colors.warningBg },
+    failed: { label: 'Failed', color: colors.danger, bg: colors.dangerBg },
+    refunded: { label: 'Refunded', color: colors.danger, bg: colors.dangerBg },
+  };
+  const m = map[status] ?? map.pending;
   return (
     <View style={{ backgroundColor: m.bg, borderRadius: radius.pill, paddingHorizontal: 8, paddingVertical: 3 }}>
       <BText style={{ fontFamily: font.semibold, fontSize: 11, color: m.color }}>{t(m.label)}</BText>
@@ -502,7 +779,17 @@ const styles = StyleSheet.create({
     paddingHorizontal: 32,
     paddingTop: 24,
   },
-  tabItem: {
+  sideNav: { width: 200, gap: 4 },
+  sideNavItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+    paddingHorizontal: 14,
+    height: 42,
+    borderRadius: radius.md,
+  },
+  topNav: { flexDirection: 'row', flexWrap: 'wrap', gap: 8, marginBottom: 16 },
+  topNavItem: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 6,
@@ -512,6 +799,15 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: colors.border,
     backgroundColor: colors.white,
+  },
+  navBadge: {
+    backgroundColor: colors.accent,
+    borderRadius: radius.pill,
+    minWidth: 18,
+    height: 18,
+    paddingHorizontal: 4,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   card: {
     backgroundColor: colors.white,
@@ -529,7 +825,6 @@ const styles = StyleSheet.create({
     borderBottomColor: colors.divider,
   },
   input: {
-    flex: 1,
     borderWidth: 1,
     borderColor: colors.border,
     borderRadius: radius.md,

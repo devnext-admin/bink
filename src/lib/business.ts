@@ -186,7 +186,7 @@ export async function registerSalon(input: RegisterSalonInput): Promise<Venue> {
 
 export async function updateVenueInfo(
   venue: Venue,
-  patch: Partial<Pick<Venue, 'name' | 'description' | 'address' | 'area' | 'city' | 'category_id' | 'highlights' | 'maps_url' | 'provider_type' | 'cancellation_policy' | 'cancellation_fee_pct' | 'deposit_cents'>>
+  patch: Partial<Pick<Venue, 'name' | 'description' | 'address' | 'area' | 'city' | 'category_id' | 'highlights' | 'maps_url' | 'provider_type' | 'cancellation_policy' | 'cancellation_fee_pct' | 'deposit_cents' | 'is_featured'>>
 ): Promise<Venue> {
   const sb = getSupabase();
   if (sb && !venue.id.startsWith('venue-')) {
@@ -456,10 +456,56 @@ export async function getAllBookings(): Promise<Booking[]> {
       .select('*, items:booking_items (service_id, service_name, duration_minutes, price_cents), venue:venues (name)')
       .order('starts_at', { ascending: false });
     if (!error && data?.length) {
-      return data.map((b: any) => ({ ...b, venue_name: b.venue?.name ?? 'Venue', items: b.items ?? [] }));
+      const userIds = [...new Set(data.map((b: any) => b.user_id).filter(Boolean))];
+      const { data: profs } = await sb.from('profiles').select('id, full_name').in('id', userIds);
+      const names = new Map((profs ?? []).map((p: any) => [p.id, p.full_name]));
+      return data.map((b: any) => ({
+        ...b,
+        venue_name: b.venue?.name ?? 'Venue',
+        customer_name: names.get(b.user_id) ?? null,
+        items: b.items ?? [],
+      }));
     }
   }
   return getBookings();
+}
+
+/** Admin: change a user's platform role. */
+export async function adminSetUserRole(userId: string, role: 'customer' | 'partner' | 'admin'): Promise<void> {
+  const sb = getSupabase();
+  if (sb) await sb.from('profiles').update({ role }).eq('id', userId);
+}
+
+export interface AdminReviewRow {
+  id: string;
+  venue_id: string;
+  venue_name: string;
+  author_name: string;
+  rating: number;
+  comment: string;
+  created_at: string;
+}
+
+/** Admin: latest reviews across the platform, for moderation. */
+export async function getAllReviews(): Promise<AdminReviewRow[]> {
+  const sb = getSupabase();
+  if (sb) {
+    const { data, error } = await sb
+      .from('reviews')
+      .select('id, venue_id, author_name, rating, comment, created_at, venue:venues (name)')
+      .order('created_at', { ascending: false })
+      .limit(200);
+    if (!error && data) {
+      return data.map((r: any) => ({ ...r, venue_name: r.venue?.name ?? 'Salon' }));
+    }
+  }
+  return [];
+}
+
+/** Admin: remove a review (the DB trigger recomputes the venue rating). */
+export async function adminDeleteReview(reviewId: string): Promise<void> {
+  const sb = getSupabase();
+  if (sb) await sb.from('reviews').delete().eq('id', reviewId);
 }
 
 export interface AdminUserRow {
