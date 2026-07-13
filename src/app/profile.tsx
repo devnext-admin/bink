@@ -107,8 +107,8 @@ export default function Profile() {
         </View>
       )}
 
-      {/* The sidebar already covers navigation on desktop */}
-      {!isDesktop && (
+      {/* The sidebar covers navigation on desktop; signed-out visitors have no account pages to open */}
+      {!isDesktop && user && (
         <View style={styles.menuCard}>
           {MENU.map((m, i) => (
             <Pressable

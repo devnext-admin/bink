@@ -6,6 +6,7 @@ import { Modal, Pressable, ScrollView, StyleSheet, TextInput, View } from 'react
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { AccountLayout } from '../components/account-layout';
 import { BottomTabs, TAB_BAR_HEIGHT } from '../components/bottom-tabs';
+import { SignInGate } from '../components/signin-gate';
 import { PaymentPill } from '../components/payment-pill';
 import { Button } from '../components/ui/button';
 import { Chip } from '../components/ui/chip';
@@ -365,6 +366,15 @@ export default function Appointments() {
       </View>
     </Modal>
   );
+
+  if (!user && !isDesktop) {
+    return (
+      <View style={{ flex: 1, backgroundColor: colors.white }}>
+        <SignInGate icon="calendar-outline" title={t('Appointments')} />
+        <BottomTabs />
+      </View>
+    );
+  }
 
   if (isDesktop) {
     return (

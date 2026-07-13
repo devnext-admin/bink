@@ -1,6 +1,7 @@
 // Arabic UI dictionary. Keys are the English source strings used with t().
 // Keep {var} tokens identical to the English key.
 export const ar: Record<string, string> = {
+  "Sign in or create an account to view this page.": "سجّل الدخول أو أنشئ حسابًا لعرض هذه الصفحة.",
   "Salon owners and freelancers use the same business account and dashboard.": "أصحاب الصالونات والمستقلون يستخدمون نفس حساب الأعمال ولوحة التحكم نفسها.",
   "Salon owner or freelancer? Log in with the same account — you’ll land straight in your business dashboard.": "صاحب صالون أو مستقل؟ سجّل الدخول بالحساب نفسه — وستصل مباشرةً إلى لوحة تحكم أعمالك.",
   "List your salon — or yourself as a freelancer — to get your business dashboard.": "أدرج صالونك — أو نفسك كمستقل — للحصول على لوحة تحكم أعمالك.",

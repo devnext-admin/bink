@@ -5,15 +5,18 @@ import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { AccountLayout } from '../components/account-layout';
 import { BottomTabs, TAB_BAR_HEIGHT } from '../components/bottom-tabs';
+import { SignInGate } from '../components/signin-gate';
 import { Button } from '../components/ui/button';
 import { BText } from '../components/ui/text';
 import { VenueCard } from '../components/venue-card';
 import { useAppData } from '../lib/app-data-context';
+import { useAuth } from '../lib/auth-context';
 import { useI18n } from '../lib/i18n';
 import { colors } from '../lib/theme';
 import { useIsDesktop } from '../lib/use-layout';
 
 export default function Favorites() {
+  const { user } = useAuth();
   const isDesktop = useIsDesktop();
   const insets = useSafeAreaInsets();
   const router = useRouter();
@@ -41,6 +44,15 @@ export default function Favorites() {
       </View>
     </View>
   );
+
+  if (!user && !isDesktop) {
+    return (
+      <View style={{ flex: 1, backgroundColor: colors.white }}>
+        <SignInGate icon="heart-outline" title={t('Favorites')} />
+        <BottomTabs />
+      </View>
+    );
+  }
 
   if (isDesktop) {
     return <AccountLayout title={t('Favorites')}>{content}</AccountLayout>;

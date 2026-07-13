@@ -5,6 +5,7 @@ import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { AccountLayout } from '../components/account-layout';
 import { BottomTabs, TAB_BAR_HEIGHT } from '../components/bottom-tabs';
+import { SignInGate } from '../components/signin-gate';
 import { BText } from '../components/ui/text';
 import { WebFooter } from '../components/web-footer';
 import { WebHeader } from '../components/web-header';
@@ -118,6 +119,15 @@ export default function Notifications() {
       )}
     </View>
   );
+
+  if (!user && !isDesktop) {
+    return (
+      <View style={{ flex: 1, backgroundColor: colors.white }}>
+        <SignInGate icon="notifications-outline" title={t('Notifications')} />
+        <BottomTabs />
+      </View>
+    );
+  }
 
   if (isDesktop) {
     return <AccountLayout title={t('Notifications')}>{list}</AccountLayout>;

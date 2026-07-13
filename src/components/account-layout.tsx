@@ -6,6 +6,7 @@ import { useAppData } from '../lib/app-data-context';
 import { useAuth } from '../lib/auth-context';
 import { useI18n } from '../lib/i18n';
 import { colors, font, radius } from '../lib/theme';
+import { SignInGate } from './signin-gate';
 import { BText } from './ui/text';
 import { WebHeader } from './web-header';
 
@@ -41,6 +42,17 @@ export function AccountLayout({
   const { user } = useAuth();
   const { allVenues } = useAppData();
   const ownsVenues = user ? allVenues.some((v) => v.owner_id === user.id) : false;
+
+  // The account area only exists for signed-in people (guests included —
+  // they opted in and their data lives on this device).
+  if (!user) {
+    return (
+      <View style={{ flex: 1, backgroundColor: colors.white }}>
+        <WebHeader showSearch />
+        <SignInGate title={title} />
+      </View>
+    );
+  }
 
   return (
     <View style={{ flex: 1, backgroundColor: colors.white }}>
