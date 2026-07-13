@@ -319,8 +319,10 @@ export async function getFavoriteIds(userId?: string | null): Promise<string[]> 
   const sb = getSupabase();
   if (sb) {
     const user = (await sb.auth.getUser()).data.user;
-    if (user) {
-      const { data, error } = await sb.from('favorites').select('venue_id').eq('user_id', user.id);
+    // Admin "view as user" passes the emulated id; otherwise use the session
+    const cloudId = userId && !userId.startsWith('demo-') && userId !== 'guest' ? userId : user?.id;
+    if (cloudId) {
+      const { data, error } = await sb.from('favorites').select('venue_id').eq('user_id', cloudId);
       if (!error && data) return data.map((r: any) => r.venue_id);
     }
   }

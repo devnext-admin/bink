@@ -160,8 +160,8 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
     minHeight: 480,
   },
-  listPane: { width: 340, borderRightWidth: 1, borderRightColor: colors.divider },
-  threadPane: { flex: 1 },
+  listPane: { width: 290, maxWidth: 290, flexGrow: 0, flexShrink: 0, borderRightWidth: 1, borderRightColor: colors.divider },
+  threadPane: { flex: 1, minWidth: 0 },
   threadHeader: {
     flexDirection: 'row',
     alignItems: 'center',

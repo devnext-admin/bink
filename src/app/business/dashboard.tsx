@@ -673,7 +673,7 @@ function VenueMessages({
 
   return (
     <View style={[styles.card, { padding: 0, overflow: 'hidden', minHeight: 460, flexDirection: 'row' }]}>
-      <ScrollView style={{ width: 300, borderRightWidth: 1, borderRightColor: colors.divider }}>
+      <ScrollView style={{ width: 280, maxWidth: 280, flexGrow: 0, flexShrink: 0, borderRightWidth: 1, borderRightColor: colors.divider }}>
         <ConversationList
           conversations={conversations}
           perspective="venue"
@@ -681,7 +681,7 @@ function VenueMessages({
           onSelect={setActive}
         />
       </ScrollView>
-      <View style={{ flex: 1 }}>
+      <View style={{ flex: 1, minWidth: 0 }}>
         {active ? (
           <ChatThread
             venueId={venue.id}

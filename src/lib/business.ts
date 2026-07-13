@@ -470,6 +470,12 @@ export async function getAllBookings(): Promise<Booking[]> {
   return getBookings();
 }
 
+/** Admin: block or unblock a user account. */
+export async function adminSetUserBlocked(userId: string, blocked: boolean): Promise<void> {
+  const sb = getSupabase();
+  if (sb) await sb.from('profiles').update({ is_blocked: blocked }).eq('id', userId);
+}
+
 /** Admin: change a user's platform role. */
 export async function adminSetUserRole(userId: string, role: 'customer' | 'partner' | 'admin'): Promise<void> {
   const sb = getSupabase();
@@ -509,6 +515,7 @@ export async function adminDeleteReview(reviewId: string): Promise<void> {
 }
 
 export interface AdminUserRow {
+  is_blocked?: boolean;
   id: string;
   name: string | null;
   email: string | null;
@@ -521,7 +528,7 @@ export async function getAllUsers(): Promise<AdminUserRow[]> {
   if (sb) {
     const { data, error } = await sb
       .from('profiles')
-      .select('id, full_name, role, created_at')
+      .select('id, full_name, role, created_at, is_blocked')
       .order('created_at', { ascending: false });
     if (!error && data?.length) {
       return data.map((p: any) => ({
@@ -530,6 +537,7 @@ export async function getAllUsers(): Promise<AdminUserRow[]> {
         email: null,
         role: p.role,
         joined_at: p.created_at,
+        is_blocked: !!p.is_blocked,
       }));
     }
   }

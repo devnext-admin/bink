@@ -1,6 +1,13 @@
 // Arabic UI dictionary. Keys are the English source strings used with t().
 // Keep {var} tokens identical to the English key.
 export const ar: Record<string, string> = {
+  "Viewing as {name}": "تتصفح باسم {name}",
+  "Exit": "خروج",
+  "View as user": "عرض كمستخدم",
+  "Block": "حظر",
+  "Unblock": "إلغاء الحظر",
+  "Blocked": "محظور",
+  "This account has been blocked by the Bink team.": "تم حظر هذا الحساب من قِبل فريق Bink.",
   "Payments": "المدفوعات",
   "Reviews": "التقييمات",
   "Waiting for your approval": "بانتظار موافقتك",

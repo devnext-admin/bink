@@ -15,6 +15,10 @@ export interface AuthUser {
 interface AuthContextValue {
   user: AuthUser | null;
   loading: boolean;
+  /** Set when an admin is viewing the app as another user. */
+  emulating: { id: string; name: string | null } | null;
+  startEmulating: (u: { id: string; email: string | null; name: string | null }) => Promise<void>;
+  stopEmulating: () => Promise<void>;
   signIn: (email: string, password: string) => Promise<string | null>;
   signUp: (name: string, email: string, password: string, role?: UserRole) => Promise<string | null>;
   continueAsGuest: (name?: string) => Promise<void>;
@@ -25,6 +29,7 @@ interface AuthContextValue {
 
 const AuthContext = createContext<AuthContextValue | null>(null);
 const GUEST_KEY = 'bink.guestUser';
+const EMULATE_KEY = 'bink.emulateUser';
 const USERS_KEY = 'bink.users'; // demo-mode registry so the admin panel can list users
 
 // In demo mode, sign in with an email starting with "admin@" to get admin
@@ -75,6 +80,13 @@ function fromSession(session: Session | null): AuthUser | null {
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<AuthUser | null>(null);
   const [loading, setLoading] = useState(true);
+  const [emulated, setEmulated] = useState<AuthUser | null>(null);
+
+  useEffect(() => {
+    AsyncStorage.getItem(EMULATE_KEY).then((raw) => {
+      if (raw) setEmulated(JSON.parse(raw));
+    });
+  }, []);
 
   useEffect(() => {
     let unsub: (() => void) | undefined;
@@ -86,7 +98,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           const u = fromSession(data.session);
           // profiles.role is the source of truth when Supabase is live
           if (u) {
-            const { data: p } = await sb.from('profiles').select('role').eq('id', u.id).maybeSingle();
+            const { data: p } = await sb.from('profiles').select('role, is_blocked').eq('id', u.id).maybeSingle();
+            if (p?.is_blocked) {
+              await sb.auth.signOut();
+              setUser(null);
+              setLoading(false);
+              return;
+            }
             if (p?.role) u.role = p.role as UserRole;
           }
           setUser(u);
@@ -135,8 +153,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         );
         return null;
       }
-      const { error } = await sb.auth.signInWithPassword({ email, password });
-      return error ? error.message : null;
+      const { data, error } = await sb.auth.signInWithPassword({ email, password });
+      if (error) return error.message;
+      if (data.user) {
+        const { data: p } = await sb.from('profiles').select('is_blocked').eq('id', data.user.id).maybeSingle();
+        if (p?.is_blocked) {
+          await sb.auth.signOut();
+          return 'This account has been blocked by the Bink team.';
+        }
+      }
+      return null;
     },
     [persistLocal]
   );
@@ -201,16 +227,49 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     [user, persistLocal]
   );
 
+  const startEmulating = useCallback(
+    async (u: { id: string; email: string | null; name: string | null }) => {
+      if (user?.role !== 'admin') return;
+      const em: AuthUser = { id: u.id, email: u.email, name: u.name, role: 'customer', isGuest: false };
+      setEmulated(em);
+      await AsyncStorage.setItem(EMULATE_KEY, JSON.stringify(em));
+    },
+    [user?.role]
+  );
+
+  const stopEmulating = useCallback(async () => {
+    setEmulated(null);
+    await AsyncStorage.removeItem(EMULATE_KEY);
+  }, []);
+
   const signOut = useCallback(async () => {
     const sb = getSupabase();
     if (sb) await sb.auth.signOut();
     await AsyncStorage.removeItem(GUEST_KEY);
+    await AsyncStorage.removeItem(EMULATE_KEY);
+    setEmulated(null);
     setUser(null);
   }, []);
 
+  // While an admin is emulating, the whole app sees the emulated customer
+  const effectiveUser = user?.role === 'admin' && emulated ? emulated : user;
+  const emulating = user?.role === 'admin' && emulated ? { id: emulated.id, name: emulated.name } : null;
+
   const value = useMemo(
-    () => ({ user, loading, signIn, signUp, continueAsGuest, signOut, setRole, updateName }),
-    [user, loading, signIn, signUp, continueAsGuest, signOut, setRole, updateName]
+    () => ({
+      user: effectiveUser,
+      loading,
+      emulating,
+      startEmulating,
+      stopEmulating,
+      signIn,
+      signUp,
+      continueAsGuest,
+      signOut,
+      setRole,
+      updateName,
+    }),
+    [effectiveUser, loading, emulating, startEmulating, stopEmulating, signIn, signUp, continueAsGuest, signOut, setRole, updateName]
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

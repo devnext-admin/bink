@@ -14,6 +14,7 @@ import {
   AdminReviewRow,
   AdminUserRow,
   adminDeleteReview,
+  adminSetUserBlocked,
   adminSetUserRole,
   getAllBookings,
   getAllReviews,
@@ -47,7 +48,7 @@ export default function Admin() {
   const isDesktop = useIsDesktop();
   const insets = useSafeAreaInsets();
   const { t, lang } = useI18n();
-  const { user, loading } = useAuth();
+  const { user, loading, startEmulating } = useAuth();
   const { allVenues, categories, refresh } = useAppData();
 
   const [tab, setTab] = useState<Tab>('overview');
@@ -310,7 +311,14 @@ export default function Admin() {
           {filtered.map((u) => (
             <View key={u.id} style={[styles.row, { flexWrap: 'wrap' }]}>
               <View style={{ flex: 1, minWidth: 180 }}>
-                <BText variant="smallMedium">{u.name ?? '—'}</BText>
+                <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
+                  <BText variant="smallMedium">{u.name ?? '—'}</BText>
+                  {u.is_blocked && (
+                    <View style={{ backgroundColor: colors.dangerBg, borderRadius: radius.pill, paddingHorizontal: 8, paddingVertical: 2 }}>
+                      <BText style={{ fontFamily: font.semibold, fontSize: 11, color: colors.danger }}>{t('Blocked')}</BText>
+                    </View>
+                  )}
+                </View>
                 <BText variant="tiny">
                   {u.email ?? t('no email')} ·{' '}
                   {t('joined {date}', {
@@ -321,7 +329,7 @@ export default function Admin() {
               {u.id === user.id ? (
                 <RoleTag role={u.role} />
               ) : (
-                <View style={{ flexDirection: 'row', gap: 6 }}>
+                <View style={{ flexDirection: 'row', gap: 6, flexWrap: 'wrap', alignItems: 'center' }}>
                   {(['customer', 'partner', 'admin'] as const).map((r) => (
                     <Chip
                       key={r}
@@ -334,6 +342,22 @@ export default function Admin() {
                       }}
                     />
                   ))}
+                  <SmallAction
+                    label={t('View as user')}
+                    color={colors.info}
+                    onPress={async () => {
+                      await startEmulating({ id: u.id, email: u.email, name: u.name });
+                      router.push('/appointments');
+                    }}
+                  />
+                  <SmallAction
+                    label={u.is_blocked ? t('Unblock') : t('Block')}
+                    color={u.is_blocked ? colors.green : colors.danger}
+                    onPress={async () => {
+                      await adminSetUserBlocked(u.id, !u.is_blocked);
+                      load();
+                    }}
+                  />
                 </View>
               )}
             </View>

@@ -8,6 +8,7 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { AppDataProvider } from '../lib/app-data-context';
 import { AuthProvider } from '../lib/auth-context';
 import { BookingProvider } from '../lib/booking-context';
+import { EmulationBanner } from '../components/emulation-banner';
 import { I18nProvider } from '../lib/i18n';
 import { colors } from '../lib/theme';
 
@@ -69,6 +70,7 @@ export default function RootLayout() {
                 <Stack.Screen name="business/dashboard" />
                 <Stack.Screen name="admin" />
               </Stack>
+              <EmulationBanner />
             </BookingProvider>
           </AppDataProvider>
         </AuthProvider>
