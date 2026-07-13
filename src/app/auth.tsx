@@ -181,6 +181,13 @@ export default function Auth() {
           }}
         />
 
+        <View style={styles.bizHint}>
+          <Ionicons name="briefcase-outline" size={15} color={colors.gray} />
+          <BText variant="tiny" style={{ flex: 1 }}>
+            {t('Salon owner or freelancer? Log in with the same account — you\u2019ll land straight in your business dashboard.')}
+          </BText>
+        </View>
+
         {(
           <View style={{ gap: 10 }}>
             <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12, marginTop: 4 }}>
@@ -305,6 +312,14 @@ const styles = StyleSheet.create({
     backgroundColor: colors.accentSoft,
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  bizHint: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    backgroundColor: colors.bgPage,
+    borderRadius: radius.md,
+    padding: 10,
   },
   demoNote: {
     flexDirection: 'row',

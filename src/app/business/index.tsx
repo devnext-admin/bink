@@ -464,6 +464,12 @@ export default function BusinessLanding() {
           <BText variant="body" style={{ marginTop: 14, maxWidth: 560, textAlign: isDesktop ? 'center' : 'left' }}>
             {t('The booking platform that fills your calendar. List your salon, studio or yourself as a freelancer and start taking online bookings today.')}
           </BText>
+          <View style={styles.sameAccountNote}>
+            <Ionicons name="briefcase-outline" size={15} color={colors.accent} />
+            <BText variant="tiny" color={colors.accent}>
+              {t('Salon owners and freelancers use the same business account and dashboard.')}
+            </BText>
+          </View>
           <View style={{ marginTop: 28, flexDirection: 'row', gap: 12 }}>
             {myVenues.length > 0 ? (
               <Button title={t('Open your dashboard')} size="lg" onPress={() => router.push('/business/dashboard')} />
@@ -585,6 +591,16 @@ const styles = StyleSheet.create({
     maxWidth: maxContentWidth + 48,
     alignSelf: 'center',
     paddingHorizontal: 24,
+  },
+  sameAccountNote: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    backgroundColor: colors.white,
+    borderRadius: radius.pill,
+    paddingHorizontal: 14,
+    paddingVertical: 8,
+    marginTop: 16,
   },
   backPill: {
     backgroundColor: colors.white,

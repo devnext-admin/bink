@@ -151,8 +151,8 @@ export default function BusinessDashboard() {
         </BText>
         <BText variant="small" style={{ marginTop: 8, textAlign: 'center', maxWidth: 320 }}>
           {user
-            ? t('List your salon on Bink to get your business dashboard.')
-            : t('Log in and list your salon to get your business dashboard.')}
+            ? t('List your salon — or yourself as a freelancer — to get your business dashboard.')
+            : t('Log in with your business account — salons and freelancers use the same login.')}
         </BText>
         <View style={{ marginTop: 20 }}>
           <Button title={t('List your business')} onPress={() => router.replace('/business')} />
