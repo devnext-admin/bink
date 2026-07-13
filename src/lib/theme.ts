@@ -27,7 +27,7 @@ export const colors = {
   info: '#194F8A',
   infoBg: '#EAF4FF',
   overlay: 'rgba(0, 0, 0, 0.4)',
-  heroGradient: ['#FFBFD0', '#FFE8E2', '#FFCFAF'] as const,
+  heroGradient: ['#FF9EBB', '#FFE2DB', '#FFB488'] as const,
   pink: '#FF385C',
 } as const;
 
