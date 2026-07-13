@@ -1,6 +1,6 @@
 import { Ionicons } from '@expo/vector-icons';
+import { HeroGradient } from './hero-gradient';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { LinearGradient } from 'expo-linear-gradient';
 import React, { useEffect, useState } from 'react';
 import { Modal, Pressable, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -54,10 +54,7 @@ export function Onboarding() {
 
   return (
     <Modal visible transparent={false} animationType="fade">
-      <LinearGradient
-        colors={[...colors.heroGradient]}
-        start={{ x: 0, y: 0 }}
-        end={{ x: 1, y: 1 }}
+      <HeroGradient
         style={[styles.wrap, { paddingTop: insets.top + 24, paddingBottom: Math.max(insets.bottom, 24) }]}
       >
         <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -95,7 +92,7 @@ export function Onboarding() {
             onPress={() => (last ? finish() : setSlide(slide + 1))}
           />
         </View>
-      </LinearGradient>
+      </HeroGradient>
     </Modal>
   );
 }

@@ -1,5 +1,5 @@
 import { Ionicons } from '@expo/vector-icons';
-import { LinearGradient } from 'expo-linear-gradient';
+import { HeroGradient } from '../components/hero-gradient';
 import React from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
 import { SectionRail } from '../components/section-rail';
@@ -36,10 +36,7 @@ export function HomeDesktop() {
 
   return (
     <ScrollView style={{ flex: 1, backgroundColor: colors.white }}>
-      <LinearGradient
-        colors={[...colors.heroGradient]}
-        start={{ x: 0, y: 0 }}
-        end={{ x: 1, y: 1 }}
+      <HeroGradient
         style={styles.hero}
       >
         <WebHeader transparent />
@@ -62,7 +59,7 @@ export function HomeDesktop() {
             <Ionicons name="qr-code-outline" size={16} color={colors.ink} />
           </View>
         </View>
-      </LinearGradient>
+      </HeroGradient>
 
       <View style={styles.content}>
         <SectionRail title={t('Recommended')} venues={featured} badge={(v) => (v.is_featured ? t('Featured') : null)} />

@@ -1,6 +1,6 @@
 import { Ionicons } from '@expo/vector-icons';
+import { HeroGradient } from '../../components/hero-gradient';
 import { Image } from 'expo-image';
-import { LinearGradient } from 'expo-linear-gradient';
 import { useRouter } from 'expo-router';
 import React, { useMemo, useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
@@ -438,10 +438,7 @@ export default function BusinessLanding() {
 
   return (
     <ScrollView style={{ flex: 1, backgroundColor: colors.white }}>
-      <LinearGradient
-        colors={[...colors.heroGradient]}
-        start={{ x: 0, y: 0 }}
-        end={{ x: 1, y: 1 }}
+      <HeroGradient
         style={{ paddingTop: insets.top + 16, paddingBottom: 56 }}
       >
         <View style={[styles.inner, { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }]}>
@@ -474,7 +471,7 @@ export default function BusinessLanding() {
             )}
           </View>
         </View>
-      </LinearGradient>
+      </HeroGradient>
 
       {/* Setup wizard */}
       {showWizard && (

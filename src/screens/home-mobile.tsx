@@ -1,5 +1,5 @@
-import { LinearGradient } from 'expo-linear-gradient';
 import React from 'react';
+import { HeroGradient } from '../components/hero-gradient';
 import { ScrollView, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { BottomTabs, TAB_BAR_HEIGHT } from '../components/bottom-tabs';
@@ -24,10 +24,7 @@ export function HomeMobile() {
   return (
     <View style={{ flex: 1, backgroundColor: colors.white }}>
       <ScrollView contentContainerStyle={{ paddingBottom: TAB_BAR_HEIGHT + 32 }}>
-        <LinearGradient
-          colors={[...colors.heroGradient]}
-          start={{ x: 0, y: 0 }}
-          end={{ x: 1, y: 1 }}
+        <HeroGradient
           style={{ paddingTop: insets.top + 16, paddingHorizontal: 20, paddingBottom: 32 }}
         >
           <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
@@ -44,7 +41,7 @@ export function HomeMobile() {
           <BText variant="smallMedium" style={{ textAlign: 'center', marginTop: 16 }}>
             <BText style={{ fontFamily: font.bold, fontSize: 14 }}>399,588</BText> {t('appointments booked today')}
           </BText>
-        </LinearGradient>
+        </HeroGradient>
 
         <SectionRail title={t('Recommended')} venues={featured} badge={() => t('Featured')} cardWidth={240} paddingHorizontal={20} />
         <SectionRail title={t('New to Bink')} venues={fresh} badge={() => t('New')} cardWidth={240} paddingHorizontal={20} />
