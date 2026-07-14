@@ -614,8 +614,8 @@ export default function Admin() {
     );
   }
 
-  const nav = (
-    <View style={isDesktop ? styles.sideNav : styles.topNav}>
+  const navInner = (
+    <View style={isDesktop ? styles.sideNav : styles.topNavRow}>
       {TABS.map((tb) => {
         const active = tab === tb.key;
         const badge = tb.key === 'salons' && pendingVenues.length > 0;
@@ -649,6 +649,13 @@ export default function Admin() {
       })}
     </View>
   );
+  const nav = isDesktop ? (
+    navInner
+  ) : (
+    <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.topNavScroll}>
+      {navInner}
+    </ScrollView>
+  );
 
   return (
     <View style={{ flex: 1, backgroundColor: colors.bgPage }}>
@@ -678,7 +685,7 @@ export default function Admin() {
 
 function StatCard({ label, value, icon, accent }: { label: string; value: string; icon: string; accent?: boolean }) {
   return (
-    <View style={[styles.card, { flex: 1, minWidth: 150 }, accent && { borderColor: '#F0C36D', backgroundColor: '#FFF9EE' }]}>
+    <View style={[styles.card, { flex: 1, minWidth: 150, flexBasis: '40%' }, accent && { borderColor: '#F0C36D', backgroundColor: '#FFF9EE' }]}>
       <Ionicons name={icon as any} size={18} color={colors.gray} />
       <BText style={{ fontFamily: font.extrabold, fontSize: 24, lineHeight: 32, color: colors.ink, marginTop: 8 }}>
         {value}
@@ -813,6 +820,8 @@ const styles = StyleSheet.create({
     borderRadius: radius.md,
   },
   topNav: { flexDirection: 'row', flexWrap: 'wrap', gap: 8, marginBottom: 16 },
+  topNavRow: { flexDirection: 'row', gap: 8 },
+  topNavScroll: { marginBottom: 16, flexGrow: 0 },
   topNavItem: {
     flexDirection: 'row',
     alignItems: 'center',

@@ -197,7 +197,7 @@ export default function BusinessDashboard() {
             </BText>
           </View>
         )}
-        <View style={{ flexDirection: isDesktop ? 'row' : 'column', gap: 12 }}>
+        <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 12 }}>
           <StatCard label={t('Upcoming bookings')} value={String(upcoming.length)} icon="calendar-outline" />
           <StatCard label={t('Total revenue')} value={formatPrice(revenue, currency)} icon="cash-outline" />
           <StatCard
@@ -270,7 +270,7 @@ export default function BusinessDashboard() {
     const escrow = escrowSummary(transactions);
     body = (
       <View style={{ gap: 16 }}>
-        <View style={{ flexDirection: isDesktop ? 'row' : 'column', gap: 12 }}>
+        <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 12 }}>
           <StatCard label={t('Gross sales')} value={formatPrice(summary.gross_cents, summary.currency)} icon="trending-up-outline" />
           <StatCard label={t('In escrow')} value={formatPrice(escrow.held_cents, escrow.currency)} icon="lock-closed-outline" />
           <StatCard label={t('Released to you')} value={formatPrice(escrow.released_cents, escrow.currency)} icon="checkmark-done-outline" />
@@ -353,9 +353,10 @@ export default function BusinessDashboard() {
   }
 
   const memberSections: Section[] = ['bookings', 'messages', 'services'];
-  const nav = (
-    <View style={isDesktop ? styles.sideNav : styles.topNav}>
-      {SECTIONS.filter((s) => canManage || memberSections.includes(s.key)).map((s) => {
+  const navItems = SECTIONS.filter((s) => canManage || memberSections.includes(s.key));
+  const navInner = (
+    <View style={isDesktop ? styles.sideNav : styles.topNavRow}>
+      {navItems.map((s) => {
         const active = section === s.key;
         return (
           <Pressable
@@ -380,6 +381,13 @@ export default function BusinessDashboard() {
         );
       })}
     </View>
+  );
+  const nav = isDesktop ? (
+    navInner
+  ) : (
+    <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.topNavScroll}>
+      {navInner}
+    </ScrollView>
   );
 
   return (
@@ -468,7 +476,7 @@ function StatusTag({ status }: { status: string }) {
 
 function StatCard({ label, value, icon }: { label: string; value: string; icon: string }) {
   return (
-    <View style={[styles.card, { flex: 1, minWidth: 150 }]}>
+    <View style={[styles.card, { flex: 1, minWidth: 150, flexBasis: '40%' }]}>
       <Ionicons name={icon as any} size={18} color={colors.gray} />
       <BText style={{ fontFamily: font.extrabold, fontSize: 24, lineHeight: 32, color: colors.ink, marginTop: 8 }}>
         {value}
@@ -1481,6 +1489,8 @@ const styles = StyleSheet.create({
     borderRadius: radius.md,
   },
   topNav: { flexDirection: 'row', flexWrap: 'wrap', gap: 8, marginBottom: 16 },
+  topNavRow: { flexDirection: 'row', gap: 8 },
+  topNavScroll: { marginBottom: 16, flexGrow: 0 },
   topNavItem: {
     flexDirection: 'row',
     alignItems: 'center',
