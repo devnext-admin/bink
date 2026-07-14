@@ -1,6 +1,6 @@
 import React from 'react';
 import { HeroGradient } from '../components/hero-gradient';
-import { ScrollView, View } from 'react-native';
+import { ScrollView, View, StyleSheet } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { BottomTabs, TAB_BAR_HEIGHT } from '../components/bottom-tabs';
 import { Logo } from '../components/logo';
@@ -11,6 +11,7 @@ import { HeroSearchMobile } from '../components/search-bar';
 import { BText } from '../components/ui/text';
 import { useAppData } from '../lib/app-data-context';
 import { useI18n } from '../lib/i18n';
+import { LinearGradient } from 'expo-linear-gradient';
 import { colors, font } from '../lib/theme';
 
 export function HomeMobile() {
@@ -22,7 +23,15 @@ export function HomeMobile() {
   const trending = venues.filter((v) => v.is_trending);
 
   return (
-    <View style={{ flex: 1, backgroundColor: colors.white }}>
+    <View style={{ flex: 1 }}>
+      <LinearGradient
+        colors={['#FFE3DA', '#FFF7F2', '#FFFFFF', '#FFF3EA']}
+        locations={[0, 0.3, 0.62, 1]}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 0, y: 1 }}
+        style={StyleSheet.absoluteFill}
+        pointerEvents="none"
+      />
       <ScrollView contentContainerStyle={{ paddingBottom: TAB_BAR_HEIGHT + 32 }}>
         <HeroGradient
           style={{ paddingTop: insets.top + 16, paddingHorizontal: 20, paddingBottom: 32 }}
@@ -35,12 +44,9 @@ export function HomeMobile() {
             {t('Book your salon visit in seconds')}
           </BText>
           <BText variant="body" style={{ marginTop: 8, marginBottom: 20 }}>
-            {t('Discover top-rated hair salons, barbershops, nail studios and beauty salons trusted by millions worldwide')}
+            {t('Discover and book top-rated hair salons, barbershops and beauty studios near you')}
           </BText>
           <HeroSearchMobile />
-          <BText variant="smallMedium" style={{ textAlign: 'center', marginTop: 16 }}>
-            <BText style={{ fontFamily: font.bold, fontSize: 14 }}>399,588</BText> {t('appointments booked today')}
-          </BText>
         </HeroGradient>
 
         <SectionRail title={t('Recommended')} venues={featured} badge={() => t('Featured')} cardWidth={240} paddingHorizontal={20} />

@@ -1,6 +1,14 @@
 // Arabic UI dictionary. Keys are the English source strings used with t().
 // Keep {var} tokens identical to the English key.
 export const ar: Record<string, string> = {
+  "Discover and book top-rated hair salons, barbershops and beauty studios near you": "اكتشف واحجز أفضل صالونات الشعر ومحلات الحلاقة واستوديوهات التجميل بالقرب منك",
+  "Online bookings around the clock, escrow-protected payments and a full dashboard for your team — built for salons and freelancers in Saudi Arabia.": "حجوزات عبر الإنترنت على مدار الساعة، ومدفوعات محمية بالضمان، ولوحة تحكم متكاملة لفريقك — صُممت للصالونات والمستقلين في المملكة العربية السعودية.",
+  "Bink’s reminders make life so much easier. I also found a few good salons near me that I didn’t know existed.": "تذكيرات Bink تجعل حياتي أسهل بكثير. كما اكتشفت صالونات جيدة بالقرب مني لم أكن أعلم بوجودها.",
+  "Booking my barber takes seconds now, and paying through the app means no waiting at the till. Highly recommend it!": "أصبح حجز حلاقي يستغرق ثوانٍ، والدفع عبر التطبيق يعني عدم الانتظار عند الكاشير. أنصح به بشدة!",
+  "Riyadh": "الرياض",
+  "Jeddah": "جدة",
+  "Al Khobar": "الخبر",
+  "Dammam": "الدمام",
   "Terms of Service": "شروط الخدمة",
   "Privacy Policy": "سياسة الخصوصية",
   "Last updated: {date}": "آخر تحديث: {date}",
@@ -488,7 +496,6 @@ export const ar: Record<string, string> = {
   "Reschedule": "إعادة الجدولة",
   "Revenue — last 7 days": "الإيرادات — آخر 7 أيام",
   "Review and confirm": "راجع وأكّد",
-  "Riyadh": "الرياض",
   "Role": "الدور",
   "Sales": "المبيعات",
   "Salons": "الصالونات",

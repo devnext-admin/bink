@@ -11,19 +11,14 @@ import { WebFooter } from '../components/web-footer';
 import { WebHeader } from '../components/web-header';
 import { useAppData } from '../lib/app-data-context';
 import { useI18n } from '../lib/i18n';
+import { LinearGradient } from 'expo-linear-gradient';
 import { colors, font, maxContentWidth, radius, shadow } from '../lib/theme';
 
 const TESTIMONIALS = [
-  { title: 'The best booking system', body: 'Great experience, easy to book. Paying for my salon visits is so convenient — no cash or cards needed!', name: 'Lucy', place: 'London, UK' },
-  { title: 'Easy to use & explore', body: 'Bink’s reminders make life so much easier. I also found a few good barbershops that I didn’t know existed.', name: 'Dan', place: 'New York, USA' },
-  { title: 'Great for finding barbers', body: 'I’ve been using Bink for two years and it’s by far the best salon booking platform I’ve used. Highly recommend it!', name: 'Dale', place: 'Sydney, Australia' },
-  { title: 'My go-to for hair & nails', body: 'Bink is my go-to app for hair appointments and nails. I can easily find and book salons near me — I love it!', name: 'Cameron', place: 'Edinburgh, UK' },
-];
-
-const STATS = [
-  { big: '130,000+', small: 'partner salons' },
-  { big: '120+ countries', small: 'using Bink' },
-  { big: '450,000+', small: 'stylists and professionals' },
+  { title: 'The best booking system', body: 'Great experience, easy to book. Paying for my salon visits is so convenient — no cash or cards needed!', name: 'Sara', place: 'Riyadh' },
+  { title: 'Easy to use & explore', body: 'Bink’s reminders make life so much easier. I also found a few good salons near me that I didn’t know existed.', name: 'Nouf', place: 'Jeddah' },
+  { title: 'Great for finding barbers', body: 'Booking my barber takes seconds now, and paying through the app means no waiting at the till. Highly recommend it!', name: 'Khalid', place: 'Al Khobar' },
+  { title: 'My go-to for hair & nails', body: 'Bink is my go-to app for hair appointments and nails. I can easily find and book salons near me — I love it!', name: 'Reem', place: 'Dammam' },
 ];
 
 export function HomeDesktop() {
@@ -32,10 +27,19 @@ export function HomeDesktop() {
   const featured = venues.filter((v) => v.is_featured);
   const fresh = venues.filter((v) => v.is_new);
   const trending = venues.filter((v) => v.is_trending);
-  const bookedToday = 397267;
 
   return (
-    <ScrollView style={{ flex: 1, backgroundColor: colors.white }}>
+    <View style={{ flex: 1 }}>
+      {/* Fresha-style page wash: the gradient continues under the whole page */}
+      <LinearGradient
+        colors={['#FFE3DA', '#FFF7F2', '#FFFFFF', '#FFF3EA']}
+        locations={[0, 0.3, 0.62, 1]}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 0, y: 1 }}
+        style={StyleSheet.absoluteFill}
+        pointerEvents="none"
+      />
+    <ScrollView style={{ flex: 1 }}>
       <HeroGradient
         style={styles.hero}
       >
@@ -45,15 +49,11 @@ export function HomeDesktop() {
             {t('Book your salon visit in seconds')}
           </BText>
           <BText variant="body" style={{ textAlign: 'center', marginTop: 12 }}>
-            {t('Discover top-rated hair salons, barbershops, nail studios and beauty salons trusted by millions')}
+            {t('Discover and book top-rated hair salons, barbershops and beauty studios near you')}
           </BText>
           <View style={{ marginTop: 32, width: '100%', alignItems: 'center' }}>
             <HeroSearchDesktop />
           </View>
-          <BText variant="bodyMedium" style={{ marginTop: 28 }}>
-            <BText style={{ fontFamily: font.bold, fontSize: 16 }}>{bookedToday.toLocaleString()}</BText>{' '}
-            {t('appointments booked today')}
-          </BText>
           <View style={[styles.appPill, shadow.card]}>
             <BText variant="smallMedium">{t('Get the app')}</BText>
             <Ionicons name="qr-code-outline" size={16} color={colors.ink} />
@@ -92,32 +92,6 @@ export function HomeDesktop() {
         </View>
       </View>
 
-      {/* Stats band */}
-      <View style={{ alignItems: 'center', marginTop: 96, paddingHorizontal: 24 }}>
-        <BText variant="h1" style={{ textAlign: 'center' }}>
-          {t('The top-rated destination for salons')}
-        </BText>
-        <BText variant="body" style={{ marginTop: 8, textAlign: 'center' }}>
-          {t('One solution, one software. Trusted by the best salons in the industry')}
-        </BText>
-        <BText style={{ fontFamily: font.extrabold, fontSize: 72, lineHeight: 84, color: colors.pink, marginTop: 40 }}>
-          {t('1 billion+')}
-        </BText>
-        <BText variant="bodyMedium">{t('appointments booked on Bink')}</BText>
-        <View style={{ flexDirection: 'row', gap: 96, marginTop: 56 }}>
-          {STATS.map((s) => (
-            <View key={s.big} style={{ alignItems: 'center' }}>
-              <BText style={{ fontFamily: font.extrabold, fontSize: 28, lineHeight: 36, color: colors.ink }}>
-                {t(s.big)}
-              </BText>
-              <BText variant="body" style={{ marginTop: 4 }}>
-                {t(s.small)}
-              </BText>
-            </View>
-          ))}
-        </View>
-      </View>
-
       {/* For business */}
       <View style={[styles.content, { marginTop: 120 }]}>
         <View style={styles.bizCard}>
@@ -125,26 +99,18 @@ export function HomeDesktop() {
             {t('Bink for business')}
           </BText>
           <BText variant="body" style={{ marginTop: 16, maxWidth: 480 }}>
-            {t('Supercharge your salon with the world’s top booking platform for salons and barbershops. Independently voted no. 1 by industry professionals.')}
+            {t('Online bookings around the clock, escrow-protected payments and a full dashboard for your team — built for salons and freelancers in Saudi Arabia.')}
           </BText>
           <View style={styles.bizBtn}>
             <BText style={{ fontFamily: font.bold, fontSize: 15, color: colors.white }}>{t('Find out more')}</BText>
             <Ionicons name={isRTL ? 'arrow-back' : 'arrow-forward'} size={16} color={colors.white} />
-          </View>
-          <View style={{ marginTop: 48 }}>
-            <BText variant="h3">{t('Excellent 5/5')}</BText>
-            <View style={{ marginTop: 8 }}>
-              <RatingStars value={5} size={18} />
-            </View>
-            <BText variant="small" style={{ marginTop: 8 }}>
-              {t('Over 1250 reviews')}
-            </BText>
           </View>
         </View>
       </View>
 
       <WebFooter />
     </ScrollView>
+    </View>
   );
 }
 
