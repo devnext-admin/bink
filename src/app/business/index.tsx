@@ -12,7 +12,8 @@ import { Field } from '../../components/ui/field';
 import { BText } from '../../components/ui/text';
 import { useAppData } from '../../lib/app-data-context';
 import { useAuth } from '../../lib/auth-context';
-import { registerSalon } from '../../lib/business';
+import * as ImagePicker from 'expo-image-picker';
+import { registerSalon, uploadVenuePhoto } from '../../lib/business';
 import { useI18n } from '../../lib/i18n';
 import { getSupabase } from '../../lib/supabase';
 import { colors, font, maxContentWidth, radius, shadow } from '../../lib/theme';
@@ -71,6 +72,7 @@ export default function BusinessLanding() {
   // Step 3 — photos
   const [imageUrl, setImageUrl] = useState('');
   const [images, setImages] = useState<string[]>([]);
+  const [uploadingPhoto, setUploadingPhoto] = useState(false);
   // Step 4 — services
   const [svcName, setSvcName] = useState('');
   const [svcDuration, setSvcDuration] = useState('60');
@@ -305,6 +307,21 @@ export default function BusinessLanding() {
           <BText variant="tiny" color={colors.accent} style={{ flex: 1 }}>
             {t('Photos must not show people, faces or body parts — interiors, tools and products only. You can skip this step and add photos later; a default interior photo is used until then.')}
           </BText>
+        </View>
+        <View style={{ flexDirection: 'row', gap: 10 }}>
+          <Button
+            title={t('Upload photo')}
+            size="sm"
+            loading={uploadingPhoto}
+            onPress={async () => {
+              const res = await ImagePicker.launchImageLibraryAsync({ mediaTypes: ['images'], quality: 0.8 });
+              if (res.canceled || !res.assets?.[0]?.uri) return;
+              setUploadingPhoto(true);
+              const url = await uploadVenuePhoto(res.assets[0].uri);
+              if (url) setImages((im) => (im.includes(url) ? im : [...im, url]));
+              setUploadingPhoto(false);
+            }}
+          />
         </View>
         <View style={{ flexDirection: 'row', gap: 10, alignItems: 'flex-end' }}>
           <View style={{ flex: 1 }}>

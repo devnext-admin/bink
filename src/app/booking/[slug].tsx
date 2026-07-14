@@ -59,6 +59,7 @@ export default function BookingScreen() {
   const { slug } = useLocalSearchParams<{ slug: string }>();
   const router = useRouter();
   const { t, isRTL } = useI18n();
+  const tt = t;
   const isDesktop = useIsDesktop();
   const insets = useSafeAreaInsets();
   const { allVenues } = useAppData();
@@ -263,8 +264,20 @@ export default function BookingScreen() {
             );
           })}
         </ScrollView>
-        <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 10 }}>
-          {TIME_SLOTS.map((t) => {
+        {([
+          ['Morning', (h: number) => h < 12],
+          ['Afternoon', (h: number) => h >= 12 && h < 17],
+          ['Evening', (h: number) => h >= 17],
+        ] as const).map(([groupLabel, match]) => {
+          const groupSlots = TIME_SLOTS.filter((slot) => match(Number(slot.split(':')[0])));
+          if (!groupSlots.length) return null;
+          return (
+            <View key={groupLabel} style={{ marginBottom: 14 }}>
+              <BText variant="smallMedium" style={{ marginBottom: 8 }}>
+                {tt(groupLabel)}
+              </BText>
+              <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 10 }}>
+          {groupSlots.map((t) => {
             const selected = booking.time === t;
             const [sh, sm] = t.split(':').map(Number);
             const taken =
@@ -296,7 +309,10 @@ export default function BookingScreen() {
               </Pressable>
             );
           })}
-        </View>
+              </View>
+            </View>
+          );
+        })}
         {!booking.date ? (
           <BText variant="small" style={{ marginTop: 16 }}>
             {t('Pick a date first, then choose a time.')}

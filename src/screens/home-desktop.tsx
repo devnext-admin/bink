@@ -8,6 +8,7 @@ import { BText } from '../components/ui/text';
 import { Avatar } from '../components/ui/avatar';
 import { WebFooter } from '../components/web-footer';
 import { WebHeader } from '../components/web-header';
+import { SkeletonRail } from '../components/skeleton';
 import { useAppData } from '../lib/app-data-context';
 import { useI18n } from '../lib/i18n';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -22,7 +23,7 @@ const TESTIMONIALS = [
 
 export function HomeDesktop() {
   const { t, isRTL } = useI18n();
-  const { venues } = useAppData();
+  const { venues, loading } = useAppData();
   const featured = venues.filter((v) => v.is_featured);
   const fresh = venues.filter((v) => v.is_new);
   const trending = venues.filter((v) => v.is_trending);
@@ -66,9 +67,18 @@ export function HomeDesktop() {
       </View>
 
       <View style={styles.content}>
-        <SectionRail title={t('Recommended')} venues={featured} badge={(v) => (v.is_featured ? t('Featured') : null)} />
-        <SectionRail title={t('New to Bink')} venues={fresh} badge={() => t('New')} />
-        <SectionRail title={t('Trending')} venues={trending} />
+        {loading ? (
+          <View style={{ gap: 40 }}>
+            <SkeletonRail />
+            <SkeletonRail />
+          </View>
+        ) : (
+          <>
+            <SectionRail title={t('Recommended')} venues={featured} badge={(v) => (v.is_featured ? t('Featured') : null)} />
+            <SectionRail title={t('New to Bink')} venues={fresh} badge={() => t('New')} />
+            <SectionRail title={t('Trending')} venues={trending} />
+          </>
+        )}
       </View>
 
       {/* Reviews */}

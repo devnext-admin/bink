@@ -8,6 +8,7 @@ import { Onboarding } from '../components/onboarding';
 import { SectionRail } from '../components/section-rail';
 import { HeroSearchMobile } from '../components/search-bar';
 import { BText } from '../components/ui/text';
+import { SkeletonRail } from '../components/skeleton';
 import { useAppData } from '../lib/app-data-context';
 import { useI18n } from '../lib/i18n';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -16,7 +17,7 @@ import { colors, font } from '../lib/theme';
 export function HomeMobile() {
   const insets = useSafeAreaInsets();
   const { t } = useI18n();
-  const { venues } = useAppData();
+  const { venues, loading } = useAppData();
   const featured = venues.filter((v) => v.is_featured);
   const fresh = venues.filter((v) => v.is_new);
   const trending = venues.filter((v) => v.is_trending);
@@ -53,9 +54,17 @@ export function HomeMobile() {
           <HeroSearchMobile />
         </View>
 
-        <SectionRail title={t('Recommended')} venues={featured} badge={() => t('Featured')} cardWidth={240} paddingHorizontal={20} />
-        <SectionRail title={t('New to Bink')} venues={fresh} badge={() => t('New')} cardWidth={240} paddingHorizontal={20} />
-        <SectionRail title={t('Trending')} venues={trending} cardWidth={240} paddingHorizontal={20} />
+        {loading ? (
+          <View style={{ paddingHorizontal: 20, marginTop: 24 }}>
+            <SkeletonRail count={2} cardWidth={240} />
+          </View>
+        ) : (
+          <>
+            <SectionRail title={t('Recommended')} venues={featured} badge={() => t('Featured')} cardWidth={240} paddingHorizontal={20} />
+            <SectionRail title={t('New to Bink')} venues={fresh} badge={() => t('New')} cardWidth={240} paddingHorizontal={20} />
+            <SectionRail title={t('Trending')} venues={trending} cardWidth={240} paddingHorizontal={20} />
+          </>
+        )}
       </ScrollView>
       <BottomTabs />
       <Onboarding />

@@ -439,7 +439,7 @@ export async function getVenueBookings(venueId: string): Promise<Booking[]> {
       return data.map((b: any) => ({
         ...b,
         venue_name: '',
-        customer_name: names.get(b.user_id) ?? null,
+        customer_name: names.get(b.user_id) ?? b.walk_in_name ?? null,
         staff_name: b.staff?.name ?? null,
         items: b.items ?? [],
       }));
@@ -462,7 +462,7 @@ export async function getAllBookings(): Promise<Booking[]> {
       return data.map((b: any) => ({
         ...b,
         venue_name: b.venue?.name ?? 'Venue',
-        customer_name: names.get(b.user_id) ?? null,
+        customer_name: names.get(b.user_id) ?? b.walk_in_name ?? null,
         items: b.items ?? [],
       }));
     }
@@ -474,6 +474,58 @@ export async function getAllBookings(): Promise<Booking[]> {
 export async function adminSetUserBlocked(userId: string, blocked: boolean): Promise<void> {
   const sb = getSupabase();
   if (sb) await sb.from('profiles').update({ is_blocked: blocked }).eq('id', userId);
+}
+
+/**
+ * Upload a salon photo to storage and return its public URL.
+ * Photos must follow the no-people rule — interiors, tools and products only.
+ */
+export async function uploadVenuePhoto(fileUri: string): Promise<string | null> {
+  const sb = getSupabase();
+  if (!sb) return null;
+  const res = await fetch(fileUri);
+  const blob = await res.blob();
+  const ext = (blob.type.split('/')[1] ?? 'jpg').replace('jpeg', 'jpg');
+  const path = `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}.${ext}`;
+  const { error } = await sb.storage.from('venue-photos').upload(path, blob, { contentType: blob.type || 'image/jpeg' });
+  if (error) return null;
+  return sb.storage.from('venue-photos').getPublicUrl(path).data.publicUrl;
+}
+
+/** Salon-created appointment for a customer without an account. */
+export async function createWalkInBooking(
+  venue: Venue,
+  input: { name: string; service: Service; staffId?: string | null; startsAt: Date }
+): Promise<boolean> {
+  const sb = getSupabase();
+  if (!sb || venue.id.startsWith('venue-')) return false;
+  const ends = new Date(input.startsAt.getTime() + input.service.duration_minutes * 60000);
+  const { data, error } = await sb
+    .from('bookings')
+    .insert({
+      venue_id: venue.id,
+      user_id: null,
+      walk_in_name: input.name,
+      staff_id: input.staffId && !input.staffId.startsWith('staff-') ? input.staffId : null,
+      starts_at: input.startsAt.toISOString(),
+      ends_at: ends.toISOString(),
+      status: 'confirmed',
+      total_cents: Math.round(input.service.price_cents * (1 - (input.service.discount_pct ?? 0) / 100)),
+      currency: input.service.currency,
+      payment_status: 'unpaid',
+      payment_method: 'pay_at_venue',
+    })
+    .select('id')
+    .single();
+  if (error || !data) return false;
+  await sb.from('booking_items').insert({
+    booking_id: data.id,
+    service_id: input.service.id,
+    service_name: input.service.name,
+    duration_minutes: input.service.duration_minutes,
+    price_cents: input.service.price_cents,
+  });
+  return true;
 }
 
 /** Admin: change a user's platform role. */

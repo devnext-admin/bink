@@ -14,9 +14,11 @@ import { Rating } from '../../components/ui/rating';
 import { BText } from '../../components/ui/text';
 import { useAppData } from '../../lib/app-data-context';
 import { useAuth } from '../../lib/auth-context';
+import * as ImagePicker from 'expo-image-picker';
 import {
   addService,
   addStaff,
+  createWalkInBooking,
   addVenueImage,
   deleteService,
   deleteStaff,
@@ -30,6 +32,7 @@ import {
   updateStaff,
   updateVenueHours,
   updateVenueInfo,
+  uploadVenuePhoto,
 } from '../../lib/business';
 import { formatDateLong, formatDuration, formatPrice, formatTimeOfDate } from '../../lib/format';
 import { formatDate, useI18n } from '../../lib/i18n';
@@ -57,7 +60,7 @@ export default function BusinessDashboard() {
   const router = useRouter();
   const isDesktop = useIsDesktop();
   const insets = useSafeAreaInsets();
-  const { t } = useI18n();
+  const { t, lang } = useI18n();
   const { user, loading } = useAuth();
   const { allVenues, refresh } = useAppData();
   const params = useLocalSearchParams<{ venue?: string }>();
@@ -119,6 +122,13 @@ export default function BusinessDashboard() {
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [messageTarget, setMessageTarget] = useState<{ userId: string; userName: string } | null>(null);
+  const [bookingsView, setBookingsView] = useState<'list' | 'day'>('list');
+  const [calDay, setCalDay] = useState<Date>(() => {
+    const d = new Date();
+    d.setHours(0, 0, 0, 0);
+    return d;
+  });
+  const [showWalkIn, setShowWalkIn] = useState(false);
   const openChatWith = (b: Booking) => {
     if (!b.user_id) return;
     setMessageTarget({ userId: b.user_id, userName: b.customer_name ?? t('Customer') });
@@ -234,7 +244,49 @@ export default function BusinessDashboard() {
       </View>
     );
   } else if (section === 'bookings') {
+    const dayBookings = visibleBookings
+      .filter((b) => new Date(b.starts_at).toDateString() === calDay.toDateString() && b.status !== 'cancelled')
+      .sort((a, b) => a.starts_at.localeCompare(b.starts_at));
     body = (
+      <View style={{ gap: 16 }}>
+        <View style={{ flexDirection: 'row', gap: 8, alignItems: 'center', flexWrap: 'wrap' }}>
+          <Chip label={t('List')} selected={bookingsView === 'list'} onPress={() => setBookingsView('list')} />
+          <Chip label={t('Day view')} selected={bookingsView === 'day'} onPress={() => setBookingsView('day')} />
+          <View style={{ flex: 1 }} />
+          {canManage && (
+            <Button title={showWalkIn ? t('Close') : t('Add booking')} size="sm" variant={showWalkIn ? 'secondary' : 'primary'} onPress={() => setShowWalkIn(!showWalkIn)} />
+          )}
+        </View>
+        {showWalkIn && canManage && (
+          <WalkInForm
+            venue={venue!}
+            onDone={() => {
+              setShowWalkIn(false);
+              reload();
+            }}
+          />
+        )}
+        {bookingsView === 'day' && (
+          <View style={styles.card}>
+            <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ gap: 6, paddingBottom: 12 }}>
+              {Array.from({ length: 14 }, (_, i) => {
+                const d = new Date();
+                d.setDate(d.getDate() + i);
+                d.setHours(0, 0, 0, 0);
+                return (
+                  <Chip
+                    key={i}
+                    label={i === 0 ? t('Today') : formatDate(lang, d, { weekday: 'short', day: 'numeric' })}
+                    selected={calDay.toDateString() === d.toDateString()}
+                    onPress={() => setCalDay(d)}
+                  />
+                );
+              })}
+            </ScrollView>
+            <DayCalendar bookings={dayBookings} />
+          </View>
+        )}
+        {bookingsView === 'list' && (
       <View style={styles.card}>
         <BText variant="h3">{canManage ? t('All bookings') : t('Your bookings')}</BText>
         {visibleBookings.length === 0 ? (
@@ -253,6 +305,8 @@ export default function BusinessDashboard() {
               canOperate
             />
           ))
+        )}
+      </View>
         )}
       </View>
     );
@@ -454,6 +508,151 @@ export default function BusinessDashboard() {
           </View>
         </View>
       </ScrollView>
+    </View>
+  );
+}
+
+// ---------------------------------------------------------------------------
+const CAL_START = 10 * 60; // 10:00
+const CAL_END = 22 * 60; // 22:00
+const PX_PER_MIN = 1.4;
+
+function DayCalendar({ bookings }: { bookings: Booking[] }) {
+  const { t } = useI18n();
+  const hours = Array.from({ length: (CAL_END - CAL_START) / 60 + 1 }, (_, i) => CAL_START + i * 60);
+  return (
+    <View style={{ flexDirection: 'row', marginTop: 8 }}>
+      <View style={{ width: 52 }}>
+        {hours.map((m) => (
+          <BText key={m} variant="tiny" style={{ height: 60 * PX_PER_MIN }}>
+            {`${String(Math.floor(m / 60)).padStart(2, '0')}:00`}
+          </BText>
+        ))}
+      </View>
+      <View style={{ flex: 1, height: (CAL_END - CAL_START) * PX_PER_MIN, borderLeftWidth: 1, borderLeftColor: colors.divider }}>
+        {hours.map((m) => (
+          <View key={m} style={{ position: 'absolute', top: (m - CAL_START) * PX_PER_MIN, left: 0, right: 0, height: 1, backgroundColor: colors.divider }} />
+        ))}
+        {bookings.map((b) => {
+          const st = new Date(b.starts_at);
+          const en = new Date(b.ends_at);
+          const startMin = Math.max(st.getHours() * 60 + st.getMinutes(), CAL_START);
+          const dur = Math.max(30, (en.getTime() - st.getTime()) / 60000);
+          return (
+            <View
+              key={b.id}
+              style={{
+                position: 'absolute',
+                top: (startMin - CAL_START) * PX_PER_MIN,
+                left: 8,
+                right: 8,
+                height: Math.min(dur, CAL_END - startMin) * PX_PER_MIN - 3,
+                backgroundColor: colors.accentSoft,
+                borderLeftWidth: 3,
+                borderLeftColor: colors.accent,
+                borderRadius: 8,
+                paddingHorizontal: 10,
+                paddingVertical: 4,
+                overflow: 'hidden',
+              }}
+            >
+              <BText variant="smallMedium" numberOfLines={1}>
+                {formatTimeOfDate(b.starts_at)} · {b.customer_name || t('Guest customer')}
+              </BText>
+              <BText variant="tiny" numberOfLines={1}>
+                {b.items.map((i) => i.service_name).join(', ')}
+                {b.staff_name ? ` · ${t('with {name}', { name: b.staff_name })}` : ''}
+              </BText>
+            </View>
+          );
+        })}
+        {bookings.length === 0 && (
+          <BText variant="small" style={{ padding: 16 }}>
+            {t('No appointments this day.')}
+          </BText>
+        )}
+      </View>
+    </View>
+  );
+}
+
+function WalkInForm({ venue, onDone }: { venue: Venue; onDone: () => void }) {
+  const { t, lang } = useI18n();
+  const [name, setName] = useState('');
+  const [serviceId, setServiceId] = useState<string | null>(venue.services[0]?.id ?? null);
+  const [staffId, setStaffId] = useState<string | null>(null);
+  const [day, setDay] = useState<Date | null>(null);
+  const [time, setTime] = useState<string | null>(null);
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const submit = async () => {
+    const service = venue.services.find((sv) => sv.id === serviceId);
+    if (!name.trim() || !service || !day || !time) {
+      setError(t('Fill the name, service, day and time.'));
+      return;
+    }
+    setBusy(true);
+    const [h, m] = time.split(':').map(Number);
+    const startsAt = new Date(day);
+    startsAt.setHours(h, m, 0, 0);
+    const ok = await createWalkInBooking(venue, { name: name.trim(), service, staffId, startsAt });
+    setBusy(false);
+    if (ok) onDone();
+    else setError(t('Could not create the booking.'));
+  };
+
+  return (
+    <View style={styles.card}>
+      <BText variant="h3">{t('New walk-in booking')}</BText>
+      <View style={{ gap: 12, marginTop: 14 }}>
+        <Field label={t('Customer name')} placeholder={t('e.g. Sara')} value={name} onChangeText={setName} />
+        <View style={{ gap: 6 }}>
+          <BText variant="smallMedium">{t('Service')}</BText>
+          <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8 }}>
+            {venue.services.map((sv) => (
+              <Chip key={sv.id} label={sv.name} selected={serviceId === sv.id} onPress={() => setServiceId(sv.id)} />
+            ))}
+          </View>
+        </View>
+        {venue.staff.length > 0 && (
+          <View style={{ gap: 6 }}>
+            <BText variant="smallMedium">{t('Professional (optional)')}</BText>
+            <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8 }}>
+              {venue.staff.map((m) => (
+                <Chip key={m.id} label={m.name} selected={staffId === m.id} onPress={() => setStaffId(staffId === m.id ? null : m.id)} />
+              ))}
+            </View>
+          </View>
+        )}
+        <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ gap: 6 }}>
+          {Array.from({ length: 14 }, (_, i) => {
+            const d = new Date();
+            d.setDate(d.getDate() + i);
+            d.setHours(0, 0, 0, 0);
+            return (
+              <Chip
+                key={i}
+                label={i === 0 ? t('Today') : formatDate(lang, d, { weekday: 'short', day: 'numeric' })}
+                selected={day?.toDateString() === d.toDateString()}
+                onPress={() => setDay(d)}
+              />
+            );
+          })}
+        </ScrollView>
+        <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 6 }}>
+          {Array.from({ length: 24 }, (_, i) => {
+            const slot = `${String(10 + Math.floor(i / 2)).padStart(2, '0')}:${i % 2 ? '30' : '00'}`;
+            return <Chip key={slot} label={slot} selected={time === slot} onPress={() => setTime(slot)} />;
+          })}
+        </View>
+        {error ? (
+          <BText variant="small" color={colors.danger}>
+            {error}
+          </BText>
+        ) : null}
+        <Button title={t('Create booking')} loading={busy} onPress={submit} />
+      </View>
     </View>
   );
 }
@@ -1405,6 +1604,7 @@ function GalleryEditor({ venue, onChanged }: { venue: Venue; onChanged: () => vo
   const { t } = useI18n();
   const [url, setUrl] = useState('');
   const [busy, setBusy] = useState(false);
+  const [uploading, setUploading] = useState(false);
 
   return (
     <View style={[styles.card, { marginTop: 16 }]}>
@@ -1431,6 +1631,28 @@ function GalleryEditor({ venue, onChanged }: { venue: Venue; onChanged: () => vo
             )}
           </View>
         ))}
+      </View>
+      <BText variant="tiny" style={{ marginTop: 10 }}>
+        {t('Photos must not show people, faces or body parts — interiors, tools and products only.')}
+      </BText>
+      <View style={{ flexDirection: 'row', gap: 10, marginTop: 12 }}>
+        <Button
+          title={t('Upload photo')}
+          size="sm"
+          variant="secondary"
+          loading={uploading}
+          onPress={async () => {
+            const res = await ImagePicker.launchImageLibraryAsync({ mediaTypes: ['images'], quality: 0.8 });
+            if (res.canceled || !res.assets?.[0]?.uri) return;
+            setUploading(true);
+            const url = await uploadVenuePhoto(res.assets[0].uri);
+            if (url) {
+              await addVenueImage(venue, url);
+              onChanged();
+            }
+            setUploading(false);
+          }}
+        />
       </View>
       <View style={{ flexDirection: 'row', gap: 10, marginTop: 14, alignItems: 'flex-end' }}>
         <View style={{ flex: 1 }}>

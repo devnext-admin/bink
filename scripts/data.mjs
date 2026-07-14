@@ -38,6 +38,7 @@ const venueDefs = [
   {
     n: 1, slug: 'glow-lash-studio', name: 'Glow Lash Studio', cat: 4,
     area: 'An Nuzhah', city: 'Riyadh', country: 'Saudi Arabia', address: 'An Nuzhah District, Olaya St',
+    lat: 24.7743, lng: 46.7386,
     flags: { featured: true },
     desc: 'Step into the peaceful world of Glow Lash Studio. We are all about perfect lashes and brows, offering expert lash extensions, lash lifts, eyebrow shaping and manicures. Our studio is designed like a relaxing bamboo spa, creating a calm and soothing atmosphere where quality and cleanliness come first.',
     highlights: ['Instant confirmation', 'Pay by app', 'Parking available', 'Woman-owned'],
@@ -57,6 +58,7 @@ const venueDefs = [
   {
     n: 2, slug: 'the-fade-room', name: 'The Fade Room', cat: 2,
     area: 'Corniche', city: 'Al Khobar', country: 'Saudi Arabia', address: 'Prince Turki St',
+    lat: 26.2946, lng: 50.213,
     flags: { featured: true },
     desc: 'A modern barbershop for the modern gentleman. Precision fades, classic cuts, hot towel shaves and beard sculpting from award-winning barbers in a relaxed, stylish space.',
     highlights: ['Instant confirmation', 'Pay by app', 'Walk-ins welcome'],
@@ -74,6 +76,7 @@ const venueDefs = [
   {
     n: 3, slug: 'the-blowout-bar', name: 'The Blowout Bar', cat: 1,
     area: 'Ash Shati', city: 'Jeddah', country: 'Saudi Arabia', address: 'Prince Faisal Bin Fahd Rd',
+    lat: 21.5723, lng: 39.131,
     flags: { featured: true },
     desc: 'Jeddah’s destination for perfect hair, fast. Signature blowouts, glossy styling, braids and treatments — walk in polished, walk out camera-ready.',
     highlights: ['Instant confirmation', 'Walk-ins welcome', 'Parking available'],
@@ -91,6 +94,7 @@ const venueDefs = [
   {
     n: 4, slug: 'velvet-nails-lounge', name: 'Velvet Nails Lounge', cat: 3,
     area: 'Al Olaya', city: 'Riyadh', country: 'Saudi Arabia', address: 'Olaya Towers, Tahlia St',
+    lat: 24.6949, lng: 46.6858,
     flags: { featured: true },
     desc: 'Luxury nail artistry in the heart of Riyadh. From flawless gel manicures to bespoke nail art, our masters treat every set as a canvas.',
     highlights: ['Instant confirmation', 'Pay by app', 'Woman-owned', 'Adults only'],
@@ -109,6 +113,7 @@ const venueDefs = [
   {
     n: 5, slug: 'marble-and-mane', name: 'Marble & Mane Hair Studio', cat: 1,
     area: 'Hittin', city: 'Riyadh', country: 'Saudi Arabia', address: 'Prince Turki Al Awwal Rd',
+    lat: 24.7614, lng: 46.6412,
     flags: { featured: true },
     desc: 'A destination hair studio for cuts, colour and transformations. Our stylists train internationally and specialise in balayage, precision cutting and healthy-hair treatments.',
     highlights: ['Instant confirmation', 'Pay by app', 'Complimentary drinks'],
@@ -126,6 +131,7 @@ const venueDefs = [
   {
     n: 6, slug: 'pure-skin-studio', name: 'Pure Skin Studio', cat: 6,
     area: 'Al Hamra', city: 'Jeddah', country: 'Saudi Arabia', address: 'Prince Sultan Rd',
+    lat: 21.5433, lng: 39.1728,
     flags: { isNew: true },
     desc: 'A skincare salon devoted to the glow: deep-cleansing facials, gentle peels, dermaplaning and LED — tailored to your skin by certified estheticians.',
     highlights: ['Instant confirmation', 'Certified estheticians', 'Parking available'],
@@ -142,6 +148,7 @@ const venueDefs = [
   {
     n: 7, slug: 'the-nail-atelier', name: 'The Nail Atelier', cat: 3,
     area: 'Al Malqa', city: 'Riyadh', country: 'Saudi Arabia', address: 'Anas Ibn Malik Rd',
+    lat: 24.8021, lng: 46.6199,
     flags: { isNew: true },
     desc: 'A boutique nail studio where minimalist design meets meticulous craft. Specialists in Russian manicure, BIAB and editorial nail art.',
     highlights: ['Instant confirmation', 'Woman-owned', 'By appointment only'],
@@ -158,6 +165,7 @@ const venueDefs = [
   {
     n: 8, slug: 'smooth-and-co-waxing', name: 'Smooth & Co Waxing Salon', cat: 5,
     area: 'Ash Shati', city: 'Dammam', country: 'Saudi Arabia', address: 'Prince Mohammed Bin Fahd Rd',
+    lat: 26.4367, lng: 50.1039,
     flags: { isNew: true },
     desc: 'The waxing specialists. Gentle low-temperature wax, spotless private rooms and therapists who make it quick, clean and comfortable.',
     highlights: ['Instant confirmation', 'Pay by app', 'Private rooms', 'Woman-owned'],
@@ -174,6 +182,7 @@ const venueDefs = [
   {
     n: 9, slug: 'brow-bar-co', name: 'Brow Bar Co', cat: 4,
     area: 'As Sulimaniyah', city: 'Riyadh', country: 'Saudi Arabia', address: 'Prince Mmd bin Abdulaziz Rd',
+    lat: 24.7469, lng: 46.705,
     flags: { isNew: true },
     desc: 'The brow specialists. Threading, tinting, lamination and henna brows perfected in minutes — walk in, glow out.',
     highlights: ['Walk-ins welcome', 'Pay by app', 'Woman-owned'],
@@ -190,6 +199,7 @@ const venueDefs = [
   {
     n: 10, slug: 'the-glam-room', name: 'The Glam Room', cat: 7,
     area: 'Corniche', city: 'Jeddah', country: 'Saudi Arabia', address: 'North Corniche Rd',
+    lat: 21.4901, lng: 39.1852,
     flags: { trending: true },
     desc: 'Jeddah’s go-to makeup studio for events, weddings and photoshoots. Senior artists, premium products and a look that lasts all night.',
     highlights: ['Instant confirmation', 'Sea view', 'Parking available', 'Woman-owned'],
@@ -206,6 +216,7 @@ const venueDefs = [
   {
     n: 11, slug: 'gentlemens-quarter', name: "Gentlemen's Quarter", cat: 2,
     area: 'King Fahd District', city: 'Riyadh', country: 'Saudi Arabia', address: 'King Fahd Rd',
+    lat: 24.7136, lng: 46.6753,
     flags: { trending: true },
     desc: 'Riyadh’s premium grooming lounge: sharp cuts, royal shaves, facials for men and a complimentary espresso bar.',
     highlights: ['Instant confirmation', 'Pay by app', 'Espresso bar'],
@@ -222,6 +233,7 @@ const venueDefs = [
   {
     n: 12, slug: 'bloom-beauty-salon', name: 'Bloom Beauty Salon', cat: 8,
     area: 'Al Rawdah', city: 'Jeddah', country: 'Saudi Arabia', address: 'Sari St',
+    lat: 21.6001, lng: 39.1055,
     flags: { trending: true },
     desc: 'Your everything salon: hair, makeup, nails and waxing under one roof. Trusted by Jeddah’s brides for over a decade.',
     highlights: ['Instant confirmation', 'Woman-owned', 'Bridal packages'],
@@ -268,6 +280,8 @@ export function buildData() {
       address: v.address,
       area: v.area,
       city: v.city,
+      lat: v.lat ?? null,
+      lng: v.lng ?? null,
       country: v.country,
       rating_avg: Number(ratingAvg) > 5 ? 5.0 : Number(ratingAvg),
       rating_count: ratingCount,

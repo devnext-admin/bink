@@ -1,15 +1,17 @@
 import { Ionicons } from '@expo/vector-icons';
 import { useLocalSearchParams } from 'expo-router';
 import React, { useMemo, useState } from 'react';
-import { ScrollView, StyleSheet, TextInput, View } from 'react-native';
+import { ScrollView, StyleSheet, TextInput, View , Platform } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { BottomTabs, TAB_BAR_HEIGHT } from '../components/bottom-tabs';
 import { Chip } from '../components/ui/chip';
 import { BText } from '../components/ui/text';
+import { SearchMap } from '../components/search-map';
 import { VenueCard } from '../components/venue-card';
 import { WebFooter } from '../components/web-footer';
 import { WebHeader } from '../components/web-header';
 import { useAppData } from '../lib/app-data-context';
+import { distanceKm, distanceLabel } from '../lib/availability';
 import { searchVenues } from '../lib/data';
 import { useI18n } from '../lib/i18n';
 import { colors, font, maxContentWidth, radius } from '../lib/theme';
@@ -22,9 +24,25 @@ export default function Search() {
   const { venues, categories } = useAppData();
   const [query, setQuery] = useState(params.q ?? '');
   const [categorySlug, setCategorySlug] = useState<string | undefined>(params.category);
-  const [sortBy, setSortBy] = useState<'recommended' | 'rating' | 'reviews' | 'price'>('recommended');
+  const [sortBy, setSortBy] = useState<'recommended' | 'rating' | 'reviews' | 'price' | 'nearest'>('recommended');
   const [priceBand, setPriceBand] = useState<0 | 1 | 2 | 3>(0); // 0 = any
+  const [showMap, setShowMap] = useState(false);
+  const [myLoc, setMyLoc] = useState<{ lat: number; lng: number } | null>(null);
   const insets = useSafeAreaInsets();
+
+  // Browser geolocation for distances; silently skipped if denied
+  React.useEffect(() => {
+    if (Platform.OS === 'web' && typeof navigator !== 'undefined' && navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (pos) => setMyLoc({ lat: pos.coords.latitude, lng: pos.coords.longitude }),
+        () => {},
+        { timeout: 5000, maximumAge: 600000 }
+      );
+    }
+  }, []);
+
+  const distanceOf = (v: (typeof venues)[number]) =>
+    myLoc && v.lat != null && v.lng != null ? distanceKm(myLoc.lat, myLoc.lng, v.lat, v.lng) : null;
 
   const avgPrice = (v: (typeof venues)[number]) =>
     v.services.length ? v.services.reduce((c, x) => c + x.price_cents, 0) / v.services.length : 0;
@@ -42,8 +60,10 @@ export default function Search() {
     if (sortBy === 'rating') out = [...out].sort((a, b) => b.rating_avg - a.rating_avg);
     else if (sortBy === 'reviews') out = [...out].sort((a, b) => b.rating_count - a.rating_count);
     else if (sortBy === 'price') out = [...out].sort((a, b) => avgPrice(a) - avgPrice(b));
+    else if (sortBy === 'nearest' && myLoc)
+      out = [...out].sort((a, b) => (distanceOf(a) ?? 1e9) - (distanceOf(b) ?? 1e9));
     return out;
-  }, [venues, query, categorySlug, categories, sortBy, priceBand]);
+  }, [venues, query, categorySlug, categories, sortBy, priceBand, myLoc]);
 
   const chips = (
     <View style={{ gap: 8 }}>
@@ -62,6 +82,12 @@ export default function Search() {
         <Chip label={t('Top rated')} selected={sortBy === 'rating'} onPress={() => setSortBy(sortBy === 'rating' ? 'recommended' : 'rating')} />
         <Chip label={t('Most reviewed')} selected={sortBy === 'reviews'} onPress={() => setSortBy(sortBy === 'reviews' ? 'recommended' : 'reviews')} />
         <Chip label={t('Lowest price')} selected={sortBy === 'price'} onPress={() => setSortBy(sortBy === 'price' ? 'recommended' : 'price')} />
+        {myLoc ? (
+          <Chip label={t('Nearest')} selected={sortBy === 'nearest'} onPress={() => setSortBy(sortBy === 'nearest' ? 'recommended' : 'nearest')} />
+        ) : null}
+        {Platform.OS === 'web' ? (
+          <Chip label={showMap ? t('List') : t('Map')} selected={showMap} onPress={() => setShowMap(!showMap)} />
+        ) : null}
         <Chip label={"\u200E0–100 ﷼"} selected={priceBand === 1} onPress={() => setPriceBand(priceBand === 1 ? 0 : 1)} />
         <Chip label={"\u200E100–250 ﷼"} selected={priceBand === 2} onPress={() => setPriceBand(priceBand === 2 ? 0 : 2)} />
         <Chip label={"\u200E250+ ﷼"} selected={priceBand === 3} onPress={() => setPriceBand(priceBand === 3 ? 0 : 3)} />
@@ -102,11 +128,17 @@ export default function Search() {
                 ? t('1 salon near you')
                 : t('{n} salons near you', { n: results.length })}
           </BText>
-          <View style={styles.grid}>
-            {results.map((v) => (
-              <VenueCard key={v.id} venue={v} width={276} />
-            ))}
-          </View>
+          {showMap ? (
+            <View style={{ marginTop: 20 }}>
+              <SearchMap venues={results} center={myLoc} />
+            </View>
+          ) : (
+            <View style={styles.grid}>
+              {results.map((v) => (
+                <VenueCard key={v.id} venue={v} width={276} distance={distanceOf(v) != null ? distanceLabel(distanceOf(v)!) : null} />
+              ))}
+            </View>
+          )}
           {!results.length && (
             <BText variant="body" style={{ marginTop: 24 }}>
               {t('No salons found. Try a different treatment or city.')}
@@ -132,9 +164,13 @@ export default function Search() {
         <BText variant="small">
           {results.length === 1 ? t('1 salon found') : t('{n} salons found', { n: results.length })}
         </BText>
-        {results.map((v) => (
-          <VenueCard key={v.id} venue={v} />
-        ))}
+        {showMap ? (
+          <SearchMap venues={results} center={myLoc} />
+        ) : (
+          results.map((v) => (
+            <VenueCard key={v.id} venue={v} distance={distanceOf(v) != null ? distanceLabel(distanceOf(v)!) : null} />
+          ))
+        )}
       </ScrollView>
       <BottomTabs />
     </View>

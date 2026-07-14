@@ -1,9 +1,10 @@
 import { Ionicons } from '@expo/vector-icons';
 import { Image } from 'expo-image';
 import { useRouter } from 'expo-router';
-import React from 'react';
-import { Pressable, StyleSheet, View } from 'react-native';
+import React, { useRef } from 'react';
+import { Animated, Pressable, StyleSheet, View } from 'react-native';
 import { useAppData } from '../lib/app-data-context';
+import { nextAvailableLabel } from '../lib/availability';
 import { useI18n } from '../lib/i18n';
 import { colors, font, radius } from '../lib/theme';
 import type { Venue } from '../lib/types';
@@ -14,14 +15,21 @@ interface VenueCardProps {
   venue: Venue;
   width?: number; // undefined = fill container
   badge?: string | null; // e.g. 'Featured' | 'New' | 'Deals' (may arrive pre-translated)
+  distance?: string | null;
 }
 
-export function VenueCard({ venue, width, badge }: VenueCardProps) {
+export function VenueCard({ venue, width, badge, distance }: VenueCardProps) {
   const router = useRouter();
-  const { t } = useI18n();
+  const { t, lang } = useI18n();
   const { favorites, toggleFav, categoryOf } = useAppData();
   const isFav = favorites.includes(venue.id);
   const category = categoryOf(venue);
+  const nextSlot = nextAvailableLabel(venue, lang, t);
+  const heartScale = useRef(new Animated.Value(1)).current;
+  const popHeart = () => {
+    heartScale.setValue(0.6);
+    Animated.spring(heartScale, { toValue: 1, friction: 3, tension: 160, useNativeDriver: false }).start();
+  };
 
   return (
     <Pressable
@@ -43,16 +51,19 @@ export function VenueCard({ venue, width, badge }: VenueCardProps) {
         <Pressable
           onPress={(e) => {
             e.stopPropagation();
+            popHeart();
             toggleFav(venue.id);
           }}
           style={styles.heart}
           hitSlop={8}
         >
-          <Ionicons
-            name={isFav ? 'heart' : 'heart-outline'}
-            size={20}
-            color={isFav ? colors.pink : colors.white}
-          />
+          <Animated.View style={{ transform: [{ scale: heartScale }] }}>
+            <Ionicons
+              name={isFav ? 'heart' : 'heart-outline'}
+              size={20}
+              color={isFav ? colors.pink : colors.white}
+            />
+          </Animated.View>
         </Pressable>
       </View>
 
@@ -70,7 +81,13 @@ export function VenueCard({ venue, width, badge }: VenueCardProps) {
           {venue.provider_type === 'freelancer' ? t('Freelancer') : category?.name}
           {'  ·  '}
           {t('{count} reviews', { count: venue.rating_count.toLocaleString() })}
+          {distance ? `  ·  ${distance}` : ''}
         </BText>
+        {nextSlot ? (
+          <BText variant="tiny" color={colors.green} numberOfLines={1} style={{ marginTop: 2 }}>
+            {nextSlot}
+          </BText>
+        ) : null}
       </View>
     </Pressable>
   );

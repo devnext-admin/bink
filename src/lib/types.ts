@@ -77,6 +77,8 @@ export interface Venue {
   highlights: string[];
   provider_type?: 'salon' | 'freelancer';
   maps_url?: string | null;
+  lat?: number | null;
+  lng?: number | null;
   cancellation_policy?: string;
   cancellation_fee_pct?: number;
   deposit_cents?: number;
