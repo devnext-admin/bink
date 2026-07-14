@@ -1,5 +1,4 @@
 import { Ionicons } from '@expo/vector-icons';
-import { HeroGradient } from '../components/hero-gradient';
 import React from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
 import { SectionRail } from '../components/section-rail';
@@ -29,20 +28,25 @@ export function HomeDesktop() {
   const trending = venues.filter((v) => v.is_trending);
 
   return (
-    <View style={{ flex: 1 }}>
-      {/* Fresha-style page wash: the gradient continues under the whole page */}
+    <ScrollView style={{ flex: 1, backgroundColor: colors.white }}>
+      {/* Fresha-style bloom: white → rose glow around the headline → deeper
+          pink where content starts → melts back to white as you scroll */}
       <LinearGradient
-        colors={['#FFE3DA', '#FFF7F2', '#FFFFFF', '#FFF3EA']}
-        locations={[0, 0.3, 0.62, 1]}
+        colors={['#FFFFFF', '#FFE9EF', '#FFC7D8', '#FFE6E8', '#FFFBFA', 'rgba(255,255,255,0)']}
+        locations={[0, 0.1, 0.28, 0.5, 0.74, 1]}
         start={{ x: 0, y: 0 }}
         end={{ x: 0, y: 1 }}
-        style={StyleSheet.absoluteFill}
+        style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 1600 }}
         pointerEvents="none"
       />
-    <ScrollView style={{ flex: 1 }}>
-      <HeroGradient
-        style={styles.hero}
-      >
+      <LinearGradient
+        colors={['rgba(255,56,92,0.08)', 'rgba(255,255,255,0)', 'rgba(255,148,94,0.09)']}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 1 }}
+        style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 950 }}
+        pointerEvents="none"
+      />
+      <View style={styles.hero}>
         <WebHeader transparent />
         <View style={styles.heroInner}>
           <BText variant="display" style={{ textAlign: 'center' }}>
@@ -59,7 +63,7 @@ export function HomeDesktop() {
             <Ionicons name="qr-code-outline" size={16} color={colors.ink} />
           </View>
         </View>
-      </HeroGradient>
+      </View>
 
       <View style={styles.content}>
         <SectionRail title={t('Recommended')} venues={featured} badge={(v) => (v.is_featured ? t('Featured') : null)} />
@@ -110,7 +114,6 @@ export function HomeDesktop() {
 
       <WebFooter />
     </ScrollView>
-    </View>
   );
 }
 
