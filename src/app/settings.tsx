@@ -79,8 +79,8 @@ export default function Settings() {
         <BText variant="h3">{t('About')}</BText>
         <View style={{ gap: 12, marginTop: 14 }}>
           <InfoRow label={t('Version')} value="1.0.0" />
-          <InfoRow label={t('Terms of service')} value="bink.app/terms" />
-          <InfoRow label={t('Privacy policy')} value="bink.app/privacy" />
+          <LinkRow label={t('Terms of service')} onPress={() => router.push('/terms' as any)} />
+          <LinkRow label={t('Privacy policy')} onPress={() => router.push('/privacy' as any)} />
         </View>
       </View>
 
@@ -170,6 +170,18 @@ function SettingRow({
       />
       </View>
     </View>
+  );
+}
+
+function LinkRow({ label, onPress }: { label: string; onPress: () => void }) {
+  const { isRTL } = useI18n();
+  return (
+    <Pressable onPress={onPress} style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+      <BText variant="small" color={colors.ink}>
+        {label}
+      </BText>
+      <Ionicons name={isRTL ? 'chevron-back' : 'chevron-forward'} size={14} color={colors.gray} />
+    </Pressable>
   );
 }
 

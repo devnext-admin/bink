@@ -1,4 +1,5 @@
 import { Ionicons } from '@expo/vector-icons';
+import { useRouter } from 'expo-router';
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
 import { useI18n } from '../lib/i18n';
@@ -15,6 +16,7 @@ const COLUMNS: { title: string; links: string[] }[] = [
 const SOCIAL = ['Facebook', 'X (Twitter)', 'LinkedIn', 'Instagram'];
 
 export function WebFooter() {
+  const router = useRouter();
   const { t } = useI18n();
   return (
     <View style={styles.wrap}>
@@ -34,11 +36,19 @@ export function WebFooter() {
             <BText variant="smallMedium" color={colors.white}>
               {t(col.title)}
             </BText>
-            {col.links.map((l) => (
-              <BText key={l} variant="small" color="rgba(255,255,255,0.7)">
-                {t(l)}
-              </BText>
-            ))}
+            {col.links.map((l) => {
+              const href = l === 'Privacy Policy' ? '/privacy' : l === 'Terms of service' || l === 'Terms of use' ? '/terms' : null;
+              return (
+                <BText
+                  key={l}
+                  variant="small"
+                  color="rgba(255,255,255,0.7)"
+                  onPress={href ? () => router.push(href as any) : undefined}
+                >
+                  {t(l)}
+                </BText>
+              );
+            })}
           </View>
         ))}
         <View style={{ flex: 1, gap: 12 }}>
