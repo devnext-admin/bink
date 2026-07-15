@@ -154,7 +154,7 @@ export default function BusinessDashboard() {
 
   if (!user || accessibleVenues.length === 0) {
     return (
-      <View style={[styles.emptyWrap, { paddingTop: insets.top + 40 }]}>
+      <View style={[styles.emptyWrap, { paddingTop: insets.top }]}>
         <Logo />
         <BText variant="h2" style={{ marginTop: 32 }}>
           {t('No business yet')}
@@ -1794,7 +1794,9 @@ const styles = StyleSheet.create({
   emptyWrap: {
     flex: 1,
     alignItems: 'center',
+    justifyContent: 'center',
     backgroundColor: colors.white,
     paddingHorizontal: 24,
+    paddingBottom: 48,
   },
 });

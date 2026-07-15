@@ -446,7 +446,7 @@ export default function BookingScreen() {
     );
   } else {
     content = (
-      <View style={{ alignItems: 'center', paddingTop: 48 }}>
+      <View style={{ alignItems: 'center' }}>
         <View style={styles.doneCircle}>
           <Ionicons name="checkmark" size={40} color={colors.white} />
         </View>
@@ -599,11 +599,15 @@ export default function BookingScreen() {
           </Pressable>
         </View>
 
-        <ScrollView contentContainerStyle={{ paddingBottom: 80 }}>
-          <View style={styles.desktopColumns}>
-            <View style={{ flex: 1, maxWidth: 640 }}>{content}</View>
-            {step !== 'done' && <View style={{ width: 380 }}>{summary}</View>}
-          </View>
+        <ScrollView contentContainerStyle={step === 'done' ? { flexGrow: 1, justifyContent: 'center', paddingBottom: 120 } : { paddingBottom: 80 }}>
+          {step === 'done' ? (
+            <View style={{ alignItems: 'center', paddingHorizontal: 24 }}>{content}</View>
+          ) : (
+            <View style={styles.desktopColumns}>
+              <View style={{ flex: 1, maxWidth: 640 }}>{content}</View>
+              <View style={{ width: 380 }}>{summary}</View>
+            </View>
+          )}
         </ScrollView>
       </View>
     );
@@ -632,7 +636,7 @@ export default function BookingScreen() {
         </Pressable>
       </View>
 
-      <ScrollView contentContainerStyle={{ padding: 20, paddingBottom: 180 }}>{content}</ScrollView>
+      <ScrollView contentContainerStyle={step === 'done' ? { padding: 20, flexGrow: 1, justifyContent: 'center' } : { padding: 20, paddingBottom: 180 }}>{content}</ScrollView>
 
       {step !== 'done' && (
         <View style={[styles.mobileBottom, { paddingBottom: Math.max(insets.bottom, 12) }]}>

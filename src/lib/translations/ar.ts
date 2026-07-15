@@ -665,5 +665,4 @@ export const ar: Record<string, string> = {
   'Could not create the booking.': 'تعذر إنشاء الحجز.',
   'Create booking': 'إنشاء الحجز',
   'No appointments this day.': 'لا توجد مواعيد في هذا اليوم.',
-  'No reviews yet': 'لا توجد تقييمات بعد',
 };
