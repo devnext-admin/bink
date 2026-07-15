@@ -10,6 +10,7 @@ import { WebFooter } from '../components/web-footer';
 import { WebHeader } from '../components/web-header';
 import { SkeletonRail } from '../components/skeleton';
 import { useAppData } from '../lib/app-data-context';
+import { homeRails } from '../lib/home-rails';
 import { useI18n } from '../lib/i18n';
 import { LinearGradient } from 'expo-linear-gradient';
 import { colors, font, maxContentWidth, radius, shadow } from '../lib/theme';
@@ -24,9 +25,7 @@ const TESTIMONIALS = [
 export function HomeDesktop() {
   const { t, isRTL } = useI18n();
   const { venues, loading } = useAppData();
-  const featured = venues.filter((v) => v.is_featured);
-  const fresh = venues.filter((v) => v.is_new);
-  const trending = venues.filter((v) => v.is_trending);
+  const { featured, fresh, trending } = homeRails(venues);
 
   return (
     <ScrollView style={{ flex: 1, backgroundColor: colors.white }}>

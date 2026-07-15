@@ -74,6 +74,7 @@ export interface Venue {
   is_featured: boolean;
   is_new: boolean;
   is_trending: boolean;
+  created_at?: string;
   highlights: string[];
   provider_type?: 'salon' | 'freelancer';
   maps_url?: string | null;

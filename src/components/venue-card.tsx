@@ -72,7 +72,7 @@ export function VenueCard({ venue, width, badge, distance }: VenueCardProps) {
           <BText variant="title" numberOfLines={1} style={{ flex: 1 }}>
             {venue.name}
           </BText>
-          <Rating value={venue.rating_avg} />
+          {venue.rating_count > 0 ? <Rating value={venue.rating_avg} /> : null}
         </View>
         <BText variant="small" numberOfLines={1}>
           {venue.area}, {venue.city}
@@ -80,7 +80,9 @@ export function VenueCard({ venue, width, badge, distance }: VenueCardProps) {
         <BText variant="small" numberOfLines={1}>
           {venue.provider_type === 'freelancer' ? t('Freelancer') : category?.name}
           {'  ·  '}
-          {t('{count} reviews', { count: venue.rating_count.toLocaleString() })}
+          {venue.rating_count > 0
+            ? t('{count} reviews', { count: venue.rating_count.toLocaleString() })
+            : t('No reviews yet')}
           {distance ? `  ·  ${distance}` : ''}
         </BText>
         {nextSlot ? (
