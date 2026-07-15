@@ -59,14 +59,13 @@ export function WebHeader({ transparent, showSearch }: WebHeaderProps) {
     <View style={[styles.wrap, !transparent && styles.solid]}>
       <View style={styles.inner}>
         <Logo />
-        {showSearch ? (
-          <View style={{ flex: 1, alignItems: 'center', marginHorizontal: 24 }}>
-            <View style={{ width: '100%', maxWidth: 560 }}>
+        <View style={{ flex: 1 }} />
+        {showSearch && (
+          <View pointerEvents="box-none" style={styles.searchOverlay}>
+            <View style={{ width: '100%', maxWidth: 520 }}>
               <CompactSearch />
             </View>
           </View>
-        ) : (
-          <View style={{ flex: 1 }} />
         )}
         <View style={{ flexDirection: 'row', alignItems: 'center', gap: 14 }}>
           <HeaderPill label={t('For business')} onPress={() => router.push('/business')} />
@@ -153,6 +152,17 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingHorizontal: 32,
     height: 68,
+  },
+  searchOverlay: {
+    // Centered on the viewport, not the leftover flex space — the logo and
+    // the right-side actions have different widths.
+    position: 'absolute',
+    top: 0,
+    bottom: 0,
+    left: 0,
+    right: 0,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   pill: {
     paddingHorizontal: 16,

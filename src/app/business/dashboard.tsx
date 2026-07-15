@@ -6,6 +6,7 @@ import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { ChatThread, ConversationList } from '../../components/chat';
 import { Logo } from '../../components/logo';
+import { NotificationsBell } from '../../components/notifications-bell';
 import { PaymentPill } from '../../components/payment-pill';
 import { Button } from '../../components/ui/button';
 import { Chip } from '../../components/ui/chip';
@@ -463,6 +464,7 @@ export default function BusinessDashboard() {
                 ))}
               </ScrollView>
             )}
+            <NotificationsBell />
             <Pressable onPress={() => router.push('/')} hitSlop={8}>
               <Ionicons name="close" size={22} color={colors.ink} />
             </Pressable>
