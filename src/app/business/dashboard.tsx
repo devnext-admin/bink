@@ -12,6 +12,7 @@ import { Button } from '../../components/ui/button';
 import { Chip } from '../../components/ui/chip';
 import { Field } from '../../components/ui/field';
 import { Rating } from '../../components/ui/rating';
+import { Avatar } from '../../components/ui/avatar';
 import { BText } from '../../components/ui/text';
 import { useAppData } from '../../lib/app-data-context';
 import { useAuth } from '../../lib/auth-context';
@@ -45,16 +46,33 @@ import { colors, font, radius } from '../../lib/theme';
 import type { Booking, Transaction, Venue } from '../../lib/types';
 import { useIsDesktop } from '../../lib/use-layout';
 
-type Section = 'overview' | 'bookings' | 'messages' | 'sales' | 'analytics' | 'services' | 'staff' | 'settings';
+type Section =
+  | 'overview'
+  | 'bookings'
+  | 'messages'
+  | 'clients'
+  | 'reviews'
+  | 'sales'
+  | 'analytics'
+  | 'services'
+  | 'staff'
+  | 'settings';
 const SECTIONS: { key: Section; label: string; icon: string }[] = [
   { key: 'overview', label: 'Overview', icon: 'grid-outline' },
-  { key: 'bookings', label: 'Bookings', icon: 'calendar-outline' },
+  { key: 'bookings', label: 'Calendar', icon: 'calendar-outline' },
   { key: 'messages', label: 'Messages', icon: 'chatbubble-ellipses-outline' },
+  { key: 'clients', label: 'Clients', icon: 'people-circle-outline' },
+  { key: 'reviews', label: 'Reviews', icon: 'star-outline' },
   { key: 'sales', label: 'Sales', icon: 'cash-outline' },
   { key: 'analytics', label: 'Analytics', icon: 'stats-chart-outline' },
   { key: 'services', label: 'Services', icon: 'pricetags-outline' },
   { key: 'staff', label: 'Team', icon: 'people-outline' },
   { key: 'settings', label: 'Settings', icon: 'settings-outline' },
+];
+const NAV_GROUPS: { title: string; keys: Section[] }[] = [
+  { title: 'Manage', keys: ['overview', 'bookings', 'messages', 'clients', 'reviews'] },
+  { title: 'Money', keys: ['sales', 'analytics'] },
+  { title: 'Setup', keys: ['services', 'staff', 'settings'] },
 ];
 
 export default function BusinessDashboard() {
@@ -130,6 +148,7 @@ export default function BusinessDashboard() {
     return d;
   });
   const [showWalkIn, setShowWalkIn] = useState(false);
+  const [clientQuery, setClientQuery] = useState('');
   const openChatWith = (b: Booking) => {
     if (!b.user_id) return;
     setMessageTarget({ userId: b.user_id, userName: b.customer_name ?? t('Customer') });
@@ -190,8 +209,87 @@ export default function BusinessDashboard() {
 
   let body: React.ReactNode = null;
   if (section === 'overview') {
+    const DAY = 86400000;
+    const active = visibleBookings.filter((b) => b.status !== 'cancelled' && b.status !== 'no_show');
+    const startToday = new Date();
+    startToday.setHours(0, 0, 0, 0);
+    const weekFrom = startToday.getTime() - 6 * DAY;
+    const weekTo = startToday.getTime() + DAY;
+    const inRange = (b: Booking, from: number, to: number) => {
+      const ts = new Date(b.starts_at).getTime();
+      return ts >= from && ts < to;
+    };
+    const todayBookings = active
+      .filter((b) => inRange(b, startToday.getTime(), weekTo))
+      .sort((a, b) => a.starts_at.localeCompare(b.starts_at));
+    const weekBookings = active.filter((b) => inRange(b, weekFrom, weekTo));
+    const prevWeekBookings = active.filter((b) => inRange(b, weekFrom - 7 * DAY, weekFrom));
+    const weekRevenue = weekBookings.reduce((c, b) => c + b.total_cents, 0);
+    const prevRevenue = prevWeekBookings.reduce((c, b) => c + b.total_cents, 0);
+    const revDelta = prevRevenue > 0 ? Math.round(((weekRevenue - prevRevenue) / prevRevenue) * 100) : null;
+    const bookDelta = prevWeekBookings.length > 0
+      ? Math.round(((weekBookings.length - prevWeekBookings.length) / prevWeekBookings.length) * 100)
+      : null;
+
+    // New clients: customers whose first appointment falls in the last 7 days
+    const firstSeen = new Map<string, number>();
+    for (const b of active) {
+      const key = b.user_id ?? `w:${b.customer_name ?? ''}`;
+      const ts = new Date(b.starts_at).getTime();
+      firstSeen.set(key, Math.min(firstSeen.get(key) ?? Infinity, ts));
+    }
+    const newClients = [...firstSeen.values()].filter((ts) => ts >= weekFrom && ts < weekTo).length;
+
+    // Occupancy today: booked minutes vs open minutes across the team
+    const todayHours = venue!.hours?.find((h) => h.weekday === new Date().getDay());
+    let openMin = 720;
+    if (todayHours?.is_closed) openMin = 0;
+    else if (todayHours?.open_time && todayHours?.close_time) {
+      const [oh, om] = todayHours.open_time.split(':').map(Number);
+      const [ch, cm] = todayHours.close_time.split(':').map(Number);
+      openMin = Math.max(60, ch * 60 + cm - (oh * 60 + om));
+    }
+    const bookedMin = todayBookings.reduce(
+      (c, b) => c + Math.max(30, (new Date(b.ends_at).getTime() - new Date(b.starts_at).getTime()) / 60000),
+      0
+    );
+    const occupancy = openMin === 0 ? null : Math.min(100, Math.round((bookedMin / (openMin * Math.max(1, venue!.staff.length))) * 100));
+
+    // Revenue trend, last 14 days
+    const trend: { label: string; value: number }[] = [];
+    for (let i = 13; i >= 0; i--) {
+      const d = new Date();
+      d.setDate(d.getDate() - i);
+      const key = d.toDateString();
+      trend.push({
+        label: formatDate(lang, d, { day: 'numeric', month: 'short' }),
+        value: active.filter((b) => new Date(b.starts_at).toDateString() === key).reduce((c, b) => c + b.total_cents, 0),
+      });
+    }
+
+    // Top services by revenue
+    const svcRev = new Map<string, { count: number; revenue: number }>();
+    for (const b of active)
+      for (const i of b.items) {
+        const cur = svcRev.get(i.service_name) ?? { count: 0, revenue: 0 };
+        cur.count += 1;
+        cur.revenue += i.price_cents;
+        svcRev.set(i.service_name, cur);
+      }
+    const topServices = [...svcRev.entries()].sort((a, b) => b[1].revenue - a[1].revenue).slice(0, 5);
+
+    // Team leaderboard by revenue
+    const teamPerf = venue!.staff
+      .map((m) => {
+        const theirs = active.filter((b) => b.staff_id === m.id);
+        return { name: m.name, count: theirs.length, revenue: theirs.reduce((c, b) => c + b.total_cents, 0) };
+      })
+      .sort((a, b) => b.revenue - a.revenue);
+
+    const recentReviews = [...venue!.reviews].slice(0, 3);
+
     body = (
-      <View style={{ gap: 24 }}>
+      <View style={{ gap: 16 }}>
         {venue!.status === 'pending' && (
           <View style={styles.pendingBanner}>
             <Ionicons name="time-outline" size={18} color={colors.warning} />
@@ -209,37 +307,172 @@ export default function BusinessDashboard() {
           </View>
         )}
         <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 12 }}>
-          <StatCard label={t('Upcoming bookings')} value={String(upcoming.length)} icon="calendar-outline" />
-          <StatCard label={t('Total revenue')} value={formatPrice(revenue, currency)} icon="cash-outline" />
+          <StatCard
+            label={t("Today's appointments")}
+            value={String(todayBookings.length)}
+            icon="calendar-outline"
+            delta={bookDelta}
+            sub={t('{n} this week', { n: weekBookings.length })}
+          />
+          <StatCard
+            label={t('Revenue — last 7 days')}
+            value={formatPrice(weekRevenue, currency)}
+            icon="cash-outline"
+            delta={revDelta}
+          />
+          <StatCard label={t('New clients (7 days)')} value={String(newClients)} icon="person-add-outline" />
+          <StatCard
+            label={t('Occupancy today')}
+            value={occupancy == null ? t('Closed') : `${occupancy}%`}
+            icon="speedometer-outline"
+          />
           <StatCard
             label={t('Rating')}
-            value={venue!.rating_count ? `${venue!.rating_avg.toFixed(1)} ★` : t('No reviews yet')}
+            value={venue!.rating_count ? venue!.rating_avg.toFixed(1) : '—'}
             icon="star-outline"
+            sub={venue!.rating_count ? t('{count} reviews', { count: String(venue!.rating_count) }) : t('No reviews yet')}
           />
-          <StatCard label={t('Services listed')} value={String(venue!.services.length)} icon="pricetags-outline" />
         </View>
-        <View style={styles.card}>
-          <BText variant="h3">{t('Next appointments')}</BText>
-          {upcoming.length === 0 ? (
-            <BText variant="small" style={{ marginTop: 10 }}>
-              {t('Nothing booked yet. Share your Bink page to start filling the calendar.')}
+
+        <View style={{ flexDirection: isDesktop ? 'row' : 'column', gap: 16 }}>
+          <View style={[styles.card, { flex: 1.5 }]}>
+            <BText variant="h3">{t('Revenue — last 14 days')}</BText>
+            <BarChart data={trend} unit="money" />
+          </View>
+          <View style={[styles.card, { flex: 1 }]}>
+            <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+              <BText variant="h3">{t("Today's schedule")}</BText>
+              {canManage && (
+                <Button
+                  title={t('Add booking')}
+                  size="sm"
+                  variant="secondary"
+                  onPress={() => {
+                    setSection('bookings');
+                    setShowWalkIn(true);
+                  }}
+                />
+              )}
+            </View>
+            {todayBookings.length === 0 ? (
+              <BText variant="small" style={{ marginTop: 12 }}>
+                {t('No appointments today.')}
+              </BText>
+            ) : (
+              <View style={{ marginTop: 8 }}>
+                {todayBookings.slice(0, 6).map((b) => (
+                  <View key={b.id} style={styles.scheduleRow}>
+                    <BText variant="smallMedium" style={{ width: 52 }}>
+                      {formatTimeOfDate(b.starts_at)}
+                    </BText>
+                    <View style={{ flex: 1 }}>
+                      <BText variant="smallMedium" numberOfLines={1}>
+                        {b.customer_name ?? t('Guest customer')}
+                      </BText>
+                      <BText variant="tiny" numberOfLines={1}>
+                        {b.items.map((i) => i.service_name).join(', ')}
+                        {b.staff_name ? ` · ${b.staff_name}` : ''}
+                      </BText>
+                    </View>
+                    <StatusTag status={b.status} />
+                  </View>
+                ))}
+              </View>
+            )}
+          </View>
+        </View>
+
+        <View style={{ flexDirection: isDesktop ? 'row' : 'column', gap: 16 }}>
+          <View style={[styles.card, { flex: 1 }]}>
+            <BText variant="h3">{t('Top services')}</BText>
+            {topServices.length === 0 ? (
+              <BText variant="small" style={{ marginTop: 10 }}>
+                {t('No bookings yet.')}
+              </BText>
+            ) : (
+              <View style={{ marginTop: 6 }}>
+                {topServices.map(([name, v]) => (
+                  <View key={name} style={styles.tableRow}>
+                    <BText variant="smallMedium" style={{ flex: 1 }} numberOfLines={1}>
+                      {name}
+                    </BText>
+                    <BText variant="tiny" style={{ width: 70 }}>
+                      {t('{n} booked', { n: v.count })}
+                    </BText>
+                    <BText variant="smallMedium" style={{ width: 90, textAlign: 'right' }}>
+                      {formatPrice(v.revenue, currency)}
+                    </BText>
+                  </View>
+                ))}
+              </View>
+            )}
+          </View>
+          <View style={[styles.card, { flex: 1 }]}>
+            <BText variant="h3">{t('Team leaderboard')}</BText>
+            {teamPerf.length === 0 ? (
+              <BText variant="small" style={{ marginTop: 10 }}>
+                {t('Add team members to see their bookings.')}
+              </BText>
+            ) : (
+              <View style={{ marginTop: 6 }}>
+                {teamPerf.map((m, i) => (
+                  <View key={m.name} style={styles.tableRow}>
+                    <BText variant="tiny" style={{ width: 18 }}>
+                      {i + 1}
+                    </BText>
+                    <BText variant="smallMedium" style={{ flex: 1 }} numberOfLines={1}>
+                      {m.name}
+                    </BText>
+                    <BText variant="tiny" style={{ width: 80 }}>
+                      {t('{n} bookings', { n: m.count })}
+                    </BText>
+                    <BText variant="smallMedium" style={{ width: 90, textAlign: 'right' }}>
+                      {formatPrice(m.revenue, currency)}
+                    </BText>
+                  </View>
+                ))}
+              </View>
+            )}
+          </View>
+        </View>
+
+        <View style={{ flexDirection: isDesktop ? 'row' : 'column', gap: 16 }}>
+          <View style={[styles.card, { flex: 1.5 }]}>
+            <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+              <BText variant="h3">{t('Recent reviews')}</BText>
+              <Button title={t('All reviews')} size="sm" variant="secondary" onPress={() => setSection('reviews')} />
+            </View>
+            {recentReviews.length === 0 ? (
+              <BText variant="small" style={{ marginTop: 12 }}>
+                {t('No reviews yet.')}
+              </BText>
+            ) : (
+              recentReviews.map((r) => (
+                <View key={r.id} style={{ marginTop: 14, gap: 4 }}>
+                  <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
+                    <BText variant="smallMedium">{r.author_name}</BText>
+                    <Rating value={r.rating} />
+                  </View>
+                  <BText variant="small" numberOfLines={2}>
+                    {r.comment}
+                  </BText>
+                </View>
+              ))
+            )}
+          </View>
+          <View style={[styles.card, { flex: 1 }]}>
+            <BText variant="h3">{t('Your public page')}</BText>
+            <BText variant="small" style={{ marginTop: 6 }}>
+              bink.app/venue/{venue!.slug}
             </BText>
-          ) : (
-            upcoming.slice(0, 5).map((b) => <BookingRow key={b.id} booking={b} venue={venue!} onMessage={openChatWith} onChanged={reload} />)
-          )}
-        </View>
-        <View style={styles.card}>
-          <BText variant="h3">{t('Your public page')}</BText>
-          <BText variant="small" style={{ marginTop: 6 }}>
-            bink.app/venue/{venue!.slug}
-          </BText>
-          <View style={{ flexDirection: 'row', marginTop: 12 }}>
-            <Button
-              title={t('Preview listing')}
-              variant="secondary"
-              size="sm"
-              onPress={() => router.push(`/venue/${venue!.slug}`)}
-            />
+            <View style={{ flexDirection: 'row', marginTop: 12 }}>
+              <Button
+                title={t('Preview listing')}
+                variant="secondary"
+                size="sm"
+                onPress={() => router.push(`/venue/${venue!.slug}`)}
+              />
+            </View>
           </View>
         </View>
       </View>
@@ -309,6 +542,175 @@ export default function BusinessDashboard() {
         )}
       </View>
         )}
+      </View>
+    );
+  } else if (section === 'clients') {
+    const map = new Map<string, { name: string; visits: number; spend: number; last: string; userId: string | null }>();
+    for (const b of visibleBookings.filter((x) => x.status !== 'cancelled')) {
+      const key = b.user_id ?? `w:${b.customer_name ?? 'guest'}`;
+      const cur = map.get(key) ?? {
+        name: b.customer_name ?? t('Guest customer'),
+        visits: 0,
+        spend: 0,
+        last: '',
+        userId: b.user_id ?? null,
+      };
+      cur.visits += 1;
+      cur.spend += b.total_cents;
+      if (b.starts_at > cur.last) cur.last = b.starts_at;
+      map.set(key, cur);
+    }
+    let clients = [...map.values()].sort((a, b) => b.spend - a.spend);
+    const q = clientQuery.trim().toLowerCase();
+    if (q) clients = clients.filter((c) => c.name.toLowerCase().includes(q));
+    body = (
+      <View style={styles.card}>
+        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 10 }}>
+          <BText variant="h3">{t('{n} clients', { n: map.size })}</BText>
+          <View style={{ width: 260 }}>
+            <Field placeholder={t('Search clients')} value={clientQuery} onChangeText={setClientQuery} />
+          </View>
+        </View>
+        {clients.length === 0 ? (
+          <BText variant="small" style={{ marginTop: 12 }}>
+            {t('No clients yet — they appear here after their first booking.')}
+          </BText>
+        ) : (
+          <View style={{ marginTop: 10 }}>
+            {isDesktop && (
+              <View style={[styles.tableRow, { borderBottomWidth: 1, borderBottomColor: colors.divider }]}>
+                <BText variant="tiny" style={{ flex: 1 }}>
+                  {t('Client')}
+                </BText>
+                <BText variant="tiny" style={{ width: 70 }}>
+                  {t('Visits')}
+                </BText>
+                <BText variant="tiny" style={{ width: 100 }}>
+                  {t('Total spent')}
+                </BText>
+                <BText variant="tiny" style={{ width: 120 }}>
+                  {t('Last visit')}
+                </BText>
+                <View style={{ width: 90 }} />
+              </View>
+            )}
+            {clients.map((c, i) => (
+              <View key={i} style={styles.tableRow}>
+                <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center', gap: 10 }}>
+                  <Avatar name={c.name} size={32} />
+                  <View style={{ flex: 1 }}>
+                    <BText variant="smallMedium" numberOfLines={1}>
+                      {c.name}
+                    </BText>
+                    {!c.userId && (
+                      <BText variant="tiny">{t('Walk-in')}</BText>
+                    )}
+                  </View>
+                </View>
+                {isDesktop && (
+                  <BText variant="small" style={{ width: 70 }}>
+                    {c.visits}
+                  </BText>
+                )}
+                <BText variant="smallMedium" style={{ width: 100 }}>
+                  {formatPrice(c.spend, currency)}
+                </BText>
+                {isDesktop && (
+                  <BText variant="small" style={{ width: 120 }}>
+                    {formatDate(lang, new Date(c.last), { day: 'numeric', month: 'short' })}
+                  </BText>
+                )}
+                <View style={{ width: 90, alignItems: 'flex-end' }}>
+                  {c.userId ? (
+                    <Button
+                      title={t('Message')}
+                      size="sm"
+                      variant="secondary"
+                      onPress={() => {
+                        setMessageTarget({ userId: c.userId!, userName: c.name });
+                        setSection('messages');
+                      }}
+                    />
+                  ) : null}
+                </View>
+              </View>
+            ))}
+          </View>
+        )}
+      </View>
+    );
+  } else if (section === 'reviews') {
+    const revs = venue!.reviews;
+    const dist = [5, 4, 3, 2, 1].map((star) => ({
+      star,
+      count: revs.filter((r) => Math.round(r.rating) === star).length,
+    }));
+    const maxDist = Math.max(...dist.map((d) => d.count), 1);
+    body = (
+      <View style={{ gap: 16 }}>
+        <View style={{ flexDirection: isDesktop ? 'row' : 'column', gap: 16 }}>
+          <View style={[styles.card, { flex: 1, alignItems: 'center', justifyContent: 'center' }]}>
+            <BText style={{ fontFamily: font.extrabold, fontSize: 44, lineHeight: 54, color: colors.ink }}>
+              {venue!.rating_count ? venue!.rating_avg.toFixed(1) : '—'}
+            </BText>
+            <Rating value={venue!.rating_avg} />
+            <BText variant="small" style={{ marginTop: 6 }}>
+              {t('{count} reviews', { count: String(venue!.rating_count) })}
+            </BText>
+          </View>
+          <View style={[styles.card, { flex: 1.6 }]}>
+            <BText variant="h3">{t('Rating breakdown')}</BText>
+            <View style={{ gap: 8, marginTop: 12 }}>
+              {dist.map((d) => (
+                <View key={d.star} style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
+                  <BText variant="tiny" style={{ width: 26 }}>
+                    {d.star} ★
+                  </BText>
+                  <View style={{ flex: 1, height: 12, backgroundColor: colors.bgSubtle, borderRadius: radius.pill }}>
+                    <View
+                      style={{
+                        width: `${(d.count / maxDist) * 100}%`,
+                        height: 12,
+                        borderRadius: radius.pill,
+                        backgroundColor: colors.star,
+                        minWidth: d.count > 0 ? 6 : 0,
+                      }}
+                    />
+                  </View>
+                  <BText variant="tiny" style={{ width: 24, textAlign: 'right' }}>
+                    {d.count}
+                  </BText>
+                </View>
+              ))}
+            </View>
+          </View>
+        </View>
+        <View style={styles.card}>
+          <BText variant="h3">{t('All reviews')}</BText>
+          {revs.length === 0 ? (
+            <BText variant="small" style={{ marginTop: 12 }}>
+              {t('No reviews yet.')}
+            </BText>
+          ) : (
+            revs.map((r) => (
+              <View key={r.id} style={styles.reviewRow}>
+                <Avatar name={r.author_name} size={36} />
+                <View style={{ flex: 1 }}>
+                  <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
+                    <BText variant="smallMedium">{r.author_name}</BText>
+                    <Rating value={r.rating} />
+                    <BText variant="tiny">{formatDateLong(r.created_at)}</BText>
+                  </View>
+                  {r.comment ? (
+                    <BText variant="small" style={{ marginTop: 4 }}>
+                      {r.comment}
+                    </BText>
+                  ) : null}
+                </View>
+              </View>
+            ))
+          )}
+        </View>
       </View>
     );
   } else if (section === 'messages') {
@@ -410,17 +812,14 @@ export default function BusinessDashboard() {
   const memberSections: Section[] = ['bookings', 'messages', 'services'];
   const navItems = SECTIONS.filter((s) => canManage || memberSections.includes(s.key));
   const navInner = (
-    <View style={isDesktop ? styles.sideNav : styles.topNavRow}>
+    <View style={styles.topNavRow}>
       {navItems.map((s) => {
         const active = section === s.key;
         return (
           <Pressable
             key={s.key}
             onPress={() => setSection(s.key)}
-            style={[
-              isDesktop ? styles.sideNavItem : styles.topNavItem,
-              active && { backgroundColor: colors.ink },
-            ]}
+            style={[styles.topNavItem, active && { backgroundColor: colors.ink }]}
           >
             <Ionicons name={s.icon as any} size={16} color={active ? colors.white : colors.ink} />
             <BText
@@ -437,13 +836,139 @@ export default function BusinessDashboard() {
       })}
     </View>
   );
-  const nav = isDesktop ? (
-    navInner
-  ) : (
+  const nav = (
     <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.topNavScroll}>
       {navInner}
     </ScrollView>
   );
+
+  const sectionLabel = SECTIONS.find((x) => x.key === section)?.label ?? 'Overview';
+  const todayLabel = formatDate(lang, new Date(), { weekday: 'long', day: 'numeric', month: 'long' });
+
+  if (isDesktop) {
+    return (
+      <View style={{ flex: 1, flexDirection: 'row', backgroundColor: colors.bgPage }}>
+        {/* sidebar */}
+        <View style={[styles.sidebar, { paddingTop: insets.top + 20 }]}>
+          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10, paddingHorizontal: 20 }}>
+            <Logo size={22} />
+            <View style={styles.bizTag}>
+              <BText style={{ fontFamily: font.bold, fontSize: 11, color: colors.accent }}>{t('BUSINESS')}</BText>
+            </View>
+          </View>
+          <View style={styles.venueBlock}>
+            <Image
+              source={{ uri: venue!.images[0]?.url }}
+              style={{ width: 38, height: 38, borderRadius: radius.sm, backgroundColor: colors.bgSubtle }}
+              contentFit="cover"
+            />
+            <View style={{ flex: 1 }}>
+              <BText variant="smallMedium" numberOfLines={1}>
+                {venue!.name}
+              </BText>
+              <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
+                <StatusTag status={venue!.status ?? 'approved'} />
+                {access === 'member' && (
+                  <BText variant="tiny" color={colors.info}>
+                    {t('Team member')}
+                  </BText>
+                )}
+              </View>
+            </View>
+          </View>
+          {accessibleVenues.length > 1 && (
+            <View style={{ paddingHorizontal: 20, marginTop: 10, flexDirection: 'row', flexWrap: 'wrap', gap: 6 }}>
+              {accessibleVenues.map((v) => (
+                <Chip key={v.id} label={v.name} selected={venue!.id === v.id} onPress={() => setVenueId(v.id)} />
+              ))}
+            </View>
+          )}
+          <ScrollView style={{ flex: 1, marginTop: 14 }} contentContainerStyle={{ paddingBottom: 12 }}>
+            {NAV_GROUPS.map((g) => {
+              const items = navItems.filter((x) => g.keys.includes(x.key));
+              if (!items.length) return null;
+              return (
+                <View key={g.title} style={{ marginBottom: 14 }}>
+                  <BText style={styles.navGroupTitle}>{t(g.title)}</BText>
+                  {items.map((x) => {
+                    const active = section === x.key;
+                    return (
+                      <Pressable
+                        key={x.key}
+                        onPress={() => setSection(x.key)}
+                        style={({ hovered }: any) => [
+                          styles.sideNavItem,
+                          hovered && !active && { backgroundColor: colors.bgPage },
+                          active && { backgroundColor: colors.ink },
+                        ]}
+                      >
+                        <Ionicons name={x.icon as any} size={16} color={active ? colors.white : colors.ink} />
+                        <BText
+                          style={{
+                            fontFamily: active ? font.bold : font.medium,
+                            fontSize: 14,
+                            color: active ? colors.white : colors.ink,
+                          }}
+                        >
+                          {t(x.label)}
+                        </BText>
+                      </Pressable>
+                    );
+                  })}
+                </View>
+              );
+            })}
+          </ScrollView>
+          <View style={styles.sidebarFooter}>
+            <Pressable style={styles.footerLink} onPress={() => router.push(`/venue/${venue!.slug}`)}>
+              <Ionicons name="open-outline" size={15} color={colors.gray} />
+              <BText variant="small">{t('View public page')}</BText>
+            </Pressable>
+            <Pressable style={styles.footerLink} onPress={() => router.push('/')}>
+              <Ionicons name="storefront-outline" size={15} color={colors.gray} />
+              <BText variant="small">{t('Back to Bink')}</BText>
+            </Pressable>
+          </View>
+        </View>
+
+        {/* main */}
+        <View style={{ flex: 1 }}>
+          <View style={[styles.topBar, { paddingTop: insets.top + 14 }]}>
+            <View>
+              <BText variant="h2">{t(sectionLabel)}</BText>
+              <BText variant="tiny">{todayLabel}</BText>
+            </View>
+            <View style={{ flex: 1 }} />
+            {canManage && (
+              <Button
+                title={t('Add booking')}
+                size="sm"
+                onPress={() => {
+                  setSection('bookings');
+                  setShowWalkIn(true);
+                }}
+              />
+            )}
+            <NotificationsBell />
+            <Pressable onPress={() => router.push('/')} hitSlop={8}>
+              <Ionicons name="close" size={22} color={colors.ink} />
+            </Pressable>
+          </View>
+          <ScrollView contentContainerStyle={{ padding: 28, paddingBottom: 60 }}>
+            {access === 'admin' && (
+              <View style={[styles.emulateBanner, { marginBottom: 16 }]}>
+                <Ionicons name="shield-checkmark-outline" size={16} color={colors.info} />
+                <BText variant="tiny" color={colors.info} style={{ flex: 1 }}>
+                  {t('Admin view — you are managing this business on behalf of its owner.')}
+                </BText>
+              </View>
+            )}
+            {body}
+          </ScrollView>
+        </View>
+      </View>
+    );
+  }
 
   return (
     <View style={{ flex: 1, backgroundColor: colors.bgPage }}>
@@ -457,9 +982,9 @@ export default function BusinessDashboard() {
             </View>
           </View>
           <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
-            {myVenues.length > 1 && (
+            {accessibleVenues.length > 1 && (
               <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ gap: 6 }}>
-                {myVenues.map((v) => (
+                {accessibleVenues.map((v) => (
                   <Chip key={v.id} label={v.name} selected={venue!.id === v.id} onPress={() => setVenueId(v.id)} />
                 ))}
               </ScrollView>
@@ -473,7 +998,7 @@ export default function BusinessDashboard() {
       </View>
 
       <ScrollView contentContainerStyle={{ paddingBottom: 60 }}>
-        <View style={[styles.contentWrap, isDesktop && { flexDirection: 'row', gap: 28 }]}>
+        <View style={styles.contentWrap}>
           {nav}
           <View style={{ flex: 1, gap: 16 }}>
             <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12, marginBottom: 4 }}>
@@ -675,16 +1200,49 @@ function StatusTag({ status }: { status: string }) {
   );
 }
 
-function StatCard({ label, value, icon }: { label: string; value: string; icon: string }) {
+function StatCard({
+  label,
+  value,
+  icon,
+  delta,
+  sub,
+}: {
+  label: string;
+  value: string;
+  icon: string;
+  delta?: number | null;
+  sub?: string;
+}) {
+  const { t } = useI18n();
+  const up = (delta ?? 0) >= 0;
   return (
-    <View style={[styles.card, { flex: 1, minWidth: 150, flexBasis: '40%' }]}>
-      <Ionicons name={icon as any} size={18} color={colors.gray} />
-      <BText style={{ fontFamily: font.extrabold, fontSize: 24, lineHeight: 32, color: colors.ink, marginTop: 8 }}>
+    <View style={[styles.card, { flex: 1, minWidth: 150, flexBasis: '18%' }]}>
+      <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+        <Ionicons name={icon as any} size={18} color={colors.gray} />
+        {delta != null && (
+          <View style={[styles.deltaPill, { backgroundColor: up ? colors.greenBg : colors.dangerBg }]}>
+            <Ionicons name={up ? 'trending-up' : 'trending-down'} size={12} color={up ? colors.green : colors.danger} />
+            <BText style={{ fontFamily: font.semibold, fontSize: 11, color: up ? colors.green : colors.danger }}>
+              {`${Math.abs(delta)}%`}
+            </BText>
+          </View>
+        )}
+      </View>
+      <BText style={{ fontFamily: font.extrabold, fontSize: 24, lineHeight: 32, color: colors.ink, marginTop: 8 }} numberOfLines={1}>
         {value}
       </BText>
-      <BText variant="tiny" style={{ marginTop: 2 }}>
+      <BText variant="tiny" style={{ marginTop: 2 }} numberOfLines={1}>
         {label}
       </BText>
+      {sub ? (
+        <BText variant="tiny" numberOfLines={1}>
+          {sub}
+        </BText>
+      ) : delta != null ? (
+        <BText variant="tiny" numberOfLines={1}>
+          {t('vs last week')}
+        </BText>
+      ) : null}
     </View>
   );
 }
@@ -1703,14 +2261,93 @@ const styles = StyleSheet.create({
     paddingHorizontal: 32,
     paddingTop: 24,
   },
-  sideNav: { width: 200, gap: 4 },
+  sidebar: {
+    width: 250,
+    backgroundColor: colors.white,
+    borderRightWidth: 1,
+    borderRightColor: colors.divider,
+  },
+  venueBlock: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+    marginTop: 20,
+    marginHorizontal: 12,
+    padding: 10,
+    borderRadius: radius.md,
+    backgroundColor: colors.bgPage,
+  },
+  navGroupTitle: {
+    fontFamily: font.semibold,
+    fontSize: 11,
+    letterSpacing: 1,
+    textTransform: 'uppercase',
+    color: colors.gray,
+    paddingHorizontal: 20,
+    marginBottom: 4,
+  },
   sideNavItem: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 10,
     paddingHorizontal: 14,
-    height: 42,
+    marginHorizontal: 12,
+    height: 40,
     borderRadius: radius.md,
+  },
+  sidebarFooter: {
+    borderTopWidth: 1,
+    borderTopColor: colors.divider,
+    paddingVertical: 10,
+    gap: 2,
+  },
+  footerLink: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+    paddingHorizontal: 20,
+    height: 36,
+  },
+  topBar: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 14,
+    backgroundColor: colors.white,
+    borderBottomWidth: 1,
+    borderBottomColor: colors.divider,
+    paddingHorizontal: 28,
+    paddingBottom: 14,
+  },
+  deltaPill: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 3,
+    borderRadius: radius.pill,
+    paddingHorizontal: 7,
+    paddingVertical: 2,
+  },
+  scheduleRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+    paddingVertical: 9,
+    borderBottomWidth: 1,
+    borderBottomColor: colors.divider,
+  },
+  tableRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+    paddingVertical: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: colors.divider,
+  },
+  reviewRow: {
+    flexDirection: 'row',
+    gap: 12,
+    paddingVertical: 14,
+    borderBottomWidth: 1,
+    borderBottomColor: colors.divider,
   },
   topNav: { flexDirection: 'row', flexWrap: 'wrap', gap: 8, marginBottom: 16 },
   topNavRow: { flexDirection: 'row', gap: 8 },
