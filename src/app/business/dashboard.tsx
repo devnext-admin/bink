@@ -141,7 +141,7 @@ export default function BusinessDashboard() {
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [messageTarget, setMessageTarget] = useState<{ userId: string; userName: string } | null>(null);
-  const [bookingsView, setBookingsView] = useState<'list' | 'day'>('list');
+  const [bookingsView, setBookingsView] = useState<'list' | 'day' | 'week'>('list');
   const [calDay, setCalDay] = useState<Date>(() => {
     const d = new Date();
     d.setHours(0, 0, 0, 0);
@@ -149,6 +149,8 @@ export default function BusinessDashboard() {
   });
   const [showWalkIn, setShowWalkIn] = useState(false);
   const [clientQuery, setClientQuery] = useState('');
+  const [calStaff, setCalStaff] = useState<string | null>(null);
+  const [expandedClient, setExpandedClient] = useState<string | null>(null);
   const openChatWith = (b: Booking) => {
     if (!b.user_id) return;
     setMessageTarget({ userId: b.user_id, userName: b.customer_name ?? t('Customer') });
@@ -334,6 +336,21 @@ export default function BusinessDashboard() {
           />
         </View>
 
+        {canManage && (
+          <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8 }}>
+            <QuickAction
+              icon="add-circle-outline"
+              label={t('New booking')}
+              onPress={() => {
+                setSection('bookings');
+                setShowWalkIn(true);
+              }}
+            />
+            <QuickAction icon="pricetag-outline" label={t('Add a service')} onPress={() => setSection('services')} />
+            <QuickAction icon="person-add-outline" label={t('Invite a team member')} onPress={() => setSection('staff')} />
+            <QuickAction icon="time-outline" label={t('Edit opening hours')} onPress={() => setSection('settings')} />
+          </View>
+        )}
         <View style={{ flexDirection: isDesktop ? 'row' : 'column', gap: 16 }}>
           <View style={[styles.card, { flex: 1.5 }]}>
             <BText variant="h3">{t('Revenue — last 14 days')}</BText>
@@ -478,14 +495,29 @@ export default function BusinessDashboard() {
       </View>
     );
   } else if (section === 'bookings') {
-    const dayBookings = visibleBookings
+    const staffFiltered = calStaff
+      ? visibleBookings.filter((b) => b.staff_id === calStaff)
+      : visibleBookings;
+    const dayBookings = staffFiltered
       .filter((b) => new Date(b.starts_at).toDateString() === calDay.toDateString() && b.status !== 'cancelled')
       .sort((a, b) => a.starts_at.localeCompare(b.starts_at));
+    const weekDays: { date: Date; items: Booking[] }[] = [];
+    for (let i = 0; i < 7; i++) {
+      const d = new Date(calDay);
+      d.setDate(calDay.getDate() + i);
+      weekDays.push({
+        date: d,
+        items: staffFiltered
+          .filter((b) => new Date(b.starts_at).toDateString() === d.toDateString() && b.status !== 'cancelled')
+          .sort((a, b) => a.starts_at.localeCompare(b.starts_at)),
+      });
+    }
     body = (
       <View style={{ gap: 16 }}>
         <View style={{ flexDirection: 'row', gap: 8, alignItems: 'center', flexWrap: 'wrap' }}>
           <Chip label={t('List')} selected={bookingsView === 'list'} onPress={() => setBookingsView('list')} />
           <Chip label={t('Day view')} selected={bookingsView === 'day'} onPress={() => setBookingsView('day')} />
+          <Chip label={t('Week view')} selected={bookingsView === 'week'} onPress={() => setBookingsView('week')} />
           <View style={{ flex: 1 }} />
           {canManage && (
             <Button title={showWalkIn ? t('Close') : t('Add booking')} size="sm" variant={showWalkIn ? 'secondary' : 'primary'} onPress={() => setShowWalkIn(!showWalkIn)} />
@@ -499,6 +531,61 @@ export default function BusinessDashboard() {
               reload();
             }}
           />
+        )}
+        {canManage && venue!.staff.length > 0 && bookingsView !== 'list' && (
+          <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 6 }}>
+            <Chip label={t('All team')} selected={!calStaff} onPress={() => setCalStaff(null)} />
+            {venue!.staff.map((m) => (
+              <Chip key={m.id} label={m.name} selected={calStaff === m.id} onPress={() => setCalStaff(calStaff === m.id ? null : m.id)} />
+            ))}
+          </View>
+        )}
+        {bookingsView === 'week' && (
+          <View style={styles.card}>
+            <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ gap: 6, paddingBottom: 12 }}>
+              {Array.from({ length: 14 }, (_, i) => {
+                const d = new Date();
+                d.setDate(d.getDate() + i);
+                d.setHours(0, 0, 0, 0);
+                return (
+                  <Chip
+                    key={i}
+                    label={i === 0 ? t('Today') : formatDate(lang, d, { weekday: 'short', day: 'numeric' })}
+                    selected={calDay.toDateString() === d.toDateString()}
+                    onPress={() => setCalDay(d)}
+                  />
+                );
+              })}
+            </ScrollView>
+            <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+              <View style={{ flexDirection: 'row', gap: 10 }}>
+                {weekDays.map((day) => (
+                  <View key={day.date.toISOString()} style={styles.weekCol}>
+                    <BText variant="smallMedium" style={{ marginBottom: 8 }}>
+                      {formatDate(lang, day.date, { weekday: 'short', day: 'numeric' })}
+                    </BText>
+                    {day.items.length === 0 ? (
+                      <BText variant="tiny">{t('Free')}</BText>
+                    ) : (
+                      day.items.map((b) => (
+                        <View key={b.id} style={styles.weekBlock}>
+                          <BText style={{ fontFamily: font.bold, fontSize: 11, color: colors.ink }}>
+                            {formatTimeOfDate(b.starts_at)}
+                          </BText>
+                          <BText variant="tiny" numberOfLines={1}>
+                            {b.customer_name ?? t('Guest customer')}
+                          </BText>
+                          <BText variant="tiny" numberOfLines={1}>
+                            {b.items.map((i) => i.service_name).join(', ')}
+                          </BText>
+                        </View>
+                      ))
+                    )}
+                  </View>
+                ))}
+              </View>
+            </ScrollView>
+          </View>
         )}
         {bookingsView === 'day' && (
           <View style={styles.card}>
@@ -595,7 +682,11 @@ export default function BusinessDashboard() {
               </View>
             )}
             {clients.map((c, i) => (
-              <View key={i} style={styles.tableRow}>
+              <Pressable
+                key={i}
+                onPress={() => setExpandedClient(expandedClient === c.name ? null : c.name)}
+                style={styles.tableRow}
+              >
                 <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center', gap: 10 }}>
                   <Avatar name={c.name} size={32} />
                   <View style={{ flex: 1 }}>
@@ -633,8 +724,35 @@ export default function BusinessDashboard() {
                     />
                   ) : null}
                 </View>
-              </View>
+              </Pressable>
             ))}
+            {expandedClient != null && (() => {
+              const c = clients.find((x) => x.name === expandedClient);
+              if (!c) return null;
+              const history = visibleBookings
+                .filter((b) => (b.customer_name ?? t('Guest customer')) === c.name)
+                .sort((a, b) => b.starts_at.localeCompare(a.starts_at));
+              return (
+                <View style={styles.clientHistory}>
+                  <BText variant="smallMedium">{t('Visit history — {name}', { name: c.name })}</BText>
+                  {history.map((b) => (
+                    <View key={b.id} style={{ flexDirection: 'row', alignItems: 'center', gap: 10, marginTop: 10 }}>
+                      <BText variant="tiny" style={{ width: 100 }}>
+                        {formatDate(lang, new Date(b.starts_at), { day: 'numeric', month: 'short', year: 'numeric' })}
+                      </BText>
+                      <BText variant="small" style={{ flex: 1 }} numberOfLines={1}>
+                        {b.items.map((i) => i.service_name).join(', ')}
+                        {b.staff_name ? ` · ${b.staff_name}` : ''}
+                      </BText>
+                      <StatusTag status={b.status} />
+                      <BText variant="smallMedium" style={{ width: 84, textAlign: 'right' }}>
+                        {formatPrice(b.total_cents, currency)}
+                      </BText>
+                    </View>
+                  ))}
+                </View>
+              );
+            })()}
           </View>
         )}
       </View>
@@ -1200,6 +1318,18 @@ function StatusTag({ status }: { status: string }) {
   );
 }
 
+function QuickAction({ icon, label, onPress }: { icon: string; label: string; onPress: () => void }) {
+  return (
+    <Pressable
+      onPress={onPress}
+      style={({ hovered }: any) => [styles.quickAction, hovered && { backgroundColor: colors.bgSubtle }]}
+    >
+      <Ionicons name={icon as any} size={16} color={colors.accent} />
+      <BText variant="smallMedium">{label}</BText>
+    </Pressable>
+  );
+}
+
 function StatCard({
   label,
   value,
@@ -1518,20 +1648,55 @@ function AnalyticsSection({
   isDesktop: boolean;
 }) {
   const { t, lang } = useI18n();
-  const active = bookings.filter((b) => b.status !== 'cancelled' && b.status !== 'no_show');
+  const [range, setRange] = useState<7 | 30 | 90>(30);
+  const DAY = 86400000;
+  const from = Date.now() - range * DAY;
+  const inRange = bookings.filter((b) => new Date(b.starts_at).getTime() >= from);
+  const active = inRange.filter((b) => b.status !== 'cancelled' && b.status !== 'no_show');
 
-  // Revenue: last 7 days
+  // Business health for the selected range
+  const revenue = active.reduce((c, b) => c + b.total_cents, 0);
+  const avgTicket = active.length ? Math.round(revenue / active.length) : 0;
+  const cancelRate = inRange.length ? Math.round((inRange.filter((b) => b.status === 'cancelled').length / inRange.length) * 100) : 0;
+  const noShowRate = inRange.length ? Math.round((inRange.filter((b) => b.status === 'no_show').length / inRange.length) * 100) : 0;
+  const clientCounts = new Map<string, number>();
+  for (const b of active) {
+    const key = b.user_id ?? `w:${b.customer_name ?? ''}`;
+    clientCounts.set(key, (clientCounts.get(key) ?? 0) + 1);
+  }
+  const returningRate = clientCounts.size
+    ? Math.round(([...clientCounts.values()].filter((n) => n > 1).length / clientCounts.size) * 100)
+    : 0;
+
+  // Revenue chart: daily for 7 days, weekly buckets beyond
   const days: { label: string; value: number }[] = [];
-  for (let i = 6; i >= 0; i--) {
-    const d = new Date();
-    d.setDate(d.getDate() - i);
-    const key = d.toDateString();
-    days.push({
-      label: formatDate(lang, d, { weekday: 'short', day: 'numeric' }),
-      value: active
-        .filter((b) => new Date(b.starts_at).toDateString() === key)
-        .reduce((c, b) => c + b.total_cents, 0),
-    });
+  if (range === 7) {
+    for (let i = 6; i >= 0; i--) {
+      const d = new Date();
+      d.setDate(d.getDate() - i);
+      const key = d.toDateString();
+      days.push({
+        label: formatDate(lang, d, { weekday: 'short', day: 'numeric' }),
+        value: active
+          .filter((b) => new Date(b.starts_at).toDateString() === key)
+          .reduce((c, b) => c + b.total_cents, 0),
+      });
+    }
+  } else {
+    const weeks = range / 7;
+    for (let w = weeks - 1; w >= 0; w--) {
+      const start = Date.now() - (w + 1) * 7 * DAY;
+      const end = Date.now() - w * 7 * DAY;
+      days.push({
+        label: formatDate(lang, new Date(start), { day: 'numeric', month: 'short' }),
+        value: active
+          .filter((b) => {
+            const ts = new Date(b.starts_at).getTime();
+            return ts >= start && ts < end;
+          })
+          .reduce((c, b) => c + b.total_cents, 0),
+      });
+    }
   }
 
   // Peak hours
@@ -1561,9 +1726,21 @@ function AnalyticsSection({
 
   return (
     <View style={{ gap: 16 }}>
+      <View style={{ flexDirection: 'row', gap: 8, flexWrap: 'wrap' }}>
+        {([7, 30, 90] as const).map((r) => (
+          <Chip key={r} label={t('{n} days', { n: r })} selected={range === r} onPress={() => setRange(r)} />
+        ))}
+      </View>
+      <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 12 }}>
+        <StatCard label={t('Revenue')} value={formatPrice(revenue, venue.services[0]?.currency ?? 'SAR')} icon="cash-outline" />
+        <StatCard label={t('Average ticket')} value={formatPrice(avgTicket, venue.services[0]?.currency ?? 'SAR')} icon="receipt-outline" />
+        <StatCard label={t('Returning clients')} value={`${returningRate}%`} icon="repeat-outline" />
+        <StatCard label={t('Cancellation rate')} value={`${cancelRate}%`} icon="close-circle-outline" />
+        <StatCard label={t('No-show rate')} value={`${noShowRate}%`} icon="eye-off-outline" />
+      </View>
       <View style={{ flexDirection: isDesktop ? 'row' : 'column', gap: 16 }}>
         <View style={[styles.card, { flex: 1 }]}>
-          <BText variant="h3">{t('Revenue — last 7 days')}</BText>
+          <BText variant="h3">{range === 7 ? t('Revenue by day') : t('Revenue by week')}</BText>
           <BarChart data={days} unit="money" />
         </View>
         <View style={[styles.card, { flex: 1 }]}>
@@ -2317,6 +2494,35 @@ const styles = StyleSheet.create({
     borderBottomColor: colors.divider,
     paddingHorizontal: 28,
     paddingBottom: 14,
+  },
+  quickAction: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    backgroundColor: colors.white,
+    borderWidth: 1,
+    borderColor: colors.border,
+    borderRadius: radius.pill,
+    paddingHorizontal: 14,
+    height: 40,
+  },
+  weekCol: {
+    width: 148,
+    gap: 6,
+  },
+  weekBlock: {
+    backgroundColor: colors.accentSoft,
+    borderLeftWidth: 3,
+    borderLeftColor: colors.accent,
+    borderRadius: 8,
+    paddingHorizontal: 8,
+    paddingVertical: 5,
+  },
+  clientHistory: {
+    backgroundColor: colors.bgPage,
+    borderRadius: radius.md,
+    padding: 14,
+    marginTop: 10,
   },
   deltaPill: {
     flexDirection: 'row',
