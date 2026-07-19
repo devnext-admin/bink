@@ -349,6 +349,7 @@ export default function Appointments() {
             ))}
           </View>
           <TextInput
+        {...({ dir: 'auto' } as any)}
             placeholder={t('Tell others about your experience (optional)')}
             placeholderTextColor={colors.gray}
             value={comment}

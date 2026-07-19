@@ -99,6 +99,7 @@ export default function Search() {
     <View style={styles.searchField}>
       <Ionicons name="search" size={18} color={colors.ink} />
       <TextInput
+        {...({ dir: 'auto' } as any)}
         placeholder={t('Search treatments, salons or cities')}
         placeholderTextColor={colors.gray}
         value={query}

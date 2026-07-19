@@ -58,6 +58,7 @@ export default function Profile() {
             {editingName ? (
               <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
                 <TextInput
+        {...({ dir: 'auto' } as any)}
                   value={nameDraft}
                   onChangeText={setNameDraft}
                   autoFocus

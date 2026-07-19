@@ -62,6 +62,7 @@ export default function Welcome() {
             : t('Set a password to finish creating your account.')}
         </BText>
         <TextInput
+        {...({ dir: 'auto' } as any)}
           placeholder={t('New password')}
           placeholderTextColor={colors.gray}
           secureTextEntry
@@ -70,6 +71,7 @@ export default function Welcome() {
           style={styles.input}
         />
         <TextInput
+        {...({ dir: 'auto' } as any)}
           placeholder={t('Repeat password')}
           placeholderTextColor={colors.gray}
           secureTextEntry

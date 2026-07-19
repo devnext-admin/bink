@@ -213,6 +213,7 @@ export default function Admin() {
         <View style={styles.card}>
           <View style={{ flexDirection: isDesktop ? 'row' : 'column', gap: 10, alignItems: isDesktop ? 'center' : 'stretch' }}>
             <TextInput
+        {...({ dir: 'auto' } as any)}
               placeholder={t('Search salons…')}
               placeholderTextColor={colors.gray}
               value={salonQuery}
@@ -296,6 +297,7 @@ export default function Admin() {
       <View style={{ gap: 16 }}>
         <View style={styles.card}>
           <TextInput
+        {...({ dir: 'auto' } as any)}
             placeholder={t('Search users…')}
             placeholderTextColor={colors.gray}
             value={userQuery}
@@ -467,6 +469,7 @@ export default function Admin() {
           <BText variant="h3">{t('Add category')}</BText>
           <View style={{ flexDirection: 'row', gap: 10, marginTop: 14, alignItems: 'center' }}>
             <TextInput
+        {...({ dir: 'auto' } as any)}
               placeholder={t('e.g. Kids Salon')}
               placeholderTextColor={colors.gray}
               value={newCategory}
@@ -507,6 +510,7 @@ export default function Admin() {
           <BText variant="h3">{t('Create promo code')}</BText>
           <View style={{ flexDirection: 'row', gap: 10, marginTop: 14, alignItems: 'center' }}>
             <TextInput
+        {...({ dir: 'auto' } as any)}
               placeholder={t('CODE')}
               placeholderTextColor={colors.gray}
               autoCapitalize="characters"
@@ -515,6 +519,7 @@ export default function Admin() {
               style={[styles.input, { flex: 1 }]}
             />
             <TextInput
+        {...({ dir: 'auto' } as any)}
               placeholder={t('% off')}
               placeholderTextColor={colors.gray}
               keyboardType="numeric"

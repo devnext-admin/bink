@@ -132,6 +132,7 @@ export default function Auth() {
 
         {mode === 'signup' && (
           <TextInput
+        {...({ dir: 'auto' } as any)}
             placeholder={t('Full name')}
             placeholderTextColor={colors.gray}
             value={name}
@@ -140,6 +141,7 @@ export default function Auth() {
           />
         )}
         <TextInput
+        {...({ dir: 'auto' } as any)}
           placeholder={t('Email address')}
           placeholderTextColor={colors.gray}
           autoCapitalize="none"
@@ -149,6 +151,7 @@ export default function Auth() {
           style={styles.input}
         />
         <TextInput
+        {...({ dir: 'auto' } as any)}
           placeholder={t('Password')}
           placeholderTextColor={colors.gray}
           secureTextEntry

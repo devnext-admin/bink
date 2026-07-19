@@ -176,6 +176,7 @@ export function ChatThread({
       </ScrollView>
       <View style={styles.inputRow}>
         <TextInput
+        {...({ dir: 'auto' } as any)}
           placeholder={t('Write a message…')}
           placeholderTextColor={colors.gray}
           value={draft}

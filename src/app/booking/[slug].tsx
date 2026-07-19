@@ -359,6 +359,7 @@ export default function BookingScreen() {
           ) : (
             <View style={[styles.confirmRow, { gap: 10 }]}>
               <TextInput
+        {...({ dir: 'auto' } as any)}
                 placeholder={t('Promo code')}
                 placeholderTextColor={colors.gray}
                 value={promoInput}
@@ -386,6 +387,7 @@ export default function BookingScreen() {
         <View style={{ marginTop: 24 }}>
           <BText variant="h3">{t('Notes for the salon')}</BText>
           <TextInput
+        {...({ dir: 'auto' } as any)}
             placeholder={t('Anything they should know? Allergies, preferences, parking…')}
             placeholderTextColor={colors.gray}
             value={notes}

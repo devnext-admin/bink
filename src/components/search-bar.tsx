@@ -20,6 +20,7 @@ export function HeroSearchDesktop() {
       <View style={styles.segment}>
         <Ionicons name="search" size={18} color={colors.ink} />
         <TextInput
+        {...({ dir: 'auto' } as any)}
           placeholder={t('All treatments')}
           placeholderTextColor={colors.ink}
           value={query}
@@ -32,6 +33,7 @@ export function HeroSearchDesktop() {
       <View style={styles.segment}>
         <Ionicons name="location-outline" size={18} color={colors.ink} />
         <TextInput
+        {...({ dir: 'auto' } as any)}
           placeholder={t('Current location')}
           placeholderTextColor={colors.ink}
           value={location}
@@ -65,6 +67,7 @@ export function HeroSearchMobile() {
       <View style={styles.mobileField}>
         <Ionicons name="search" size={18} color={colors.ink} />
         <TextInput
+        {...({ dir: 'auto' } as any)}
           placeholder={t('All treatments')}
           placeholderTextColor={colors.ink}
           value={query}
