@@ -98,7 +98,9 @@ export default function Notifications() {
               <View style={{ flex: 1 }}>
                 <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
                   <BText variant="smallMedium" style={{ flex: 1 }}>
-                    {n.title}
+                    {n.title.startsWith('Message from ')
+                      ? t('Message from {name}', { name: n.title.slice('Message from '.length) })
+                      : t(n.title)}
                   </BText>
                   <BText variant="tiny">{timeAgo(n.created_at, lang, t)}</BText>
                 </View>
