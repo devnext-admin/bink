@@ -163,3 +163,18 @@ npx vercel deploy --cwd dist --prod --yes
 Note: fonts (Manrope + Ionicons) are bundled from `assets/fonts/` and registered in
 `src/app/_layout.tsx` — the Vercel CLI strips any `node_modules` path from uploads,
 so package-path font assets would 404 in production.
+
+## Deep E2E testing
+
+`e2e/deep-test.mjs` is a full smoke suite covering every role: guest browsing
+and booking, the customer account area, all ten business-dashboard sections,
+team-member role isolation, the admin back-office, the mobile layout, and
+Arabic/RTL. To run it:
+
+```bash
+npm i -D playwright && npx playwright install chromium   # once
+npx expo start --web --port 8081                         # terminal 1
+node e2e/deep-test.mjs                                   # terminal 2
+```
+
+All demo personas use the password `binkdemo123`.
