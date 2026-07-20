@@ -112,7 +112,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           const u = fromSession(data.session);
           // profiles.role is the source of truth when Supabase is live
           if (u) {
-            const { data: p } = await sb.from('profiles').select('role, is_blocked, phone').eq('id', u.id).maybeSingle();
+            const { data: p } = await sb.from('profiles').select('role, is_blocked').eq('id', u.id).maybeSingle();
             if (p?.is_blocked) {
               await sb.auth.signOut();
               setUser(null);
@@ -120,7 +120,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
               return;
             }
             if (p?.role) u.role = p.role as UserRole;
-            if (p?.phone) u.phone = p.phone as string;
+            // Phone is column-protected; the owner reads their own via RPC.
+            const { data: ph } = await sb.rpc('my_phone');
+            if (ph) u.phone = ph as string;
           }
           setUser(u);
           setLoading(false);

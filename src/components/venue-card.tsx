@@ -5,6 +5,7 @@ import React, { useRef } from 'react';
 import { Animated, Pressable, StyleSheet, View } from 'react-native';
 import { useAppData } from '../lib/app-data-context';
 import { nextAvailableLabel } from '../lib/availability';
+import { sized } from '../lib/image';
 import { useI18n } from '../lib/i18n';
 import { colors, font, radius } from '../lib/theme';
 import type { Venue } from '../lib/types';
@@ -38,10 +39,11 @@ export function VenueCard({ venue, width, badge, distance }: VenueCardProps) {
     >
       <View style={styles.imageWrap}>
         <Image
-          source={{ uri: venue.images[0]?.url }}
+          source={{ uri: sized(venue.images[0]?.url, width ?? 320) }}
           style={[styles.image, { width: '100%', aspectRatio: 1.5 }]}
           contentFit="cover"
           transition={200}
+          {...({ loading: 'lazy' } as any)}
           alt={`${venue.name} — ${venue.area}, ${venue.city}`}
           accessibilityLabel={`${venue.name} — ${venue.area}, ${venue.city}`}
         />

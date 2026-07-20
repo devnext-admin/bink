@@ -1,6 +1,7 @@
 import { Image } from 'expo-image';
 import React from 'react';
 import { View } from 'react-native';
+import { sized } from '../../lib/image';
 import { colors, font } from '../../lib/theme';
 import { BText } from './text';
 
@@ -19,7 +20,7 @@ export function Avatar({ name, url, size = 56 }: AvatarProps) {
   if (url) {
     return (
       <Image
-        source={{ uri: url }}
+        source={{ uri: sized(url, size) }}
         style={{ width: size, height: size, borderRadius: size / 2 }}
         contentFit="cover"
         transition={150}

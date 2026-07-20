@@ -1,4 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { loadArabicFont } from './arabic-font';
 import React, { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { I18nManager, Platform } from 'react-native';
 import { ar } from './translations/ar';
@@ -47,11 +48,13 @@ export function I18nProvider({ children }: { children: React.ReactNode }) {
         const l: Lang = v === 'ar' ? 'ar' : 'en';
         setLangState(l);
         applyDirection(l);
+        if (l === 'ar') loadArabicFont();
       })
       .finally(() => setReady(true));
   }, []);
 
   const setLang = useCallback(async (l: Lang) => {
+    if (l === 'ar') loadArabicFont(); // fetch Tajawal the moment Arabic is chosen
     setLangState(l);
     applyDirection(l);
     await AsyncStorage.setItem(LANG_KEY, l);

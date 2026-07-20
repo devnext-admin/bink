@@ -19,6 +19,7 @@ import { useAppData } from '../../lib/app-data-context';
 import { useAuth } from '../../lib/auth-context';
 import { useBooking } from '../../lib/booking-context';
 import { getBookings } from '../../lib/data';
+import { sized } from '../../lib/image';
 import { formatTime, weekdayName } from '../../lib/format';
 import { useI18n } from '../../lib/i18n';
 import { getLocalReviews, ratingWithLocal, submitReview } from '../../lib/ops';
@@ -336,7 +337,7 @@ function GalleryViewer({ venue, open, onClose }: { venue: Venue; open: boolean; 
           {venue.images.map((im) => (
             <Image accessibilityLabel={venue.name} alt={venue.name}
               key={im.url + im.sort_order}
-              source={{ uri: im.url }}
+              source={{ uri: sized(im.url, 640) }}
               style={{ width: '100%', aspectRatio: 1.5, borderRadius: radius.lg, backgroundColor: colors.bgSubtle }}
               contentFit="cover"
               transition={200}
@@ -458,7 +459,7 @@ function VenueDesktop({ venue }: { venue: Venue }) {
         {/* Gallery: 1 large + 2 stacked */}
         <View style={{ flexDirection: 'row', gap: 8, marginTop: 24, position: 'relative' }}>
           <Image accessibilityLabel={venue.name} alt={venue.name}
-            source={{ uri: venue.images[0]?.url }}
+            source={{ uri: sized(venue.images[0]?.url, 1080) }}
             style={{ flex: 2, aspectRatio: 1.55, borderRadius: radius.lg, backgroundColor: colors.bgSubtle }}
             contentFit="cover"
             transition={200}
@@ -467,7 +468,7 @@ function VenueDesktop({ venue }: { venue: Venue }) {
             {venue.images.slice(1, 3).map((im) => (
               <Image accessibilityLabel={venue.name} alt={venue.name}
                 key={im.url + im.sort_order}
-                source={{ uri: im.url }}
+                source={{ uri: sized(im.url, 640) }}
                 style={{ flex: 1, borderRadius: radius.lg, backgroundColor: colors.bgSubtle }}
                 contentFit="cover"
                 transition={200}
@@ -556,7 +557,7 @@ function VenueMobile({ venue }: { venue: Venue }) {
       <ScrollView contentContainerStyle={{ paddingBottom: 120 }}>
         <View>
           <Image accessibilityLabel={venue.name} alt={venue.name}
-            source={{ uri: venue.images[0]?.url }}
+            source={{ uri: sized(venue.images[0]?.url, 1080) }}
             style={{ width: '100%', aspectRatio: 1.3, backgroundColor: colors.bgSubtle }}
             contentFit="cover"
             transition={200}
