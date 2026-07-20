@@ -10,10 +10,10 @@ import { Avatar } from '../components/ui/avatar';
 import { WebFooter } from '../components/web-footer';
 import { WebHeader } from '../components/web-header';
 import { SkeletonRail } from '../components/skeleton';
+import { HeroGradient } from '../components/hero-gradient';
 import { useAppData } from '../lib/app-data-context';
 import { homeRails } from '../lib/home-rails';
 import { useI18n } from '../lib/i18n';
-import { LinearGradient } from 'expo-linear-gradient';
 import { colors, font, maxContentWidth, radius, shadow } from '../lib/theme';
 
 const TESTIMONIALS = [
@@ -31,24 +31,8 @@ export function HomeDesktop() {
 
   return (
     <ScrollView style={{ flex: 1, backgroundColor: colors.white }}>
-      {/* Fresha-style bloom: white → rose glow around the headline → deeper
-          pink where content starts → melts back to white as you scroll */}
-      <LinearGradient
-        colors={['#FFFFFF', '#FFE9EF', '#FFC7D8', '#FFE6E8', '#FFFBFA', 'rgba(255,255,255,0)']}
-        locations={[0, 0.1, 0.28, 0.5, 0.74, 1]}
-        start={{ x: 0, y: 0 }}
-        end={{ x: 0, y: 1 }}
-        style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 1600 }}
-        pointerEvents="none"
-      />
-      <LinearGradient
-        colors={['rgba(255,56,92,0.08)', 'rgba(255,255,255,0)', 'rgba(255,148,94,0.09)']}
-        start={{ x: 0, y: 0 }}
-        end={{ x: 1, y: 1 }}
-        style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 950 }}
-        pointerEvents="none"
-      />
-      <View style={styles.hero}>
+      {/* Pink → ivory → orange wash, contained to the hero/header only */}
+      <HeroGradient style={styles.hero}>
         <WebHeader transparent />
         <View style={styles.heroInner}>
           <BText variant="display" style={{ textAlign: 'center' }}>
@@ -65,7 +49,7 @@ export function HomeDesktop() {
             <Ionicons name="qr-code-outline" size={16} color={colors.ink} />
           </View>
         </View>
-      </View>
+      </HeroGradient>
 
       <View style={styles.content}>
         {loading ? (
