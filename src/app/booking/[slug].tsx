@@ -36,8 +36,10 @@ const DAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 function nextDays(count: number): { date: string; day: string; num: number; month: string }[] {
   const out = [];
   const now = new Date();
+  // Offer today first — same-day booking is allowed; past time slots for
+  // today are disabled below so only genuinely bookable times show.
   for (let i = 0; i < count; i++) {
-    const d = new Date(now.getFullYear(), now.getMonth(), now.getDate() + i + 1);
+    const d = new Date(now.getFullYear(), now.getMonth(), now.getDate() + i);
     out.push({
       date: `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`,
       day: DAYS[d.getDay()],
@@ -63,7 +65,7 @@ export default function BookingScreen() {
   const isDesktop = useIsDesktop();
   const insets = useSafeAreaInsets();
   const { allVenues } = useAppData();
-  const { user } = useAuth();
+  const { user, continueAsGuest } = useAuth();
   const booking = useBooking();
   const venue = allVenues.find((v) => v.slug === slug) ?? booking.venue;
 
@@ -78,6 +80,7 @@ export default function BookingScreen() {
   const [promoInput, setPromoInput] = useState('');
   const [promo, setPromo] = useState<PromoCode | null>(null);
   const [promoError, setPromoError] = useState<string | null>(null);
+  const [promoChecking, setPromoChecking] = useState(false);
   const [notes, setNotes] = useState('');
 
   // Live availability for the selected day
@@ -101,7 +104,9 @@ export default function BookingScreen() {
   const applyPromo = async () => {
     setPromoError(null);
     if (!promoInput.trim()) return;
+    setPromoChecking(true);
     const p = await validatePromo(promoInput);
+    setPromoChecking(false);
     if (p) {
       setPromo(p);
       setPromoInput('');
@@ -123,6 +128,9 @@ export default function BookingScreen() {
     else if (step === 'confirm') {
       setSubmitting(true);
       setPayError(null);
+      // A visitor with no account still gets a guest session so the booking
+      // they just made shows up under "View appointments" afterwards.
+      if (!user) await continueAsGuest();
       const [h, m] = booking.time!.split(':').map(Number);
       const [y, mo, d] = booking.date!.split('-').map(Number);
       const startsAt = new Date(y, mo - 1, d, h, m);
@@ -280,9 +288,13 @@ export default function BookingScreen() {
           {groupSlots.map((t) => {
             const selected = booking.time === t;
             const [sh, sm] = t.split(':').map(Number);
+            const isToday = booking.date === new Date().toISOString().slice(0, 10);
+            const nowMin = new Date().getHours() * 60 + new Date().getMinutes();
+            const isPast = isToday && sh * 60 + sm <= nowMin;
             const taken =
-              !!booking.date &&
-              !isSlotFree(busy, sh * 60 + sm, booking.totalMinutes || 30, booking.staff?.id ?? null, venue.staff.length);
+              (!!booking.date &&
+                !isSlotFree(busy, sh * 60 + sm, booking.totalMinutes || 30, booking.staff?.id ?? null, venue.staff.length)) ||
+              isPast;
             const disabled = !booking.date || taken;
             return (
               <Pressable
@@ -363,12 +375,18 @@ export default function BookingScreen() {
                 placeholder={t('Promo code')}
                 placeholderTextColor={colors.gray}
                 value={promoInput}
-                onChangeText={setPromoInput}
+                onChangeText={(v) => {
+                  setPromoInput(v);
+                  if (promoError) setPromoError(null);
+                }}
                 autoCapitalize="characters"
+                onSubmitEditing={applyPromo}
                 style={styles.promoInput}
               />
-              <Pressable onPress={applyPromo} style={styles.promoBtn}>
-                <BText style={{ fontFamily: font.semibold, fontSize: 13, color: colors.ink }}>{t('Apply')}</BText>
+              <Pressable onPress={applyPromo} disabled={promoChecking} style={[styles.promoBtn, promoChecking && { opacity: 0.6 }]}>
+                <BText style={{ fontFamily: font.semibold, fontSize: 13, color: colors.ink }}>
+                  {promoChecking ? t('Checking…') : t('Apply')}
+                </BText>
               </Pressable>
             </View>
           )}

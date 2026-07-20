@@ -75,6 +75,9 @@ const NAV_GROUPS: { title: string; keys: Section[] }[] = [
   { title: 'Setup', keys: ['services', 'staff', 'settings'] },
 ];
 
+const publicHost =
+  typeof window !== 'undefined' && window.location?.host ? window.location.host : 'bink-three.vercel.app';
+
 export default function BusinessDashboard() {
   const router = useRouter();
   const isDesktop = useIsDesktop();
@@ -480,7 +483,7 @@ export default function BusinessDashboard() {
           <View style={[styles.card, { flex: 1 }]}>
             <BText variant="h3">{t('Your public page')}</BText>
             <BText variant="small" style={{ marginTop: 6 }}>
-              bink.app/venue/{venue!.slug}
+              {publicHost}/venue/{venue!.slug}
             </BText>
             <View style={{ flexDirection: 'row', marginTop: 12 }}>
               <Button

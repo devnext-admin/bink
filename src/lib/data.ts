@@ -131,6 +131,66 @@ async function getLocalBookings(): Promise<Booking[]> {
   }
 }
 
+/**
+ * Migrates locally-stored guest bookings (user_id null) into the cloud under
+ * the now-signed-in user. Called once after a real sign-in/sign-up so a person
+ * who booked as a guest keeps those appointments after creating an account.
+ */
+export async function claimGuestBookings(): Promise<void> {
+  const sb = getSupabase();
+  if (!sb) return;
+  const { data: userRes } = await sb.auth.getUser();
+  const uid = userRes.user?.id;
+  if (!uid) return;
+  let local: Booking[] = [];
+  try {
+    const raw = await AsyncStorage.getItem(LOCAL_BOOKINGS_KEY);
+    local = raw ? JSON.parse(raw) : [];
+  } catch {
+    return;
+  }
+  const guestOnes = local.filter((b) => b.user_id == null);
+  if (!guestOnes.length) return;
+  const remaining = local.filter((b) => b.user_id != null);
+  for (const b of guestOnes) {
+    try {
+      const { data, error } = await sb
+        .from('bookings')
+        .insert({
+          user_id: uid,
+          venue_id: b.venue_id,
+          staff_id: b.staff_id ?? null,
+          starts_at: b.starts_at,
+          ends_at: b.ends_at,
+          status: b.status,
+          total_cents: b.total_cents,
+          currency: b.currency,
+          notes: b.notes ?? null,
+          promo_code: b.promo_code ?? null,
+        })
+        .select('id')
+        .single();
+      if (!error && data && b.items?.length) {
+        await sb.from('booking_items').insert(
+          b.items.map((i) => ({
+            booking_id: data.id,
+            service_id: i.service_id,
+            service_name: i.service_name,
+            duration_minutes: i.duration_minutes,
+            price_cents: i.price_cents,
+          }))
+        );
+      }
+    } catch {
+      // keep it locally if the migration fails
+      remaining.push(b);
+    }
+  }
+  try {
+    await AsyncStorage.setItem(LOCAL_BOOKINGS_KEY, JSON.stringify(remaining));
+  } catch {}
+}
+
 export interface CreateBookingInput {
   venue: Venue;
   staffId?: string | null;

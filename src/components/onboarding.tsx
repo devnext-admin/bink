@@ -53,7 +53,7 @@ export function Onboarding() {
   const last = slide === SLIDES.length - 1;
 
   return (
-    <Modal visible transparent={false} animationType="fade">
+    <Modal visible transparent={false} animationType="fade" accessibilityLabel={t('Welcome to Bink')} aria-label={t('Welcome to Bink')}>
       <HeroGradient
         variant="soft"
         style={[styles.wrap, { paddingTop: insets.top + 24, paddingBottom: Math.max(insets.bottom, 24) }]}

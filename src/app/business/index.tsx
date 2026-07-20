@@ -6,6 +6,8 @@ import React, { useMemo, useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Logo } from '../../components/logo';
+import { Seo } from '../../components/seo';
+import { WebFooter } from '../../components/web-footer';
 import { Button } from '../../components/ui/button';
 import { Chip } from '../../components/ui/chip';
 import { Field } from '../../components/ui/field';
@@ -53,6 +55,7 @@ export default function BusinessLanding() {
   const [step, setStep] = useState(0);
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
 
   // Step 1 — business
   const [providerType, setProviderType] = useState<'salon' | 'freelancer'>('salon');
@@ -160,15 +163,16 @@ export default function BusinessLanding() {
     // Create the owner's login first, so the salon has an account to sign
     // back into for appointments, messages and sales.
     let ownerId = user?.id ?? null;
+    let mustVerify = false;
     if (needsAccount) {
-      const err = await signUp(ownerName.trim(), ownerEmail.trim(), ownerPassword, 'partner');
-      if (err) {
-        setError(err);
+      const res = await signUp(ownerName.trim(), ownerEmail.trim(), ownerPassword, { role: 'partner' });
+      if (res.error) {
+        setError(res.error);
         setBusy(false);
         return;
       }
-      const sb = getSupabase();
-      ownerId = sb ? ((await sb.auth.getUser()).data.user?.id ?? null) : `demo-${ownerEmail.trim()}`;
+      ownerId = res.userId ?? null;
+      mustVerify = !!res.needsVerification;
       if (!ownerId) {
         setError(t('Could not create your account. Please try again.'));
         setBusy(false);
@@ -199,6 +203,12 @@ export default function BusinessLanding() {
     if (!needsAccount && user && user.role !== 'admin' && user.role !== 'partner') await setRole('partner');
     await refresh();
     setBusy(false);
+    if (mustVerify) {
+      // The salon is saved (pending approval); the owner must confirm their
+      // email before they can sign in and manage it.
+      setSubmitted(true);
+      return;
+    }
     router.replace('/business/dashboard');
   };
 
@@ -453,8 +463,33 @@ export default function BusinessLanding() {
 
   const lastStep = step === WIZARD_STEPS.length - 1;
 
+  if (submitted) {
+    return (
+      <ScrollView
+        style={{ flex: 1, backgroundColor: colors.white }}
+        contentContainerStyle={{ flexGrow: 1, alignItems: 'center', justifyContent: 'center', padding: 24 }}
+      >
+        <View style={{ maxWidth: 440, alignItems: 'center', gap: 12 }}>
+          <View style={styles.successCircle}>
+            <Ionicons name="checkmark" size={38} color={colors.white} />
+          </View>
+          <BText variant="h2" style={{ textAlign: 'center' }}>
+            {t('Your salon has been submitted')}
+          </BText>
+          <BText variant="small" style={{ textAlign: 'center' }}>
+            {t('We sent a verification link to {email}. Confirm your email, then sign in — your listing is pending review by the Bink team.', {
+              email: ownerEmail.trim(),
+            })}
+          </BText>
+          <Button title={t('Go to login')} size="lg" onPress={() => router.replace('/auth')} />
+        </View>
+      </ScrollView>
+    );
+  }
+
   return (
     <ScrollView style={{ flex: 1, backgroundColor: colors.white }}>
+      <Seo title={t('Bink for business — grow your salon')} description={t('List your salon or freelance service on Bink and start taking online bookings today.')} />
       <HeroGradient
         variant="soft"
         style={{ paddingTop: insets.top + 16, paddingBottom: 56 }}
@@ -598,6 +633,7 @@ export default function BusinessLanding() {
           </View>
         )}
       </View>
+      {isDesktop && <WebFooter />}
     </ScrollView>
   );
 }
@@ -700,6 +736,15 @@ const styles = StyleSheet.create({
     backgroundColor: colors.bgPage,
     borderRadius: radius.lg,
     padding: 24,
+  },
+  successCircle: {
+    width: 76,
+    height: 76,
+    borderRadius: 38,
+    backgroundColor: colors.green,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 6,
   },
   perkIcon: {
     width: 44,

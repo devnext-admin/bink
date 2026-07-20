@@ -1,6 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import type { Session } from '@supabase/supabase-js';
 import React, { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
+import { claimGuestBookings } from './data';
 import { getSupabase, isSupabaseConfigured } from './supabase';
 import type { UserRole } from './types';
 
@@ -10,6 +11,8 @@ export interface AuthUser {
   name: string | null;
   role: UserRole;
   isGuest: boolean;
+  phone?: string | null;
+  emailVerified?: boolean;
 }
 
 interface AuthContextValue {
@@ -20,11 +23,20 @@ interface AuthContextValue {
   startEmulating: (u: { id: string; email: string | null; name: string | null }) => Promise<void>;
   stopEmulating: () => Promise<void>;
   signIn: (email: string, password: string) => Promise<string | null>;
-  signUp: (name: string, email: string, password: string, role?: UserRole) => Promise<string | null>;
+  /** Returns { error } or { needsVerification } when a confirmation email was sent. */
+  signUp: (
+    name: string,
+    email: string,
+    password: string,
+    opts?: { role?: UserRole; phone?: string }
+  ) => Promise<{ error?: string; needsVerification?: boolean; userId?: string }>;
   continueAsGuest: (name?: string) => Promise<void>;
   signOut: () => Promise<void>;
   setRole: (role: UserRole) => Promise<void>;
   updateName: (name: string) => Promise<void>;
+  updateProfile: (patch: { name?: string; phone?: string }) => Promise<void>;
+  resendVerification: (email: string) => Promise<string | null>;
+  refreshUser: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextValue | null>(null);
@@ -74,6 +86,8 @@ function fromSession(session: Session | null): AuthUser | null {
     name: (session.user.user_metadata?.full_name as string) ?? null,
     role: ((session.user.user_metadata?.role as UserRole) ?? 'customer') as UserRole,
     isGuest: false,
+    phone: (session.user.user_metadata?.phone as string) ?? null,
+    emailVerified: !!session.user.email_confirmed_at,
   };
 }
 
@@ -98,7 +112,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           const u = fromSession(data.session);
           // profiles.role is the source of truth when Supabase is live
           if (u) {
-            const { data: p } = await sb.from('profiles').select('role, is_blocked').eq('id', u.id).maybeSingle();
+            const { data: p } = await sb.from('profiles').select('role, is_blocked, phone').eq('id', u.id).maybeSingle();
             if (p?.is_blocked) {
               await sb.auth.signOut();
               setUser(null);
@@ -106,6 +120,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
               return;
             }
             if (p?.role) u.role = p.role as UserRole;
+            if (p?.phone) u.phone = p.phone as string;
           }
           setUser(u);
           setLoading(false);
@@ -161,6 +176,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           await sb.auth.signOut();
           return 'This account has been blocked by the Bink team.';
         }
+        await claimGuestBookings();
       }
       return null;
     },
@@ -168,23 +184,30 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   );
 
   const signUp = useCallback(
-    async (name: string, email: string, password: string, role?: UserRole) => {
+    async (name: string, email: string, password: string, opts?: { role?: UserRole; phone?: string }) => {
+      const role = opts?.role;
+      const phone = opts?.phone?.trim() || undefined;
       const sb = getSupabase();
       if (!sb) {
-        await persistLocal({ id: `demo-${email}`, email, name, role: role ?? demoRole(email), isGuest: true });
-        return null;
+        await persistLocal({ id: `demo-${email}`, email, name, role: role ?? demoRole(email), isGuest: true, phone });
+        return { userId: `demo-${email}` };
       }
       const { data, error } = await sb.auth.signUp({
         email,
         password,
-        options: { data: { full_name: name, ...(role ? { role } : {}) } },
+        options: { data: { full_name: name, ...(phone ? { phone } : {}), ...(role ? { role } : {}) } },
       });
-      if (error) return error.message;
-      // profiles.role defaults to 'customer' via trigger — lift it if needed
-      if (role && role !== 'customer' && data.user) {
-        await sb.from('profiles').update({ role }).eq('id', data.user.id);
+      if (error) return { error: error.message };
+      if (data.user) {
+        const patch: Record<string, unknown> = {};
+        if (role && role !== 'customer') patch.role = role;
+        if (phone) patch.phone = phone;
+        if (Object.keys(patch).length) await sb.from('profiles').update(patch).eq('id', data.user.id);
       }
-      return null;
+      // When email confirmation is required, Supabase returns a user with no
+      // active session — the caller should route to the verify-email screen.
+      const needsVerification = !!data.user && !data.session;
+      return { needsVerification, userId: data.user?.id };
     },
     [persistLocal]
   );
@@ -227,6 +250,48 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     [user, persistLocal]
   );
 
+  const updateProfile = useCallback(
+    async (patch: { name?: string; phone?: string }) => {
+      if (!user) return;
+      const name = patch.name?.trim();
+      const phone = patch.phone?.trim();
+      const next = { ...user, ...(name ? { name } : {}), ...(phone !== undefined ? { phone } : {}) };
+      const sb = getSupabase();
+      if (sb && !user.isGuest) {
+        const meta: Record<string, unknown> = {};
+        if (name) meta.full_name = name;
+        if (phone !== undefined) meta.phone = phone;
+        if (Object.keys(meta).length) await sb.auth.updateUser({ data: meta });
+        const col: Record<string, unknown> = {};
+        if (name) col.full_name = name;
+        if (phone !== undefined) col.phone = phone;
+        if (Object.keys(col).length) await sb.from('profiles').update(col).eq('id', user.id);
+        setUser(next);
+        return;
+      }
+      await persistLocal(next);
+    },
+    [user, persistLocal]
+  );
+
+  const resendVerification = useCallback(async (email: string) => {
+    const sb = getSupabase();
+    if (!sb) return null;
+    const { error } = await sb.auth.resend({ type: 'signup', email });
+    return error ? error.message : null;
+  }, []);
+
+  const refreshUser = useCallback(async () => {
+    const sb = getSupabase();
+    if (!sb) return;
+    const { data } = await sb.auth.getUser();
+    if (data.user) {
+      setUser((cur) =>
+        cur ? { ...cur, emailVerified: !!data.user!.email_confirmed_at } : cur
+      );
+    }
+  }, []);
+
   const startEmulating = useCallback(
     async (u: { id: string; email: string | null; name: string | null }) => {
       if (user?.role !== 'admin') return;
@@ -268,8 +333,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       signOut,
       setRole,
       updateName,
+      updateProfile,
+      resendVerification,
+      refreshUser,
     }),
-    [effectiveUser, loading, emulating, startEmulating, stopEmulating, signIn, signUp, continueAsGuest, signOut, setRole, updateName]
+    [effectiveUser, loading, emulating, startEmulating, stopEmulating, signIn, signUp, continueAsGuest, signOut, setRole, updateName, updateProfile, resendVerification, refreshUser]
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

@@ -1,67 +1,108 @@
 import { Ionicons } from '@expo/vector-icons';
+import * as Linking from 'expo-linking';
 import { useRouter } from 'expo-router';
 import React from 'react';
-import { StyleSheet, View } from 'react-native';
+import { Pressable, StyleSheet, View } from 'react-native';
 import { useI18n } from '../lib/i18n';
 import { colors, maxContentWidth } from '../lib/theme';
 import { Logo } from './logo';
 import { BText } from './ui/text';
 
-const COLUMNS: { title: string; links: string[] }[] = [
-  { title: 'About Bink', links: ['Careers', 'Help and support', 'Blog', 'Sitemap'] },
-  { title: 'For business', links: ['For partners', 'Pricing', 'Support', 'Status'] },
-  { title: 'Legal', links: ['Privacy Policy', 'Terms of service', 'Terms of use'] },
+// Every link resolves to a real destination: an in-app route, or an external
+// URL opened in a new tab. No dead controls.
+type Link = { label: string; to: string; external?: boolean };
+const COLUMNS: { title: string; links: Link[] }[] = [
+  {
+    title: 'About Bink',
+    links: [
+      { label: 'Help and support', to: '/support' },
+      { label: 'For partners', to: '/business' },
+      { label: 'Contact us', to: '/support' },
+    ],
+  },
+  {
+    title: 'For business',
+    links: [
+      { label: 'List your business', to: '/business' },
+      { label: 'Business dashboard', to: '/business/dashboard' },
+      { label: 'Pricing', to: '/business' },
+    ],
+  },
+  {
+    title: 'Legal',
+    links: [
+      { label: 'Privacy Policy', to: '/privacy' },
+      { label: 'Terms of service', to: '/terms' },
+      { label: 'Terms of use', to: '/terms' },
+    ],
+  },
 ];
 
-const SOCIAL = ['Facebook', 'X (Twitter)', 'LinkedIn', 'Instagram'];
+const SOCIAL: { label: string; icon: string; url: string }[] = [
+  { label: 'Instagram', icon: 'logo-instagram', url: 'https://instagram.com/bink' },
+  { label: 'X (Twitter)', icon: 'logo-twitter', url: 'https://x.com/bink' },
+  { label: 'LinkedIn', icon: 'logo-linkedin', url: 'https://www.linkedin.com/company/bink' },
+  { label: 'Facebook', icon: 'logo-facebook', url: 'https://facebook.com/bink' },
+];
 
 export function WebFooter() {
   const router = useRouter();
   const { t } = useI18n();
+  const open = (l: Link) => {
+    if (l.external) Linking.openURL(l.to).catch(() => {});
+    else router.push(l.to as any);
+  };
   return (
     <View style={styles.wrap}>
       <View style={styles.inner}>
-        <View style={{ flex: 1.2, gap: 16 }}>
+        <View style={{ flex: 1.2, gap: 16, minWidth: 180 }}>
           <Logo color={colors.white} />
-          <View style={styles.appPill}>
+          <Pressable
+            style={({ hovered }: any) => [styles.appPill, hovered && { backgroundColor: 'rgba(255,255,255,0.1)' }]}
+            onPress={() => router.push('/business')}
+          >
             <BText variant="smallMedium" color={colors.white}>
               {t('Get the app')}
             </BText>
             <Ionicons name="logo-apple" size={16} color={colors.white} />
             <Ionicons name="logo-google-playstore" size={14} color={colors.white} />
-          </View>
+          </Pressable>
         </View>
         {COLUMNS.map((col) => (
-          <View key={col.title} style={{ flex: 1, gap: 12 }}>
+          <View key={col.title} style={{ flex: 1, gap: 12, minWidth: 130 }}>
             <BText variant="smallMedium" color={colors.white}>
               {t(col.title)}
             </BText>
-            {col.links.map((l) => {
-              const href = l === 'Privacy Policy' ? '/privacy' : l === 'Terms of service' || l === 'Terms of use' ? '/terms' : null;
-              return (
-                <BText
-                  key={l}
-                  variant="small"
-                  color="rgba(255,255,255,0.7)"
-                  onPress={href ? () => router.push(href as any) : undefined}
-                >
-                  {t(l)}
-                </BText>
-              );
-            })}
+            {col.links.map((l) => (
+              <Pressable key={l.label} onPress={() => open(l)}>
+                {({ hovered }: any) => (
+                  <BText variant="small" color={hovered ? colors.white : 'rgba(255,255,255,0.7)'}>
+                    {t(l.label)}
+                  </BText>
+                )}
+              </Pressable>
+            ))}
           </View>
         ))}
-        <View style={{ flex: 1, gap: 12 }}>
+        <View style={{ flex: 1, gap: 12, minWidth: 130 }}>
           <BText variant="smallMedium" color={colors.white}>
             {t('Find us on social')}
           </BText>
           {SOCIAL.map((s) => (
-            <View key={s} style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
-              <Ionicons name="open-outline" size={12} color="rgba(255,255,255,0.7)" />
-              <BText variant="small" color="rgba(255,255,255,0.7)">
-                {s}
-              </BText>
-            </View>
+            <Pressable
+              key={s.label}
+              style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}
+              onPress={() => Linking.openURL(s.url).catch(() => {})}
+            >
+              {({ hovered }: any) => (
+                <>
+                  <Ionicons name={s.icon as any} size={15} color={hovered ? colors.white : 'rgba(255,255,255,0.7)'} />
+                  <BText variant="small" color={hovered ? colors.white : 'rgba(255,255,255,0.7)'}>
+                    {t(s.label)}
+                  </BText>
+                </>
+              )}
+            </Pressable>
           ))}
         </View>
       </View>
@@ -69,7 +110,7 @@ export function WebFooter() {
         <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
           <Ionicons name="globe-outline" size={14} color="rgba(255,255,255,0.7)" />
           <BText variant="small" color="rgba(255,255,255,0.7)">
-            {t('English')}
+            {t('Saudi Arabia')}
           </BText>
         </View>
         <BText variant="small" color="rgba(255,255,255,0.7)">
@@ -94,6 +135,7 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     flexDirection: 'row',
     gap: 32,
+    flexWrap: 'wrap',
   },
   appPill: {
     flexDirection: 'row',

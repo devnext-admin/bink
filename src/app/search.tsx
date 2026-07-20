@@ -1,3 +1,4 @@
+import { Seo } from '../components/seo';
 import { Ionicons } from '@expo/vector-icons';
 import { useLocalSearchParams } from 'expo-router';
 import React, { useMemo, useState } from 'react';
@@ -116,6 +117,7 @@ export default function Search() {
   if (isDesktop) {
     return (
       <ScrollView style={{ flex: 1, backgroundColor: colors.white }}>
+        <Seo title={t('Search salons, barbers & beauty')} description={t('Find and book salons near you on Bink.')} />
         <WebHeader showSearch={false} />
         <View style={styles.desktopContent}>
           <View style={{ maxWidth: 560 }}>{searchInput}</View>
@@ -153,6 +155,7 @@ export default function Search() {
 
   return (
     <View style={{ flex: 1, backgroundColor: colors.white }}>
+      <Seo title={t('Search salons, barbers & beauty')} description={t('Find and book salons near you on Bink.')} />
       <View style={{ paddingTop: insets.top + 12, paddingHorizontal: 20, gap: 12 }}>
         <BText variant="h1">{t('Search')}</BText>
         {searchInput}

@@ -6,6 +6,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useI18n } from '../lib/i18n';
 import { colors } from '../lib/theme';
 import { BText } from './ui/text';
+import { Seo } from './seo';
 import { WebFooter } from './web-footer';
 import { WebHeader } from './web-header';
 import { useIsDesktop } from '../lib/use-layout';
@@ -34,6 +35,16 @@ export function LegalPage({
 
   const content = (
     <View style={styles.column}>
+      <Pressable
+        onPress={() => (router.canGoBack() ? router.back() : router.replace('/'))}
+        hitSlop={8}
+        style={({ hovered }: any) => [styles.backLink, hovered && { opacity: 0.7 }]}
+      >
+        <Ionicons name={isRTL ? 'arrow-forward' : 'arrow-back'} size={18} color={colors.gray} />
+        <BText variant="smallMedium" color={colors.gray}>
+          {t('Back')}
+        </BText>
+      </Pressable>
       <BText variant="h1">{t(title)}</BText>
       <BText variant="tiny" style={{ marginTop: 6 }}>
         {t('Last updated: {date}', { date: updated })}
@@ -63,6 +74,7 @@ export function LegalPage({
   if (isDesktop) {
     return (
       <View style={{ flex: 1, backgroundColor: colors.white }}>
+        <Seo title={t(title)} />
         <WebHeader showSearch />
         <ScrollView contentContainerStyle={styles.desktopWrap}>
           {content}
@@ -75,12 +87,10 @@ export function LegalPage({
 
   return (
     <View style={{ flex: 1, backgroundColor: colors.white }}>
+      <Seo title={t(title)} />
       <ScrollView
         contentContainerStyle={{ paddingTop: insets.top + 16, paddingHorizontal: 20, paddingBottom: 48 }}
       >
-        <Pressable onPress={() => (router.canGoBack() ? router.back() : router.replace('/'))} hitSlop={8} style={{ marginBottom: 16 }}>
-          <Ionicons name={isRTL ? 'arrow-forward' : 'arrow-back'} size={24} color={colors.ink} />
-        </Pressable>
         {content}
       </ScrollView>
     </View>
@@ -90,6 +100,7 @@ export function LegalPage({
 const styles = StyleSheet.create({
   desktopWrap: { paddingTop: 40, alignItems: 'center' },
   column: { width: '100%', maxWidth: 720, alignSelf: 'center', paddingHorizontal: 24 },
+  backLink: { flexDirection: 'row', alignItems: 'center', gap: 6, marginBottom: 18, alignSelf: 'flex-start' },
   notice: {
     flexDirection: 'row',
     alignItems: 'center',

@@ -2,9 +2,10 @@ import { Ionicons } from '@expo/vector-icons';
 import { Image } from 'expo-image';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import React, { useEffect, useMemo, useState } from 'react';
-import { Linking, Modal, Pressable, ScrollView, StyleSheet, View } from 'react-native';
+import { Linking, Modal, Pressable, ScrollView, StyleSheet, TextInput, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { ReviewCard } from '../../components/review-card';
+import { Seo } from '../../components/seo';
 import { SectionRail } from '../../components/section-rail';
 import { ServiceRow } from '../../components/service-row';
 import { StaffAvatar } from '../../components/ui/avatar';
@@ -15,10 +16,12 @@ import { BText } from '../../components/ui/text';
 import { WebFooter } from '../../components/web-footer';
 import { WebHeader } from '../../components/web-header';
 import { useAppData } from '../../lib/app-data-context';
+import { useAuth } from '../../lib/auth-context';
 import { useBooking } from '../../lib/booking-context';
+import { getBookings } from '../../lib/data';
 import { formatTime, weekdayName } from '../../lib/format';
 import { useI18n } from '../../lib/i18n';
-import { getLocalReviews, ratingWithLocal } from '../../lib/ops';
+import { getLocalReviews, ratingWithLocal, submitReview } from '../../lib/ops';
 import { colors, font, maxContentWidth, radius, shadow } from '../../lib/theme';
 import type { Review, Service, Venue } from '../../lib/types';
 import { useIsDesktop } from '../../lib/use-layout';
@@ -46,7 +49,15 @@ export default function VenueScreen() {
   const isDesktop = useIsDesktop();
 
   if (!venue) return null;
-  return isDesktop ? <VenueDesktop venue={venue} /> : <VenueMobile venue={venue} />;
+  return (
+    <>
+      <Seo
+        title={`${venue.name} — ${venue.area}, ${venue.city}`}
+        description={`Book ${venue.name} in ${venue.city} on Bink. ${venue.description}`.slice(0, 180)}
+      />
+      {isDesktop ? <VenueDesktop venue={venue} /> : <VenueMobile venue={venue} />}
+    </>
+  );
 }
 
 // ---------------------------------------------------------------------------
@@ -114,27 +125,113 @@ function TeamSection({ venue }: { venue: Venue }) {
 
 function ReviewsSection({ venue, columns = 2 }: { venue: Venue; columns?: number }) {
   const { t } = useI18n();
+  const router = useRouter();
+  const { user } = useAuth();
   const [localReviews, setLocalReviews] = useState<Review[]>([]);
+  const [eligible, setEligible] = useState<{ bookingId: string } | null>(null);
+  const [composing, setComposing] = useState(false);
+  const [stars, setStars] = useState(5);
+  const [comment, setComment] = useState('');
+  const [saving, setSaving] = useState(false);
+
+  const load = () => getLocalReviews(venue.id).then(setLocalReviews);
   useEffect(() => {
-    getLocalReviews(venue.id).then(setLocalReviews);
+    load();
   }, [venue.id]);
+
+  // A customer can review a venue once they have a past booking there that
+  // they have not already rated.
+  useEffect(() => {
+    if (!user || user.isGuest) {
+      setEligible(null);
+      return;
+    }
+    getBookings(user.id).then((bookings) => {
+      const past = bookings.find(
+        (b) => b.venue_id === venue.id && new Date(b.starts_at).getTime() < Date.now() && b.status !== 'cancelled' && !b.rated
+      );
+      setEligible(past ? { bookingId: past.id } : null);
+    });
+  }, [user?.id, venue.id]);
+
+  const submit = async () => {
+    if (!eligible) return;
+    setSaving(true);
+    await submitReview({
+      venue,
+      bookingId: eligible.bookingId,
+      authorName: user?.name ?? t('Guest'),
+      userId: user?.id ?? null,
+      rating: stars,
+      comment: comment.trim(),
+    });
+    setSaving(false);
+    setComposing(false);
+    setComment('');
+    setStars(5);
+    setEligible(null);
+    load();
+  };
 
   const { avg, count } = ratingWithLocal(venue, localReviews);
   const reviews = [...localReviews, ...venue.reviews];
 
   return (
     <View>
-      <BText variant="h2">{t('Reviews')}</BText>
+      <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+        <BText variant="h2">{t('Reviews')}</BText>
+        {eligible && !composing && (
+          <Button title={t('Write a review')} size="sm" variant="secondary" onPress={() => setComposing(true)} />
+        )}
+      </View>
       <View style={{ marginTop: 16, gap: 6 }}>
         <RatingStars value={avg} size={28} />
         <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
-          <BText variant="h3">{avg.toFixed(1)}</BText>
-          <BText variant="body" color={colors.accent}>
-            ({count.toLocaleString()})
-          </BText>
+          <BText variant="h3">{count > 0 ? avg.toFixed(1) : t('No reviews yet')}</BText>
+          {count > 0 && (
+            <BText variant="body" color={colors.accent}>
+              ({count.toLocaleString()})
+            </BText>
+          )}
         </View>
       </View>
-      <View style={{ flexDirection: 'row', flexWrap: 'wrap', columnGap: 32 }}>
+
+      {composing && (
+        <View style={styles.reviewComposer}>
+          <BText variant="smallMedium">{t('How was your visit?')}</BText>
+          <View style={{ flexDirection: 'row', gap: 6, marginTop: 8 }}>
+            {[1, 2, 3, 4, 5].map((i) => (
+              <Pressable key={i} onPress={() => setStars(i)} hitSlop={6}>
+                <Ionicons name={stars >= i ? 'star' : 'star-outline'} size={30} color={colors.star} />
+              </Pressable>
+            ))}
+          </View>
+          <TextInput
+            {...({ dir: 'auto' } as any)}
+            placeholder={t('Share the details of your experience (optional)')}
+            placeholderTextColor={colors.gray}
+            value={comment}
+            onChangeText={setComment}
+            multiline
+            style={styles.reviewInput}
+          />
+          <View style={{ flexDirection: 'row', gap: 10, marginTop: 10 }}>
+            <Button title={t('Submit review')} size="sm" loading={saving} onPress={submit} />
+            <Button title={t('Cancel')} size="sm" variant="secondary" onPress={() => setComposing(false)} />
+          </View>
+        </View>
+      )}
+
+      {!user && (
+        <Pressable style={styles.reviewHint} onPress={() => router.push('/auth')}>
+          <Ionicons name="star-outline" size={16} color={colors.gray} />
+          <BText variant="small" color={colors.gray}>
+            {t('Booked here? Log in to leave a review.')}
+          </BText>
+        </Pressable>
+      )}
+
+      <View style={{ flexDirection: 'row', flexWrap: 'wrap', columnGap: 32, marginTop: 12 }}>
         {reviews.map((r) => (
           <View key={r.id} style={{ width: columns === 2 ? '47%' : '100%' }}>
             <ReviewCard review={r} />
@@ -237,7 +334,7 @@ function GalleryViewer({ venue, open, onClose }: { venue: Venue; open: boolean; 
         </View>
         <ScrollView contentContainerStyle={{ padding: 20, gap: 14, maxWidth: 900, width: '100%', alignSelf: 'center' }}>
           {venue.images.map((im) => (
-            <Image
+            <Image accessibilityLabel={venue.name} alt={venue.name}
               key={im.url + im.sort_order}
               source={{ uri: im.url }}
               style={{ width: '100%', aspectRatio: 1.5, borderRadius: radius.lg, backgroundColor: colors.bgSubtle }}
@@ -293,12 +390,27 @@ function VenueDesktop({ venue }: { venue: Venue }) {
       <WebHeader showSearch />
       <View style={styles.desktopContent}>
         {/* Breadcrumb */}
-        <View style={{ flexDirection: 'row', gap: 6, marginTop: 20 }}>
-          {[t('Home'), category ? t(category.name) : t('Venues'), venue.city, venue.name].map((c, i, a) => (
-            <React.Fragment key={c}>
-              <BText variant="small" color={i === a.length - 1 ? colors.ink : colors.gray}>
-                {c}
-              </BText>
+        <View style={{ flexDirection: 'row', gap: 6, marginTop: 20, flexWrap: 'wrap' }}>
+          {[
+            { label: t('Home'), to: '/' },
+            { label: category ? t(category.name) : t('Venues'), to: category ? `/search?category=${category.slug}` : '/search' },
+            { label: venue.city, to: `/search?q=${encodeURIComponent(venue.city)}` },
+            { label: venue.name, to: null as string | null },
+          ].map((c, i, a) => (
+            <React.Fragment key={c.label + i}>
+              {c.to ? (
+                <Pressable onPress={() => router.push(c.to as any)}>
+                  {({ hovered }: any) => (
+                    <BText variant="small" color={colors.gray} style={hovered ? { textDecorationLine: 'underline' } : undefined}>
+                      {c.label}
+                    </BText>
+                  )}
+                </Pressable>
+              ) : (
+                <BText variant="small" color={colors.ink}>
+                  {c.label}
+                </BText>
+              )}
               {i < a.length - 1 && (
                 <BText variant="small" color={colors.gray}>
                   ·
@@ -345,7 +457,7 @@ function VenueDesktop({ venue }: { venue: Venue }) {
 
         {/* Gallery: 1 large + 2 stacked */}
         <View style={{ flexDirection: 'row', gap: 8, marginTop: 24, position: 'relative' }}>
-          <Image
+          <Image accessibilityLabel={venue.name} alt={venue.name}
             source={{ uri: venue.images[0]?.url }}
             style={{ flex: 2, aspectRatio: 1.55, borderRadius: radius.lg, backgroundColor: colors.bgSubtle }}
             contentFit="cover"
@@ -353,7 +465,7 @@ function VenueDesktop({ venue }: { venue: Venue }) {
           />
           <View style={{ flex: 1, gap: 8 }}>
             {venue.images.slice(1, 3).map((im) => (
-              <Image
+              <Image accessibilityLabel={venue.name} alt={venue.name}
                 key={im.url + im.sort_order}
                 source={{ uri: im.url }}
                 style={{ flex: 1, borderRadius: radius.lg, backgroundColor: colors.bgSubtle }}
@@ -443,7 +555,7 @@ function VenueMobile({ venue }: { venue: Venue }) {
     <View style={{ flex: 1, backgroundColor: colors.white }}>
       <ScrollView contentContainerStyle={{ paddingBottom: 120 }}>
         <View>
-          <Image
+          <Image accessibilityLabel={venue.name} alt={venue.name}
             source={{ uri: venue.images[0]?.url }}
             style={{ width: '100%', aspectRatio: 1.3, backgroundColor: colors.bgSubtle }}
             contentFit="cover"
@@ -530,6 +642,34 @@ function FavButton({ venueId, floating }: { venueId: string; floating?: boolean 
 }
 
 const styles = StyleSheet.create({
+  reviewComposer: {
+    marginTop: 16,
+    padding: 16,
+    borderWidth: 1,
+    borderColor: colors.divider,
+    borderRadius: radius.lg,
+    backgroundColor: colors.bgPage,
+  },
+  reviewInput: {
+    marginTop: 12,
+    borderWidth: 1,
+    borderColor: colors.border,
+    borderRadius: radius.md,
+    minHeight: 72,
+    padding: 12,
+    fontFamily: font.regular,
+    fontSize: 14,
+    color: colors.ink,
+    backgroundColor: colors.white,
+    textAlignVertical: 'top',
+    ...(typeof window !== 'undefined' ? ({ outlineStyle: 'none' } as any) : null),
+  },
+  reviewHint: {
+    marginTop: 14,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+  },
   desktopContent: {
     width: '100%',
     maxWidth: maxContentWidth + 48,

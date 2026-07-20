@@ -19,6 +19,7 @@ import {
   getAllBookings,
   getAllReviews,
   getAllUsers,
+  registerSalon,
   setVenueStatus,
   updateVenueInfo,
 } from '../lib/business';
@@ -62,6 +63,50 @@ export default function Admin() {
   const [newCategory, setNewCategory] = useState('');
   const [salonQuery, setSalonQuery] = useState('');
   const [salonStatus, setSalonStatus] = useState<'all' | 'approved' | 'pending' | 'suspended'>('all');
+  const [addSalon, setAddSalon] = useState(false);
+  const [nsName, setNsName] = useState('');
+  const [nsCat, setNsCat] = useState<number | null>(null);
+  const [nsCity, setNsCity] = useState('');
+  const [nsArea, setNsArea] = useState('');
+  const [nsAddress, setNsAddress] = useState('');
+  const [nsBusy, setNsBusy] = useState(false);
+  const [nsError, setNsError] = useState<string | null>(null);
+
+  const createSalon = async () => {
+    if (!user) return;
+    if (!nsName.trim() || !nsCat || !nsCity.trim()) {
+      setNsError(t('Please fill the name, category and city.'));
+      return;
+    }
+    setNsBusy(true);
+    setNsError(null);
+    const venue = await registerSalon({
+      ownerId: user.id,
+      providerType: 'salon',
+      mapsUrl: null,
+      name: nsName.trim(),
+      categoryId: nsCat,
+      description: `Welcome to ${nsName.trim()} — quality treatments, easy booking on Bink.`,
+      address: nsAddress.trim(),
+      area: nsArea.trim(),
+      city: nsCity.trim(),
+      country: 'Saudi Arabia',
+      images: [],
+      services: [],
+      staff: [],
+      hours: [],
+    });
+    // Admin-created salons go live immediately.
+    await setVenueStatus(venue, 'approved');
+    await refresh();
+    setNsBusy(false);
+    setAddSalon(false);
+    setNsName('');
+    setNsCat(null);
+    setNsCity('');
+    setNsArea('');
+    setNsAddress('');
+  };
   const [userQuery, setUserQuery] = useState('');
   const [bookingStatus, setBookingStatus] = useState<'all' | 'confirmed' | 'completed' | 'cancelled'>('all');
 
@@ -220,7 +265,7 @@ export default function Admin() {
               onChangeText={setSalonQuery}
               style={[styles.input, { flex: 1 }]}
             />
-            <View style={{ flexDirection: 'row', gap: 6 }}>
+            <View style={{ flexDirection: 'row', gap: 6, flexWrap: 'wrap' }}>
               {(['all', 'approved', 'pending', 'suspended'] as const).map((st) => (
                 <Chip
                   key={st}
@@ -230,8 +275,72 @@ export default function Admin() {
                 />
               ))}
             </View>
+            <Button
+              title={addSalon ? t('Close') : t('Add salon')}
+              size="sm"
+              variant={addSalon ? 'secondary' : 'primary'}
+              onPress={() => setAddSalon(!addSalon)}
+            />
           </View>
         </View>
+
+        {addSalon && (
+          <View style={styles.card}>
+            <BText variant="h3">{t('Add a salon')}</BText>
+            <BText variant="tiny" style={{ marginTop: 4 }}>
+              {t('Creates a live listing you manage. The owner can be reassigned later from the business dashboard.')}
+            </BText>
+            <View style={{ gap: 12, marginTop: 14 }}>
+              <TextInput
+                {...({ dir: 'auto' } as any)}
+                placeholder={t('Salon name')}
+                placeholderTextColor={colors.gray}
+                value={nsName}
+                onChangeText={setNsName}
+                style={styles.input}
+              />
+              <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8 }}>
+                {categories.map((c) => (
+                  <Chip key={c.id} label={t(c.name)} selected={nsCat === c.id} onPress={() => setNsCat(c.id)} />
+                ))}
+              </View>
+              <View style={{ flexDirection: isDesktop ? 'row' : 'column', gap: 10 }}>
+                <TextInput
+                  {...({ dir: 'auto' } as any)}
+                  placeholder={t('City')}
+                  placeholderTextColor={colors.gray}
+                  value={nsCity}
+                  onChangeText={setNsCity}
+                  style={[styles.input, { flex: 1 }]}
+                />
+                <TextInput
+                  {...({ dir: 'auto' } as any)}
+                  placeholder={t('Area / district')}
+                  placeholderTextColor={colors.gray}
+                  value={nsArea}
+                  onChangeText={setNsArea}
+                  style={[styles.input, { flex: 1 }]}
+                />
+              </View>
+              <TextInput
+                {...({ dir: 'auto' } as any)}
+                placeholder={t('Street address')}
+                placeholderTextColor={colors.gray}
+                value={nsAddress}
+                onChangeText={setNsAddress}
+                style={styles.input}
+              />
+              {nsError ? (
+                <BText variant="small" color={colors.danger}>
+                  {nsError}
+                </BText>
+              ) : null}
+              <View style={{ flexDirection: 'row' }}>
+                <Button title={t('Create salon')} loading={nsBusy} onPress={createSalon} />
+              </View>
+            </View>
+          </View>
+        )}
         <View style={styles.card}>
           <BText variant="h3">{t('All salons ({n})', { n: filtered.length })}</BText>
           {filtered.map((v) => {
@@ -256,7 +365,7 @@ export default function Admin() {
                   <BText variant="tiny">
                     {v.area ? `${v.area}, ` : ''}
                     {v.city} · {t(categories.find((c) => c.id === v.category_id)?.name ?? '—')} ·{' '}
-                    {t('{n} services', { n: v.services.length })}
+                    {v.services.length === 1 ? t('1 service') : t('{n} services', { n: v.services.length })}
                     {v.provider_type === 'freelancer' ? ` · ${t('Freelancer')}` : ''}
                   </BText>
                 </View>

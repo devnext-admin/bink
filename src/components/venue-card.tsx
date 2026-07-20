@@ -42,6 +42,8 @@ export function VenueCard({ venue, width, badge, distance }: VenueCardProps) {
           style={[styles.image, { width: '100%', aspectRatio: 1.5 }]}
           contentFit="cover"
           transition={200}
+          alt={`${venue.name} — ${venue.area}, ${venue.city}`}
+          accessibilityLabel={`${venue.name} — ${venue.area}, ${venue.city}`}
         />
         {badge ? (
           <View style={styles.badge}>

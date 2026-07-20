@@ -177,6 +177,21 @@ export async function registerSalon(input: RegisterSalonInput): Promise<Venue> {
       }
       return venue;
     }
+    // No active session yet (e.g. a brand-new owner who still has to confirm
+    // their email) — RLS blocks the direct insert, so create the pending venue
+    // through the service-role edge function instead.
+    const { data: sess } = await sb.auth.getSession();
+    if (!sess.session && input.ownerId && !input.ownerId.startsWith('demo-')) {
+      try {
+        const { data: fn, error: fnErr } = await sb.functions.invoke('register-venue', {
+          body: { ownerId: input.ownerId, venue },
+        });
+        if (!fnErr && fn?.id) {
+          venue.id = fn.id;
+          return venue;
+        }
+      } catch {}
+    }
   }
 
   const locals = await getLocalVenues();

@@ -33,10 +33,12 @@ export default function Profile() {
   const insets = useSafeAreaInsets();
   const router = useRouter();
   const { t, isRTL } = useI18n();
-  const { user, signOut, updateName } = useAuth();
+  const { user, signOut, updateProfile } = useAuth();
   const { venues, allVenues, favorites } = useAppData();
   const [editingName, setEditingName] = useState(false);
   const [nameDraft, setNameDraft] = useState('');
+  const [phoneDraft, setPhoneDraft] = useState('');
+  const [savingProfile, setSavingProfile] = useState(false);
   const favVenues = venues.filter((v) => favorites.includes(v.id));
 
   const ownsVenues = user ? allVenues.some((v) => v.owner_id === user.id) : false;
@@ -52,49 +54,94 @@ export default function Profile() {
   const content = (
     <View style={{ gap: 24 }}>
       {user ? (
-        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 16 }}>
-          <Avatar name={user.name ?? user.email ?? t('You')} size={64} />
-          <View style={{ flex: 1 }}>
-            {editingName ? (
-              <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
-                <TextInput
-        {...({ dir: 'auto' } as any)}
-                  value={nameDraft}
-                  onChangeText={setNameDraft}
-                  autoFocus
-                  style={styles.nameInput}
-                  placeholder={t('Your name')}
-                  placeholderTextColor={colors.gray}
-                />
-                <Pressable
-                  onPress={async () => {
-                    await updateName(nameDraft);
-                    setEditingName(false);
-                  }}
-                  hitSlop={8}
-                >
-                  <Ionicons name="checkmark-circle" size={26} color={colors.green} />
-                </Pressable>
-                <Pressable onPress={() => setEditingName(false)} hitSlop={8}>
-                  <Ionicons name="close-circle-outline" size={26} color={colors.gray} />
-                </Pressable>
-              </View>
-            ) : (
-              <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
-                <BText variant="h2">{user.name ?? t('Welcome')}</BText>
-                <Pressable
-                  onPress={() => {
-                    setNameDraft(user.name ?? '');
-                    setEditingName(true);
-                  }}
-                  hitSlop={8}
-                >
-                  <Ionicons name="pencil-outline" size={18} color={colors.gray} />
-                </Pressable>
-              </View>
+        <View style={{ gap: 16 }}>
+          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 16 }}>
+            <Avatar name={user.name ?? user.email ?? t('You')} size={64} />
+            <View style={{ flex: 1 }}>
+              <BText variant="h2">{user.name ?? t('Welcome')}</BText>
+              <BText variant="small">{user.email ?? (user.isGuest ? t('Guest account') : '')}</BText>
+            </View>
+            {!user.isGuest && !editingName && (
+              <Button
+                title={t('Edit profile')}
+                size="sm"
+                variant="secondary"
+                onPress={() => {
+                  setNameDraft(user.name ?? '');
+                  setPhoneDraft(user.phone ?? '');
+                  setEditingName(true);
+                }}
+              />
             )}
-            <BText variant="small">{user.email ?? (user.isGuest ? t('Guest account') : '')}</BText>
           </View>
+
+          {!user.isGuest && (
+            <View style={styles.detailsCard}>
+              {editingName ? (
+                <View style={{ gap: 12 }}>
+                  <View style={{ gap: 6 }}>
+                    <BText variant="tiny" color={colors.gray}>{t('Full name')}</BText>
+                    <TextInput
+                      {...({ dir: 'auto' } as any)}
+                      value={nameDraft}
+                      onChangeText={setNameDraft}
+                      style={styles.detailInput}
+                      placeholder={t('Your name')}
+                      placeholderTextColor={colors.gray}
+                    />
+                  </View>
+                  <View style={{ gap: 6 }}>
+                    <BText variant="tiny" color={colors.gray}>{t('Phone number')}</BText>
+                    <TextInput
+                      {...({ dir: 'auto' } as any)}
+                      value={phoneDraft}
+                      onChangeText={setPhoneDraft}
+                      keyboardType="phone-pad"
+                      style={styles.detailInput}
+                      placeholder={t('e.g. +966 5X XXX XXXX')}
+                      placeholderTextColor={colors.gray}
+                    />
+                  </View>
+                  <View style={{ flexDirection: 'row', gap: 10 }}>
+                    <Button
+                      title={t('Save changes')}
+                      size="sm"
+                      loading={savingProfile}
+                      onPress={async () => {
+                        setSavingProfile(true);
+                        await updateProfile({ name: nameDraft, phone: phoneDraft });
+                        setSavingProfile(false);
+                        setEditingName(false);
+                      }}
+                    />
+                    <Button title={t('Cancel')} size="sm" variant="secondary" onPress={() => setEditingName(false)} />
+                  </View>
+                </View>
+              ) : (
+                <View>
+                  <DetailRow icon="mail-outline" label={t('Email')} value={user.email ?? '—'}>
+                    <View
+                      style={[
+                        styles.verifyChip,
+                        { backgroundColor: user.emailVerified ? colors.greenBg : colors.warningBg },
+                      ]}
+                    >
+                      <Ionicons
+                        name={user.emailVerified ? 'checkmark-circle' : 'alert-circle-outline'}
+                        size={12}
+                        color={user.emailVerified ? colors.green : colors.warning}
+                      />
+                      <BText variant="tiny" color={user.emailVerified ? colors.green : colors.warning}>
+                        {user.emailVerified ? t('Verified') : t('Unverified')}
+                      </BText>
+                    </View>
+                  </DetailRow>
+                  <DetailRow icon="call-outline" label={t('Phone')} value={user.phone || t('Not added')} />
+                  <DetailRow icon="person-outline" label={t('Account type')} value={t('Customer')} last />
+                </View>
+              )}
+            </View>
+          )}
         </View>
       ) : (
         <View style={styles.signInCard}>
@@ -175,7 +222,67 @@ export default function Profile() {
   );
 }
 
+function DetailRow({
+  icon,
+  label,
+  value,
+  children,
+  last,
+}: {
+  icon: string;
+  label: string;
+  value: string;
+  children?: React.ReactNode;
+  last?: boolean;
+}) {
+  return (
+    <View style={[styles.detailRow, !last && { borderBottomWidth: 1, borderBottomColor: colors.divider }]}>
+      <Ionicons name={icon as any} size={18} color={colors.gray} />
+      <View style={{ flex: 1 }}>
+        <BText variant="tiny" color={colors.gray}>
+          {label}
+        </BText>
+        <BText variant="bodyMedium" numberOfLines={1}>
+          {value}
+        </BText>
+      </View>
+      {children}
+    </View>
+  );
+}
+
 const styles = StyleSheet.create({
+  detailsCard: {
+    borderWidth: 1,
+    borderColor: colors.divider,
+    borderRadius: radius.lg,
+    paddingHorizontal: 16,
+    paddingVertical: 4,
+  },
+  detailRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+    paddingVertical: 14,
+  },
+  detailInput: {
+    borderWidth: 1,
+    borderColor: colors.border,
+    borderRadius: radius.md,
+    height: 46,
+    paddingHorizontal: 12,
+    fontSize: 15,
+    color: colors.ink,
+    ...(typeof window !== 'undefined' ? ({ outlineStyle: 'none' } as any) : null),
+  },
+  verifyChip: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+    borderRadius: radius.pill,
+    paddingHorizontal: 8,
+    paddingVertical: 3,
+  },
   signInCard: {
     backgroundColor: colors.bgPage,
     borderRadius: radius.lg,

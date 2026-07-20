@@ -1,6 +1,7 @@
 import { Ionicons } from '@expo/vector-icons';
+import { useRouter } from 'expo-router';
 import React from 'react';
-import { ScrollView, StyleSheet, View } from 'react-native';
+import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import { SectionRail } from '../components/section-rail';
 import { HeroSearchDesktop } from '../components/search-bar';
 import { RatingStars } from '../components/ui/rating';
@@ -24,6 +25,7 @@ const TESTIMONIALS = [
 
 export function HomeDesktop() {
   const { t, isRTL } = useI18n();
+  const router = useRouter();
   const { venues, loading } = useAppData();
   const { featured, fresh, trending } = homeRails(venues);
 
@@ -114,10 +116,13 @@ export function HomeDesktop() {
           <BText variant="body" style={{ marginTop: 16, maxWidth: 480 }}>
             {t('Online bookings around the clock, escrow-protected payments and a full dashboard for your team — built for salons and freelancers in Saudi Arabia.')}
           </BText>
-          <View style={styles.bizBtn}>
+          <Pressable
+            style={({ hovered }: any) => [styles.bizBtn, hovered && { backgroundColor: colors.accentDark }]}
+            onPress={() => router.push('/business')}
+          >
             <BText style={{ fontFamily: font.bold, fontSize: 15, color: colors.white }}>{t('Find out more')}</BText>
             <Ionicons name={isRTL ? 'arrow-back' : 'arrow-forward'} size={16} color={colors.white} />
-          </View>
+          </Pressable>
         </View>
       </View>
 
