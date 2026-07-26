@@ -137,7 +137,12 @@ export default function Profile() {
                     </View>
                   </DetailRow>
                   <DetailRow icon="call-outline" label={t('Phone')} value={user.phone || t('Not added')} />
-                  <DetailRow icon="person-outline" label={t('Account type')} value={t('Customer')} last />
+                  <DetailRow
+                    icon="person-outline"
+                    label={t('Account type')}
+                    value={user.role === 'admin' ? t('Admin') : user.role === 'partner' ? t('Business') : t('Customer')}
+                    last
+                  />
                 </View>
               )}
             </View>

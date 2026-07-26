@@ -1,7 +1,7 @@
 import { Ionicons } from '@expo/vector-icons';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import React, { useState } from 'react';
-import { Pressable, ScrollView, StyleSheet, TextInput, View } from 'react-native';
+import { KeyboardAvoidingView, Platform, Pressable, ScrollView, StyleSheet, TextInput, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Logo } from '../components/logo';
 import { Button } from '../components/ui/button';
@@ -189,9 +189,11 @@ export default function Auth() {
   }
 
   return (
+    <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
     <ScrollView
       style={{ flex: 1, backgroundColor: colors.white }}
       contentContainerStyle={{ flexGrow: 1, alignItems: 'center', justifyContent: 'center', padding: 24 }}
+      keyboardShouldPersistTaps="handled"
     >
       <Pressable onPress={close} style={[styles.close, { top: insets.top + 16 }]}>
         <Ionicons name="close" size={22} color={colors.ink} />
@@ -381,6 +383,7 @@ export default function Auth() {
         </Pressable>
       </View>
     </ScrollView>
+    </KeyboardAvoidingView>
   );
 }
 

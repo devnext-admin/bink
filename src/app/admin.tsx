@@ -1,7 +1,7 @@
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { Platform, Pressable, ScrollView, StyleSheet, TextInput, View } from 'react-native';
+import { Platform, Pressable, ScrollView, Share, StyleSheet, TextInput, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Logo } from '../components/logo';
 import { PaymentPill } from '../components/payment-pill';
@@ -880,6 +880,12 @@ function exportBookingsCsv(bookings: Booking[]) {
     ]),
   ];
   const csv = rows.map((r) => r.map(esc).join(',')).join('\n');
+  // CSV download is a browser feature; on native (Expo Go) share the text so
+  // the tap does something useful instead of crashing on `document`.
+  if (Platform.OS !== 'web' || typeof document === 'undefined') {
+    Share.share({ message: csv, title: 'Bink bookings export' }).catch(() => {});
+    return;
+  }
   const blob = new Blob([csv], { type: 'text/csv' });
   const a = document.createElement('a');
   a.href = URL.createObjectURL(blob);
