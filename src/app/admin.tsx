@@ -420,7 +420,12 @@ export default function Admin() {
             {t('Tap a role to change what a user can do.')}
           </BText>
           {filtered.map((u) => (
-            <View key={u.id} style={[styles.row, { flexWrap: 'wrap' }]}>
+            <View
+              key={u.id}
+              style={[styles.row, isDesktop
+                ? { flexWrap: 'wrap' }
+                : { flexDirection: 'column', alignItems: 'stretch', gap: 10 }]}
+            >
               <View style={{ flex: 1, minWidth: 180 }}>
                 <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
                   <BText variant="smallMedium">{u.name ?? '—'}</BText>
@@ -440,7 +445,7 @@ export default function Admin() {
               {u.id === user.id ? (
                 <RoleTag role={u.role} />
               ) : (
-                <View style={{ flexDirection: 'row', gap: 6, flexWrap: 'wrap', alignItems: 'center' }}>
+                <View style={{ flexDirection: 'row', gap: 6, flexWrap: 'wrap', alignItems: 'center', flexShrink: 1, minWidth: 0 }}>
                   {(['customer', 'partner', 'admin'] as const).map((r) => (
                     <Chip
                       key={r}

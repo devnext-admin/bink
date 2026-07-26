@@ -216,7 +216,7 @@ function ReviewsSection({ venue, columns = 2 }: { venue: Venue; columns?: number
             multiline
             style={styles.reviewInput}
           />
-          <View style={{ flexDirection: 'row', gap: 10, marginTop: 10 }}>
+          <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 10, marginTop: 10 }}>
             <Button title={t('Submit review')} size="sm" loading={saving} onPress={submit} />
             <Button title={t('Cancel')} size="sm" variant="secondary" onPress={() => setComposing(false)} />
           </View>

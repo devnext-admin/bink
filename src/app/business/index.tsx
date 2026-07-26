@@ -318,7 +318,7 @@ export default function BusinessLanding() {
             {t('Photos must not show people, faces or body parts — interiors, tools and products only. You can skip this step and add photos later; a default interior photo is used until then.')}
           </BText>
         </View>
-        <View style={{ flexDirection: 'row', gap: 10 }}>
+        <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 10 }}>
           <Button
             title={t('Upload photo')}
             size="sm"

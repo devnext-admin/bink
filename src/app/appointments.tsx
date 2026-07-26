@@ -201,7 +201,7 @@ export default function Appointments() {
             </View>
             {filter === 'upcoming' && b.status !== 'cancelled' ? (
               <View style={{ marginTop: 16 }}>
-                <View style={{ flexDirection: 'row', gap: 10 }}>
+                <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 10 }}>
                   <Button
                     title={reschedId === b.id ? t('Close') : t('Reschedule')}
                     variant="secondary"
@@ -324,7 +324,7 @@ export default function Appointments() {
               })()}
             </>
           )}
-          <View style={{ flexDirection: 'row', gap: 10, marginTop: 18 }}>
+          <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 10, marginTop: 18 }}>
             <Button title={t('Keep booking')} variant="secondary" onPress={() => setCancelTarget(null)} />
             <Button title={t('Yes, cancel it')} loading={cancelling} onPress={confirmCancel} />
           </View>
@@ -357,7 +357,7 @@ export default function Appointments() {
             multiline
             style={styles.reviewInput}
           />
-          <View style={{ flexDirection: 'row', gap: 10, marginTop: 16 }}>
+          <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 10, marginTop: 16 }}>
             <View style={{ flex: 1 }}>
               <Button title={t('Submit review')} fullWidth loading={savingReview} onPress={onSubmitReview} />
             </View>
