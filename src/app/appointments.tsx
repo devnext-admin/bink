@@ -156,27 +156,30 @@ export default function Appointments() {
                   contentFit="cover"
                 />
               ) : null}
-              <View style={{ flex: 1, gap: 2 }}>
-                <BText variant="title">{b.venue_name}</BText>
-                <BText variant="small">{b.venue_area}</BText>
-                <BText variant="smallMedium" style={{ marginTop: 4 }}>
-                  {formatDate(lang, b.starts_at, { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })} ·{' '}
-                  {formatTimeOfDate(b.starts_at)}
-                </BText>
+              <View style={{ flex: 1, gap: 4 }}>
+                <BText variant="title" numberOfLines={2}>{b.venue_name}</BText>
+                <BText variant="small" numberOfLines={1}>{b.venue_area}</BText>
+                <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 6, marginTop: 2 }}>
+                  <StatusPill status={b.status} />
+                  <PaymentPill
+                    status={b.payment_status ?? 'unpaid'}
+                    escrow={
+                      b.payment_status === 'paid'
+                        ? b.status === 'completed' && b.customer_confirmed_at
+                          ? 'released'
+                          : 'held'
+                        : undefined
+                    }
+                  />
+                </View>
               </View>
-              <View style={{ gap: 4, alignItems: 'flex-end' }}>
-                <StatusPill status={b.status} />
-                <PaymentPill
-                  status={b.payment_status ?? 'unpaid'}
-                  escrow={
-                    b.payment_status === 'paid'
-                      ? b.status === 'completed' && b.customer_confirmed_at
-                        ? 'released'
-                        : 'held'
-                      : undefined
-                  }
-                />
-              </View>
+            </View>
+            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8, marginTop: 12 }}>
+              <Ionicons name="calendar-outline" size={16} color={colors.gray} />
+              <BText variant="smallMedium">
+                {formatDate(lang, b.starts_at, { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })} ·{' '}
+                {formatTimeOfDate(b.starts_at)}
+              </BText>
             </View>
             <View style={styles.cardDivider} />
             <View style={{ gap: 6 }}>

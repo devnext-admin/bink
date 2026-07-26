@@ -257,12 +257,17 @@ function AboutSection({ venue }: { venue: Venue }) {
       <BText variant="body" style={{ marginTop: 12 }}>
         {venue.description}
       </BText>
-      <BText variant="small" style={{ marginTop: 12 }}>
-        {venue.address}, {venue.area}, {venue.city}, {venue.country}{' '}
-        <BText variant="link" onPress={() => Linking.openURL(directionsUrl(venue))}>
-          {t('Get directions')}
-        </BText>
-      </BText>
+      <View style={{ flexDirection: 'row', gap: 8, marginTop: 14 }}>
+        <Ionicons name="location-outline" size={16} color={colors.gray} style={{ marginTop: 2 }} />
+        <View style={{ flex: 1, gap: 4 }}>
+          <BText variant="small">
+            {venue.address}, {venue.area}, {venue.city}, {venue.country}
+          </BText>
+          <Pressable onPress={() => Linking.openURL(directionsUrl(venue))}>
+            <BText variant="link">{t('Get directions')}</BText>
+          </Pressable>
+        </View>
+      </View>
     </View>
   );
 }
