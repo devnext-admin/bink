@@ -85,7 +85,7 @@ export default function BookingScreen() {
 
   // Live availability for the selected day
   useEffect(() => {
-    if (venue && booking.date) getBusyIntervals(venue.id, booking.date).then(setBusy);
+    if (venue && booking.date) getBusyIntervals(venue.id, booking.date).then(setBusy, () => {});
     else setBusy([]);
   }, [venue?.id, booking.date]);
 

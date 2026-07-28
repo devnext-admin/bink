@@ -70,8 +70,8 @@ export default function Notifications() {
         setItems(list);
         setLoaded(true);
         // Mark read after showing, so badges clear on next visit anywhere
-        markAllRead(user?.id ?? null, ownedIds);
-      });
+        markAllRead(user?.id ?? null, ownedIds).catch(() => {});
+      }, () => setLoaded(true));
     }, [user?.id, ownedIds])
   );
 

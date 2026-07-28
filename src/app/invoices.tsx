@@ -32,7 +32,7 @@ export default function Invoices() {
       getMyInvoices(user?.id).then((i) => {
         setInvoices(i);
         setLoaded(true);
-      });
+      }, () => setLoaded(true));
     }, [user?.id])
   );
 

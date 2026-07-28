@@ -98,7 +98,7 @@ export default function BusinessDashboard() {
   useEffect(() => {
     if (user && !user.isGuest) {
       getMyStaffAccess()
-        .then(setStaffAccess)
+        .then(setStaffAccess, () => {})
         .finally(() => setStaffLoaded(true));
     } else {
       setStaffLoaded(true);
@@ -162,16 +162,16 @@ export default function BusinessDashboard() {
 
   useEffect(() => {
     if (venue) {
-      getVenueBookings(venue.id).then(setBookings);
-      getVenueTransactions(venue.id).then(setTransactions);
+      getVenueBookings(venue.id).then(setBookings, () => {});
+      getVenueTransactions(venue.id).then(setTransactions, () => {});
     }
   }, [venue?.id]);
 
   const reload = useCallback(async () => {
     await refresh();
     if (venue) {
-      getVenueBookings(venue.id).then(setBookings);
-      getVenueTransactions(venue.id).then(setTransactions);
+      getVenueBookings(venue.id).then(setBookings, () => {});
+      getVenueTransactions(venue.id).then(setTransactions, () => {});
     }
   }, [refresh, venue?.id]);
 
@@ -1542,8 +1542,9 @@ function VenueMessages({
 
   useEffect(() => {
     const load = () =>
-      getConversationsForVenue(venue.id).then((all) =>
-        setConversations(allowedUserIds ? all.filter((c) => allowedUserIds.includes(c.user_id)) : all)
+      getConversationsForVenue(venue.id).then(
+        (all) => setConversations(allowedUserIds ? all.filter((c) => allowedUserIds.includes(c.user_id)) : all),
+        () => {}
       );
     load();
     const t = setInterval(load, 5000);

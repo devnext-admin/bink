@@ -63,7 +63,7 @@ export default function Appointments() {
     getBookings(user?.id ?? null).then((b) => {
       setBookings(b);
       setLoaded(true);
-    });
+    }, () => setLoaded(true));
   }, [user?.id]);
 
   useFocusEffect(

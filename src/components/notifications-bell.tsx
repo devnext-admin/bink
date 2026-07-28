@@ -17,7 +17,7 @@ export function NotificationsBell({ color = colors.ink }: { color?: string }) {
   useFocusEffect(
     useCallback(() => {
       const ownedIds = user ? allVenues.filter((v) => v.owner_id === user.id).map((v) => v.id) : [];
-      getUnreadCount(user?.id ?? null, ownedIds).then(setUnread);
+      getUnreadCount(user?.id ?? null, ownedIds).then(setUnread, () => {});
     }, [user?.id, allVenues])
   );
 

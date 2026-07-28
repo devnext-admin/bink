@@ -135,7 +135,7 @@ function ReviewsSection({ venue, columns = 2 }: { venue: Venue; columns?: number
   const [comment, setComment] = useState('');
   const [saving, setSaving] = useState(false);
 
-  const load = () => getLocalReviews(venue.id).then(setLocalReviews);
+  const load = () => getLocalReviews(venue.id).then(setLocalReviews, () => {});
   useEffect(() => {
     load();
   }, [venue.id]);
@@ -152,7 +152,7 @@ function ReviewsSection({ venue, columns = 2 }: { venue: Venue; columns?: number
         (b) => b.venue_id === venue.id && new Date(b.starts_at).getTime() < Date.now() && b.status !== 'cancelled' && !b.rated
       );
       setEligible(past ? { bookingId: past.id } : null);
-    });
+    }, () => {});
   }, [user?.id, venue.id]);
 
   const submit = async () => {

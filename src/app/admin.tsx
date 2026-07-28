@@ -111,11 +111,11 @@ export default function Admin() {
   const [bookingStatus, setBookingStatus] = useState<'all' | 'confirmed' | 'completed' | 'cancelled'>('all');
 
   const load = useCallback(() => {
-    getAllUsers().then(setUsers);
-    getAllBookings().then(setBookings);
-    getAllTransactions().then(setTransactions);
-    getPromoCodes().then(setPromos);
-    getAllReviews().then(setReviews);
+    getAllUsers().then(setUsers, () => {});
+    getAllBookings().then(setBookings, () => {});
+    getAllTransactions().then(setTransactions, () => {});
+    getPromoCodes().then(setPromos, () => {});
+    getAllReviews().then(setReviews, () => {});
   }, []);
 
   useEffect(() => {

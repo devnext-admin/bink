@@ -105,6 +105,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     let unsub: (() => void) | undefined;
     (async () => {
+     try {
       const sb = getSupabase();
       if (sb) {
         const { data } = await sb.auth.getSession();
@@ -134,7 +135,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           if (u) {
             sb.from('profiles').select('role').eq('id', u.id).maybeSingle().then(({ data: p }) => {
               if (p?.role) setUser((cur) => (cur && cur.id === u.id ? { ...cur, role: p.role as UserRole } : cur));
-            });
+            }, () => {});
           }
         });
         unsub = () => sub.subscription.unsubscribe();
@@ -143,6 +144,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       const raw = await AsyncStorage.getItem(GUEST_KEY);
       if (raw) setUser(JSON.parse(raw));
       setLoading(false);
+     } catch {
+       // Network hiccup on startup — fall back to guest/unauthenticated and
+       // never surface an unhandled rejection.
+       setLoading(false);
+     }
     })();
     return () => unsub?.();
   }, []);

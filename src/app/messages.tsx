@@ -45,7 +45,7 @@ export default function Messages() {
   }, [isDesktop, conversations.length]);
 
   const refresh = useCallback(() => {
-    if (user) getConversationsForUser(user.id).then(setConversations);
+    if (user) getConversationsForUser(user.id).then(setConversations, () => {});
   }, [user?.id]);
 
   useFocusEffect(
