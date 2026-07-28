@@ -48,6 +48,11 @@ export default function RootLayout() {
                 screenOptions={{
                   headerShown: false,
                   contentStyle: { backgroundColor: colors.white },
+                  // Standard iOS push (new screen enters from the trailing edge).
+                  animation: 'slide_from_right',
+                  // Bottom-tab taps use router.replace; without this, native-stack
+                  // animates a replace as a "pop" (screen slides in from the left).
+                  animationTypeForReplace: 'push',
                 }}
               >
                 <Stack.Screen name="index" />
