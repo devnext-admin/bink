@@ -26,29 +26,35 @@ export function AppDataProvider({ children }: { children: React.ReactNode }) {
   const [loading, setLoading] = useState(true);
 
   const refresh = useCallback(async () => {
+    // Each source degrades independently: a transient network failure on one
+    // (e.g. a Wi-Fi blip) must never reject the whole load, hang the loader,
+    // or bubble up as an unhandled rejection. Keep whatever we can get.
     const [base, locals, c, f] = await Promise.all([
-      getVenues(),
-      getLocalVenues(),
-      getCategories(),
-      getFavoriteIds(user?.id),
+      getVenues().catch(() => [] as Venue[]),
+      getLocalVenues().catch(() => [] as Venue[]),
+      getCategories().catch(() => [] as Category[]),
+      getFavoriteIds(user?.id).catch(() => [] as string[]),
     ]);
-    if (isSupabaseConfigured) {
-      // Cloud is the source of truth — local copies only add venues the
-      // cloud doesn't know about (demo-mode leftovers), never shadow it.
-      const baseIds = new Set(base.map((v) => v.id));
-      setAllVenues([...locals.filter((v) => !baseIds.has(v.id)), ...base]);
-    } else {
-      // Demo mode: locally-edited copies override their base venue
-      const overridden = new Set(locals.map((v) => v.id));
-      setAllVenues([...locals, ...base.filter((v) => !overridden.has(v.id))]);
+    // Don't wipe existing venues if the cloud fetch momentarily returned nothing.
+    if (base.length || locals.length) {
+      if (isSupabaseConfigured) {
+        // Cloud is the source of truth — local copies only add venues the
+        // cloud doesn't know about (demo-mode leftovers), never shadow it.
+        const baseIds = new Set(base.map((v) => v.id));
+        setAllVenues([...locals.filter((v) => !baseIds.has(v.id)), ...base]);
+      } else {
+        // Demo mode: locally-edited copies override their base venue
+        const overridden = new Set(locals.map((v) => v.id));
+        setAllVenues([...locals, ...base.filter((v) => !overridden.has(v.id))]);
+      }
     }
-    setCategories(c);
+    if (c.length) setCategories(c);
     setFavorites(f);
     setLoading(false);
   }, [user?.id]);
 
   useEffect(() => {
-    refresh();
+    refresh().catch(() => setLoading(false));
   }, [refresh]);
 
   const toggleFav = useCallback((venueId: string) => {
