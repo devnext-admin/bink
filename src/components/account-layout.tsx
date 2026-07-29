@@ -21,6 +21,11 @@ const NAV = [
   { href: '/support', label: 'Help and support', icon: 'help-circle-outline' },
 ] as const;
 
+// Bink staff don't book appointments — hide the customer rows for admins.
+const ADMIN_NAV = NAV.filter((n) =>
+  ['/profile', '/notifications', '/settings', '/support'].includes(n.href)
+);
+
 /**
  * Desktop account shell: header + left sidebar nav + content, Fresha-style.
  * The shell spans the full viewport; the content column stays at a readable
@@ -63,7 +68,7 @@ export function AccountLayout({
           <BText variant="h2" style={{ paddingHorizontal: 14, marginBottom: 16 }}>
             {user?.name ?? t('Your account')}
           </BText>
-          {NAV.map((item) => {
+          {(user.role === 'admin' ? ADMIN_NAV : NAV).map((item) => {
             const active = pathname === item.href;
             return (
               <Pressable
@@ -88,16 +93,22 @@ export function AccountLayout({
               </Pressable>
             );
           })}
-          <View style={styles.sideDivider} />
-          <Pressable
-            onPress={() => router.push(ownsVenues ? '/business/dashboard' : '/business')}
-            style={({ hovered }: any) => [styles.navItem, hovered && { backgroundColor: colors.bgPage }]}
-          >
-            <Ionicons name="storefront-outline" size={18} color={colors.ink} />
-            <BText style={{ fontFamily: font.regular, fontSize: 15, color: colors.ink }}>
-              {t(ownsVenues ? 'Business dashboard' : 'Bink for Business')}
-            </BText>
-          </Pressable>
+          {/* Business owners get their dashboard; plain customers see no
+              business links here at all. */}
+          {ownsVenues && user.role !== 'admin' && (
+            <>
+              <View style={styles.sideDivider} />
+              <Pressable
+                onPress={() => router.replace('/business/dashboard')}
+                style={({ hovered }: any) => [styles.navItem, hovered && { backgroundColor: colors.bgPage }]}
+              >
+                <Ionicons name="storefront-outline" size={18} color={colors.ink} />
+                <BText style={{ fontFamily: font.regular, fontSize: 15, color: colors.ink }}>
+                  {t('Business dashboard')}
+                </BText>
+              </Pressable>
+            </>
+          )}
           {user?.role === 'admin' && (
             <Pressable
               onPress={() => router.replace('/admin')}

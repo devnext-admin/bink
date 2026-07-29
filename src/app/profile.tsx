@@ -17,13 +17,19 @@ import { useI18n } from '../lib/i18n';
 import { colors, radius } from '../lib/theme';
 import { useIsDesktop } from '../lib/use-layout';
 
-const BASE_MENU = [
+const CUSTOMER_MENU = [
   { icon: 'calendar-outline', label: 'Appointments', href: '/appointments' },
   { icon: 'receipt-outline', label: 'Invoices', href: '/invoices' },
   { icon: 'chatbubble-ellipses-outline', label: 'Messages', href: '/messages' },
   { icon: 'notifications-outline', label: 'Notifications', href: '/notifications' },
-  { icon: 'heart-outline', label: 'Favorites', href: null },
-  { icon: 'storefront-outline', label: 'Bink for Business', href: '/business' },
+  { icon: 'heart-outline', label: 'Favorites', href: '/favorites' },
+  { icon: 'settings-outline', label: 'Settings', href: '/settings' },
+  { icon: 'help-circle-outline', label: 'Help and support', href: '/support' },
+];
+// Bink staff don't need the customer account clutter — just their tools.
+const ADMIN_MENU = [
+  { icon: 'shield-checkmark-outline', label: 'Admin dashboard', href: '/admin' },
+  { icon: 'notifications-outline', label: 'Notifications', href: '/notifications' },
   { icon: 'settings-outline', label: 'Settings', href: '/settings' },
   { icon: 'help-circle-outline', label: 'Help and support', href: '/support' },
 ];
@@ -42,14 +48,17 @@ export default function Profile() {
   const favVenues = venues.filter((v) => favorites.includes(v.id));
 
   const ownsVenues = user ? allVenues.some((v) => v.owner_id === user.id) : false;
-  const MENU = [
-    ...BASE_MENU.map((m) =>
-      m.label === 'Bink for Business' && ownsVenues ? { ...m, href: '/business/dashboard' } : m
-    ),
-    ...(user?.role === 'admin'
-      ? [{ icon: 'shield-checkmark-outline', label: 'Admin dashboard', href: '/admin' }]
-      : []),
-  ];
+  // Customers see customer things only; owners additionally get their
+  // dashboard; Bink admins get a slim staff menu instead.
+  const MENU =
+    user?.role === 'admin'
+      ? ADMIN_MENU
+      : [
+          ...(ownsVenues
+            ? [{ icon: 'storefront-outline', label: 'Business dashboard', href: '/business/dashboard' }]
+            : []),
+          ...CUSTOMER_MENU,
+        ];
 
   const content = (
     <View style={{ gap: 24 }}>

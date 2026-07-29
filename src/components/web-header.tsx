@@ -30,30 +30,40 @@ export function WebHeader({ transparent, showSearch }: WebHeaderProps) {
     router.push(href as any);
   };
 
-  const menuItems: { label: string; icon: string; onPress: () => void }[] = [
-    { label: 'Profile', icon: 'person-outline', onPress: () => go('/profile') },
-    { label: 'Appointments', icon: 'calendar-outline', onPress: () => go('/appointments') },
-    { label: 'Messages', icon: 'chatbubble-ellipses-outline', onPress: () => go('/messages') },
-    { label: 'Favorites', icon: 'heart-outline', onPress: () => go('/favorites') },
-    {
-      label: ownsVenues ? 'Business dashboard' : 'Bink for Business',
-      icon: 'storefront-outline',
-      onPress: () => { setMenuOpen(false); router.replace((ownsVenues ? '/business/dashboard' : '/business') as any); },
+  // Role-aware menu: customers see customer things only, owners additionally
+  // get their dashboard, and Bink admins get a slim staff menu.
+  const logoutItem = {
+    label: 'Log out',
+    icon: 'log-out-outline',
+    onPress: async () => {
+      setMenuOpen(false);
+      await signOut();
+      router.replace('/');
     },
-    ...(user?.role === 'admin'
-      ? [{ label: 'Admin', icon: 'shield-checkmark-outline', onPress: () => { setMenuOpen(false); router.replace('/admin' as any); } }]
-      : []),
-    { label: 'Settings', icon: 'settings-outline', onPress: () => go('/settings') },
-    {
-      label: 'Log out',
-      icon: 'log-out-outline',
-      onPress: async () => {
-        setMenuOpen(false);
-        await signOut();
-        router.replace('/');
-      },
-    },
-  ];
+  };
+  const menuItems: { label: string; icon: string; onPress: () => void }[] =
+    user?.role === 'admin'
+      ? [
+          { label: 'Admin', icon: 'shield-checkmark-outline', onPress: () => { setMenuOpen(false); router.replace('/admin' as any); } },
+          { label: 'Profile', icon: 'person-outline', onPress: () => go('/profile') },
+          { label: 'Settings', icon: 'settings-outline', onPress: () => go('/settings') },
+          logoutItem,
+        ]
+      : [
+          ...(ownsVenues
+            ? [{
+                label: 'Business dashboard',
+                icon: 'storefront-outline',
+                onPress: () => { setMenuOpen(false); router.replace('/business/dashboard' as any); },
+              }]
+            : []),
+          { label: 'Profile', icon: 'person-outline', onPress: () => go('/profile') },
+          { label: 'Appointments', icon: 'calendar-outline', onPress: () => go('/appointments') },
+          { label: 'Messages', icon: 'chatbubble-ellipses-outline', onPress: () => go('/messages') },
+          { label: 'Favorites', icon: 'heart-outline', onPress: () => go('/favorites') },
+          { label: 'Settings', icon: 'settings-outline', onPress: () => go('/settings') },
+          logoutItem,
+        ];
 
   return (
     <View style={[styles.wrap, !transparent && styles.solid]}>
@@ -68,7 +78,10 @@ export function WebHeader({ transparent, showSearch }: WebHeaderProps) {
           </View>
         )}
         <View style={{ flexDirection: 'row', alignItems: 'center', gap: 14 }}>
-          <HeaderPill label={t('For business')} onPress={() => router.push('/business')} />
+          {/* Salon acquisition CTA — only for visitors who aren't signed in.
+              Signed-in customers shouldn't be pushed business links; owners
+              and admins have their own entries in the avatar menu. */}
+          {!user && <HeaderPill label={t('For business')} onPress={() => router.push('/business')} />}
           {user ? (
             <>
               <NotificationsBell />
