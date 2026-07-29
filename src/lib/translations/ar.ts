@@ -770,4 +770,8 @@ export const ar: Record<string, string> = {
   'Your salon has been submitted': 'تم إرسال صالونك',
   'and': 'و',
   'e.g. +966 5X XXX XXXX': 'مثال: +966 5X XXX XXXX',
+  'You can be booked for any service.': 'يمكن حجزك لأي خدمة.',
+  'New services join the salon menu and are added to the ones you provide.': 'تُضاف الخدمات الجديدة إلى قائمة الصالون وإلى الخدمات التي تقدّمها.',
+  'Tap to choose which services you can be booked for.': 'اضغط لاختيار الخدمات التي يمكن حجزك لها.',
+  'No services yet — add your first one above.': 'لا توجد خدمات بعد — أضف أول خدمة بالأعلى.',
 };

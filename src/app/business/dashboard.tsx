@@ -898,29 +898,12 @@ export default function BusinessDashboard() {
   } else if (section === 'services') {
     if (canManage) {
       body = <ServicesEditor venue={venue!} onChanged={reload} />;
+    } else if (memberStaffId) {
+      body = <MemberServicesEditor venue={venue!} staffId={memberStaffId} onChanged={reload} />;
     } else {
-      const me = venue!.staff.find((m) => m.id === memberStaffId);
-      const mine = (me?.service_ids?.length
-        ? venue!.services.filter((sv) => me.service_ids!.includes(sv.id))
-        : venue!.services);
       body = (
         <View style={styles.card}>
-          <BText variant="h3">{t('Services you provide')}</BText>
-          {!me?.service_ids?.length && (
-            <BText variant="tiny" style={{ marginTop: 4 }}>
-              {t('No specific services assigned yet — you can be booked for any service.')}
-            </BText>
-          )}
-          {mine.map((sv) => (
-            <View key={sv.id} style={styles.bookingRow}>
-              <View style={{ flex: 1 }}>
-                <BText variant="smallMedium">{sv.name}</BText>
-                <BText variant="tiny">
-                  {sv.group_name} · {formatDuration(sv.duration_minutes)} · {formatPrice(sv.price_cents, sv.currency)}
-                </BText>
-              </View>
-            </View>
-          ))}
+          <BText variant="small">{t('You can be booked for any service.')}</BText>
         </View>
       );
     }
@@ -1071,7 +1054,7 @@ export default function BusinessDashboard() {
               />
             )}
             <NotificationsBell />
-            <Pressable onPress={() => router.push('/')} hitSlop={8}>
+            <Pressable onPress={() => (router.canGoBack() ? router.back() : router.replace('/'))} hitSlop={8}>
               <Ionicons name="close" size={22} color={colors.ink} />
             </Pressable>
           </View>
@@ -1111,7 +1094,7 @@ export default function BusinessDashboard() {
               </ScrollView>
             )}
             <NotificationsBell />
-            <Pressable onPress={() => router.push('/')} hitSlop={8}>
+            <Pressable onPress={() => (router.canGoBack() ? router.back() : router.replace('/'))} hitSlop={8}>
               <Ionicons name="close" size={22} color={colors.ink} />
             </Pressable>
           </View>
@@ -1792,6 +1775,126 @@ function TxStatusPill({ status }: { status: string }) {
   return (
     <View style={{ backgroundColor: m.bg, borderRadius: radius.pill, paddingHorizontal: 8, paddingVertical: 3 }}>
       <BText style={{ fontFamily: font.semibold, fontSize: 11, color: m.color }}>{t(m.label)}</BText>
+    </View>
+  );
+}
+
+function MemberServicesEditor({
+  venue,
+  staffId,
+  onChanged,
+}: {
+  venue: Venue;
+  staffId: string;
+  onChanged: () => void;
+}) {
+  const { t } = useI18n();
+  const me = venue.staff.find((m) => m.id === staffId);
+  const explicit = me?.service_ids ?? [];
+  const providesAll = explicit.length === 0;
+  const providedSet = new Set(providesAll ? venue.services.map((s) => s.id) : explicit);
+
+  const [savingId, setSavingId] = useState<string | null>(null);
+  const [name, setName] = useState('');
+  const [group, setGroup] = useState('Featured');
+  const [duration, setDuration] = useState('60');
+  const [price, setPrice] = useState('');
+  const [adding, setAdding] = useState(false);
+
+  const toggle = async (id: string) => {
+    const next = new Set(providedSet);
+    if (next.has(id)) next.delete(id);
+    else next.add(id);
+    setSavingId(id);
+    // An empty list means "provides everything"; keep that shorthand when the
+    // member has (re)selected every service.
+    const list = next.size === venue.services.length ? [] : [...next];
+    await setStaffServices(staffId, list);
+    setSavingId(null);
+    onChanged();
+  };
+
+  const addNew = async () => {
+    if (!name.trim() || !price.trim()) return;
+    setAdding(true);
+    const beforeIds = new Set(venue.services.map((s) => s.id));
+    const updated = await addService(venue, {
+      name: name.trim(),
+      group_name: group.trim() || 'Featured',
+      duration_minutes: Math.max(5, parseInt(duration, 10) || 30),
+      price_cents: Math.round(parseFloat(price) * 100),
+    });
+    // Assign the newly created service to this member (unless they already
+    // provide everything, in which case it's covered automatically).
+    if (!providesAll) {
+      const added = updated.services.find((s) => !beforeIds.has(s.id));
+      if (added) await setStaffServices(staffId, [...explicit, added.id]);
+    }
+    setName('');
+    setPrice('');
+    setDuration('60');
+    setGroup('Featured');
+    setAdding(false);
+    onChanged();
+  };
+
+  return (
+    <View style={{ gap: 16 }}>
+      <View style={styles.card}>
+        <BText variant="h3">{t('Add a service')}</BText>
+        <BText variant="tiny" style={{ marginTop: 4 }}>
+          {t('New services join the salon menu and are added to the ones you provide.')}
+        </BText>
+        <View style={{ gap: 12, marginTop: 16 }}>
+          <Field label={t('Service name')} placeholder={t('e.g. Gel Manicure')} value={name} onChangeText={setName} />
+          <View style={{ flexDirection: 'row', gap: 12 }}>
+            <View style={{ flex: 1 }}>
+              <Field label={t('Group')} placeholder={t('Featured')} value={group} onChangeText={setGroup} />
+            </View>
+            <View style={{ flex: 1 }}>
+              <Field label={t('Duration (min)')} keyboardType="numeric" value={duration} onChangeText={setDuration} />
+            </View>
+            <View style={{ flex: 1 }}>
+              <Field label={t('Price')} keyboardType="numeric" placeholder="150" value={price} onChangeText={setPrice} />
+            </View>
+          </View>
+          <View style={{ flexDirection: 'row' }}>
+            <Button title={t('Add service')} loading={adding} onPress={addNew} />
+          </View>
+        </View>
+      </View>
+
+      <View style={styles.card}>
+        <BText variant="h3">{t('Services you provide')}</BText>
+        <BText variant="tiny" style={{ marginTop: 4 }}>
+          {t('Tap to choose which services you can be booked for.')}
+        </BText>
+        <View style={{ marginTop: 8 }}>
+          {venue.services.map((sv) => {
+            const on = providedSet.has(sv.id);
+            return (
+              <Pressable key={sv.id} onPress={() => toggle(sv.id)} disabled={savingId === sv.id} style={styles.tableRow}>
+                <View style={{ flex: 1 }}>
+                  <BText variant="smallMedium">{sv.name}</BText>
+                  <BText variant="tiny">
+                    {sv.group_name} · {formatDuration(sv.duration_minutes)} · {formatPrice(sv.price_cents, sv.currency)}
+                  </BText>
+                </View>
+                <Ionicons
+                  name={on ? 'checkbox' : 'square-outline'}
+                  size={22}
+                  color={on ? colors.accent : colors.gray}
+                />
+              </Pressable>
+            );
+          })}
+          {venue.services.length === 0 && (
+            <BText variant="small" style={{ marginTop: 10 }}>
+              {t('No services yet — add your first one above.')}
+            </BText>
+          )}
+        </View>
+      </View>
     </View>
   );
 }
