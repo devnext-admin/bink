@@ -524,7 +524,7 @@ export default function BusinessLanding() {
           </View>
           <View style={{ marginTop: 28, flexDirection: 'row', gap: 12 }}>
             {myVenues.length > 0 ? (
-              <Button title={t('Open your dashboard')} size="lg" onPress={() => router.push('/business/dashboard')} />
+              <Button title={t('Open your dashboard')} size="lg" onPress={() => router.replace('/business/dashboard')} />
             ) : (
               !showWizard && <Button title={t('List your business')} size="lg" onPress={startListing} />
             )}

@@ -38,10 +38,10 @@ export function WebHeader({ transparent, showSearch }: WebHeaderProps) {
     {
       label: ownsVenues ? 'Business dashboard' : 'Bink for Business',
       icon: 'storefront-outline',
-      onPress: () => go(ownsVenues ? '/business/dashboard' : '/business'),
+      onPress: () => { setMenuOpen(false); router.replace((ownsVenues ? '/business/dashboard' : '/business') as any); },
     },
     ...(user?.role === 'admin'
-      ? [{ label: 'Admin', icon: 'shield-checkmark-outline', onPress: () => go('/admin') }]
+      ? [{ label: 'Admin', icon: 'shield-checkmark-outline', onPress: () => { setMenuOpen(false); router.replace('/admin' as any); } }]
       : []),
     { label: 'Settings', icon: 'settings-outline', onPress: () => go('/settings') },
     {

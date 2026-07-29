@@ -166,7 +166,13 @@ export default function Profile() {
           {MENU.map((m, i) => (
             <Pressable
               key={m.label}
-              onPress={() => (m.href ? router.push(m.href as any) : null)}
+              onPress={() =>
+                m.href
+                  ? ['/admin', '/business/dashboard', '/business'].includes(m.href)
+                    ? router.replace(m.href as any)
+                    : router.push(m.href as any)
+                  : null
+              }
               style={({ hovered }: any) => [
                 styles.menuRow,
                 i < MENU.length - 1 && { borderBottomWidth: 1, borderBottomColor: colors.divider },

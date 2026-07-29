@@ -1028,7 +1028,7 @@ export default function BusinessDashboard() {
               <Ionicons name="open-outline" size={15} color={colors.gray} />
               <BText variant="small">{t('View public page')}</BText>
             </Pressable>
-            <Pressable style={styles.footerLink} onPress={() => router.push('/')}>
+            <Pressable style={styles.footerLink} onPress={() => router.replace('/')}>
               <Ionicons name="storefront-outline" size={15} color={colors.gray} />
               <BText variant="small">{t('Back to Bink')}</BText>
             </Pressable>
@@ -1054,9 +1054,7 @@ export default function BusinessDashboard() {
               />
             )}
             <NotificationsBell />
-            <Pressable onPress={() => (router.canGoBack() ? router.back() : router.replace('/'))} hitSlop={8}>
-              <Ionicons name="close" size={22} color={colors.ink} />
-            </Pressable>
+
           </View>
           <ScrollView contentContainerStyle={{ padding: 28, paddingBottom: 60 }}>
             {access === 'admin' && (
@@ -1094,8 +1092,8 @@ export default function BusinessDashboard() {
               </ScrollView>
             )}
             <NotificationsBell />
-            <Pressable onPress={() => (router.canGoBack() ? router.back() : router.replace('/'))} hitSlop={8}>
-              <Ionicons name="close" size={22} color={colors.ink} />
+            <Pressable onPress={() => router.replace('/')} hitSlop={8} accessibilityLabel={t('Back to Bink')}>
+              <Ionicons name="storefront-outline" size={22} color={colors.ink} />
             </Pressable>
           </View>
         </View>

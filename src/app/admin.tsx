@@ -786,8 +786,14 @@ export default function Admin() {
               <BText style={{ fontFamily: font.bold, fontSize: 11, color: colors.white }}>{t('ADMIN')}</BText>
             </View>
           </View>
-          <Pressable onPress={() => router.push('/')} hitSlop={8}>
-            <Ionicons name="close" size={22} color={colors.ink} />
+          <Pressable
+            onPress={() => router.replace('/')}
+            hitSlop={8}
+            accessibilityLabel={t('Back to Bink')}
+            style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}
+          >
+            <Ionicons name="storefront-outline" size={20} color={colors.ink} />
+            <BText variant="smallMedium">{t('Back to Bink')}</BText>
           </Pressable>
         </View>
       </View>

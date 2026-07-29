@@ -100,7 +100,7 @@ export function AccountLayout({
           </Pressable>
           {user?.role === 'admin' && (
             <Pressable
-              onPress={() => router.push('/admin')}
+              onPress={() => router.replace('/admin')}
               style={({ hovered }: any) => [styles.navItem, hovered && { backgroundColor: colors.bgPage }]}
             >
               <Ionicons name="shield-checkmark-outline" size={18} color={colors.ink} />
