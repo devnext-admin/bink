@@ -30,11 +30,11 @@ export function ServiceRow({ service, mode = 'book', selected, showDescription, 
       ]}
     >
       <View style={{ flex: 1, gap: 4 }}>
-        <BText variant="title">{service.name}</BText>
+        <BText variant="title">{t(service.name)}</BText>
         <BText variant="small">{formatDuration(service.duration_minutes)}</BText>
         {showDescription && service.description ? (
           <BText variant="small" numberOfLines={2} style={{ marginTop: 2 }}>
-            {service.description}
+            {t(service.description)}
           </BText>
         ) : null}
         <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8, marginTop: 4 }}>

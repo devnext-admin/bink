@@ -391,8 +391,8 @@ export default function BusinessDashboard() {
                         {b.customer_name ?? t('Guest customer')}
                       </BText>
                       <BText variant="tiny" numberOfLines={1}>
-                        {b.items.map((i) => i.service_name).join(', ')}
-                        {b.staff_name ? ` · ${b.staff_name}` : ''}
+                        {b.items.map((i) => t(i.service_name)).join('، ')}
+                        {b.staff_name ? ` · ${t(b.staff_name)}` : ''}
                       </BText>
                     </View>
                     <StatusTag status={b.status} />
@@ -415,7 +415,7 @@ export default function BusinessDashboard() {
                 {topServices.map(([name, v]) => (
                   <View key={name} style={styles.tableRow}>
                     <BText variant="smallMedium" style={{ flex: 1 }} numberOfLines={1}>
-                      {name}
+                      {t(name)}
                     </BText>
                     <BText variant="tiny" style={{ width: 70 }}>
                       {t('{n} booked', { n: v.count })}
@@ -442,7 +442,7 @@ export default function BusinessDashboard() {
                       {i + 1}
                     </BText>
                     <BText variant="smallMedium" style={{ flex: 1 }} numberOfLines={1}>
-                      {m.name}
+                      {t(m.name)}
                     </BText>
                     <BText variant="tiny" style={{ width: 80 }}>
                       {t('{n} bookings', { n: m.count })}
@@ -471,11 +471,11 @@ export default function BusinessDashboard() {
               recentReviews.map((r) => (
                 <View key={r.id} style={{ marginTop: 14, gap: 4 }}>
                   <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
-                    <BText variant="smallMedium">{r.author_name}</BText>
+                    <BText variant="smallMedium">{t(r.author_name)}</BText>
                     <Rating value={r.rating} />
                   </View>
                   <BText variant="small" numberOfLines={2}>
-                    {r.comment}
+                    {t(r.comment)}
                   </BText>
                 </View>
               ))
@@ -540,7 +540,7 @@ export default function BusinessDashboard() {
           <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 6 }}>
             <Chip label={t('All team')} selected={!calStaff} onPress={() => setCalStaff(null)} />
             {venue!.staff.map((m) => (
-              <Chip key={m.id} label={m.name} selected={calStaff === m.id} onPress={() => setCalStaff(calStaff === m.id ? null : m.id)} />
+              <Chip key={m.id} label={t(m.name)} selected={calStaff === m.id} onPress={() => setCalStaff(calStaff === m.id ? null : m.id)} />
             ))}
           </View>
         )}
@@ -580,7 +580,7 @@ export default function BusinessDashboard() {
                             {b.customer_name ?? t('Guest customer')}
                           </BText>
                           <BText variant="tiny" numberOfLines={1}>
-                            {b.items.map((i) => i.service_name).join(', ')}
+                            {b.items.map((i) => t(i.service_name)).join('، ')}
                           </BText>
                         </View>
                       ))
@@ -745,8 +745,8 @@ export default function BusinessDashboard() {
                         {formatDate(lang, new Date(b.starts_at), { day: 'numeric', month: 'short', year: 'numeric' })}
                       </BText>
                       <BText variant="small" style={{ flex: 1 }} numberOfLines={1}>
-                        {b.items.map((i) => i.service_name).join(', ')}
-                        {b.staff_name ? ` · ${b.staff_name}` : ''}
+                        {b.items.map((i) => t(i.service_name)).join('، ')}
+                        {b.staff_name ? ` · ${t(b.staff_name)}` : ''}
                       </BText>
                       <StatusTag status={b.status} />
                       <BText variant="smallMedium" style={{ width: 84, textAlign: 'right' }}>
@@ -819,7 +819,7 @@ export default function BusinessDashboard() {
                 <Avatar name={r.author_name} size={36} />
                 <View style={{ flex: 1 }}>
                   <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
-                    <BText variant="smallMedium">{r.author_name}</BText>
+                    <BText variant="smallMedium">{t(r.author_name)}</BText>
                     <Rating value={r.rating} />
                     <BText variant="tiny">{formatDateLong(r.created_at)}</BText>
                   </View>
@@ -967,7 +967,7 @@ export default function BusinessDashboard() {
             />
             <View style={{ flex: 1 }}>
               <BText variant="smallMedium" numberOfLines={1}>
-                {venue!.name}
+                {t(venue!.name)}
               </BText>
               <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
                 <StatusTag status={venue!.status ?? 'approved'} />
@@ -1108,11 +1108,11 @@ export default function BusinessDashboard() {
                 contentFit="cover"
               />
               <View>
-                <BText variant="h2">{venue!.name}</BText>
+                <BText variant="h2">{t(venue!.name)}</BText>
                 <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
                   <BText variant="small">
-                    {venue!.area ? `${venue!.area}, ` : ''}
-                    {venue!.city}
+                    {venue!.area ? `${t(venue!.area)}, ` : ''}
+                    {t(venue!.city)}
                   </BText>
                   <StatusTag status={venue!.status ?? 'approved'} />
                   {access === 'member' && (
@@ -1187,8 +1187,8 @@ function DayCalendar({ bookings }: { bookings: Booking[] }) {
                 {formatTimeOfDate(b.starts_at)} · {b.customer_name || t('Guest customer')}
               </BText>
               <BText variant="tiny" numberOfLines={1}>
-                {b.items.map((i) => i.service_name).join(', ')}
-                {b.staff_name ? ` · ${t('with {name}', { name: b.staff_name })}` : ''}
+                {b.items.map((i) => t(i.service_name)).join('، ')}
+                {b.staff_name ? ` · ${t('with {name}', { name: t(b.staff_name) })}` : ''}
               </BText>
             </View>
           );
@@ -1238,7 +1238,7 @@ function WalkInForm({ venue, onDone }: { venue: Venue; onDone: () => void }) {
           <BText variant="smallMedium">{t('Service')}</BText>
           <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8 }}>
             {venue.services.map((sv) => (
-              <Chip key={sv.id} label={sv.name} selected={serviceId === sv.id} onPress={() => setServiceId(sv.id)} />
+              <Chip key={sv.id} label={t(sv.name)} selected={serviceId === sv.id} onPress={() => setServiceId(sv.id)} />
             ))}
           </View>
         </View>
@@ -1247,7 +1247,7 @@ function WalkInForm({ venue, onDone }: { venue: Venue; onDone: () => void }) {
             <BText variant="smallMedium">{t('Professional (optional)')}</BText>
             <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8 }}>
               {venue.staff.map((m) => (
-                <Chip key={m.id} label={m.name} selected={staffId === m.id} onPress={() => setStaffId(staffId === m.id ? null : m.id)} />
+                <Chip key={m.id} label={t(m.name)} selected={staffId === m.id} onPress={() => setStaffId(staffId === m.id ? null : m.id)} />
               ))}
             </View>
           </View>
@@ -1403,7 +1403,7 @@ function BookingRow({
     <View style={[styles.bookingRow, { flexWrap: 'wrap' }]}>
       <View style={{ flex: 1, minWidth: 220 }}>
         <BText variant="smallMedium">
-          {booking.customer_name || t('Guest customer')} · {booking.items.map((i) => i.service_name).join(', ')}
+          {booking.customer_name || t('Guest customer')} · {booking.items.map((i) => t(i.service_name)).join('، ')}
         </BText>
         <BText variant="tiny" style={{ marginTop: 2 }}>
           {t('{date} at {time}', { date: formatDateLong(booking.starts_at), time: formatTimeOfDate(booking.starts_at) })}
@@ -1697,7 +1697,7 @@ function AnalyticsSection({
   const topServices = [...svcCounts.entries()]
     .sort((a, b) => b[1] - a[1])
     .slice(0, 5)
-    .map(([label, value]) => ({ label, value }));
+    .map(([label, value]) => ({ label: t(label), value }));
 
   // Team performance
   const team = venue.staff.map((m) => ({
@@ -1871,9 +1871,9 @@ function MemberServicesEditor({
             return (
               <Pressable key={sv.id} onPress={() => toggle(sv.id)} disabled={savingId === sv.id} style={styles.tableRow}>
                 <View style={{ flex: 1 }}>
-                  <BText variant="smallMedium">{sv.name}</BText>
+                  <BText variant="smallMedium">{t(sv.name)}</BText>
                   <BText variant="tiny">
-                    {sv.group_name} · {formatDuration(sv.duration_minutes)} · {formatPrice(sv.price_cents, sv.currency)}
+                    {t(sv.group_name)} · {formatDuration(sv.duration_minutes)} · {formatPrice(sv.price_cents, sv.currency)}
                   </BText>
                 </View>
                 <Ionicons
@@ -1971,9 +1971,9 @@ function ServicesEditor({ venue, onChanged }: { venue: Venue; onChanged: () => v
         {venue.services.map((s) => (
           <View key={s.id} style={styles.bookingRow}>
             <View style={{ flex: 1 }}>
-              <BText variant="smallMedium">{s.name}</BText>
+              <BText variant="smallMedium">{t(s.name)}</BText>
               <BText variant="tiny">
-                {s.group_name} · {formatDuration(s.duration_minutes)} · {formatPrice(s.price_cents, s.currency)}
+                {t(s.group_name)} · {formatDuration(s.duration_minutes)} · {formatPrice(s.price_cents, s.currency)}
                 {s.discount_pct ? ` · ${t('{pct}% off', { pct: s.discount_pct })}` : ''}
               </BText>
             </View>
@@ -2100,7 +2100,7 @@ function StaffEditor({ venue, onChanged }: { venue: Venue; onChanged: () => void
             <BText variant="tiny">{t('Leave empty if they can be booked for any service.')}</BText>
             <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8 }}>
               {venue.services.map((sv) => (
-                <Chip key={sv.id} label={sv.name} selected={serviceIds.includes(sv.id)} onPress={() => toggleServiceId(sv.id)} />
+                <Chip key={sv.id} label={t(sv.name)} selected={serviceIds.includes(sv.id)} onPress={() => toggleServiceId(sv.id)} />
               ))}
             </View>
           </View>

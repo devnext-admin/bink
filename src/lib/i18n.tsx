@@ -3,6 +3,8 @@ import { loadArabicFont } from './arabic-font';
 import React, { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { I18nManager, Platform } from 'react-native';
 import { ar } from './translations/ar';
+import { arContent } from './translations/ar-content';
+import { setPriceLang } from './format';
 
 export type Lang = 'en' | 'ar';
 const LANG_KEY = 'bink.lang';
@@ -19,6 +21,7 @@ const I18nContext = createContext<I18nValue | null>(null);
 
 function applyDirection(lang: Lang) {
   const rtl = lang === 'ar';
+  setPriceLang(lang);
   if (Platform.OS === 'web') {
     if (typeof document !== 'undefined') {
       document.documentElement.setAttribute('dir', rtl ? 'rtl' : 'ltr');
@@ -62,7 +65,8 @@ export function I18nProvider({ children }: { children: React.ReactNode }) {
 
   const t = useCallback(
     (s: string, vars?: Record<string, string | number>) =>
-      interpolate(lang === 'ar' ? (ar[s] ?? s) : s, vars),
+      // UI strings first, then marketplace content (salon/service names etc.)
+      interpolate(lang === 'ar' ? (ar[s] ?? arContent[s] ?? s) : s, vars),
     [lang]
   );
 

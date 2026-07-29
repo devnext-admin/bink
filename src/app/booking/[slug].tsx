@@ -234,7 +234,7 @@ export default function BookingScreen() {
           {venue.staff.map((m) => (
             <ProCard
               key={m.id}
-              label={m.name}
+              label={t(m.name)}
               sub={m.role}
               rating={m.rating}
               selected={booking.staff?.id === m.id}
@@ -340,13 +340,13 @@ export default function BookingScreen() {
           <InfoRow icon="calendar-outline" text={t('{date} at {time}', { date: booking.date!, time: booking.time! })} />
           <InfoRow icon="time-outline" text={t('{duration} total duration', { duration: formatDuration(booking.totalMinutes) })} />
           <InfoRow icon="person-outline" text={booking.staff ? `${booking.staff.name} — ${booking.staff.role}` : t('Any professional')} />
-          <InfoRow icon="location-outline" text={`${venue.name}, ${venue.area}, ${venue.city}`} />
+          <InfoRow icon="location-outline" text={`${t(venue.name)}, ${t(venue.area)}, ${t(venue.city)}`} />
         </View>
         <View style={{ marginTop: 28, gap: 12 }}>
           {booking.services.map((s) => (
             <View key={s.id} style={styles.confirmRow}>
               <View style={{ flex: 1 }}>
-                <BText variant="title">{s.name}</BText>
+                <BText variant="title">{t(s.name)}</BText>
                 <BText variant="small">{formatDuration(s.duration_minutes)}</BText>
               </View>
               <BText variant="smallMedium">
@@ -474,7 +474,7 @@ export default function BookingScreen() {
           {t('Booking confirmed')}
         </BText>
         <BText variant="body" style={{ marginTop: 8, textAlign: 'center', maxWidth: 400 }}>
-          {venue.name} · {t('{date} at {time}', { date: booking.date!, time: booking.time! })}. {t('We can’t wait to see you!')}
+          {t(venue.name)} · {t('{date} at {time}', { date: booking.date!, time: booking.time! })}. {t('We can’t wait to see you!')}
         </BText>
         {paid ? (
           <View style={[styles.paidPill, { backgroundColor: colors.greenBg }]}>
@@ -528,11 +528,11 @@ export default function BookingScreen() {
         />
         <View style={{ flex: 1 }}>
           <BText variant="title" numberOfLines={1}>
-            {venue.name}
+            {t(venue.name)}
           </BText>
           <Rating value={venue.rating_avg} count={venue.rating_count} size={12} />
           <BText variant="tiny" numberOfLines={1}>
-            {venue.area}, {venue.city}
+            {t(venue.area)}, {t(venue.city)}
           </BText>
         </View>
       </View>
@@ -545,7 +545,7 @@ export default function BookingScreen() {
             <View key={s.id} style={{ flexDirection: 'row', justifyContent: 'space-between', gap: 8 }}>
               <View style={{ flex: 1 }}>
                 <BText variant="smallMedium" numberOfLines={1}>
-                  {s.name}
+                  {t(s.name)}
                 </BText>
                 <BText variant="tiny">{formatDuration(s.duration_minutes)}</BText>
               </View>

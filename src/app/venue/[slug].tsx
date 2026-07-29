@@ -45,6 +45,7 @@ const HIGHLIGHT_ICONS: Record<string, string> = {
 
 export default function VenueScreen() {
   const { slug } = useLocalSearchParams<{ slug: string }>();
+  const { t } = useI18n();
   const { allVenues } = useAppData();
   const venue = allVenues.find((v) => v.slug === slug);
   const isDesktop = useIsDesktop();
@@ -53,8 +54,8 @@ export default function VenueScreen() {
   return (
     <>
       <Seo
-        title={`${venue.name} — ${venue.area}, ${venue.city}`}
-        description={`Book ${venue.name} in ${venue.city} on Bink. ${venue.description}`.slice(0, 180)}
+        title={`${t(venue.name)} — ${t(venue.area)}, ${t(venue.city)}`}
+        description={`Book ${t(venue.name)} in ${venue.city} on Bink. ${t(venue.description)}`.slice(0, 180)}
       />
       {isDesktop ? <VenueDesktop venue={venue} /> : <VenueMobile venue={venue} />}
     </>
@@ -255,13 +256,13 @@ function AboutSection({ venue }: { venue: Venue }) {
     <View>
       <BText variant="h2">{t('About')}</BText>
       <BText variant="body" style={{ marginTop: 12 }}>
-        {venue.description}
+        {t(venue.description)}
       </BText>
       <View style={{ flexDirection: 'row', gap: 8, marginTop: 14 }}>
         <Ionicons name="location-outline" size={16} color={colors.gray} style={{ marginTop: 2 }} />
         <View style={{ flex: 1, gap: 4 }}>
           <BText variant="small">
-            {venue.address}, {venue.area}, {venue.city}, {venue.country}
+            {t(venue.address)}, {t(venue.area)}, {t(venue.city)}, {t(venue.country)}
           </BText>
           <Pressable onPress={() => Linking.openURL(directionsUrl(venue))}>
             <BText variant="link">{t('Get directions')}</BText>
@@ -340,7 +341,7 @@ function GalleryViewer({ venue, open, onClose }: { venue: Venue; open: boolean; 
         </View>
         <ScrollView contentContainerStyle={{ padding: 20, gap: 14, maxWidth: 900, width: '100%', alignSelf: 'center' }}>
           {venue.images.map((im) => (
-            <Image accessibilityLabel={venue.name} alt={venue.name}
+            <Image accessibilityLabel={t(venue.name)} alt={t(venue.name)}
               key={im.url + im.sort_order}
               source={{ uri: sized(im.url, 640) }}
               style={{ width: '100%', aspectRatio: 1.5, borderRadius: radius.lg, backgroundColor: colors.bgSubtle }}
@@ -400,8 +401,8 @@ function VenueDesktop({ venue }: { venue: Venue }) {
           {[
             { label: t('Home'), to: '/' },
             { label: category ? t(category.name) : t('Venues'), to: category ? `/search?category=${category.slug}` : '/search' },
-            { label: venue.city, to: `/search?q=${encodeURIComponent(venue.city)}` },
-            { label: venue.name, to: null as string | null },
+            { label: t(venue.city), to: `/search?q=${encodeURIComponent(venue.city)}` },
+            { label: t(venue.name), to: null as string | null },
           ].map((c, i, a) => (
             <React.Fragment key={c.label + i}>
               {c.to ? (
@@ -431,7 +432,7 @@ function VenueDesktop({ venue }: { venue: Venue }) {
           <View style={{ gap: 8, flex: 1 }}>
             <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12 }}>
               <BText style={{ fontFamily: font.extrabold, fontSize: 40, lineHeight: 48, color: colors.ink }}>
-                {venue.name}
+                {t(venue.name)}
               </BText>
               {venue.provider_type === 'freelancer' && (
                 <View style={{ backgroundColor: colors.accentSoft, borderRadius: 999, paddingHorizontal: 12, height: 26, alignItems: 'center', justifyContent: 'center' }}>
@@ -448,7 +449,7 @@ function VenueDesktop({ venue }: { venue: Venue }) {
                 {t('until {time}', { time: t('10:00 PM') })}
               </BText>
               <BText variant="body" color={colors.gray}>
-                · {venue.area}, {venue.city}
+                · {t(venue.area)}, {t(venue.city)}
               </BText>
               <BText variant="link" onPress={() => Linking.openURL(directionsUrl(venue))}>
                 {t('Get directions')}
@@ -463,7 +464,7 @@ function VenueDesktop({ venue }: { venue: Venue }) {
 
         {/* Gallery: 1 large + 2 stacked */}
         <View style={{ flexDirection: 'row', gap: 8, marginTop: 24, position: 'relative' }}>
-          <Image accessibilityLabel={venue.name} alt={venue.name}
+          <Image accessibilityLabel={t(venue.name)} alt={t(venue.name)}
             source={{ uri: sized(venue.images[0]?.url, 1080) }}
             style={{ flex: 2, aspectRatio: 1.55, borderRadius: radius.lg, backgroundColor: colors.bgSubtle }}
             contentFit="cover"
@@ -471,7 +472,7 @@ function VenueDesktop({ venue }: { venue: Venue }) {
           />
           <View style={{ flex: 1, gap: 8 }}>
             {venue.images.slice(1, 3).map((im) => (
-              <Image accessibilityLabel={venue.name} alt={venue.name}
+              <Image accessibilityLabel={t(venue.name)} alt={t(venue.name)}
                 key={im.url + im.sort_order}
                 source={{ uri: sized(im.url, 640) }}
                 style={{ flex: 1, borderRadius: radius.lg, backgroundColor: colors.bgSubtle }}
@@ -522,7 +523,7 @@ function VenueDesktop({ venue }: { venue: Venue }) {
                 <Ionicons name="location-outline" size={18} color={colors.ink} />
                 <View style={{ flex: 1 }}>
                   <BText variant="small" color={colors.ink}>
-                    {venue.address}, {venue.area}, {venue.city}
+                    {venue.address}, {t(venue.area)}, {t(venue.city)}
                   </BText>
                   <BText variant="link" style={{ marginTop: 4 }} onPress={() => Linking.openURL(directionsUrl(venue))}>
                     {t('Get directions')}
@@ -561,7 +562,7 @@ function VenueMobile({ venue }: { venue: Venue }) {
     <View style={{ flex: 1, backgroundColor: colors.white }}>
       <ScrollView contentContainerStyle={{ paddingBottom: 120 }}>
         <View>
-          <Image accessibilityLabel={venue.name} alt={venue.name}
+          <Image accessibilityLabel={t(venue.name)} alt={t(venue.name)}
             source={{ uri: sized(venue.images[0]?.url, 1080) }}
             style={{ width: '100%', aspectRatio: 1.3, backgroundColor: colors.bgSubtle }}
             contentFit="cover"
@@ -587,7 +588,7 @@ function VenueMobile({ venue }: { venue: Venue }) {
         <GalleryViewer venue={venue} open={galleryOpen} onClose={() => setGalleryOpen(false)} />
 
         <View style={{ padding: 20, gap: 8 }}>
-          <BText variant="h1">{venue.name}</BText>
+          <BText variant="h1">{t(venue.name)}</BText>
           <Rating value={venue.rating_avg} count={venue.rating_count} size={15} />
           <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
             <BText variant="small" color={colors.green} style={{ fontFamily: font.semibold }}>
@@ -598,7 +599,7 @@ function VenueMobile({ venue }: { venue: Venue }) {
           <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
             <Ionicons name="location-outline" size={14} color={colors.gray} />
             <BText variant="small">
-              {venue.area}, {venue.city}
+              {t(venue.area)}, {t(venue.city)}
             </BText>
           </View>
         </View>

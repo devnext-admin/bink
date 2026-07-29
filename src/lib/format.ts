@@ -1,6 +1,14 @@
+// Kept in sync by the I18nProvider so prices localise ("SAR 180" → "180 ر.س")
+// without threading lang through every call site.
+let priceLang: 'en' | 'ar' = 'en';
+export function setPriceLang(l: 'en' | 'ar') {
+  priceLang = l;
+}
+
 export function formatPrice(cents: number, currency: string): string {
   const whole = cents / 100;
   const str = Number.isInteger(whole) ? whole.toLocaleString('en-US') : whole.toFixed(2);
+  if (priceLang === 'ar' && currency === 'SAR') return `${str} ر.س`;
   return `${currency} ${str}`;
 }
 

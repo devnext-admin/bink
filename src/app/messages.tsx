@@ -115,7 +115,7 @@ export default function Messages() {
             <View style={styles.threadPane}>
               {active && (
                 <View style={styles.threadHeader}>
-                  <BText variant="title">{active.venueName}</BText>
+                  <BText variant="title">{t(active.venueName)}</BText>
                   <Pressable onPress={() => router.push(`/venue/${allVenues.find((v) => v.id === active.venueId)?.slug}`)} hitSlop={8}>
                     <BText variant="link">{t('View salon')}</BText>
                   </Pressable>
@@ -138,7 +138,7 @@ export default function Messages() {
             <Ionicons name={isRTL ? 'arrow-forward' : 'arrow-back'} size={24} color={colors.ink} />
           </Pressable>
         ) : null}
-        <BText variant="h1">{active ? active.venueName : t('Messages')}</BText>
+        <BText variant="h1">{active ? t(active.venueName) : t('Messages')}</BText>
       </View>
       {active ? (
         <View style={{ flex: 1, paddingBottom: TAB_BAR_HEIGHT }}>{thread}</View>

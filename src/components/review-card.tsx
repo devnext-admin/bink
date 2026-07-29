@@ -8,7 +8,7 @@ import { RatingStars } from './ui/rating';
 import { BText } from './ui/text';
 
 export function ReviewCard({ review }: { review: Review }) {
-  const { lang } = useI18n();
+  const { lang, t } = useI18n();
   const date = formatDate(lang, review.created_at, {
     weekday: 'short',
     month: 'short',
@@ -18,16 +18,16 @@ export function ReviewCard({ review }: { review: Review }) {
   return (
     <View style={{ gap: 10, paddingVertical: 16 }}>
       <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12 }}>
-        <Avatar name={review.author_name} size={40} />
+        <Avatar name={t(review.author_name)} size={40} />
         <View>
-          <BText variant="smallMedium">{review.author_name}</BText>
+          <BText variant="smallMedium">{t(review.author_name)}</BText>
           <BText variant="tiny" color={colors.gray}>
             {date}
           </BText>
         </View>
       </View>
       <RatingStars value={review.rating} size={14} />
-      {review.comment ? <BText variant="body">{review.comment}</BText> : null}
+      {review.comment ? <BText variant="body">{t(review.comment)}</BText> : null}
     </View>
   );
 }

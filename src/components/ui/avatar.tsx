@@ -1,6 +1,7 @@
 import { Image } from 'expo-image';
 import React from 'react';
 import { View } from 'react-native';
+import { useI18n } from '../../lib/i18n';
 import { sized } from '../../lib/image';
 import { colors, font } from '../../lib/theme';
 import { BText } from './text';
@@ -46,6 +47,7 @@ export function Avatar({ name, url, size = 56 }: AvatarProps) {
 }
 
 export function StaffAvatar({ name, role, url, size = 88 }: AvatarProps & { role?: string }) {
+  const { t } = useI18n();
   return (
     <View style={{ alignItems: 'center', width: size + 24 }}>
       <View
@@ -63,11 +65,11 @@ export function StaffAvatar({ name, role, url, size = 88 }: AvatarProps & { role
         <Avatar name={name} url={url} size={size - 8} />
       </View>
       <BText variant="smallMedium" style={{ marginTop: 8 }} numberOfLines={1}>
-        {name}
+        {t(name)}
       </BText>
       {role ? (
         <BText variant="tiny" numberOfLines={1} style={{ marginTop: 2 }}>
-          {role}
+          {t(role)}
         </BText>
       ) : null}
     </View>

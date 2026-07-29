@@ -157,8 +157,8 @@ export default function Appointments() {
                 />
               ) : null}
               <View style={{ flex: 1, gap: 4 }}>
-                <BText variant="title" numberOfLines={2}>{b.venue_name}</BText>
-                <BText variant="small" numberOfLines={1}>{b.venue_area}</BText>
+                <BText variant="title" numberOfLines={2}>{t(b.venue_name)}</BText>
+                <BText variant="small" numberOfLines={1}>{(b.venue_area ?? '').split(', ').map((x) => t(x)).join(t(', '))}</BText>
                 <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 6, marginTop: 2 }}>
                   <StatusPill status={b.status} />
                   <PaymentPill
@@ -186,7 +186,7 @@ export default function Appointments() {
               {b.items.map((i) => (
                 <View key={i.service_id} style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                   <BText variant="small" color={colors.ink}>
-                    {i.service_name}
+                    {t(i.service_name)}
                   </BText>
                   <BText variant="small" color={colors.ink}>
                     {formatPrice(i.price_cents, b.currency)}
@@ -296,7 +296,7 @@ export default function Appointments() {
           {cancelTarget && (
             <>
               <BText variant="small" style={{ marginTop: 6, textAlign: 'center' }}>
-                {cancelTarget.venue_name} ·{' '}
+                {t(cancelTarget.venue_name)} ·{' '}
                 {formatDate(lang, cancelTarget.starts_at, { weekday: 'long', month: 'long', day: 'numeric' })}
               </BText>
               {(() => {
@@ -342,7 +342,7 @@ export default function Appointments() {
         <View style={styles.modalCard}>
           <BText variant="h2">{t('How was your visit?')}</BText>
           <BText variant="small" style={{ marginTop: 4 }}>
-            {rateBooking?.venue_name}
+            {t(rateBooking?.venue_name ?? '')}
           </BText>
           <View style={{ flexDirection: 'row', gap: 8, marginTop: 20, justifyContent: 'center' }}>
             {[1, 2, 3, 4, 5].map((i) => (

@@ -60,7 +60,7 @@ export default function Invoices() {
                 <View style={{ flex: 1 }}>
                   <BText variant="title">{inv.number}</BText>
                   <BText variant="tiny">
-                    {inv.venue_name ?? t('Bink booking')} ·{' '}
+                    {t(inv.venue_name ?? 'Bink booking')} ·{' '}
                     {formatDate(lang, inv.issued_at, { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}
                   </BText>
                 </View>

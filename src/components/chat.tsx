@@ -47,7 +47,7 @@ export function ConversationList({
     <View>
       {conversations.map((c) => {
         const key = `${c.venue_id}|${c.user_id}`;
-        const title = perspective === 'customer' ? c.venue_name : c.user_name || t('Customer');
+        const title = perspective === 'customer' ? t(c.venue_name) : c.user_name || t('Customer');
         return (
           <Pressable
             key={key}

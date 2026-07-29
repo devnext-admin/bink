@@ -74,15 +74,15 @@ export function VenueCard({ venue, width, badge, distance }: VenueCardProps) {
       <View style={{ marginTop: 12, gap: 3 }}>
         <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: 8 }}>
           <BText variant="title" numberOfLines={1} style={{ flex: 1 }}>
-            {venue.name}
+            {t(venue.name)}
           </BText>
           {venue.rating_count > 0 ? <Rating value={venue.rating_avg} /> : null}
         </View>
         <BText variant="small" numberOfLines={1}>
-          {venue.area}, {venue.city}
+          {t(venue.area)}, {t(venue.city)}
         </BText>
         <BText variant="small" numberOfLines={1}>
-          {venue.provider_type === 'freelancer' ? t('Freelancer') : category?.name}
+          {venue.provider_type === 'freelancer' ? t('Freelancer') : t(category?.name ?? '')}
           {'  ·  '}
           {venue.rating_count > 0
             ? t('{count} reviews', { count: venue.rating_count.toLocaleString() })
