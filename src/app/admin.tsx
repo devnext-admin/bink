@@ -87,7 +87,7 @@ export default function Admin() {
       mapsUrl: null,
       name: nsName.trim(),
       categoryId: nsCat,
-      description: `Welcome to ${nsName.trim()} — quality treatments, easy booking on Bink.`,
+      description: `Welcome to ${nsName.trim()} - quality treatments, easy booking on Bink.`,
       address: nsAddress.trim(),
       area: nsArea.trim(),
       city: nsCity.trim(),
@@ -190,7 +190,7 @@ export default function Admin() {
                 <View style={{ flex: 1 }}>
                   <BText variant="smallMedium">{v.name}</BText>
                   <BText variant="tiny">
-                    {v.city} · {t(categories.find((c) => c.id === v.category_id)?.name ?? '—')}
+                    {v.city} · {t(categories.find((c) => c.id === v.category_id)?.name ?? '-')}
                     {v.provider_type === 'freelancer' ? ` · ${t('Freelancer')}` : ''}
                   </BText>
                 </View>
@@ -234,7 +234,7 @@ export default function Admin() {
                     {v.name}
                   </BText>
                   <BText variant="tiny" numberOfLines={1}>
-                    {v.city} · {t(categories.find((c) => c.id === v.category_id)?.name ?? '—')}
+                    {v.city} · {t(categories.find((c) => c.id === v.category_id)?.name ?? '-')}
                   </BText>
                 </View>
                 <BText variant="smallMedium">
@@ -365,7 +365,7 @@ export default function Admin() {
                   </Pressable>
                   <BText variant="tiny">
                     {v.area ? `${v.area}, ` : ''}
-                    {v.city} · {t(categories.find((c) => c.id === v.category_id)?.name ?? '—')} ·{' '}
+                    {v.city} · {t(categories.find((c) => c.id === v.category_id)?.name ?? '-')} ·{' '}
                     {v.services.length === 1 ? t('1 service') : t('{n} services', { n: v.services.length })}
                     {v.provider_type === 'freelancer' ? ` · ${t('Freelancer')}` : ''}
                   </BText>
@@ -429,7 +429,7 @@ export default function Admin() {
             >
               <View style={{ flex: 1, minWidth: 180 }}>
                 <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
-                  <BText variant="smallMedium">{u.name ?? '—'}</BText>
+                  <BText variant="smallMedium">{u.name ?? '-'}</BText>
                   {u.is_blocked && (
                     <View style={{ backgroundColor: colors.dangerBg, borderRadius: radius.pill, paddingHorizontal: 8, paddingVertical: 2 }}>
                       <BText style={{ fontFamily: font.semibold, fontSize: 11, color: colors.danger }}>{t('Blocked')}</BText>

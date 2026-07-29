@@ -38,7 +38,7 @@ async function saveLocalVenues(venues: Venue[]) {
 }
 
 /** Apply a mutation to one locally-stored venue (creating the local copy from
- *  a seed venue if needed — used when admins/owners edit demo venues). */
+ *  a seed venue if needed - used when admins/owners edit demo venues). */
 async function mutateLocalVenue(venue: Venue, fn: (v: Venue) => Venue): Promise<Venue> {
   const locals = await getLocalVenues();
   const idx = locals.findIndex((v) => v.id === venue.id);
@@ -178,7 +178,7 @@ export async function registerSalon(input: RegisterSalonInput): Promise<Venue> {
       return venue;
     }
     // No active session yet (e.g. a brand-new owner who still has to confirm
-    // their email) — RLS blocks the direct insert, so create the pending venue
+    // their email) - RLS blocks the direct insert, so create the pending venue
     // through the service-role edge function instead.
     const { data: sess } = await sb.auth.getSession();
     if (!sess.session && input.ownerId && !input.ownerId.startsWith('demo-')) {
@@ -493,7 +493,7 @@ export async function adminSetUserBlocked(userId: string, blocked: boolean): Pro
 
 /**
  * Upload a salon photo to storage and return its public URL.
- * Photos must follow the no-people rule — interiors, tools and products only.
+ * Photos must follow the no-people rule - interiors, tools and products only.
  */
 export async function uploadVenuePhoto(fileUri: string): Promise<string | null> {
   const sb = getSupabase();

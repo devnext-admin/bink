@@ -23,7 +23,7 @@ const FAQS = [
   },
   {
     q: 'Can I cancel or reschedule?',
-    a: 'Yes — open Appointments, find your upcoming booking, and use Reschedule to pick a new time or Cancel booking to cancel. Paid bookings that are cancelled can be refunded by the salon.',
+    a: 'Yes - open Appointments, find your upcoming booking, and use Reschedule to pick a new time or Cancel booking to cancel. Paid bookings that are cancelled can be refunded by the salon.',
   },
   {
     q: 'How do refunds work?',
@@ -31,7 +31,7 @@ const FAQS = [
   },
   {
     q: 'How do I list my salon on Bink?',
-    a: 'Tap For business, then List your business. Fill in your salon details and submit — the Bink team reviews every listing before it goes live, then you manage services, team and bookings from your dashboard.',
+    a: 'Tap For business, then List your business. Fill in your salon details and submit - the Bink team reviews every listing before it goes live, then you manage services, team and bookings from your dashboard.',
   },
   {
     q: 'How do reviews work?',
@@ -75,7 +75,7 @@ export default function Support() {
           </View>
           <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
             <Ionicons name="logo-whatsapp" size={18} color={colors.ink} />
-            <BText variant="body">{t('+966 5X XXX XXXX (9 AM – 9 PM, Sun–Thu)')}</BText>
+            <BText variant="body">{t('+966 500 000 000 (9 AM - 9 PM, Sun-Thu)')}</BText>
           </View>
         </View>
       </View>

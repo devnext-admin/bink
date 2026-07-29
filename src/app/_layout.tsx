@@ -25,7 +25,7 @@ export default function RootLayout() {
     Poppins_600SemiBold: require('../../assets/fonts/Poppins-SemiBold.ttf'),
     Poppins_700Bold: require('../../assets/fonts/Poppins-Bold.ttf'),
     Poppins_800ExtraBold: require('../../assets/fonts/Poppins-ExtraBold.ttf'),
-    // Poppins has no Arabic glyphs — Tajawal carries the brand in Arabic, but
+    // Poppins has no Arabic glyphs - Tajawal carries the brand in Arabic, but
     // it is loaded on demand (see lib/arabic-font) so English users don't pay
     // ~300 KB of fonts they never render.
   });

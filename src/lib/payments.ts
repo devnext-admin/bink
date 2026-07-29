@@ -139,7 +139,7 @@ export async function payForBooking(input: PayForBookingInput): Promise<Transact
           audience: 'venue',
           venueId: input.booking.venue_id,
           title: 'Payment received',
-          body: `${(input.booking.total_cents / 100).toFixed(2)} ${input.booking.currency} paid online — held in escrow until the visit is confirmed.`,
+          body: `${(input.booking.total_cents / 100).toFixed(2)} ${input.booking.currency} paid online - held in escrow until the visit is confirmed.`,
         });
         return { ...txRow, venue_name: input.booking.venue_name, customer_name: input.customerName ?? null } as Transaction;
       }

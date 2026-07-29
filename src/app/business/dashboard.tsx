@@ -187,8 +187,8 @@ export default function BusinessDashboard() {
         </BText>
         <BText variant="small" style={{ marginTop: 8, textAlign: 'center', maxWidth: 320 }}>
           {user
-            ? t('List your salon — or yourself as a freelancer — to get your business dashboard.')
-            : t('Log in with your business account — salons and freelancers use the same login.')}
+            ? t('List your salon - or yourself as a freelancer - to get your business dashboard.')
+            : t('Log in with your business account - salons and freelancers use the same login.')}
         </BText>
         <View style={{ marginTop: 20 }}>
           <Button title={t('List your business')} onPress={() => router.replace('/business')} />
@@ -321,7 +321,7 @@ export default function BusinessDashboard() {
             sub={t('{n} this week', { n: weekBookings.length })}
           />
           <StatCard
-            label={t('Revenue — last 7 days')}
+            label={t('Revenue - last 7 days')}
             value={formatPrice(weekRevenue, currency)}
             icon="cash-outline"
             delta={revDelta}
@@ -334,7 +334,7 @@ export default function BusinessDashboard() {
           />
           <StatCard
             label={t('Rating')}
-            value={venue!.rating_count ? venue!.rating_avg.toFixed(1) : '—'}
+            value={venue!.rating_count ? venue!.rating_avg.toFixed(1) : '-'}
             icon="star-outline"
             sub={venue!.rating_count ? t('{count} reviews', { count: String(venue!.rating_count) }) : t('No reviews yet')}
           />
@@ -357,7 +357,7 @@ export default function BusinessDashboard() {
         )}
         <View style={{ flexDirection: isDesktop ? 'row' : 'column', gap: 16 }}>
           <View style={[styles.card, { flex: 1.5 }]}>
-            <BText variant="h3">{t('Revenue — last 14 days')}</BText>
+            <BText variant="h3">{t('Revenue - last 14 days')}</BText>
             <BarChart data={trend} unit="money" />
           </View>
           <View style={[styles.card, { flex: 1 }]}>
@@ -664,7 +664,7 @@ export default function BusinessDashboard() {
         </View>
         {clients.length === 0 ? (
           <BText variant="small" style={{ marginTop: 12 }}>
-            {t('No clients yet — they appear here after their first booking.')}
+            {t('No clients yet - they appear here after their first booking.')}
           </BText>
         ) : (
           <View style={{ marginTop: 10 }}>
@@ -738,7 +738,7 @@ export default function BusinessDashboard() {
                 .sort((a, b) => b.starts_at.localeCompare(a.starts_at));
               return (
                 <View style={styles.clientHistory}>
-                  <BText variant="smallMedium">{t('Visit history — {name}', { name: c.name })}</BText>
+                  <BText variant="smallMedium">{t('Visit history - {name}', { name: c.name })}</BText>
                   {history.map((b) => (
                     <View key={b.id} style={{ flexDirection: 'row', alignItems: 'center', gap: 10, marginTop: 10 }}>
                       <BText variant="tiny" style={{ width: 100 }}>
@@ -773,7 +773,7 @@ export default function BusinessDashboard() {
         <View style={{ flexDirection: isDesktop ? 'row' : 'column', gap: 16 }}>
           <View style={[styles.card, { flex: 1, alignItems: 'center', justifyContent: 'center' }]}>
             <BText style={{ fontFamily: font.extrabold, fontSize: 44, lineHeight: 54, color: colors.ink }}>
-              {venue!.rating_count ? venue!.rating_avg.toFixed(1) : '—'}
+              {venue!.rating_count ? venue!.rating_avg.toFixed(1) : '-'}
             </BText>
             <Rating value={venue!.rating_avg} />
             <BText variant="small" style={{ marginTop: 6 }}>
@@ -953,7 +953,7 @@ export default function BusinessDashboard() {
   if (isDesktop) {
     return (
       <View style={{ flex: 1, backgroundColor: colors.bgPage }}>
-        {/* The standard app header stays — the dashboard is a section of the
+        {/* The standard app header stays - the dashboard is a section of the
             same app, not a separate takeover. */}
         <WebHeader />
         <View style={{ flex: 1, flexDirection: 'row' }}>
@@ -1058,7 +1058,7 @@ export default function BusinessDashboard() {
               <View style={[styles.emulateBanner, { marginBottom: 16 }]}>
                 <Ionicons name="shield-checkmark-outline" size={16} color={colors.info} />
                 <BText variant="tiny" color={colors.info} style={{ flex: 1 }}>
-                  {t('Admin view — you are managing this business on behalf of its owner.')}
+                  {t('Admin view - you are managing this business on behalf of its owner.')}
                 </BText>
               </View>
             )}
@@ -1127,7 +1127,7 @@ export default function BusinessDashboard() {
               <View style={styles.emulateBanner}>
                 <Ionicons name="shield-checkmark-outline" size={16} color={colors.info} />
                 <BText variant="tiny" color={colors.info} style={{ flex: 1 }}>
-                  {t('Admin view — you are managing this business on behalf of its owner.')}
+                  {t('Admin view - you are managing this business on behalf of its owner.')}
                 </BText>
               </View>
             )}
@@ -1886,7 +1886,7 @@ function MemberServicesEditor({
           })}
           {venue.services.length === 0 && (
             <BText variant="small" style={{ marginTop: 10 }}>
-              {t('No services yet — add your first one above.')}
+              {t('No services yet - add your first one above.')}
             </BText>
           )}
         </View>
@@ -2090,8 +2090,8 @@ function StaffEditor({ venue, onChanged }: { venue: Venue; onChanged: () => void
         <View style={{ gap: 6, marginTop: 12 }}>
           <BText variant="smallMedium">{t('Access level')}</BText>
           <View style={{ flexDirection: 'row', gap: 8 }}>
-            <Chip label={t('Team member — sees only their own work')} selected={venueRole === 'member'} onPress={() => setVenueRole('member')} />
-            <Chip label={t('Manager — sees everything')} selected={venueRole === 'manager'} onPress={() => setVenueRole('manager')} />
+            <Chip label={t('Team member - sees only their own work')} selected={venueRole === 'member'} onPress={() => setVenueRole('member')} />
+            <Chip label={t('Manager - sees everything')} selected={venueRole === 'manager'} onPress={() => setVenueRole('manager')} />
           </View>
         </View>
         {venue.services.length > 0 && (
@@ -2473,7 +2473,7 @@ function GalleryEditor({ venue, onChanged }: { venue: Venue; onChanged: () => vo
         ))}
       </View>
       <BText variant="tiny" style={{ marginTop: 10 }}>
-        {t('Photos must not show people, faces or body parts — interiors, tools and products only.')}
+        {t('Photos must not show people, faces or body parts - interiors, tools and products only.')}
       </BText>
       <View style={{ flexDirection: 'row', gap: 10, marginTop: 12 }}>
         <Button

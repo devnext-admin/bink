@@ -13,9 +13,14 @@ export function formatPrice(cents: number, currency: string): string {
 }
 
 export function formatDuration(minutes: number): string {
-  if (minutes < 60) return `${minutes} min`;
+  const ar = priceLang === 'ar';
+  if (minutes < 60) return ar ? `${minutes} دقيقة` : `${minutes} min`;
   const h = Math.floor(minutes / 60);
   const m = minutes % 60;
+  if (ar) {
+    const hours = h === 1 ? 'ساعة' : h === 2 ? 'ساعتان' : `${h} ساعات`;
+    return m === 0 ? hours : `${hours} و${m} دقيقة`;
+  }
   if (m === 0) return h === 1 ? '1 hr' : `${h} hrs`;
   return `${h} hr, ${m} min`;
 }

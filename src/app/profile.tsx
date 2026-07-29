@@ -26,7 +26,7 @@ const CUSTOMER_MENU = [
   { icon: 'settings-outline', label: 'Settings', href: '/settings' },
   { icon: 'help-circle-outline', label: 'Help and support', href: '/support' },
 ];
-// Bink staff don't need the customer account clutter — just their tools.
+// Bink staff don't need the customer account clutter - just their tools.
 const ADMIN_MENU = [
   { icon: 'shield-checkmark-outline', label: 'Admin dashboard', href: '/admin' },
   { icon: 'notifications-outline', label: 'Notifications', href: '/notifications' },
@@ -65,9 +65,9 @@ export default function Profile() {
       {user ? (
         <View style={{ gap: 16 }}>
           <View style={{ flexDirection: 'row', alignItems: 'center', gap: 16 }}>
-            <Avatar name={user.name ?? user.email ?? t('You')} size={64} />
+            <Avatar name={t(user.name ?? user.email ?? 'You')} size={64} />
             <View style={{ flex: 1 }}>
-              <BText variant="h2">{user.name ?? t('Welcome')}</BText>
+              <BText variant="h2">{t(user.name ?? 'Welcome')}</BText>
               <BText variant="small">{user.email ?? (user.isGuest ? t('Guest account') : '')}</BText>
             </View>
             {!user.isGuest && !editingName && (
@@ -128,7 +128,7 @@ export default function Profile() {
                 </View>
               ) : (
                 <View>
-                  <DetailRow icon="mail-outline" label={t('Email')} value={user.email ?? '—'}>
+                  <DetailRow icon="mail-outline" label={t('Email')} value={user.email ?? '-'}>
                     <View
                       style={[
                         styles.verifyChip,

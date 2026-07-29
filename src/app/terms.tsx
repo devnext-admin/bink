@@ -4,7 +4,7 @@ import { LegalPage, LegalSection } from '../components/legal-page';
 const SECTIONS: LegalSection[] = [
   {
     title: 'Who we are',
-    body: 'Bink is an online marketplace that connects customers with independent beauty businesses — salons, studios and freelance professionals ("Providers"). Bink facilitates discovery, booking, messaging and payment; the beauty services themselves are performed by the Providers, not by Bink.',
+    body: 'Bink is an online marketplace that connects customers with independent beauty businesses - salons, studios and freelance professionals ("Providers"). Bink facilitates discovery, booking, messaging and payment; the beauty services themselves are performed by the Providers, not by Bink.',
   },
   {
     title: 'Accounts',
@@ -36,7 +36,7 @@ const SECTIONS: LegalSection[] = [
   },
   {
     title: 'Acceptable use and blocking',
-    body: 'You must not misuse Bink — including fraudulent bookings, harassment through messaging, or attempts to circumvent payments. Bink may block accounts that violate these terms; blocked accounts cannot sign in, book, message or review.',
+    body: 'You must not misuse Bink - including fraudulent bookings, harassment through messaging, or attempts to circumvent payments. Bink may block accounts that violate these terms; blocked accounts cannot sign in, book, message or review.',
   },
   {
     title: 'Liability',
@@ -57,7 +57,7 @@ export default function Terms() {
     <LegalPage
       title="Terms of Service"
       updated="July 14, 2026"
-      intro="These terms govern your use of the Bink platform — the website, mobile experience and related services. By creating an account or making a booking you agree to them, so please read them carefully. This document is a working draft prepared for review by legal counsel before public launch."
+      intro="These terms govern your use of the Bink platform - the website, mobile experience and related services. By creating an account or making a booking you agree to them, so please read them carefully. This document is a working draft prepared for review by legal counsel before public launch."
       sections={SECTIONS}
     />
   );

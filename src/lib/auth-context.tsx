@@ -145,7 +145,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       if (raw) setUser(JSON.parse(raw));
       setLoading(false);
      } catch {
-       // Network hiccup on startup — fall back to guest/unauthenticated and
+       // Network hiccup on startup - fall back to guest/unauthenticated and
        // never surface an unhandled rejection.
        setLoading(false);
      }
@@ -213,7 +213,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         if (Object.keys(patch).length) await sb.from('profiles').update(patch).eq('id', data.user.id);
       }
       // When email confirmation is required, Supabase returns a user with no
-      // active session — the caller should route to the verify-email screen.
+      // active session - the caller should route to the verify-email screen.
       const needsVerification = !!data.user && !data.session;
       return { needsVerification, userId: data.user?.id };
     },

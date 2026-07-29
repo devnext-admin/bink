@@ -21,7 +21,7 @@ const NAV = [
   { href: '/support', label: 'Help and support', icon: 'help-circle-outline' },
 ] as const;
 
-// Bink staff don't book appointments — hide the customer rows for admins.
+// Bink staff don't book appointments - hide the customer rows for admins.
 const ADMIN_NAV = NAV.filter((n) =>
   ['/profile', '/notifications', '/settings', '/support'].includes(n.href)
 );
@@ -48,7 +48,7 @@ export function AccountLayout({
   const { allVenues } = useAppData();
   const ownsVenues = user ? allVenues.some((v) => v.owner_id === user.id) : false;
 
-  // The account area only exists for signed-in people (guests included —
+  // The account area only exists for signed-in people (guests included -
   // they opted in and their data lives on this device).
   if (!user) {
     return (
@@ -66,7 +66,7 @@ export function AccountLayout({
         {/* Sidebar */}
         <View style={styles.sidebar}>
           <BText variant="h2" style={{ paddingHorizontal: 14, marginBottom: 16 }}>
-            {user?.name ?? t('Your account')}
+            {t(user?.name ?? 'Your account')}
           </BText>
           {(user.role === 'admin' ? ADMIN_NAV : NAV).map((item) => {
             const active = pathname === item.href;

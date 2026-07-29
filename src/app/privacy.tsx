@@ -16,7 +16,7 @@ const SECTIONS: LegalSection[] = [
   },
   {
     title: 'Sharing',
-    body: 'We share data only with the service providers needed to run Bink — payment processing, cloud hosting and email delivery — under contracts that limit their use of it. We do not sell your personal data. We may disclose data where the law requires it.',
+    body: 'We share data only with the service providers needed to run Bink - payment processing, cloud hosting and email delivery - under contracts that limit their use of it. We do not sell your personal data. We may disclose data where the law requires it.',
   },
   {
     title: 'Where your data lives',
@@ -32,7 +32,7 @@ const SECTIONS: LegalSection[] = [
   },
   {
     title: 'Local storage',
-    body: 'Bink stores a small amount of data on your device — your session, language choice and interface preferences — so the app works and remembers you. We do not use third-party advertising trackers.',
+    body: 'Bink stores a small amount of data on your device - your session, language choice and interface preferences - so the app works and remembers you. We do not use third-party advertising trackers.',
   },
   {
     title: 'Children',

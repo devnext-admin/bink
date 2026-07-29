@@ -57,7 +57,7 @@ async function registerPersona(email: string, name: string, role: 'customer' | '
 }
 
 // ---------------------------------------------------------------------------
-// Customer demo: Deema — a regular Bink user with history everywhere
+// Customer demo: Deema - a regular Bink user with history everywhere
 // ---------------------------------------------------------------------------
 export async function seedCustomerDemo() {
   await registerPersona(DEMO_CUSTOMER_EMAIL, 'Deema', 'customer');
@@ -236,7 +236,7 @@ export async function seedCustomerDemo() {
       user_id: CUSTOMER_ID,
       user_name: 'Deema',
       sender: 'customer',
-      text: 'Hi! Booking for Saturday — can I get Omar if he is free?',
+      text: 'Hi! Booking for Saturday - can I get Omar if he is free?',
       read_by_customer: true,
       read_by_venue: true,
       created_at: at(-1, 17, 2),
@@ -248,7 +248,7 @@ export async function seedCustomerDemo() {
       user_id: CUSTOMER_ID,
       user_name: 'Deema',
       sender: 'venue',
-      text: 'Hi Deema! Omar is in on Saturday — I moved your booking to him. See you then! ✂️',
+      text: 'Hi Deema! Omar is in on Saturday - I moved your booking to him. See you then! ✂️',
       read_by_customer: false, // unread badge for the demo user
       read_by_venue: true,
       created_at: at(-1, 17, 26),
@@ -262,7 +262,7 @@ export async function seedCustomerDemo() {
       venue_id: FADE_ROOM,
       audience: 'customer',
       title: 'Message from The Fade Room',
-      body: 'Omar is in on Saturday — I moved your booking to him. See you then!',
+      body: 'Omar is in on Saturday - I moved your booking to him. See you then!',
       is_read: false,
       created_at: at(-1, 17, 26),
     },
@@ -307,7 +307,7 @@ export async function seedOwnerDemo() {
     slug: 'glow-and-co-demo',
     name: 'Glow & Co',
     description:
-      'Your neighbourhood glow-up destination — precision cuts, colour and styling from a team that treats every visit like an occasion.',
+      'Your neighbourhood glow-up destination - precision cuts, colour and styling from a team that treats every visit like an occasion.',
     category_id: 1,
     owner_id: OWNER_ID,
     status: 'approved',
@@ -357,7 +357,7 @@ export async function seedOwnerDemo() {
       venue_area: 'Al Olaya, Riyadh',
       staff_id: 'staff-demo-1',
       staff_name: 'Lama',
-      notes: 'First visit — shoulder-length trim.',
+      notes: 'First visit - shoulder-length trim.',
       starts_at: at(1, 14, 0),
       ends_at: at(1, 15, 0),
       status: 'confirmed',

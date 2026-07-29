@@ -112,7 +112,7 @@ export function searchVenues(venues: Venue[], query: string, categorySlug?: stri
 }
 
 // ---------------------------------------------------------------------------
-// Bookings — Supabase when signed in, otherwise AsyncStorage (demo mode)
+// Bookings - Supabase when signed in, otherwise AsyncStorage (demo mode)
 // ---------------------------------------------------------------------------
 const LOCAL_BOOKINGS_KEY = 'bink.bookings';
 
@@ -368,7 +368,7 @@ export async function cancelBooking(id: string): Promise<void> {
 }
 
 // ---------------------------------------------------------------------------
-// Favorites — local (mirrors to Supabase when signed in)
+// Favorites - local (mirrors to Supabase when signed in)
 // ---------------------------------------------------------------------------
 const LOCAL_FAVS_KEY = 'bink.favorites';
 

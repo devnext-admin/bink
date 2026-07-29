@@ -68,7 +68,7 @@ export function ConversationList({
               </View>
               <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
                 <BText variant="tiny" numberOfLines={1} style={{ flex: 1 }}>
-                  {c.last_text}
+                  {t(c.last_text)}
                 </BText>
                 {c.unread > 0 && (
                   <View style={styles.unreadDot}>
@@ -145,7 +145,7 @@ export function ChatThread({
             <Ionicons name="chatbubbles-outline" size={40} color={colors.grayLight} />
             <BText variant="small">
               {perspective === 'customer'
-                ? t('Say hello to {name} — ask about services, timing or anything else.', { name: venueName })
+                ? t('Say hello to {name} - ask about services, timing or anything else.', { name: venueName })
                 : t('Start the conversation with {name}.', { name: userName || t('this customer') })}
             </BText>
           </View>
@@ -156,7 +156,7 @@ export function ChatThread({
             <View key={m.id} style={[styles.bubbleRow, mine && { justifyContent: 'flex-end' }]}>
               <View style={[styles.bubble, mine ? styles.bubbleMine : styles.bubbleTheirs]}>
                 <BText variant="small" color={mine ? colors.white : colors.ink}>
-                  {m.text}
+                  {t(m.text)}
                 </BText>
                 <BText
                   style={{

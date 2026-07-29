@@ -35,7 +35,7 @@ interface BTextProps extends TextProps {
   color?: string;
 }
 
-// Poppins has no Arabic glyphs — swap to the matching Tajawal weight in Arabic.
+// Poppins has no Arabic glyphs - swap to the matching Tajawal weight in Arabic.
 const AR_FONT: Record<string, string> = {
   Poppins_400Regular: 'Tajawal_400Regular',
   Poppins_500Medium: 'Tajawal_500Medium',
@@ -53,7 +53,7 @@ export function BText({ variant = 'body', color, style, ...rest }: BTextProps) {
     const size = flat.fontSize ?? 16;
     flat = { ...flat, lineHeight: Math.max(flat.lineHeight ?? 0, Math.round(size * 1.6)) };
     // Latin content (venue names, emails) auto-detects as LTR and would
-    // left-align inside the RTL layout — pin everything to the right so
+    // left-align inside the RTL layout - pin everything to the right so
     // mixed-language blocks stay on one edge.
     if (flat.textAlign === undefined) flat = { ...flat, textAlign: 'right' };
   }

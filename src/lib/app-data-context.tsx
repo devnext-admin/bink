@@ -38,7 +38,7 @@ export function AppDataProvider({ children }: { children: React.ReactNode }) {
     // Don't wipe existing venues if the cloud fetch momentarily returned nothing.
     if (base.length || locals.length) {
       if (isSupabaseConfigured) {
-        // Cloud is the source of truth — local copies only add venues the
+        // Cloud is the source of truth - local copies only add venues the
         // cloud doesn't know about (demo-mode leftovers), never shadow it.
         const baseIds = new Set(base.map((v) => v.id));
         setAllVenues([...locals.filter((v) => !baseIds.has(v.id)), ...base]);

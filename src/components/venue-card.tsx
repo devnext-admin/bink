@@ -44,8 +44,8 @@ export function VenueCard({ venue, width, badge, distance }: VenueCardProps) {
           contentFit="cover"
           transition={200}
           {...({ loading: 'lazy' } as any)}
-          alt={`${venue.name} — ${venue.area}, ${venue.city}`}
-          accessibilityLabel={`${venue.name} — ${venue.area}, ${venue.city}`}
+          alt={`${venue.name} - ${venue.area}, ${venue.city}`}
+          accessibilityLabel={`${venue.name} - ${venue.area}, ${venue.city}`}
         />
         {badge ? (
           <View style={styles.badge}>

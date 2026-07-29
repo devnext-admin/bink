@@ -54,7 +54,7 @@ export default function VenueScreen() {
   return (
     <>
       <Seo
-        title={`${t(venue.name)} — ${t(venue.area)}, ${t(venue.city)}`}
+        title={`${t(venue.name)} - ${t(venue.area)}, ${t(venue.city)}`}
         description={`Book ${t(venue.name)} in ${venue.city} on Bink. ${t(venue.description)}`.slice(0, 180)}
       />
       {isDesktop ? <VenueDesktop venue={venue} /> : <VenueMobile venue={venue} />}
@@ -333,7 +333,7 @@ function GalleryViewer({ venue, open, onClose }: { venue: Venue; open: boolean; 
       <View style={{ flex: 1, backgroundColor: colors.white }}>
         <View style={galleryStyles.top}>
           <BText variant="h2">
-            {t('{name} — photos ({n})', { name: venue.name, n: venue.images.length })}
+            {t('{name} - photos ({n})', { name: venue.name, n: venue.images.length })}
           </BText>
           <Pressable onPress={onClose} hitSlop={10} style={galleryStyles.close}>
             <Ionicons name="close" size={22} color={colors.ink} />

@@ -58,7 +58,7 @@ export default function Welcome() {
         </BText>
         <BText variant="small" style={{ marginTop: 6, textAlign: 'center' }}>
           {user?.name
-            ? t('Hi {name} — set a password to finish creating your account.', { name: user.name })
+            ? t('Hi {name} - set a password to finish creating your account.', { name: user.name })
             : t('Set a password to finish creating your account.')}
         </BText>
         <TextInput

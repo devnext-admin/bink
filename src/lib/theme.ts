@@ -1,21 +1,21 @@
-// Bink design tokens — from the official Bink brand guidelines
+// Bink design tokens - from the official Bink brand guidelines
 // (carried over from the original client app's theme system).
 // Bink Red #FF385C on white, Bink Black #222222, Poppins type,
 // pill buttons, 20px cards, 12px inputs, star #FBBF24.
 
 export const colors = {
-  ink: '#222222', // Bink Black — primary text
-  gray: '#545A62', // neutral 600 — subtitles
-  grayLight: '#8A8D93', // neutral 500 — hints/placeholders
-  body: '#374151', // neutral 700 — body text
+  ink: '#222222', // Bink Black - primary text
+  gray: '#545A62', // neutral 600 - subtitles
+  grayLight: '#8A8D93', // neutral 500 - hints/placeholders
+  body: '#374151', // neutral 700 - body text
   border: '#D1D4D9', // neutral 300
   divider: '#E5E7EB', // neutral 200
   bgSubtle: '#F1F5F9', // neutral 100
   bgPage: '#F9F9F9', // BG light
   white: '#FFFFFF',
-  accent: '#FF385C', // Bink Red — CTA / interactive
-  accentDark: '#E6323A', // red 600 — hover/pressed
-  accentSoft: '#FFF5F7', // red 50 — ghost backgrounds
+  accent: '#FF385C', // Bink Red - CTA / interactive
+  accentDark: '#E6323A', // red 600 - hover/pressed
+  accentSoft: '#FFF5F7', // red 50 - ghost backgrounds
   accentLight: '#FFEBEF', // red 100
   star: '#FBBF24',
   green: '#10A660',

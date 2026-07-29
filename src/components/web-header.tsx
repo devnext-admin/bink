@@ -78,7 +78,7 @@ export function WebHeader({ transparent, showSearch }: WebHeaderProps) {
           </View>
         )}
         <View style={{ flexDirection: 'row', alignItems: 'center', gap: 14 }}>
-          {/* Salon acquisition CTA — only for visitors who aren't signed in.
+          {/* Salon acquisition CTA - only for visitors who aren't signed in.
               Signed-in customers shouldn't be pushed business links; owners
               and admins have their own entries in the avatar menu. */}
           {!user && <HeaderPill label={t('For business')} onPress={() => router.push('/business')} />}
@@ -89,7 +89,7 @@ export function WebHeader({ transparent, showSearch }: WebHeaderProps) {
                 onPress={() => setMenuOpen((o) => !o)}
                 style={({ hovered }: any) => [styles.avatarBtn, hovered && { backgroundColor: colors.bgSubtle }]}
               >
-                <Avatar name={user.name ?? user.email ?? t('You')} size={32} />
+                <Avatar name={t(user.name ?? user.email ?? 'You')} size={32} />
                 <Ionicons name={menuOpen ? 'chevron-up' : 'chevron-down'} size={14} color={colors.ink} />
               </Pressable>
             </>
@@ -113,10 +113,10 @@ export function WebHeader({ transparent, showSearch }: WebHeaderProps) {
           <Pressable style={styles.backdrop} onPress={() => setMenuOpen(false)} />
           <View style={[styles.menu, shadow.floating]}>
             <View style={styles.menuHeader}>
-              <Avatar name={user.name ?? user.email ?? t('You')} size={40} />
+              <Avatar name={t(user.name ?? user.email ?? 'You')} size={40} />
               <View style={{ flex: 1 }}>
                 <BText variant="smallMedium" numberOfLines={1}>
-                  {user.name ?? t('Welcome')}
+                  {t(user.name ?? 'Welcome')}
                 </BText>
                 <BText variant="tiny" numberOfLines={1}>
                   {user.email ?? t('Guest account')}
@@ -167,7 +167,7 @@ const styles = StyleSheet.create({
     height: 68,
   },
   searchOverlay: {
-    // Centered on the viewport, not the leftover flex space — the logo and
+    // Centered on the viewport, not the leftover flex space - the logo and
     // the right-side actions have different widths.
     position: 'absolute',
     top: 0,

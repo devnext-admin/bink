@@ -56,8 +56,8 @@ export const arContent: Record<string, string> = {
   // ---- Salon descriptions -------------------------------------------------
   'Your everything salon: hair, makeup, nails and waxing under one roof. Trusted by Jeddah’s brides for over a decade.':
     'صالونك الشامل: شعر ومكياج وأظافر وإزالة شعر تحت سقف واحد. محل ثقة عرائس جدة لأكثر من عقد.',
-  'The brow specialists. Threading, tinting, lamination and henna brows perfected in minutes — walk in, glow out.':
-    'متخصصو الحواجب. خيط وصبغة وترميم وحواجب حناء بإتقان في دقائق — ادخلي وتألقي.',
+  'The brow specialists. Threading, tinting, lamination and henna brows perfected in minutes - walk in, glow out.':
+    'متخصصو الحواجب. خيط وصبغة وترميم وحواجب حناء بإتقان في دقائق - ادخلي وتألقي.',
   'Riyadh’s premium grooming lounge: sharp cuts, royal shaves, facials for men and a complimentary espresso bar.':
     'صالة العناية الفاخرة في الرياض: قصّات حادة وحلاقة ملكية وعناية ببشرة الرجال مع ركن إسبريسو مجاني.',
   'A boutique hair salon in the heart of Riyadh. Precision cuts, dimensional colour and glow-up facials from a close-knit team that treats every guest like a regular.':
@@ -66,12 +66,12 @@ export const arContent: Record<string, string> = {
     'ادخلي إلى عالم استوديو جلو لاش الهادئ. شغفنا الرموش والحواجب المثالية: تركيب رموش احترافي ورفع رموش ورسم حواجب ومانيكير. صُمم الاستوديو كمنتجع خيزران مريح بأجواء هادئة تضع الجودة والنظافة أولًا.',
   'A destination hair studio for cuts, colour and transformations. Our stylists train internationally and specialise in balayage, precision cutting and healthy-hair treatments.':
     'وجهة لقصّات الشعر والألوان والتحوّلات. مصففونا يتدربون عالميًا ويتخصصون في الباليات والقص الدقيق وعلاجات الشعر الصحي.',
-  'A skincare salon devoted to the glow: deep-cleansing facials, gentle peels, dermaplaning and LED — tailored to your skin by certified estheticians.':
-    'صالون عناية بالبشرة مكرّس للنضارة: تنظيف عميق وتقشير لطيف وديرمابلاننج وجلسات LED — مصممة لبشرتك على يد خبيرات معتمدات.',
+  'A skincare salon devoted to the glow: deep-cleansing facials, gentle peels, dermaplaning and LED - tailored to your skin by certified estheticians.':
+    'صالون عناية بالبشرة مكرّس للنضارة: تنظيف عميق وتقشير لطيف وديرمابلاننج وجلسات LED - مصممة لبشرتك على يد خبيرات معتمدات.',
   'The waxing specialists. Gentle low-temperature wax, spotless private rooms and therapists who make it quick, clean and comfortable.':
     'متخصصو إزالة الشعر بالشمع. شمع لطيف منخفض الحرارة وغرف خاصة نظيفة وخبيرات يجعلن الجلسة سريعة ونظيفة ومريحة.',
-  'Jeddah’s destination for perfect hair, fast. Signature blowouts, glossy styling, braids and treatments — walk in polished, walk out camera-ready.':
-    'وجهة جدة للشعر المثالي بسرعة. سشوار مميز وتصفيف لامع وضفائر وعلاجات — ادخلي أنيقة واخرجي جاهزة للعدسة.',
+  'Jeddah’s destination for perfect hair, fast. Signature blowouts, glossy styling, braids and treatments - walk in polished, walk out camera-ready.':
+    'وجهة جدة للشعر المثالي بسرعة. سشوار مميز وتصفيف لامع وضفائر وعلاجات - ادخلي أنيقة واخرجي جاهزة للعدسة.',
   'A modern barbershop for the modern gentleman. Precision fades, classic cuts, hot towel shaves and beard sculpting from award-winning barbers in a relaxed, stylish space.':
     'صالون حلاقة عصري للرجل العصري. فيد دقيق وقصّات كلاسيكية وحلاقة بالمناشف الساخنة ونحت لحية على يد حلاقين حائزين على جوائز في أجواء أنيقة ومريحة.',
   'Jeddah’s go-to makeup studio for events, weddings and photoshoots. Senior artists, premium products and a look that lasts all night.':
@@ -247,7 +247,7 @@ export const arContent: Record<string, string> = {
   'Patient, friendly cuts for the little gentlemen.': 'قصّات صبورة وودودة لصغار السادة.',
   'Calming, collagen-boosting LED session.': 'جلسة LED مهدئة ومحفزة للكولاجين.',
   'Strip or individual lashes applied to perfection.': 'رموش شريطية أو فردية مركبة بإتقان.',
-  'Curled, darkened natural lashes — mascara optional.': 'رموش طبيعية مرفوعة وداكنة — المسكرة اختيارية.',
+  'Curled, darkened natural lashes - mascara optional.': 'رموش طبيعية مرفوعة وداكنة - المسكرة اختيارية.',
   'Keep your set full with a two-week refill by our lash masters.': 'حافظي على كثافة رموشك مع تعبئة كل أسبوعين لدى خبيراتنا.',
   'Our gentle lash removal service safely removes eyelash extensions while preserving your natural lashes.': 'إزالة لطيفة وآمنة للرموش الصناعية مع الحفاظ على رموشك الطبيعية.',
   'A complete lift package for lashes and brows for a naturally polished look.': 'باقة رفع كاملة للرموش والحواجب لإطلالة طبيعية أنيقة.',
@@ -258,9 +258,9 @@ export const arContent: Record<string, string> = {
   'Bond-building treatment for stronger, healthier hair.': 'علاج بناء الروابط لشعر أقوى وأصح.',
   'Complete pedicure with long-wear gel polish.': 'باديكير كامل مع طلاء جل يدوم طويلًا.',
   'Full root coverage with premium ammonia-free colour.': 'تغطية كاملة للجذور بصبغة فاخرة خالية من الأمونيا.',
-  'Hot towels, straight razor, facial massage — the full ritual.': 'مناشف ساخنة وموس ومساج للوجه — الطقس الكامل.',
+  'Hot towels, straight razor, facial massage - the full ritual.': 'مناشف ساخنة وموس ومساج للوجه - الطقس الكامل.',
   'Ultra-precise dry manicure with flawless gel application.': 'مانيكير جاف فائق الدقة مع جل مثالي.',
-  'Wash, blow dry and finish — smooth, bouncy or beach waves.': 'غسيل وسشوار وتصفيف — ناعم أو حيوي أو تموجات شاطئية.',
+  'Wash, blow dry and finish - smooth, bouncy or beach waves.': 'غسيل وسشوار وتصفيف - ناعم أو حيوي أو تموجات شاطئية.',
   'Deep cleanse, exfoliation, extraction and hydration boost.': 'تنظيف عميق وتقشير واستخلاص مع دفعة ترطيب.',
   'Smooth, natural silk press with heat protection.': 'سيلك برس طبيعي ناعم مع حماية حرارية.',
   'Our signature combo: a razor-sharp skin fade with a fully sculpted beard finish.': 'كومبو التوقيع: فيد حاد كالموس مع لحية منحوتة بالكامل.',
@@ -291,4 +291,9 @@ export const arContent: Record<string, string> = {
   'Effortless booking and outstanding service. Highly recommend to everyone.': 'حجز سهل وخدمة استثنائية. أنصح به الجميع.',
   'Lama understood exactly what I wanted. Best cut I have had in years.': 'لمى فهمت بالضبط ما أريده. أفضل قصة حصلت عليها منذ سنوات.',
   'Gorgeous salon and my colour came out perfect.': 'صالون رائع ولون شعري طلع مثاليًا.',
+  // ---- Seeded chat messages ----------------------------------------------
+  'Hi! Booking for Saturday - can I get Omar if he is free?': 'مرحبًا! حجزي يوم السبت، هل يمكنني الحصول على عمر إذا كان متاحًا؟',
+  'Hi Deema! Omar is in on Saturday - I moved your booking to him. See you then! ✂️': 'أهلًا ديمة! عمر متواجد يوم السبت، نقلت حجزك إليه. نراك حينها! ✂️',
+  'Hi! Can I move my appointment 30 minutes later tomorrow?': 'مرحبًا! هل يمكن تأخير موعدي غدًا 30 دقيقة؟',
+  'Hi! Is there parking near the salon?': 'مرحبًا! هل يوجد موقف سيارات قريب من الصالون؟',
 };

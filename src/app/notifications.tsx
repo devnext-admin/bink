@@ -12,6 +12,7 @@ import { WebHeader } from '../components/web-header';
 import { useAppData } from '../lib/app-data-context';
 import { useAuth } from '../lib/auth-context';
 import { formatDate, useI18n, type Lang } from '../lib/i18n';
+import { translateNotificationBody } from '../lib/notification-i18n';
 import { AppNotification, getNotifications, markAllRead } from '../lib/notifications';
 import { colors, radius } from '../lib/theme';
 import { useIsDesktop } from '../lib/use-layout';
@@ -99,19 +100,19 @@ export default function Notifications() {
                 <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
                   <BText variant="smallMedium" style={{ flex: 1 }}>
                     {n.title.startsWith('Message from ')
-                      ? t('Message from {name}', { name: n.title.slice('Message from '.length) })
+                      ? t('Message from {name}', { name: t(n.title.slice('Message from '.length)) })
                       : t(n.title)}
                   </BText>
                   <BText variant="tiny">{timeAgo(n.created_at, lang, t)}</BText>
                 </View>
                 {n.body ? (
                   <BText variant="small" style={{ marginTop: 2 }}>
-                    {n.body}
+                    {lang === 'ar' ? translateNotificationBody(n.body) : n.body}
                   </BText>
                 ) : null}
                 {n.audience === 'venue' ? (
                   <BText variant="tiny" color={colors.accent} style={{ marginTop: 4 }}>
-                    {allVenues.find((v) => v.id === n.venue_id)?.name ?? t('Your salon')}
+                    {t(allVenues.find((v) => v.id === n.venue_id)?.name ?? 'Your salon')}
                   </BText>
                 ) : null}
               </View>

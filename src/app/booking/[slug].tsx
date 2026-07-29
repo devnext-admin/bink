@@ -36,7 +36,7 @@ const DAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 function nextDays(count: number): { date: string; day: string; num: number; month: string }[] {
   const out = [];
   const now = new Date();
-  // Offer today first — same-day booking is allowed; past time slots for
+  // Offer today first - same-day booking is allowed; past time slots for
   // today are disabled below so only genuinely bookable times show.
   for (let i = 0; i < count; i++) {
     const d = new Date(now.getFullYear(), now.getMonth(), now.getDate() + i);
@@ -179,7 +179,7 @@ export default function BookingScreen() {
         // Booking stays confirmed as pay-at-venue if the charge fails
         await markPayAtVenue(created.id);
         setPaid(false);
-        setPayError(e?.message ?? t('Payment failed — your booking is confirmed as pay at venue.'));
+        setPayError(e?.message ?? t('Payment failed - your booking is confirmed as pay at venue.'));
       }
       setSubmitting(false);
       setConfirmedId(created.id);
@@ -339,7 +339,7 @@ export default function BookingScreen() {
         <View style={{ gap: 12, marginTop: 20 }}>
           <InfoRow icon="calendar-outline" text={t('{date} at {time}', { date: booking.date!, time: booking.time! })} />
           <InfoRow icon="time-outline" text={t('{duration} total duration', { duration: formatDuration(booking.totalMinutes) })} />
-          <InfoRow icon="person-outline" text={booking.staff ? `${booking.staff.name} — ${booking.staff.role}` : t('Any professional')} />
+          <InfoRow icon="person-outline" text={booking.staff ? `${booking.staff.name} - ${booking.staff.role}` : t('Any professional')} />
           <InfoRow icon="location-outline" text={`${t(venue.name)}, ${t(venue.area)}, ${t(venue.city)}`} />
         </View>
         <View style={{ marginTop: 28, gap: 12 }}>
@@ -422,7 +422,7 @@ export default function BookingScreen() {
               title={t('Pay at venue')}
               sub={
                 depositCents > 0
-                  ? t('Reservation deposit {amount} charged now — the rest at the venue', {
+                  ? t('Reservation deposit {amount} charged now - the rest at the venue', {
                       amount: formatPrice(depositCents, booking.currency),
                     })
                   : t('No payment needed today')
@@ -433,14 +433,14 @@ export default function BookingScreen() {
             <PayOption
               icon="card-outline"
               title={t('Pay by card')}
-              sub={paymentsGateway === 'demo' ? t('Test gateway — no real charge') : t('mada, Visa, Mastercard')}
+              sub={paymentsGateway === 'demo' ? t('Test gateway - no real charge') : t('mada, Visa, Mastercard')}
               selected={payMethod === 'card'}
               onPress={() => setPayMethod('card')}
             />
             <PayOption
               icon="logo-apple"
               title={t('Apple Pay')}
-              sub={paymentsGateway === 'demo' ? t('Test gateway — no real charge') : t('Pay with Apple Pay')}
+              sub={paymentsGateway === 'demo' ? t('Test gateway - no real charge') : t('Pay with Apple Pay')}
               selected={payMethod === 'apple_pay'}
               onPress={() => setPayMethod('apple_pay')}
             />
@@ -450,7 +450,7 @@ export default function BookingScreen() {
               <Ionicons name="shield-checkmark-outline" size={18} color={colors.ink} />
               <BText variant="small" color={colors.ink}>
                 {t(
-                  '{amount} is charged now and held securely in escrow by Bink. It is only released to the salon after your visit is completed and you confirm it. Includes 15% VAT — a tax invoice is issued automatically.',
+                  '{amount} is charged now and held securely in escrow by Bink. It is only released to the salon after your visit is completed and you confirm it. Includes 15% VAT - a tax invoice is issued automatically.',
                   { amount: formatPrice(finalTotal, booking.currency) }
                 )}
               </BText>

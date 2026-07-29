@@ -191,7 +191,7 @@ export async function submitReview(input: {
     audience: 'venue',
     venueId: input.venue.id,
     title: 'New review',
-    body: `${input.authorName} rated you ${input.rating}★${input.comment ? ` — “${input.comment.slice(0, 80)}”` : ''}`,
+    body: `${input.authorName} rated you ${input.rating}★${input.comment ? ` - “${input.comment.slice(0, 80)}”` : ''}`,
   });
   return review;
 }

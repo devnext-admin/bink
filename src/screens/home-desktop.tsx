@@ -17,10 +17,10 @@ import { useI18n } from '../lib/i18n';
 import { colors, font, maxContentWidth, radius, shadow } from '../lib/theme';
 
 const TESTIMONIALS = [
-  { title: 'The best booking system', body: 'Great experience, easy to book. Paying for my salon visits is so convenient — no cash or cards needed!', name: 'Sara', place: 'Riyadh' },
+  { title: 'The best booking system', body: 'Great experience, easy to book. Paying for my salon visits is so convenient - no cash or cards needed!', name: 'Sara', place: 'Riyadh' },
   { title: 'Easy to use & explore', body: 'Bink’s reminders make life so much easier. I also found a few good salons near me that I didn’t know existed.', name: 'Nouf', place: 'Jeddah' },
   { title: 'Great for finding barbers', body: 'Booking my barber takes seconds now, and paying through the app means no waiting at the till. Highly recommend it!', name: 'Khalid', place: 'Al Khobar' },
-  { title: 'My go-to for hair & nails', body: 'Bink is my go-to app for hair appointments and nails. I can easily find and book salons near me — I love it!', name: 'Reem', place: 'Dammam' },
+  { title: 'My go-to for hair & nails', body: 'Bink is my go-to app for hair appointments and nails. I can easily find and book salons near me - I love it!', name: 'Reem', place: 'Dammam' },
 ];
 
 export function HomeDesktop() {
@@ -98,7 +98,7 @@ export function HomeDesktop() {
             {t('Bink for business')}
           </BText>
           <BText variant="body" style={{ marginTop: 16, maxWidth: 480 }}>
-            {t('Online bookings around the clock, escrow-protected payments and a full dashboard for your team — built for salons and freelancers in Saudi Arabia.')}
+            {t('Online bookings around the clock, escrow-protected payments and a full dashboard for your team - built for salons and freelancers in Saudi Arabia.')}
           </BText>
           <Pressable
             style={({ hovered }: any) => [styles.bizBtn, hovered && { backgroundColor: colors.accentDark }]}

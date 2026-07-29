@@ -24,7 +24,7 @@ import type { Venue } from '../../lib/types';
 import { useIsDesktop } from '../../lib/use-layout';
 
 const PERKS = [
-  { icon: 'calendar-outline', title: 'Online bookings 24/7', body: 'Clients book while you sleep — no calls, no back-and-forth.' },
+  { icon: 'calendar-outline', title: 'Online bookings 24/7', body: 'Clients book while you sleep - no calls, no back-and-forth.' },
   { icon: 'people-outline', title: 'Reach new clients', body: 'Get discovered by thousands searching on Bink every day.' },
   { icon: 'stats-chart-outline', title: 'Grow with insights', body: 'Track bookings, revenue and your team’s performance.' },
   { icon: 'card-outline', title: 'Zero subscription', body: 'Free to list. You only pay when clients book through Bink.' },
@@ -58,7 +58,7 @@ export default function BusinessLanding() {
   const [busy, setBusy] = useState(false);
   const [submitted, setSubmitted] = useState(false);
 
-  // Step 1 — business
+  // Step 1 - business
   const [providerType, setProviderType] = useState<'salon' | 'freelancer'>('salon');
   const [name, setName] = useState('');
   const [categoryId, setCategoryId] = useState<number | null>(null);
@@ -68,25 +68,25 @@ export default function BusinessLanding() {
   const [ownerName, setOwnerName] = useState('');
   const [ownerEmail, setOwnerEmail] = useState('');
   const [ownerPassword, setOwnerPassword] = useState('');
-  // Step 2 — location
+  // Step 2 - location
   const [city, setCity] = useState('');
   const [area, setArea] = useState('');
   const [address, setAddress] = useState('');
   const [mapsUrl, setMapsUrl] = useState('');
-  // Step 3 — photos
+  // Step 3 - photos
   const [imageUrl, setImageUrl] = useState('');
   const [images, setImages] = useState<string[]>([]);
   const [uploadingPhoto, setUploadingPhoto] = useState(false);
-  // Step 4 — services
+  // Step 4 - services
   const [svcName, setSvcName] = useState('');
   const [svcDuration, setSvcDuration] = useState('60');
   const [svcPrice, setSvcPrice] = useState('');
   const [services, setServices] = useState<DraftService[]>([]);
-  // Step 5 — team
+  // Step 5 - team
   const [memberName, setMemberName] = useState('');
   const [memberRole, setMemberRole] = useState('');
   const [team, setTeam] = useState<{ name: string; role: string }[]>([]);
-  // Step 6 — hours
+  // Step 6 - hours
   const [hours, setHours] = useState<Venue['hours']>(
     Array.from({ length: 7 }, (_, weekday) => ({
       weekday,
@@ -190,8 +190,8 @@ export default function BusinessLanding() {
       description:
         description.trim() ||
         (providerType === 'freelancer'
-          ? `${name.trim()} — independent professional, easy booking on Bink.`
-          : `Welcome to ${name.trim()} — quality treatments, easy booking on Bink.`),
+          ? `${name.trim()} - independent professional, easy booking on Bink.`
+          : `Welcome to ${name.trim()} - quality treatments, easy booking on Bink.`),
       address: address.trim(),
       area: area.trim(),
       city: city.trim(),
@@ -224,7 +224,7 @@ export default function BusinessLanding() {
             {(
               [
                 { key: 'salon', icon: 'storefront-outline', title: 'A salon / studio', sub: 'A place with chairs and a team' },
-                { key: 'freelancer', icon: 'person-outline', title: 'Myself — freelancer', sub: 'Independent professional' },
+                { key: 'freelancer', icon: 'person-outline', title: 'Myself - freelancer', sub: 'Independent professional' },
               ] as const
             ).map((opt) => (
               <Pressable
@@ -243,7 +243,7 @@ export default function BusinessLanding() {
         </View>
         <Field
           label={providerType === 'freelancer' ? t('Your professional name') : t('Business name')}
-          placeholder={providerType === 'freelancer' ? t('e.g. Lama — Hair & Makeup') : t('e.g. Luna Beauty Lounge')}
+          placeholder={providerType === 'freelancer' ? t('e.g. Lama - Hair & Makeup') : t('e.g. Luna Beauty Lounge')}
           value={name}
           onChangeText={setName}
         />
@@ -306,7 +306,7 @@ export default function BusinessLanding() {
           autoCapitalize="none"
         />
         <BText variant="tiny">
-          {t("Paste your place's share link from Google Maps — customers get one-tap directions.")}
+          {t("Paste your place's share link from Google Maps - customers get one-tap directions.")}
         </BText>
       </View>
     );
@@ -316,7 +316,7 @@ export default function BusinessLanding() {
         <View style={styles.note}>
           <Ionicons name="information-circle-outline" size={16} color={colors.accent} />
           <BText variant="tiny" color={colors.accent} style={{ flex: 1 }}>
-            {t('Photos must not show people, faces or body parts — interiors, tools and products only. You can skip this step and add photos later; a default interior photo is used until then.')}
+            {t('Photos must not show people, faces or body parts - interiors, tools and products only. You can skip this step and add photos later; a default interior photo is used until then.')}
           </BText>
         </View>
         <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 10 }}>
@@ -354,7 +354,7 @@ export default function BusinessLanding() {
             </View>
           ))}
           {!images.length && (
-            <BText variant="small">{t('No photos yet — that’s okay for now.')}</BText>
+            <BText variant="small">{t('No photos yet - that’s okay for now.')}</BText>
           )}
         </View>
       </View>
@@ -388,7 +388,7 @@ export default function BusinessLanding() {
           </View>
         ))}
         {!services.length && (
-          <BText variant="small">{t('Add at least one service so customers can book you — or add them later.')}</BText>
+          <BText variant="small">{t('Add at least one service so customers can book you - or add them later.')}</BText>
         )}
       </View>
     );
@@ -415,7 +415,7 @@ export default function BusinessLanding() {
             </Pressable>
           </View>
         ))}
-        {!team.length && <BText variant="small">{t('Optional — clients can pick “Any professional” if you skip this.')}</BText>}
+        {!team.length && <BText variant="small">{t('Optional - clients can pick “Any professional” if you skip this.')}</BText>}
       </View>
     );
   } else {
@@ -478,7 +478,7 @@ export default function BusinessLanding() {
             {t('Your salon has been submitted')}
           </BText>
           <BText variant="small" style={{ textAlign: 'center' }}>
-            {t('We sent a verification link to {email}. Confirm your email, then sign in — your listing is pending review by the Bink team.', {
+            {t('We sent a verification link to {email}. Confirm your email, then sign in - your listing is pending review by the Bink team.', {
               email: ownerEmail.trim(),
             })}
           </BText>
@@ -490,8 +490,8 @@ export default function BusinessLanding() {
 
   return (
     <ScrollView style={{ flex: 1, backgroundColor: colors.white }}>
-      <Seo title={t('Bink for business — grow your salon')} description={t('List your salon or freelance service on Bink and start taking online bookings today.')} />
-      {/* Same app chrome as everywhere else — the business landing is a page
+      <Seo title={t('Bink for business - grow your salon')} description={t('List your salon or freelance service on Bink and start taking online bookings today.')} />
+      {/* Same app chrome as everywhere else - the business landing is a page
           of Bink, not a separate site. Mobile keeps its compact hero header. */}
       {isDesktop && <WebHeader />}
       <HeroGradient
@@ -584,7 +584,7 @@ export default function BusinessLanding() {
               {step === 5 && t('Set your opening hours')}
             </BText>
             <BText variant="small" style={{ marginTop: 4, marginBottom: 20 }}>
-              {t('Step {n} of {m} — your listing goes live once the Bink team approves it.', {
+              {t('Step {n} of {m} - your listing goes live once the Bink team approves it.', {
                 n: step + 1,
                 m: WIZARD_STEPS.length,
               })}

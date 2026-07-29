@@ -3,7 +3,7 @@ import type { Venue } from './types';
 /**
  * Picks the venues for the three home rails. Seed flags (is_featured /
  * is_new / is_trending) come first, then each rail fills up with real
- * signals — rating, recency, review volume — so newly approved listings
+ * signals - rating, recency, review volume - so newly approved listings
  * surface on the home page without any manual flagging.
  */
 export function homeRails(venues: Venue[], per = 8) {

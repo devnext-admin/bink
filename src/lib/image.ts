@@ -1,7 +1,7 @@
 import { PixelRatio } from 'react-native';
 
 // All venue imagery is served from Unsplash with a `?w=` width parameter that
-// was baked in at 1200px — far larger than the thumbnails and cards that show
+// was baked in at 1200px - far larger than the thumbnails and cards that show
 // it. This rewrites the requested width to the actual display size (times the
 // device pixel ratio, capped) so a 280px card fetches a ~560px image instead
 // of a 1200px one, cutting the bytes roughly 4×.

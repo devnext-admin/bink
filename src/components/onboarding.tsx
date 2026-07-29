@@ -21,7 +21,7 @@ const SLIDES = [
   {
     icon: 'calendar-outline',
     title: 'Book in seconds',
-    body: 'Pick a service, your favorite professional and a time that suits you — done.',
+    body: 'Pick a service, your favorite professional and a time that suits you - done.',
   },
   {
     icon: 'card-outline',

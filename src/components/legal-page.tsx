@@ -47,7 +47,7 @@ export function LegalPage({
       </Pressable>
       <BText variant="h1">{t(title)}</BText>
       <BText variant="tiny" style={{ marginTop: 6 }}>
-        {t('Last updated: {date}', { date: updated })}
+        {t('Last updated: {date}', { date: t(updated) })}
       </BText>
       <BText variant="body" style={{ marginTop: 18 }}>
         {t(intro)}

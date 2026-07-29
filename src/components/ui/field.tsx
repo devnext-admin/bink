@@ -4,8 +4,8 @@ import { useI18n } from '../../lib/i18n';
 import { colors, font, radius } from '../../lib/theme';
 import { BText } from './text';
 
-// dir="auto" makes the browser lay the typed text out by its own script —
-// Arabic flows right-to-left, Latin left-to-right — regardless of UI language.
+// dir="auto" makes the browser lay the typed text out by its own script -
+// Arabic flows right-to-left, Latin left-to-right - regardless of UI language.
 const nativeBidi = { dir: 'auto' } as any;
 
 interface FieldProps extends TextInputProps {

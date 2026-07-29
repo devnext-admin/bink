@@ -137,7 +137,7 @@ export default function Auth() {
       setSentTo(email);
       return;
     }
-    // Autoconfirm on (or demo mode) — straight in
+    // Autoconfirm on (or demo mode) - straight in
     await refresh();
     close();
   };
@@ -165,7 +165,7 @@ export default function Auth() {
             })}
           </BText>
           <Button
-            title={t('I have verified — log in')}
+            title={t('I have verified - log in')}
             size="lg"
             fullWidth
             onPress={() => {
@@ -214,7 +214,7 @@ export default function Auth() {
           <View style={styles.demoNote}>
             <Ionicons name="information-circle-outline" size={16} color={colors.accent} />
             <BText variant="tiny" color={colors.accent}>
-              {t('Demo mode — any email and password works')}
+              {t('Demo mode - any email and password works')}
             </BText>
           </View>
         )}
@@ -333,7 +333,7 @@ export default function Auth() {
         <View style={styles.bizHint}>
           <Ionicons name="briefcase-outline" size={15} color={colors.gray} />
           <BText variant="tiny" style={{ flex: 1 }}>
-            {t('Salon owner or freelancer? Log in with the same account — you’ll land straight in your business dashboard.')}
+            {t('Salon owner or freelancer? Log in with the same account - you’ll land straight in your business dashboard.')}
           </BText>
         </View>
 
