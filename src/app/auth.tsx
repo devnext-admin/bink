@@ -237,6 +237,7 @@ export default function Auth() {
           keyboardType="email-address"
           value={email}
           onChangeText={setEmail}
+          onSubmitEditing={submit}
           style={styles.input}
         />
         {mode === 'signup' && (
@@ -258,6 +259,7 @@ export default function Auth() {
             secureTextEntry={!showPw}
             value={password}
             onChangeText={setPassword}
+            onSubmitEditing={submit}
             style={styles.input}
           />
           <Pressable onPress={() => setShowPw((s) => !s)} style={styles.eye} hitSlop={8}>

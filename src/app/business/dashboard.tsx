@@ -388,7 +388,7 @@ export default function BusinessDashboard() {
                     </BText>
                     <View style={{ flex: 1 }}>
                       <BText variant="smallMedium" numberOfLines={1}>
-                        {b.customer_name ?? t('Guest customer')}
+                        {t(b.customer_name ?? 'Guest customer')}
                       </BText>
                       <BText variant="tiny" numberOfLines={1}>
                         {b.items.map((i) => t(i.service_name)).join('، ')}
@@ -577,7 +577,7 @@ export default function BusinessDashboard() {
                             {formatTimeOfDate(b.starts_at)}
                           </BText>
                           <BText variant="tiny" numberOfLines={1}>
-                            {b.customer_name ?? t('Guest customer')}
+                            {t(b.customer_name ?? 'Guest customer')}
                           </BText>
                           <BText variant="tiny" numberOfLines={1}>
                             {b.items.map((i) => t(i.service_name)).join('، ')}
@@ -695,7 +695,7 @@ export default function BusinessDashboard() {
                   <Avatar name={c.name} size={32} />
                   <View style={{ flex: 1 }}>
                     <BText variant="smallMedium" numberOfLines={1}>
-                      {c.name}
+                      {t(c.name)}
                     </BText>
                     {!c.userId && (
                       <BText variant="tiny">{t('Walk-in')}</BText>
@@ -738,7 +738,7 @@ export default function BusinessDashboard() {
                 .sort((a, b) => b.starts_at.localeCompare(a.starts_at));
               return (
                 <View style={styles.clientHistory}>
-                  <BText variant="smallMedium">{t('Visit history - {name}', { name: c.name })}</BText>
+                  <BText variant="smallMedium">{t('Visit history - {name}', { name: t(c.name) })}</BText>
                   {history.map((b) => (
                     <View key={b.id} style={{ flexDirection: 'row', alignItems: 'center', gap: 10, marginTop: 10 }}>
                       <BText variant="tiny" style={{ width: 100 }}>
@@ -872,7 +872,7 @@ export default function BusinessDashboard() {
               <View key={tx.id} style={styles.bookingRow}>
                 <View style={{ flex: 1 }}>
                   <BText variant="smallMedium">
-                    {tx.customer_name || t('Customer')} ·{' '}
+                    {t(tx.customer_name || 'Customer')} ·{' '}
                     {tx.method === 'apple_pay' ? 'Apple Pay' : tx.method === 'card' ? t('Card') : t('At venue')}
                   </BText>
                   <BText variant="tiny">
@@ -1184,7 +1184,7 @@ function DayCalendar({ bookings }: { bookings: Booking[] }) {
               }}
             >
               <BText variant="smallMedium" numberOfLines={1}>
-                {formatTimeOfDate(b.starts_at)} · {b.customer_name || t('Guest customer')}
+                {formatTimeOfDate(b.starts_at)} · {t(b.customer_name || 'Guest customer')}
               </BText>
               <BText variant="tiny" numberOfLines={1}>
                 {b.items.map((i) => t(i.service_name)).join('، ')}
@@ -1403,7 +1403,7 @@ function BookingRow({
     <View style={[styles.bookingRow, { flexWrap: 'wrap' }]}>
       <View style={{ flex: 1, minWidth: 220 }}>
         <BText variant="smallMedium">
-          {booking.customer_name || t('Guest customer')} · {booking.items.map((i) => t(i.service_name)).join('، ')}
+          {t(booking.customer_name || 'Guest customer')} · {booking.items.map((i) => t(i.service_name)).join('، ')}
         </BText>
         <BText variant="tiny" style={{ marginTop: 2 }}>
           {t('{date} at {time}', { date: formatDateLong(booking.starts_at), time: formatTimeOfDate(booking.starts_at) })}

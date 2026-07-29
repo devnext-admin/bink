@@ -218,7 +218,7 @@ export default function Admin() {
                     {b.venue_name || allVenues.find((v) => v.id === b.venue_id)?.name || t('Venue')}
                   </BText>
                   <BText variant="tiny" numberOfLines={1}>
-                    {b.customer_name || t('Guest')} · {formatDateLong(b.starts_at)}
+                    {t(b.customer_name || 'Guest')} · {formatDateLong(b.starts_at)}
                   </BText>
                 </View>
                 <BText variant="smallMedium">{formatPrice(b.total_cents, b.currency)}</BText>
@@ -718,7 +718,7 @@ export default function Admin() {
                     {b.venue_name || allVenues.find((v) => v.id === b.venue_id)?.name || t('Venue')}
                   </BText>
                   <BText variant="tiny">
-                    {b.customer_name || t('Guest')} ·{' '}
+                    {t(b.customer_name || 'Guest')} ·{' '}
                     {t('{date} at {time}', { date: formatDateLong(b.starts_at), time: formatTimeOfDate(b.starts_at) })} ·{' '}
                     {b.items.map((i) => i.service_name).join(', ')}
                   </BText>

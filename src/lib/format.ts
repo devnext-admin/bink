@@ -33,13 +33,15 @@ export function weekdayName(weekday: number): string {
 
 export function formatTime(time: string): string {
   const [h, m] = time.split(':').map(Number);
-  const suffix = h >= 12 ? 'PM' : 'AM';
+  const ar = priceLang === 'ar';
+  const suffix = h >= 12 ? (ar ? 'مساءً' : 'PM') : (ar ? 'صباحًا' : 'AM');
   const hour12 = h % 12 === 0 ? 12 : h % 12;
   return `${hour12}:${String(m).padStart(2, '0')} ${suffix}`;
 }
 
 export function formatDateLong(iso: string): string {
-  return new Date(iso).toLocaleDateString('en-US', {
+  const locale = priceLang === 'ar' ? 'ar-u-ca-gregory-nu-latn' : 'en-US';
+  return new Date(iso).toLocaleDateString(locale, {
     weekday: 'long',
     day: 'numeric',
     month: 'long',
@@ -48,5 +50,7 @@ export function formatDateLong(iso: string): string {
 }
 
 export function formatTimeOfDate(iso: string): string {
-  return new Date(iso).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+  const s = new Date(iso).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+  if (priceLang === 'ar') return s.replace('AM', 'صباحًا').replace('PM', 'مساءً');
+  return s;
 }
