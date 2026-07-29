@@ -7,6 +7,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { ChatThread, ConversationList } from '../../components/chat';
 import { Logo } from '../../components/logo';
 import { NotificationsBell } from '../../components/notifications-bell';
+import { WebHeader } from '../../components/web-header';
 import { PaymentPill } from '../../components/payment-pill';
 import { Button } from '../../components/ui/button';
 import { Chip } from '../../components/ui/chip';
@@ -951,16 +952,14 @@ export default function BusinessDashboard() {
 
   if (isDesktop) {
     return (
-      <View style={{ flex: 1, flexDirection: 'row', backgroundColor: colors.bgPage }}>
+      <View style={{ flex: 1, backgroundColor: colors.bgPage }}>
+        {/* The standard app header stays — the dashboard is a section of the
+            same app, not a separate takeover. */}
+        <WebHeader />
+        <View style={{ flex: 1, flexDirection: 'row' }}>
         {/* sidebar */}
-        <View style={[styles.sidebar, { paddingTop: insets.top + 20 }]}>
-          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10, paddingHorizontal: 20 }}>
-            <Logo size={22} />
-            <View style={styles.bizTag}>
-              <BText style={{ fontFamily: font.bold, fontSize: 11, color: colors.accent }}>{t('BUSINESS')}</BText>
-            </View>
-          </View>
-          <View style={styles.venueBlock}>
+        <View style={[styles.sidebar, { paddingTop: 16 }]}>
+          <View style={[styles.venueBlock, { marginTop: 0 }]}>
             <Image
               source={{ uri: venue!.images[0]?.url }}
               style={{ width: 38, height: 38, borderRadius: radius.sm, backgroundColor: colors.bgSubtle }}
@@ -1037,7 +1036,7 @@ export default function BusinessDashboard() {
 
         {/* main */}
         <View style={{ flex: 1 }}>
-          <View style={[styles.topBar, { paddingTop: insets.top + 14 }]}>
+          <View style={[styles.topBar, { paddingTop: 14 }]}>
             <View>
               <BText variant="h2">{t(sectionLabel)}</BText>
               <BText variant="tiny">{todayLabel}</BText>
@@ -1053,8 +1052,6 @@ export default function BusinessDashboard() {
                 }}
               />
             )}
-            <NotificationsBell />
-
           </View>
           <ScrollView contentContainerStyle={{ padding: 28, paddingBottom: 60 }}>
             {access === 'admin' && (
@@ -1067,6 +1064,7 @@ export default function BusinessDashboard() {
             )}
             {body}
           </ScrollView>
+        </View>
         </View>
       </View>
     );

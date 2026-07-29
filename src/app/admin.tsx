@@ -4,6 +4,7 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { Platform, Pressable, ScrollView, Share, StyleSheet, TextInput, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Logo } from '../components/logo';
+import { WebHeader } from '../components/web-header';
 import { PaymentPill } from '../components/payment-pill';
 import { Button } from '../components/ui/button';
 import { Chip } from '../components/ui/chip';
@@ -778,6 +779,11 @@ export default function Admin() {
 
   return (
     <View style={{ flex: 1, backgroundColor: colors.bgPage }}>
+      {/* Desktop: the admin panel lives under the standard app header like any
+          other section. Mobile keeps its compact ADMIN header. */}
+      {isDesktop ? (
+        <WebHeader />
+      ) : (
       <View style={[styles.header, { paddingTop: insets.top + 12 }]}>
         <View style={styles.headerInner}>
           <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12 }}>
@@ -797,6 +803,7 @@ export default function Admin() {
           </Pressable>
         </View>
       </View>
+      )}
 
       <ScrollView contentContainerStyle={{ paddingBottom: 60 }}>
         <View style={[styles.contentWrap, isDesktop && { flexDirection: 'row', gap: 28 }]}>

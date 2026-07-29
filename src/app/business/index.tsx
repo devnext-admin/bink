@@ -8,6 +8,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Logo } from '../../components/logo';
 import { Seo } from '../../components/seo';
 import { WebFooter } from '../../components/web-footer';
+import { WebHeader } from '../../components/web-header';
 import { Button } from '../../components/ui/button';
 import { Chip } from '../../components/ui/chip';
 import { Field } from '../../components/ui/field';
@@ -490,16 +491,21 @@ export default function BusinessLanding() {
   return (
     <ScrollView style={{ flex: 1, backgroundColor: colors.white }}>
       <Seo title={t('Bink for business — grow your salon')} description={t('List your salon or freelance service on Bink and start taking online bookings today.')} />
+      {/* Same app chrome as everywhere else — the business landing is a page
+          of Bink, not a separate site. Mobile keeps its compact hero header. */}
+      {isDesktop && <WebHeader />}
       <HeroGradient
         variant="soft"
-        style={{ paddingTop: insets.top + 16, paddingBottom: 56 }}
+        style={{ paddingTop: isDesktop ? 24 : insets.top + 16, paddingBottom: 56 }}
       >
+        {!isDesktop && (
         <View style={[styles.inner, { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }]}>
           <Logo />
           <Pressable onPress={() => router.push('/')} style={styles.backPill}>
             <BText variant="smallMedium">{t('For customers')}</BText>
           </Pressable>
         </View>
+        )}
         <View style={[styles.inner, { alignItems: isDesktop ? 'center' : 'flex-start', paddingTop: 48 }]}>
           <BText
             style={{
