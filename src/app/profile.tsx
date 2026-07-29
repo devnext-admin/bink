@@ -8,7 +8,6 @@ import { BottomTabs, TAB_BAR_HEIGHT } from '../components/bottom-tabs';
 import { Avatar } from '../components/ui/avatar';
 import { Button } from '../components/ui/button';
 import { BText } from '../components/ui/text';
-import { VenueCard } from '../components/venue-card';
 import { WebFooter } from '../components/web-footer';
 import { WebHeader } from '../components/web-header';
 import { useAppData } from '../lib/app-data-context';
@@ -40,12 +39,11 @@ export default function Profile() {
   const router = useRouter();
   const { t, isRTL } = useI18n();
   const { user, signOut, updateProfile } = useAuth();
-  const { venues, allVenues, favorites } = useAppData();
+  const { allVenues } = useAppData();
   const [editingName, setEditingName] = useState(false);
   const [nameDraft, setNameDraft] = useState('');
   const [phoneDraft, setPhoneDraft] = useState('');
   const [savingProfile, setSavingProfile] = useState(false);
-  const favVenues = venues.filter((v) => favorites.includes(v.id));
 
   const ownsVenues = user ? allVenues.some((v) => v.owner_id === user.id) : false;
   // Customers see customer things only; owners additionally get their
@@ -197,19 +195,6 @@ export default function Profile() {
           ))}
         </View>
       )}
-
-      {favVenues.length ? (
-        <View>
-          <BText variant="h2" style={{ marginBottom: 16 }}>
-            {t('Favorites')}
-          </BText>
-          <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 16 }}>
-            {favVenues.map((v) => (
-              <VenueCard key={v.id} venue={v} width={isDesktop ? 226 : undefined} />
-            ))}
-          </View>
-        </View>
-      ) : null}
 
       {user ? (
         <View style={{ alignItems: 'flex-start' }}>

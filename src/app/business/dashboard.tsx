@@ -1515,7 +1515,8 @@ function VenueMessages({
   target?: { userId: string; userName: string } | null;
   onTargetConsumed?: () => void;
 }) {
-  const { t } = useI18n();
+  const { t, isRTL } = useI18n();
+  const isDesktop = useIsDesktop();
   const [conversations, setConversations] = useState<Conversation[]>([]);
   const [active, setActive] = useState<Conversation | null>(null);
 
@@ -1546,10 +1547,43 @@ function VenueMessages({
     }
   }, [target?.userId]);
 
-  // Open the most recent conversation by default
+  // Open the most recent conversation by default - desktop only; the phone
+  // starts on the chat list, like any messaging app.
   useEffect(() => {
-    if (!active && conversations.length) setActive(conversations[0]);
-  }, [conversations.length]);
+    if (isDesktop && !active && conversations.length) setActive(conversations[0]);
+  }, [conversations.length, isDesktop]);
+
+  // Phone: chat list -> full-screen thread with a back button
+  if (!isDesktop) {
+    return (
+      <View style={[styles.card, { padding: 0, overflow: 'hidden', minHeight: 520 }]}>
+        {active ? (
+          <>
+            <View style={styles.chatMobileHeader}>
+              <Pressable onPress={() => setActive(null)} hitSlop={10}>
+                <Ionicons name={isRTL ? 'arrow-forward' : 'arrow-back'} size={22} color={colors.ink} />
+              </Pressable>
+              <Avatar name={t(active.user_name || 'Customer')} size={34} />
+              <BText variant="title" numberOfLines={1} style={{ flex: 1 }}>
+                {t(active.user_name || 'Customer')}
+              </BText>
+            </View>
+            <ChatThread
+              venueId={venue.id}
+              venueName={venue.name}
+              userId={active.user_id}
+              userName={active.user_name}
+              perspective="venue"
+            />
+          </>
+        ) : (
+          <ScrollView>
+            <ConversationList conversations={conversations} perspective="venue" onSelect={setActive} />
+          </ScrollView>
+        )}
+      </View>
+    );
+  }
 
   return (
     <View style={[styles.card, { padding: 0, overflow: 'hidden', minHeight: 460, flexDirection: 'row' }]}>
@@ -2517,6 +2551,16 @@ function GalleryEditor({ venue, onChanged }: { venue: Venue; onChanged: () => vo
 }
 
 const styles = StyleSheet.create({
+  chatMobileHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+    paddingHorizontal: 14,
+    paddingVertical: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: colors.divider,
+    backgroundColor: colors.bgPage,
+  },
   header: {
     backgroundColor: colors.white,
     borderBottomWidth: 1,
