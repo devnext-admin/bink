@@ -12,7 +12,6 @@ import { BText } from './ui/text';
 
 const TABS = [
   { href: '/', label: 'Home', icon: 'home-outline', activeIcon: 'home' },
-  { href: '/search', label: 'Search', icon: 'search-outline', activeIcon: 'search' },
   { href: '/appointments', label: 'Appointments', icon: 'calendar-outline', activeIcon: 'calendar' },
   { href: '/messages', label: 'Messages', icon: 'chatbubble-ellipses-outline', activeIcon: 'chatbubble-ellipses' },
   { href: '/profile', label: 'Profile', icon: 'person-outline', activeIcon: 'person' },
@@ -43,7 +42,8 @@ export function BottomTabs() {
   return (
     <View style={[styles.bar, { paddingBottom: Math.max(insets.bottom, 8) }]}>
       {TABS.map((tab) => {
-        const active = pathname === tab.href;
+        // Search lives inside the Home flow, so keep Home lit there
+        const active = pathname === tab.href || (tab.href === '/' && pathname === '/search');
         const showBadge = tab.href === '/messages' && unread > 0;
         return (
           <Pressable

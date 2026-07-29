@@ -1,8 +1,8 @@
 import { Seo } from '../components/seo';
 import { Ionicons } from '@expo/vector-icons';
-import { useLocalSearchParams } from 'expo-router';
+import { useLocalSearchParams, useRouter } from 'expo-router';
 import React, { useMemo, useState } from 'react';
-import { ScrollView, StyleSheet, TextInput, View , Platform } from 'react-native';
+import { Platform, Pressable, ScrollView, StyleSheet, TextInput, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { BottomTabs, TAB_BAR_HEIGHT } from '../components/bottom-tabs';
 import { Chip } from '../components/ui/chip';
@@ -19,7 +19,8 @@ import { colors, font, maxContentWidth, radius } from '../lib/theme';
 import { useIsDesktop } from '../lib/use-layout';
 
 export default function Search() {
-  const { t } = useI18n();
+  const { t, isRTL } = useI18n();
+  const router = useRouter();
   const isDesktop = useIsDesktop();
   const params = useLocalSearchParams<{ q?: string; category?: string }>();
   const { venues, categories } = useAppData();
@@ -157,7 +158,12 @@ export default function Search() {
     <View style={{ flex: 1, backgroundColor: colors.white }}>
       <Seo title={t('Search salons, barbers & beauty')} description={t('Find and book salons near you on Bink.')} />
       <View style={{ paddingTop: insets.top + 12, paddingHorizontal: 20, gap: 12 }}>
-        <BText variant="h1">{t('Search')}</BText>
+        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12 }}>
+          <Pressable onPress={() => (router.canGoBack() ? router.back() : router.replace('/'))} hitSlop={8}>
+            <Ionicons name={isRTL ? 'arrow-forward' : 'arrow-back'} size={24} color={colors.ink} />
+          </Pressable>
+          <BText variant="h1">{t('Search')}</BText>
+        </View>
         {searchInput}
         {chips}
       </View>
