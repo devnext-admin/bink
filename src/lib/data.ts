@@ -357,6 +357,14 @@ export async function cancelBooking(id: string): Promise<void> {
       JSON.stringify(bookings.map((b) => (b.id === id ? { ...b, status: 'cancelled' } : b)))
     );
   }
+  // Money held in escrow (online payment or reservation deposit) goes back to
+  // the customer - the service will not happen. refundBooking is a no-op when
+  // nothing was paid. Any late-cancellation fee is settled by the salon
+  // separately, per its policy.
+  try {
+    const { refundBooking } = await import('./payments');
+    await refundBooking(id);
+  } catch {}
   if (booking) {
     await pushNotification({
       audience: 'venue',
