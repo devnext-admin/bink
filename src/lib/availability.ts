@@ -37,6 +37,17 @@ export function nextAvailableLabel(venue: Venue, lang: Lang, t: (s: string, v?: 
   return null;
 }
 
+/** Whether the venue is open at the given moment. Unknown hours count as open. */
+export function isOpenAt(venue: Venue, at: Date): boolean {
+  if (!venue.hours?.length) return true;
+  const h = venue.hours.find((x) => x.weekday === at.getDay());
+  if (!h || h.is_closed || !h.open_time || !h.close_time) return false;
+  const [oh, om] = h.open_time.split(':').map(Number);
+  const [ch, cm] = h.close_time.split(':').map(Number);
+  const mins = at.getHours() * 60 + at.getMinutes();
+  return mins >= oh * 60 + om && mins < ch * 60 + cm;
+}
+
 /** Haversine distance in km between two coordinates. */
 export function distanceKm(aLat: number, aLng: number, bLat: number, bLng: number): number {
   const R = 6371;

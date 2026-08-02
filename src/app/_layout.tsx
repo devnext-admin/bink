@@ -3,6 +3,7 @@ import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
 import React, { useEffect } from 'react';
+import { Platform } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { AppDataProvider } from '../lib/app-data-context';
@@ -13,6 +14,9 @@ import { I18nProvider } from '../lib/i18n';
 import { colors } from '../lib/theme';
 
 SplashScreen.preventAutoHideAsync().catch(() => {});
+
+// iOS tab apps never animate tab switches; the web slide stays for continuity.
+const tabScreen = Platform.OS === 'web' ? undefined : ({ animation: 'none' } as const);
 
 export default function RootLayout() {
   const [fontsLoaded] = useFonts({
@@ -48,23 +52,25 @@ export default function RootLayout() {
                 screenOptions={{
                   headerShown: false,
                   contentStyle: { backgroundColor: colors.white },
-                  // Standard iOS push (new screen enters from the trailing edge).
-                  animation: 'slide_from_right',
+                  // Native gets the platform's own push (parallax + swipe back);
+                  // the web build keeps an explicit slide so it matches iOS.
+                  animation: Platform.OS === 'web' ? 'slide_from_right' : 'default',
                   // Bottom-tab taps use router.replace; without this, native-stack
                   // animates a replace as a "pop" (screen slides in from the left).
                   animationTypeForReplace: 'push',
                 }}
               >
-                <Stack.Screen name="index" />
+                {/* Tab-bar destinations switch instantly on native, like any iOS tab app */}
+                <Stack.Screen name="index" options={tabScreen} />
                 <Stack.Screen name="search" />
-                <Stack.Screen name="appointments" />
+                <Stack.Screen name="appointments" options={tabScreen} />
                 <Stack.Screen name="invoices" />
                 <Stack.Screen name="notifications" />
-                <Stack.Screen name="messages" />
+                <Stack.Screen name="messages" options={tabScreen} />
                 <Stack.Screen name="favorites" />
                 <Stack.Screen name="support" />
                 <Stack.Screen name="settings" />
-                <Stack.Screen name="profile" />
+                <Stack.Screen name="profile" options={tabScreen} />
                 <Stack.Screen name="auth" options={{ presentation: 'modal' }} />
                 <Stack.Screen name="welcome" />
                 <Stack.Screen name="terms" />

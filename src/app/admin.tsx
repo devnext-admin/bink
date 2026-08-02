@@ -1,8 +1,9 @@
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { Platform, Pressable, ScrollView, Share, StyleSheet, TextInput, View } from 'react-native';
+import { Modal, Platform, Pressable, ScrollView, Share, StyleSheet, TextInput, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { ChatThread } from '../components/chat';
 import { Logo } from '../components/logo';
 import { WebHeader } from '../components/web-header';
 import { PaymentPill } from '../components/payment-pill';
@@ -27,6 +28,7 @@ import {
 import { createCategory } from '../lib/data';
 import { formatDateLong, formatPrice, formatTimeOfDate } from '../lib/format';
 import { formatDate, useI18n } from '../lib/i18n';
+import { getThread, sendMessage } from '../lib/messages';
 import { createPromo, getPromoCodes, togglePromo } from '../lib/ops';
 import { escrowSummary, getAllTransactions, refundBooking, salesSummary } from '../lib/payments';
 import { colors, font, radius } from '../lib/theme';
@@ -54,6 +56,63 @@ export default function Admin() {
   const { allVenues, categories, refresh } = useAppData();
 
   const [tab, setTab] = useState<Tab>('overview');
+  // Admin chat about a booking: with the salon (admin speaks as a user) or
+  // with the customer (admin speaks as the Bink Support venue).
+  const [chat, setChat] = useState<{
+    title: string;
+    venueId: string;
+    venueName: string;
+    userId: string;
+    userName: string;
+    perspective: 'customer' | 'venue';
+  } | null>(null);
+
+  const openBookingChat = async (b: Booking, side: 'salon' | 'customer') => {
+    if (!user) return;
+    const venueName = b.venue_name || allVenues.find((v) => v.id === b.venue_id)?.name || 'Venue';
+    const services = b.items.map((i) => i.service_name).join(', ');
+    const refText =
+      `Bink admin, about booking ${b.id.slice(0, 8)}: ${services} at ${venueName}, ` +
+      `${formatDateLong(b.starts_at)} ${formatTimeOfDate(b.starts_at)}, customer ${b.customer_name || 'Guest'}`;
+    let next: NonNullable<typeof chat>;
+    if (side === 'salon') {
+      next = {
+        title: venueName,
+        venueId: b.venue_id,
+        venueName,
+        userId: user.id,
+        userName: user.name ?? 'Bink Admin',
+        perspective: 'customer',
+      };
+    } else {
+      const support = allVenues.find((v) => v.slug === 'bink-support');
+      if (!b.user_id || !support) return;
+      next = {
+        title: b.customer_name || t('Customer'),
+        venueId: support.id,
+        venueName: support.name,
+        userId: b.user_id,
+        userName: b.customer_name || 'Customer',
+        perspective: 'venue',
+      };
+    }
+    // Drop the booking reference into the thread once per booking
+    try {
+      const thread = await getThread(next.venueId, next.userId);
+      if (!thread.some((m) => m.text === refText)) {
+        await sendMessage({
+          venueId: next.venueId,
+          venueName: next.venueName,
+          userId: next.userId,
+          userName: next.userName,
+          sender: next.perspective,
+          text: refText,
+        });
+      }
+    } catch {}
+    setChat(next);
+  };
+
   const [users, setUsers] = useState<AdminUserRow[]>([]);
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [transactions, setTransactions] = useState<Transaction[]>([]);
@@ -249,6 +308,7 @@ export default function Admin() {
   } else if (tab === 'salons') {
     const q = salonQuery.trim().toLowerCase();
     const filtered = allVenues.filter((v) => {
+      if (v.slug === 'bink-support') return false; // platform messaging identity, not a salon
       const status = v.status ?? 'approved';
       if (salonStatus !== 'all' && status !== salonStatus) return false;
       if (q && !`${v.name} ${v.city} ${v.area}`.toLowerCase().includes(q)) return false;
@@ -372,7 +432,7 @@ export default function Admin() {
                 </View>
                 <StatusTag status={status} />
                 <View style={{ flexDirection: 'row', gap: 6 }}>
-                  <SmallAction label={t('Open dashboard')} color={colors.info} onPress={() => router.push(`/business/dashboard?venue=${v.id}` as any)} />
+                  <SmallAction label={t('View as owner')} color={colors.info} onPress={() => router.replace(`/business/dashboard?venue=${v.id}` as any)} />
                   {status !== 'approved' && (
                     <SmallAction
                       label={t('Approve')}
@@ -712,8 +772,8 @@ export default function Admin() {
             </BText>
           ) : (
             filtered.map((b) => (
-              <View key={b.id} style={styles.row}>
-                <View style={{ flex: 1 }}>
+              <View key={b.id} style={[styles.row, { flexWrap: 'wrap' }]}>
+                <View style={{ flex: 1, minWidth: 200 }}>
                   <BText variant="smallMedium">
                     {b.venue_name || allVenues.find((v) => v.id === b.venue_id)?.name || t('Venue')}
                   </BText>
@@ -726,6 +786,12 @@ export default function Admin() {
                 <BText variant="smallMedium">{formatPrice(b.total_cents, b.currency)}</BText>
                 <PaymentPill status={b.payment_status ?? 'unpaid'} />
                 <StatusTag status={b.status} />
+                <View style={{ flexDirection: 'row', gap: 6 }}>
+                  <SmallAction label={t('Message salon')} color={colors.info} onPress={() => openBookingChat(b, 'salon')} />
+                  {b.user_id ? (
+                    <SmallAction label={t('Message customer')} color={colors.accent} onPress={() => openBookingChat(b, 'customer')} />
+                  ) : null}
+                </View>
               </View>
             ))
           )}
@@ -811,6 +877,31 @@ export default function Admin() {
           <View style={{ flex: 1, gap: 16 }}>{body}</View>
         </View>
       </ScrollView>
+
+      {/* Booking chat: admin talks to the salon or to the customer */}
+      <Modal visible={!!chat} transparent animationType="fade" onRequestClose={() => setChat(null)}>
+        <View style={styles.chatBackdrop}>
+          <View style={[styles.chatCard, isDesktop && { maxWidth: 520, height: 560 }]}>
+            <View style={styles.chatHeader}>
+              <BText variant="title" numberOfLines={1} style={{ flex: 1 }}>
+                {chat ? t(chat.title) : ''}
+              </BText>
+              <Pressable onPress={() => setChat(null)} hitSlop={10} accessibilityLabel={t('Close')}>
+                <Ionicons name="close" size={22} color={colors.ink} />
+              </Pressable>
+            </View>
+            {chat && (
+              <ChatThread
+                venueId={chat.venueId}
+                venueName={chat.venueName}
+                userId={chat.userId}
+                userName={chat.userName}
+                perspective={chat.perspective}
+              />
+            )}
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 }
@@ -924,6 +1015,31 @@ function SmallAction({ label, color, onPress }: { label: string; color: string; 
 }
 
 const styles = StyleSheet.create({
+  chatBackdrop: {
+    flex: 1,
+    backgroundColor: 'rgba(17,17,17,0.45)',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 16,
+  },
+  chatCard: {
+    width: '100%',
+    height: '85%',
+    maxHeight: 640,
+    backgroundColor: colors.white,
+    borderRadius: radius.xl,
+    overflow: 'hidden',
+  },
+  chatHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    borderBottomWidth: 1,
+    borderBottomColor: colors.divider,
+    backgroundColor: colors.bgPage,
+  },
   header: {
     backgroundColor: colors.white,
     borderBottomWidth: 1,

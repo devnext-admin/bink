@@ -66,7 +66,8 @@ export function AppDataProvider({ children }: { children: React.ReactNode }) {
 
   const value = useMemo<AppDataValue>(
     () => ({
-      venues: allVenues.filter((v) => !v.status || v.status === 'approved'),
+      // bink-support is the platform's messaging identity, never a bookable salon
+      venues: allVenues.filter((v) => (!v.status || v.status === 'approved') && v.slug !== 'bink-support'),
       allVenues,
       categories,
       favorites,

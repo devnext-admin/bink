@@ -122,7 +122,7 @@ export default function BusinessDashboard() {
   const venue = accessibleVenues.find((v) => v.id === venueId) ?? accessibleVenues[0] ?? null;
 
   // 'owner' | 'admin' | 'manager' | 'member'
-  const access: 'owner' | 'admin' | 'manager' | 'member' = !venue
+  const baseAccess: 'owner' | 'admin' | 'manager' | 'member' = !venue
     ? 'owner'
     : emulated && venue.id === emulated.id
       ? 'admin'
@@ -131,10 +131,17 @@ export default function BusinessDashboard() {
         : staffAccess.find((a) => a.venueId === venue.id)?.venueRole === 'manager'
           ? 'manager'
           : 'member';
+  // Owners and managers can preview the dashboard exactly as one of their
+  // team members sees it - member-only nav, their bookings, their services.
+  const [viewAsStaff, setViewAsStaff] = useState<{ id: string; name: string } | null>(null);
+  useEffect(() => setViewAsStaff(null), [venue?.id]);
+  const access = viewAsStaff && baseAccess !== 'member' ? ('member' as const) : baseAccess;
   const canManage = access !== 'member';
-  const memberStaffId = access === 'member'
-    ? staffAccess.find((a) => a.venueId === venue?.id)?.staffId ?? null
-    : null;
+  const memberStaffId = viewAsStaff
+    ? viewAsStaff.id
+    : access === 'member'
+      ? staffAccess.find((a) => a.venueId === venue?.id)?.staffId ?? null
+      : null;
 
   const [section, setSection] = useState<Section>('overview');
   useEffect(() => {
@@ -909,7 +916,13 @@ export default function BusinessDashboard() {
       );
     }
   } else if (section === 'staff') {
-    body = <StaffEditor venue={venue!} onChanged={reload} />;
+    body = (
+      <StaffEditor
+        venue={venue!}
+        onChanged={reload}
+        onViewAs={(m) => setViewAsStaff({ id: m.id, name: m.name })}
+      />
+    );
   } else {
     body = <SettingsEditor venue={venue!} onChanged={reload} />;
   }
@@ -1060,6 +1073,16 @@ export default function BusinessDashboard() {
                 <BText variant="tiny" color={colors.info} style={{ flex: 1 }}>
                   {t('Admin view - you are managing this business on behalf of its owner.')}
                 </BText>
+                <SmallPillBtn label={t('Exit')} color={colors.info} onPress={() => router.replace('/admin')} />
+              </View>
+            )}
+            {viewAsStaff && (
+              <View style={[styles.emulateBanner, { marginBottom: 16 }]}>
+                <Ionicons name="eye-outline" size={16} color={colors.info} />
+                <BText variant="tiny" color={colors.info} style={{ flex: 1 }}>
+                  {t('Viewing as {name}', { name: t(viewAsStaff.name) })}
+                </BText>
+                <SmallPillBtn label={t('Exit')} color={colors.info} onPress={() => setViewAsStaff(null)} />
               </View>
             )}
             {body}
@@ -1129,6 +1152,16 @@ export default function BusinessDashboard() {
                 <BText variant="tiny" color={colors.info} style={{ flex: 1 }}>
                   {t('Admin view - you are managing this business on behalf of its owner.')}
                 </BText>
+                <SmallPillBtn label={t('Exit')} color={colors.info} onPress={() => router.replace('/admin')} />
+              </View>
+            )}
+            {viewAsStaff && (
+              <View style={styles.emulateBanner}>
+                <Ionicons name="eye-outline" size={16} color={colors.info} />
+                <BText variant="tiny" color={colors.info} style={{ flex: 1 }}>
+                  {t('Viewing as {name}', { name: t(viewAsStaff.name) })}
+                </BText>
+                <SmallPillBtn label={t('Exit')} color={colors.info} onPress={() => setViewAsStaff(null)} />
               </View>
             )}
             {body}
@@ -2036,7 +2069,15 @@ function ServicesEditor({ venue, onChanged }: { venue: Venue; onChanged: () => v
   );
 }
 
-function StaffEditor({ venue, onChanged }: { venue: Venue; onChanged: () => void }) {
+function StaffEditor({
+  venue,
+  onChanged,
+  onViewAs,
+}: {
+  venue: Venue;
+  onChanged: () => void;
+  onViewAs?: (m: Venue['staff'][number]) => void;
+}) {
   const { t } = useI18n();
   const [editingId, setEditingId] = useState<string | null>(null);
   const [name, setName] = useState('');
@@ -2183,6 +2224,9 @@ function StaffEditor({ venue, onChanged }: { venue: Venue; onChanged: () => void
                 color={colors.accent}
                 onPress={() => sendInvite(m.id)}
               />
+            ) : null}
+            {onViewAs ? (
+              <SmallPillBtn label={t('View as')} color={colors.info} onPress={() => onViewAs(m)} />
             ) : null}
             <Pressable onPress={() => startEdit(m)} hitSlop={8}>
               <Ionicons name="pencil-outline" size={18} color={colors.ink} />

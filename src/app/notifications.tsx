@@ -91,8 +91,19 @@ export default function Notifications() {
       ) : (
         items.map((n) => {
           const ic = iconFor(n.title);
+          const target =
+            n.audience === 'venue'
+              ? '/business/dashboard'
+              : n.title.startsWith('Message from ') || n.title === 'New message'
+                ? '/messages'
+                : /booking|visit|payment|refund|rate|rescheduled|cancelled/i.test(`${n.title} ${n.body ?? ''}`)
+                  ? '/appointments'
+                  : null;
           return (
-            <View key={n.id} style={[styles.card, !n.is_read && { backgroundColor: colors.accentSoft }]}>
+            <Pressable
+              key={n.id}
+              onPress={target ? () => router.push(target as any) : undefined}
+              style={[styles.card, !n.is_read && { backgroundColor: colors.accentSoft }]}>
               <View style={[styles.iconCircle, { backgroundColor: ic.bg }]}>
                 <Ionicons name={ic.icon as any} size={18} color={ic.tint} />
               </View>
@@ -116,7 +127,7 @@ export default function Notifications() {
                   </BText>
                 ) : null}
               </View>
-            </View>
+            </Pressable>
           );
         })
       )}

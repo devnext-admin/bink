@@ -12,35 +12,47 @@ import { VenueCard } from '../components/venue-card';
 import { WebFooter } from '../components/web-footer';
 import { WebHeader } from '../components/web-header';
 import { useAppData } from '../lib/app-data-context';
-import { distanceKm, distanceLabel } from '../lib/availability';
+import { distanceKm, distanceLabel, isOpenAt } from '../lib/availability';
 import { searchVenues } from '../lib/data';
-import { useI18n } from '../lib/i18n';
+import { formatDate, useI18n } from '../lib/i18n';
+import { getLocationIfGranted } from '../lib/location';
 import { colors, font, maxContentWidth, radius } from '../lib/theme';
 import { useIsDesktop } from '../lib/use-layout';
 
 export default function Search() {
-  const { t, isRTL } = useI18n();
+  const { t, isRTL, lang } = useI18n();
   const router = useRouter();
   const isDesktop = useIsDesktop();
-  const params = useLocalSearchParams<{ q?: string; category?: string }>();
+  const params = useLocalSearchParams<{
+    q?: string;
+    category?: string;
+    lat?: string;
+    lng?: string;
+    date?: string;
+    time?: string;
+  }>();
   const { venues, categories } = useAppData();
   const [query, setQuery] = useState(params.q ?? '');
   const [categorySlug, setCategorySlug] = useState<string | undefined>(params.category);
   const [sortBy, setSortBy] = useState<'recommended' | 'rating' | 'reviews' | 'price' | 'nearest'>('recommended');
   const [priceBand, setPriceBand] = useState<0 | 1 | 2 | 3>(0); // 0 = any
   const [showMap, setShowMap] = useState(false);
-  const [myLoc, setMyLoc] = useState<{ lat: number; lng: number } | null>(null);
+  const [myLoc, setMyLoc] = useState<{ lat: number; lng: number } | null>(() =>
+    params.lat && params.lng ? { lat: Number(params.lat), lng: Number(params.lng) } : null
+  );
+  // "Open at" filter handed over from the hero search's date and time picker
+  const [when, setWhen] = useState<{ date: string; time: string } | null>(
+    params.date && params.time ? { date: params.date, time: params.time } : null
+  );
   const insets = useSafeAreaInsets();
 
-  // Browser geolocation for distances; silently skipped if denied
+  // Device position for distances (web and native); never prompts on its own -
+  // it only uses a permission the user already granted.
   React.useEffect(() => {
-    if (Platform.OS === 'web' && typeof navigator !== 'undefined' && navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (pos) => setMyLoc({ lat: pos.coords.latitude, lng: pos.coords.longitude }),
-        () => {},
-        { timeout: 5000, maximumAge: 600000 }
-      );
-    }
+    if (myLoc) return;
+    getLocationIfGranted().then((p) => {
+      if (p) setMyLoc({ lat: p.lat, lng: p.lng });
+    }, () => {});
   }, []);
 
   const distanceOf = (v: (typeof venues)[number]) =>
@@ -49,8 +61,16 @@ export default function Search() {
   const avgPrice = (v: (typeof venues)[number]) =>
     v.services.length ? v.services.reduce((c, x) => c + x.price_cents, 0) / v.services.length : 0;
 
+  const whenDate = useMemo(() => {
+    if (!when) return null;
+    const [y, m, d] = when.date.split('-').map(Number);
+    const [h, min] = when.time.split(':').map(Number);
+    return new Date(y, m - 1, d, h, min);
+  }, [when]);
+
   const results = useMemo(() => {
     let out = searchVenues(venues, query, categorySlug, categories);
+    if (whenDate) out = out.filter((v) => isOpenAt(v, whenDate));
     if (priceBand) {
       out = out.filter((v) => {
         const avg = avgPrice(v);
@@ -65,7 +85,7 @@ export default function Search() {
     else if (sortBy === 'nearest' && myLoc)
       out = [...out].sort((a, b) => (distanceOf(a) ?? 1e9) - (distanceOf(b) ?? 1e9));
     return out;
-  }, [venues, query, categorySlug, categories, sortBy, priceBand, myLoc]);
+  }, [venues, query, categorySlug, categories, sortBy, priceBand, myLoc, whenDate]);
 
   const chips = (
     <View style={{ gap: 8 }}>
@@ -81,6 +101,13 @@ export default function Search() {
         ))}
       </ScrollView>
       <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ gap: 8 }}>
+        {when && whenDate ? (
+          <Chip
+            label={`${t('Open')} ${formatDate(lang, whenDate, { weekday: 'short', day: 'numeric', month: 'short' })} · ${when.time} ✕`}
+            selected
+            onPress={() => setWhen(null)}
+          />
+        ) : null}
         <Chip label={t('Top rated')} selected={sortBy === 'rating'} onPress={() => setSortBy(sortBy === 'rating' ? 'recommended' : 'rating')} />
         <Chip label={t('Most reviewed')} selected={sortBy === 'reviews'} onPress={() => setSortBy(sortBy === 'reviews' ? 'recommended' : 'reviews')} />
         <Chip label={t('Lowest price')} selected={sortBy === 'price'} onPress={() => setSortBy(sortBy === 'price' ? 'recommended' : 'price')} />

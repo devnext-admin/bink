@@ -72,6 +72,27 @@ export default function Appointments() {
     }, [refresh])
   );
 
+  // Uber-style: the first time a completed visit shows up unrated, the rating
+  // sheet opens by itself. Each booking only ever auto-prompts once.
+  React.useEffect(() => {
+    if (!loaded || rateBooking) return;
+    (async () => {
+      try {
+        const AsyncStorage = (await import('@react-native-async-storage/async-storage')).default;
+        const raw = await AsyncStorage.getItem('bink.ratePrompted');
+        const prompted: string[] = raw ? JSON.parse(raw) : [];
+        const candidate = bookings.find((b) => b.status === 'completed' && !b.rated && !prompted.includes(b.id));
+        if (!candidate) return;
+        await AsyncStorage.setItem(
+          'bink.ratePrompted',
+          JSON.stringify([...prompted, candidate.id].slice(-50))
+        );
+        setFilter('past');
+        setRateBooking(candidate);
+      } catch {}
+    })();
+  }, [loaded, bookings.length]);
+
   const now = Date.now();
   const isPast = (b: Booking) =>
     new Date(b.starts_at).getTime() < now ||
@@ -270,8 +291,25 @@ export default function Appointments() {
               </View>
             ) : null}
             {filter === 'past' && (b.status === 'completed' || b.status === 'confirmed') && !b.rated ? (
-              <View style={{ flexDirection: 'row', gap: 10, marginTop: 16 }}>
-                <Button title={t('Rate your visit')} size="sm" onPress={() => setRateBooking(b)} />
+              <View style={styles.rateRow}>
+                <BText variant="smallMedium" style={{ flex: 1 }}>
+                  {t('How was your visit?')}
+                </BText>
+                <View style={{ flexDirection: 'row', gap: 6 }}>
+                  {[1, 2, 3, 4, 5].map((i) => (
+                    <Pressable
+                      key={i}
+                      onPress={() => {
+                        setStars(i);
+                        setRateBooking(b);
+                      }}
+                      hitSlop={6}
+                      accessibilityLabel={t('{n} stars', { n: i })}
+                    >
+                      <Ionicons name="star-outline" size={22} color={colors.star} />
+                    </Pressable>
+                  ))}
+                </View>
               </View>
             ) : null}
             {b.rated ? (
@@ -455,6 +493,16 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: 12,
     backgroundColor: colors.infoBg,
+    borderRadius: radius.md,
+    padding: 12,
+    marginTop: 16,
+  },
+  rateRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+    flexWrap: 'wrap',
+    backgroundColor: colors.bgSubtle,
     borderRadius: radius.md,
     padding: 12,
     marginTop: 16,
