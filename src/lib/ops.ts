@@ -230,13 +230,29 @@ export async function validatePromo(code: string): Promise<PromoCode | null> {
   const promo = promos.find((p) => p.code.toUpperCase() === code.trim().toUpperCase());
   if (!promo || !promo.is_active) return null;
   if (promo.expires_at && new Date(promo.expires_at).getTime() < Date.now()) return null;
+  if (promo.max_uses != null && (promo.used_count ?? 0) >= promo.max_uses) return null;
   return promo;
 }
 
-export async function createPromo(code: string, pctOff: number): Promise<void> {
+/** Count one redemption of a promo code (called when a booking uses it). */
+export async function redeemPromo(code: string): Promise<void> {
+  const sb = getSupabase();
+  if (sb) await sb.rpc('redeem_promo', { p_code: code }).then(() => {}, () => {});
+}
+
+export async function createPromo(
+  code: string,
+  pctOff: number,
+  opts?: { maxUses?: number | null; expiresAt?: string | null }
+): Promise<void> {
   const sb = getSupabase();
   if (sb) {
-    const { error } = await sb.from('promo_codes').insert({ code: code.toUpperCase(), pct_off: pctOff });
+    const { error } = await sb.from('promo_codes').insert({
+      code: code.toUpperCase(),
+      pct_off: pctOff,
+      max_uses: opts?.maxUses ?? null,
+      expires_at: opts?.expiresAt ?? null,
+    });
     if (!error) return;
   }
   const local = await readList<PromoCode>(PROMOS_KEY);

@@ -86,6 +86,18 @@ export function useI18n(): I18nValue {
 }
 
 /** Locale-aware date formatting (Gregorian calendar in both languages). */
+// Category labels: admin-created categories carry their own Arabic name in
+// the database; seeded ones translate through the dictionary.
+export function categoryName(
+  c: { name: string; name_ar?: string | null } | null | undefined,
+  lang: Lang,
+  t: (s: string) => string
+): string {
+  if (!c) return '';
+  if (lang === 'ar' && c.name_ar) return c.name_ar;
+  return t(c.name);
+}
+
 export function formatDate(
   lang: Lang,
   date: Date | string,

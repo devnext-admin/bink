@@ -62,6 +62,28 @@ export default function Auth() {
 
   const params = useLocalSearchParams<{ mode?: string }>();
   const [mode, setMode] = useState<'signin' | 'signup'>(params.mode === 'signup' ? 'signup' : 'signin');
+  const [forgot, setForgot] = useState(false);
+  const [resetSent, setResetSent] = useState(false);
+  const [resetBusy, setResetBusy] = useState(false);
+
+  const sendReset = async () => {
+    if (!email.trim()) {
+      setError(t('Please fill in all fields.'));
+      return;
+    }
+    const sb = getSupabase();
+    if (!sb) return;
+    setResetBusy(true);
+    setError(null);
+    const redirectTo =
+      Platform.OS === 'web' && typeof window !== 'undefined'
+        ? `${window.location.origin}/reset-password`
+        : 'https://bink-three.vercel.app/reset-password';
+    const { error: err } = await sb.auth.resetPasswordForEmail(email.trim(), { redirectTo });
+    setResetBusy(false);
+    if (err) setError(err.message);
+    else setResetSent(true);
+  };
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
@@ -210,15 +232,6 @@ export default function Auth() {
           </BText>
         </View>
 
-        {!isSupabaseConfigured && (
-          <View style={styles.demoNote}>
-            <Ionicons name="information-circle-outline" size={16} color={colors.accent} />
-            <BText variant="tiny" color={colors.accent}>
-              {t('Demo mode - any email and password works')}
-            </BText>
-          </View>
-        )}
-
         {mode === 'signup' && (
           <TextInput
             {...({ dir: 'auto' } as any)}
@@ -266,6 +279,40 @@ export default function Auth() {
             <Ionicons name={showPw ? 'eye-off-outline' : 'eye-outline'} size={20} color={colors.gray} />
           </Pressable>
         </View>
+        {mode === 'signin' && (
+          <Pressable
+            onPress={() => {
+              setError(null);
+              setResetSent(false);
+              setForgot(true);
+            }}
+            style={{ alignSelf: 'flex-start' }}
+            hitSlop={6}
+          >
+            <BText variant="small" color={colors.accent}>
+              {t('Forgot password?')}
+            </BText>
+          </Pressable>
+        )}
+        {forgot && (
+          <View style={styles.forgotBox}>
+            {resetSent ? (
+              <BText variant="small" color={colors.green}>
+                {t('Reset link sent to {email}. Open it, then set a new password.', { email: email.trim() })}
+              </BText>
+            ) : (
+              <>
+                <BText variant="small">
+                  {t('Enter your email above, then tap the button - we will send you a reset link.')}
+                </BText>
+                <View style={{ flexDirection: 'row', gap: 10, marginTop: 10 }}>
+                  <Button title={t('Send reset link')} size="sm" loading={resetBusy} onPress={sendReset} />
+                  <Button title={t('Cancel')} size="sm" variant="secondary" onPress={() => setForgot(false)} />
+                </View>
+              </>
+            )}
+          </View>
+        )}
         {mode === 'signup' && (
           <>
             <TextInput
@@ -446,6 +493,11 @@ const styles = StyleSheet.create({
     ...(typeof window !== 'undefined' ? ({ outlineStyle: 'none' } as any) : null),
   },
   eye: { position: 'absolute', right: 14, top: 16 },
+  forgotBox: {
+    backgroundColor: colors.bgSubtle,
+    borderRadius: radius.md,
+    padding: 12,
+  },
   agreeRow: { flexDirection: 'row', alignItems: 'center', gap: 8 },
   mailCircle: {
     width: 72,
@@ -481,14 +533,5 @@ const styles = StyleSheet.create({
     backgroundColor: colors.bgPage,
     borderRadius: radius.md,
     padding: 10,
-  },
-  demoNote: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-    backgroundColor: colors.accentSoft,
-    borderRadius: radius.md,
-    padding: 12,
-    justifyContent: 'center',
   },
 });

@@ -44,15 +44,6 @@ const GUEST_KEY = 'bink.guestUser';
 const EMULATE_KEY = 'bink.emulateUser';
 const USERS_KEY = 'bink.users'; // demo-mode registry so the admin panel can list users
 
-// In demo mode, sign in with an email starting with "admin@" to get admin
-// access; "owner@" gets the partner role (used by the one-click salon demo).
-function demoRole(email: string): UserRole {
-  const e = email.toLowerCase();
-  if (e.startsWith('admin@')) return 'admin';
-  if (e.startsWith('owner@')) return 'partner';
-  return 'customer';
-}
-
 async function registerDemoUser(user: AuthUser) {
   try {
     const raw = await AsyncStorage.getItem(USERS_KEY);
@@ -162,20 +153,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const signIn = useCallback(
     async (email: string, password: string) => {
       const sb = getSupabase();
-      if (!sb) {
-        // Demo mode: any credentials work; existing demo user keeps their role
-        const existing = (await getDemoUsers()).find((u) => u.email === email);
-        await persistLocal(
-          existing ?? {
-            id: `demo-${email}`,
-            email,
-            name: email.split('@')[0],
-            role: demoRole(email),
-            isGuest: true,
-          }
-        );
-        return null;
-      }
+      // Real credentials only - there is no offline fallback that grants roles.
+      if (!sb) return 'Sign-in is unavailable right now. Please try again later.';
       const { data, error } = await sb.auth.signInWithPassword({ email, password });
       if (error) return error.message;
       if (data.user) {
@@ -196,10 +175,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       const role = opts?.role;
       const phone = opts?.phone?.trim() || undefined;
       const sb = getSupabase();
-      if (!sb) {
-        await persistLocal({ id: `demo-${email}`, email, name, role: role ?? demoRole(email), isGuest: true, phone });
-        return { userId: `demo-${email}` };
-      }
+      if (!sb) return { error: 'Sign-up is unavailable right now. Please try again later.' };
       const { data, error } = await sb.auth.signUp({
         email,
         password,

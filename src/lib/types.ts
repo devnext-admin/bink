@@ -3,6 +3,8 @@ export interface Category {
   slug: string;
   name: string;
   icon: string;
+  name_ar?: string | null;
+  image_url?: string | null;
 }
 
 export interface VenueImage {
@@ -98,6 +100,8 @@ export interface PromoCode {
   pct_off: number;
   is_active: boolean;
   expires_at?: string | null;
+  max_uses?: number | null;
+  used_count?: number;
 }
 export type PaymentStatus = 'unpaid' | 'paid' | 'refunded';
 export type PaymentMethod = 'pay_at_venue' | 'card' | 'apple_pay';
@@ -165,5 +169,6 @@ export interface Booking {
   status: BookingStatus;
   total_cents: number;
   currency: string;
+  created_at?: string;
   items: BookingItem[];
 }

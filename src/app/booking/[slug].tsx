@@ -16,7 +16,7 @@ import { useBooking } from '../../lib/booking-context';
 import { createBooking } from '../../lib/data';
 import { formatDuration, formatPrice } from '../../lib/format';
 import { useI18n } from '../../lib/i18n';
-import { getBusyIntervals, isSlotFree, validatePromo, type BusyInterval } from '../../lib/ops';
+import { getBusyIntervals, isSlotFree, redeemPromo, validatePromo, type BusyInterval } from '../../lib/ops';
 import { markPayAtVenue, payDeposit, payForBooking, paymentsGateway } from '../../lib/payments';
 import { colors, font, radius, shadow } from '../../lib/theme';
 import type { PaymentMethod, PromoCode } from '../../lib/types';
@@ -152,6 +152,7 @@ export default function BookingScreen() {
           price_cents: Math.round(s.price_cents * (1 - s.discount_pct / 100)),
         })),
       });
+      if (promo) redeemPromo(promo.code).catch(() => {});
       try {
         if (payMethod === 'pay_at_venue') {
           await markPayAtVenue(created.id);

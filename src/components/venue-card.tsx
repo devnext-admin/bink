@@ -6,7 +6,7 @@ import { Animated, Pressable, StyleSheet, View } from 'react-native';
 import { useAppData } from '../lib/app-data-context';
 import { nextAvailableLabel } from '../lib/availability';
 import { sized } from '../lib/image';
-import { useI18n } from '../lib/i18n';
+import { categoryName, useI18n } from '../lib/i18n';
 import { colors, font, radius } from '../lib/theme';
 import type { Venue } from '../lib/types';
 import { Rating } from './ui/rating';
@@ -82,7 +82,7 @@ export function VenueCard({ venue, width, badge, distance }: VenueCardProps) {
           {t(venue.area)}, {t(venue.city)}
         </BText>
         <BText variant="small" numberOfLines={1}>
-          {venue.provider_type === 'freelancer' ? t('Freelancer') : t(category?.name ?? '')}
+          {venue.provider_type === 'freelancer' ? t('Freelancer') : categoryName(category, lang, t)}
           {'  ·  '}
           {venue.rating_count > 0
             ? t('{count} reviews', { count: venue.rating_count.toLocaleString() })

@@ -1,5 +1,6 @@
 import { Ionicons } from '@expo/vector-icons';
-import { useRouter } from 'expo-router';
+import { Image } from 'expo-image';
+import { useLocalSearchParams, useRouter } from 'expo-router';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { Modal, Platform, Pressable, ScrollView, Share, StyleSheet, TextInput, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -27,7 +28,7 @@ import {
 } from '../lib/business';
 import { createCategory } from '../lib/data';
 import { formatDateLong, formatPrice, formatTimeOfDate } from '../lib/format';
-import { formatDate, useI18n } from '../lib/i18n';
+import { categoryName, formatDate, useI18n } from '../lib/i18n';
 import { getThread, sendMessage } from '../lib/messages';
 import { createPromo, getPromoCodes, togglePromo } from '../lib/ops';
 import { escrowSummary, getAllTransactions, refundBooking, salesSummary } from '../lib/payments';
@@ -55,7 +56,13 @@ export default function Admin() {
   const { user, loading, startEmulating } = useAuth();
   const { allVenues, categories, refresh } = useAppData();
 
-  const [tab, setTab] = useState<Tab>('overview');
+  // The active tab lives in the URL (?tab=payments) so admin views are shareable
+  const tabParam = (useLocalSearchParams<{ tab?: string }>().tab ?? '') as Tab;
+  const [tab, setTabState] = useState<Tab>(TABS.some((x) => x.key === tabParam) ? tabParam : 'overview');
+  const setTab = (next: Tab) => {
+    setTabState(next);
+    router.setParams({ tab: next });
+  };
   // Admin chat about a booking: with the salon (admin speaks as a user) or
   // with the customer (admin speaks as the Bink Support venue).
   const [chat, setChat] = useState<{
@@ -120,7 +127,11 @@ export default function Admin() {
   const [promos, setPromos] = useState<any[]>([]);
   const [newPromoCode, setNewPromoCode] = useState('');
   const [newPromoPct, setNewPromoPct] = useState('10');
+  const [newPromoMax, setNewPromoMax] = useState('');
+  const [newPromoExpiry, setNewPromoExpiry] = useState('');
   const [newCategory, setNewCategory] = useState('');
+  const [newCategoryAr, setNewCategoryAr] = useState('');
+  const [newCategoryImg, setNewCategoryImg] = useState('');
   const [salonQuery, setSalonQuery] = useState('');
   const [salonStatus, setSalonStatus] = useState<'all' | 'approved' | 'pending' | 'suspended'>('all');
   const [addSalon, setAddSalon] = useState(false);
@@ -186,6 +197,20 @@ export default function Admin() {
     const activeBookings = bookings.filter((b) => b.status !== 'cancelled');
     const sales = salesSummary(transactions);
     const escrow = escrowSummary(transactions);
+    // Month-on-month growth: the last 30 days against the 30 days before them
+    const now = Date.now();
+    const DAY = 86400000;
+    const inWindow = (iso: string | null | undefined, from: number, to: number) => {
+      if (!iso) return false;
+      const ts = new Date(iso).getTime();
+      return ts >= from && ts < to;
+    };
+    const growth = (cur: number, prev: number): number =>
+      prev === 0 ? (cur > 0 ? 100 : 0) : Math.round(((cur - prev) / prev) * 100);
+    const bCur = activeBookings.filter((b) => inWindow(b.created_at ?? b.starts_at, now - 30 * DAY, now));
+    const bPrev = activeBookings.filter((b) => inWindow(b.created_at ?? b.starts_at, now - 60 * DAY, now - 30 * DAY));
+    const uCur = users.filter((u) => inWindow(u.joined_at, now - 30 * DAY, now)).length;
+    const uPrev = users.filter((u) => inWindow(u.joined_at, now - 60 * DAY, now - 30 * DAY)).length;
     return {
       salons: allVenues.length,
       pending: allVenues.filter((v) => v.status === 'pending').length,
@@ -197,8 +222,28 @@ export default function Admin() {
       escrowReleased: escrow.released_cents,
       refunds: sales.refunds_cents,
       currency: activeBookings[0]?.currency ?? 'SAR',
+      bookingsGrowth: growth(bCur.length, bPrev.length),
+      revenueGrowth: growth(
+        bCur.reduce((c, b) => c + b.total_cents, 0),
+        bPrev.reduce((c, b) => c + b.total_cents, 0)
+      ),
+      usersGrowth: growth(uCur, uPrev),
     };
   }, [allVenues, users, bookings, transactions]);
+
+  // Long lists render in pages of 12 - "Show more" extends by 24 at a time
+  const [listLimits, setListLimits] = useState<Record<string, number>>({});
+  const limitFor = (key: string) => listLimits[key] ?? 12;
+  const showMore = (key: string) => setListLimits((l) => ({ ...l, [key]: limitFor(key) + 24 }));
+  const paged = <T,>(key: string, list: T[]) => list.slice(0, limitFor(key));
+  const ShowMoreBtn = ({ myKey, total }: { myKey: string; total: number }) =>
+    total > limitFor(myKey) ? (
+      <Pressable onPress={() => showMore(myKey)} style={{ paddingVertical: 12, alignItems: 'center' }}>
+        <BText variant="smallMedium" color={colors.accent}>
+          {t('Show more ({n} of {total})', { n: limitFor(myKey), total })}
+        </BText>
+      </Pressable>
+    ) : null;
 
   if (loading) return null;
 
@@ -231,11 +276,11 @@ export default function Admin() {
         <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 12 }}>
           <StatCard label={t('Total salons')} value={String(stats.salons)} icon="storefront-outline" />
           <StatCard label={t('Pending approval')} value={String(stats.pending)} icon="time-outline" accent={stats.pending > 0} />
-          <StatCard label={t('Registered users')} value={String(stats.users)} icon="people-outline" />
-          <StatCard label={t('Bookings')} value={String(stats.bookings)} icon="calendar-outline" />
+          <StatCard label={t('Registered users')} value={String(stats.users)} icon="people-outline" delta={stats.usersGrowth} deltaLabel={t('vs last month')} />
+          <StatCard label={t('Bookings')} value={String(stats.bookings)} icon="calendar-outline" delta={stats.bookingsGrowth} deltaLabel={t('vs last month')} />
         </View>
         <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 12 }}>
-          <StatCard label={t('Booking value')} value={formatPrice(stats.revenue, stats.currency)} icon="cash-outline" />
+          <StatCard label={t('Booking value')} value={formatPrice(stats.revenue, stats.currency)} icon="cash-outline" delta={stats.revenueGrowth} deltaLabel={t('vs last month')} />
           <StatCard label={t('Paid online')} value={formatPrice(stats.onlinePaid, stats.currency)} icon="card-outline" />
           <StatCard label={t('In escrow')} value={formatPrice(stats.escrowHeld, stats.currency)} icon="lock-closed-outline" />
           <StatCard label={t('Refunds')} value={formatPrice(stats.refunds, stats.currency)} icon="return-down-back-outline" />
@@ -336,6 +381,7 @@ export default function Admin() {
                 />
               ))}
             </View>
+            <SmallAction label={t('Export CSV')} color={colors.ink} onPress={() => exportSalonsCsv(filtered)} />
             <Button
               title={addSalon ? t('Close') : t('Add salon')}
               size="sm"
@@ -362,7 +408,7 @@ export default function Admin() {
               />
               <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8 }}>
                 {categories.map((c) => (
-                  <Chip key={c.id} label={t(c.name)} selected={nsCat === c.id} onPress={() => setNsCat(c.id)} />
+                  <Chip key={c.id} label={categoryName(c, lang, t)} selected={nsCat === c.id} onPress={() => setNsCat(c.id)} />
                 ))}
               </View>
               <View style={{ flexDirection: isDesktop ? 'row' : 'column', gap: 10 }}>
@@ -404,7 +450,7 @@ export default function Admin() {
         )}
         <View style={styles.card}>
           <BText variant="h3">{t('All salons ({n})', { n: filtered.length })}</BText>
-          {filtered.map((v) => {
+          {paged('salons', filtered).map((v) => {
             const status = v.status ?? 'approved';
             return (
               <View key={v.id} style={[styles.row, { flexWrap: 'wrap' }]}>
@@ -457,6 +503,7 @@ export default function Admin() {
               </View>
             );
           })}
+          <ShowMoreBtn myKey="salons" total={filtered.length} />
         </View>
       </View>
     );
@@ -466,21 +513,24 @@ export default function Admin() {
     body = (
       <View style={{ gap: 16 }}>
         <View style={styles.card}>
-          <TextInput
-        {...({ dir: 'auto' } as any)}
-            placeholder={t('Search users…')}
-            placeholderTextColor={colors.gray}
-            value={userQuery}
-            onChangeText={setUserQuery}
-            style={styles.input}
-          />
+          <View style={{ flexDirection: 'row', gap: 10, alignItems: 'center' }}>
+            <TextInput
+              {...({ dir: 'auto' } as any)}
+              placeholder={t('Search users…')}
+              placeholderTextColor={colors.gray}
+              value={userQuery}
+              onChangeText={setUserQuery}
+              style={[styles.input, { flex: 1 }]}
+            />
+            <SmallAction label={t('Export CSV')} color={colors.ink} onPress={() => exportUsersCsv(filtered)} />
+          </View>
         </View>
         <View style={styles.card}>
           <BText variant="h3">{t('Users ({n})', { n: filtered.length })}</BText>
           <BText variant="tiny" style={{ marginTop: 4 }}>
             {t('Tap a role to change what a user can do.')}
           </BText>
-          {filtered.map((u) => (
+          {paged('users', filtered).map((u) => (
             <View
               key={u.id}
               style={[styles.row, isDesktop
@@ -539,6 +589,7 @@ export default function Admin() {
               )}
             </View>
           ))}
+          <ShowMoreBtn myKey="users" total={filtered.length} />
         </View>
       </View>
     );
@@ -558,14 +609,14 @@ export default function Admin() {
               {t('No online payments yet. Card and Apple Pay payments will appear here; pay-at-venue bookings are listed under Bookings.')}
             </BText>
           ) : (
-            transactions.map((tx) => (
+            paged('tx', transactions).map((tx) => (
               <View key={tx.id} style={[styles.row, { flexWrap: 'wrap' }]}>
                 <View style={{ flex: 1, minWidth: 220 }}>
                   <BText variant="smallMedium" numberOfLines={1}>
                     {tx.venue_name || allVenues.find((v) => v.id === tx.venue_id)?.name || t('Venue')}
                   </BText>
                   <BText variant="tiny" numberOfLines={1}>
-                    {formatDateLong(tx.created_at)} · {tx.method === 'apple_pay' ? 'Apple Pay' : tx.method === 'card' ? t('Card') : t('At venue')} · {tx.gateway}
+                    {formatDateLong(tx.created_at)} · {tx.method === 'apple_pay' ? 'Apple Pay' : tx.method === 'card' ? t('Card') : t('At venue')}
                   </BText>
                 </View>
                 <BText
@@ -589,6 +640,7 @@ export default function Admin() {
               </View>
             ))
           )}
+          <ShowMoreBtn myKey="tx" total={transactions.length} />
         </View>
       </View>
     );
@@ -604,7 +656,7 @@ export default function Admin() {
             {t('No reviews yet.')}
           </BText>
         ) : (
-          reviews.map((r) => (
+          paged('reviews', reviews).map((r) => (
             <View key={r.id} style={[styles.row, { alignItems: 'flex-start' }]}>
               <View style={{ flex: 1 }}>
                 <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
@@ -635,6 +687,7 @@ export default function Admin() {
             </View>
           ))
         )}
+        <ShowMoreBtn myKey="reviews" total={reviews.length} />
       </View>
     );
   } else if (tab === 'categories') {
@@ -642,33 +695,70 @@ export default function Admin() {
       <View style={{ gap: 16 }}>
         <View style={styles.card}>
           <BText variant="h3">{t('Add category')}</BText>
-          <View style={{ flexDirection: 'row', gap: 10, marginTop: 14, alignItems: 'center' }}>
-            <TextInput
-        {...({ dir: 'auto' } as any)}
-              placeholder={t('e.g. Kids Salon')}
-              placeholderTextColor={colors.gray}
-              value={newCategory}
-              onChangeText={setNewCategory}
-              style={styles.input}
-            />
-            <Button
-              title={t('Add')}
-              size="sm"
-              onPress={async () => {
-                if (!newCategory.trim()) return;
-                await createCategory(newCategory.trim());
-                setNewCategory('');
-                await refresh();
-              }}
-            />
+          <View style={{ gap: 10, marginTop: 14 }}>
+            <View style={{ flexDirection: isDesktop ? 'row' : 'column', gap: 10 }}>
+              <TextInput
+                {...({ dir: 'auto' } as any)}
+                placeholder={t('Name in English, e.g. Kids Salon')}
+                placeholderTextColor={colors.gray}
+                value={newCategory}
+                onChangeText={setNewCategory}
+                style={[styles.input, { flex: 1 }]}
+              />
+              <TextInput
+                {...({ dir: 'auto' } as any)}
+                placeholder={t('Name in Arabic')}
+                placeholderTextColor={colors.gray}
+                value={newCategoryAr}
+                onChangeText={setNewCategoryAr}
+                style={[styles.input, { flex: 1 }]}
+              />
+            </View>
+            <View style={{ flexDirection: 'row', gap: 10, alignItems: 'center' }}>
+              <TextInput
+                {...({ dir: 'auto' } as any)}
+                placeholder={t('Image URL (optional)')}
+                placeholderTextColor={colors.gray}
+                autoCapitalize="none"
+                value={newCategoryImg}
+                onChangeText={setNewCategoryImg}
+                style={[styles.input, { flex: 1 }]}
+              />
+              <Button
+                title={t('Add')}
+                size="sm"
+                onPress={async () => {
+                  if (!newCategory.trim()) return;
+                  await createCategory(newCategory.trim(), newCategoryAr, newCategoryImg);
+                  setNewCategory('');
+                  setNewCategoryAr('');
+                  setNewCategoryImg('');
+                  await refresh();
+                }}
+              />
+            </View>
           </View>
         </View>
         <View style={styles.card}>
           <BText variant="h3">{t('Categories ({n})', { n: categories.length })}</BText>
           {categories.map((c) => (
             <View key={c.slug} style={styles.row}>
+              {c.image_url ? (
+                <Image
+                  source={{ uri: c.image_url }}
+                  style={{ width: 36, height: 36, borderRadius: radius.sm, backgroundColor: colors.bgSubtle }}
+                  contentFit="cover"
+                />
+              ) : (
+                <View style={{ width: 36, height: 36, borderRadius: radius.sm, backgroundColor: colors.bgSubtle, alignItems: 'center', justifyContent: 'center' }}>
+                  <Ionicons name={(c.icon as any) || 'sparkles-outline'} size={16} color={colors.gray} />
+                </View>
+              )}
               <View style={{ flex: 1 }}>
-                <BText variant="smallMedium">{t(c.name)}</BText>
+                <BText variant="smallMedium">
+                  {c.name}
+                  {c.name_ar ? ` · ${c.name_ar}` : ''}
+                </BText>
                 <BText variant="tiny">
                   {c.slug} · {t('{n} salons', { n: allVenues.filter((v) => v.category_id === c.id).length })}
                 </BText>
@@ -683,18 +773,18 @@ export default function Admin() {
       <View style={{ gap: 16 }}>
         <View style={styles.card}>
           <BText variant="h3">{t('Create promo code')}</BText>
-          <View style={{ flexDirection: 'row', gap: 10, marginTop: 14, alignItems: 'center' }}>
+          <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 10, marginTop: 14, alignItems: 'center' }}>
             <TextInput
-        {...({ dir: 'auto' } as any)}
+              {...({ dir: 'auto' } as any)}
               placeholder={t('CODE')}
               placeholderTextColor={colors.gray}
               autoCapitalize="characters"
               value={newPromoCode}
               onChangeText={setNewPromoCode}
-              style={[styles.input, { flex: 1 }]}
+              style={[styles.input, { flex: 1, minWidth: 140 }]}
             />
             <TextInput
-        {...({ dir: 'auto' } as any)}
+              {...({ dir: 'auto' } as any)}
               placeholder={t('% off')}
               placeholderTextColor={colors.gray}
               keyboardType="numeric"
@@ -702,14 +792,39 @@ export default function Admin() {
               onChangeText={setNewPromoPct}
               style={[styles.input, { width: 80, flex: 0 }]}
             />
+            <TextInput
+              {...({ dir: 'auto' } as any)}
+              placeholder={t('Usage limit')}
+              placeholderTextColor={colors.gray}
+              keyboardType="numeric"
+              value={newPromoMax}
+              onChangeText={setNewPromoMax}
+              style={[styles.input, { width: 110, flex: 0 }]}
+            />
+            <TextInput
+              {...({ dir: 'auto' } as any)}
+              placeholder={t('Expiry YYYY-MM-DD')}
+              placeholderTextColor={colors.gray}
+              autoCapitalize="none"
+              value={newPromoExpiry}
+              onChangeText={setNewPromoExpiry}
+              style={[styles.input, { width: 170, flex: 0 }]}
+            />
             <Button
               title={t('Create')}
               size="sm"
               onPress={async () => {
                 const pct = parseInt(newPromoPct, 10);
                 if (!newPromoCode.trim() || !pct) return;
-                await createPromo(newPromoCode.trim(), Math.min(100, Math.max(1, pct)));
+                const maxUses = parseInt(newPromoMax, 10);
+                const expiry = /^\d{4}-\d{2}-\d{2}$/.test(newPromoExpiry.trim()) ? newPromoExpiry.trim() : null;
+                await createPromo(newPromoCode.trim(), Math.min(100, Math.max(1, pct)), {
+                  maxUses: Number.isFinite(maxUses) && maxUses > 0 ? maxUses : null,
+                  expiresAt: expiry,
+                });
                 setNewPromoCode('');
+                setNewPromoMax('');
+                setNewPromoExpiry('');
                 load();
               }}
             />
@@ -728,6 +843,10 @@ export default function Admin() {
                         date: formatDate(lang, p.expires_at, { year: 'numeric', month: 'numeric', day: 'numeric' }),
                       })}`
                     : ` · ${t('no expiry')}`}
+                  {' · '}
+                  {p.max_uses != null
+                    ? t('used {n} of {max}', { n: p.used_count ?? 0, max: p.max_uses })
+                    : t('used {n} times', { n: p.used_count ?? 0 })}
                 </BText>
               </View>
               <StatusTag status={p.is_active ? 'approved' : 'suspended'} />
@@ -771,7 +890,7 @@ export default function Admin() {
               {t('No bookings yet.')}
             </BText>
           ) : (
-            filtered.map((b) => (
+            paged('bookings', filtered).map((b) => (
               <View key={b.id} style={[styles.row, { flexWrap: 'wrap' }]}>
                 <View style={{ flex: 1, minWidth: 200 }}>
                   <BText variant="smallMedium">
@@ -795,6 +914,7 @@ export default function Admin() {
               </View>
             ))
           )}
+          <ShowMoreBtn myKey="bookings" total={filtered.length} />
         </View>
       </View>
     );
@@ -906,7 +1026,21 @@ export default function Admin() {
   );
 }
 
-function StatCard({ label, value, icon, accent }: { label: string; value: string; icon: string; accent?: boolean }) {
+function StatCard({
+  label,
+  value,
+  icon,
+  accent,
+  delta,
+  deltaLabel,
+}: {
+  label: string;
+  value: string;
+  icon: string;
+  accent?: boolean;
+  delta?: number | null;
+  deltaLabel?: string;
+}) {
   return (
     <View style={[styles.card, { flex: 1, minWidth: 150, flexBasis: '40%' }, accent && { borderColor: '#F0C36D', backgroundColor: '#FFF9EE' }]}>
       <Ionicons name={icon as any} size={18} color={colors.gray} />
@@ -916,6 +1050,19 @@ function StatCard({ label, value, icon, accent }: { label: string; value: string
       <BText variant="tiny" style={{ marginTop: 2 }}>
         {label}
       </BText>
+      {delta !== undefined && delta !== null ? (
+        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4, marginTop: 6 }}>
+          <Ionicons
+            name={delta >= 0 ? 'trending-up-outline' : 'trending-down-outline'}
+            size={13}
+            color={delta >= 0 ? colors.green : colors.danger}
+          />
+          <BText variant="tiny" color={delta >= 0 ? colors.green : colors.danger}>
+            {delta >= 0 ? '+' : ''}
+            {delta}% {deltaLabel ?? ''}
+          </BText>
+        </View>
+      ) : null}
     </View>
   );
 }
@@ -973,7 +1120,6 @@ function RoleTag({ role }: { role: string }) {
 }
 
 function exportBookingsCsv(bookings: Booking[]) {
-  const esc = (v: unknown) => `"${String(v ?? '').replace(/"/g, '""')}"`;
   const rows = [
     ['Booking ID', 'Venue', 'Customer', 'Starts', 'Services', 'Total', 'Currency', 'Status', 'Payment'],
     ...bookings.map((b) => [
@@ -988,17 +1134,42 @@ function exportBookingsCsv(bookings: Booking[]) {
       b.payment_status ?? 'unpaid',
     ]),
   ];
+  downloadCsv(rows, 'bookings');
+}
+
+function exportUsersCsv(users: AdminUserRow[]) {
+  downloadCsv(
+    [
+      ['User ID', 'Name', 'Email', 'Role', 'Joined', 'Blocked'],
+      ...users.map((u) => [u.id, u.name ?? '', u.email ?? '', u.role, u.joined_at, u.is_blocked ? 'yes' : 'no']),
+    ],
+    'users'
+  );
+}
+
+function exportSalonsCsv(venues: { id: string; name: string; city: string; area: string; status?: string | null; services: unknown[]; rating_avg: number; rating_count: number }[]) {
+  downloadCsv(
+    [
+      ['Salon ID', 'Name', 'City', 'Area', 'Status', 'Services', 'Rating', 'Reviews'],
+      ...venues.map((v) => [v.id, v.name, v.city, v.area, v.status ?? 'approved', v.services.length, v.rating_avg, v.rating_count]),
+    ],
+    'salons'
+  );
+}
+
+function downloadCsv(rows: unknown[][], kind: string) {
+  const esc = (v: unknown) => `"${String(v ?? '').replace(/"/g, '""')}"`;
   const csv = rows.map((r) => r.map(esc).join(',')).join('\n');
   // CSV download is a browser feature; on native (Expo Go) share the text so
   // the tap does something useful instead of crashing on `document`.
   if (Platform.OS !== 'web' || typeof document === 'undefined') {
-    Share.share({ message: csv, title: 'Bink bookings export' }).catch(() => {});
+    Share.share({ message: csv, title: `Bink ${kind} export` }).catch(() => {});
     return;
   }
   const blob = new Blob([csv], { type: 'text/csv' });
   const a = document.createElement('a');
   a.href = URL.createObjectURL(blob);
-  a.download = `bink-bookings-${new Date().toISOString().slice(0, 10)}.csv`;
+  a.download = `bink-${kind}-${new Date().toISOString().slice(0, 10)}.csv`;
   a.click();
   URL.revokeObjectURL(a.href);
 }

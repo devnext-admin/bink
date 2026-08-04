@@ -52,11 +52,18 @@ export async function getCategories(): Promise<Category[]> {
   }
 }
 
-export async function createCategory(name: string): Promise<void> {
+export async function createCategory(name: string, nameAr?: string, imageUrl?: string): Promise<void> {
   const slug = name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
   const sb = getSupabase();
   if (sb) {
-    const { error } = await sb.from('categories').insert({ name, slug, icon: 'sparkles-outline', sort_order: 99 });
+    const { error } = await sb.from('categories').insert({
+      name,
+      slug,
+      icon: 'sparkles-outline',
+      sort_order: 99,
+      name_ar: nameAr?.trim() || null,
+      image_url: imageUrl?.trim() || null,
+    });
     if (!error) return;
   }
   const raw = await AsyncStorage.getItem(LOCAL_CATEGORIES_KEY);

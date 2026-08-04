@@ -14,7 +14,7 @@ import { WebHeader } from '../components/web-header';
 import { useAppData } from '../lib/app-data-context';
 import { distanceKm, distanceLabel, isOpenAt } from '../lib/availability';
 import { searchVenues } from '../lib/data';
-import { formatDate, useI18n } from '../lib/i18n';
+import { categoryName, formatDate, useI18n } from '../lib/i18n';
 import { getLocationIfGranted } from '../lib/location';
 import { colors, font, maxContentWidth, radius } from '../lib/theme';
 import { useIsDesktop } from '../lib/use-layout';
@@ -94,7 +94,7 @@ export default function Search() {
         {categories.map((c) => (
           <Chip
             key={c.slug}
-            label={t(c.name)}
+            label={categoryName(c, lang, t)}
             selected={categorySlug === c.slug}
             onPress={() => setCategorySlug(categorySlug === c.slug ? undefined : c.slug)}
           />

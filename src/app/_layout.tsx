@@ -72,6 +72,7 @@ export default function RootLayout() {
                 <Stack.Screen name="settings" />
                 <Stack.Screen name="profile" options={tabScreen} />
                 <Stack.Screen name="auth" options={{ presentation: 'modal' }} />
+                <Stack.Screen name="reset-password" />
                 <Stack.Screen name="welcome" />
                 <Stack.Screen name="terms" />
                 <Stack.Screen name="privacy" />
