@@ -19,6 +19,7 @@ import { cancelBooking, getBookings } from '../lib/data';
 import { formatPrice, formatTimeOfDate } from '../lib/format';
 import { formatDate, useI18n, type Lang } from '../lib/i18n';
 import { rescheduleBooking, submitReview } from '../lib/ops';
+import { sendSmsToSelf } from '../lib/sms';
 import { confirmServiceByCustomer } from '../lib/payments';
 import { colors, font, radius } from '../lib/theme';
 import type { Booking } from '../lib/types';
@@ -109,6 +110,11 @@ export default function Appointments() {
     await cancelBooking(cancelTarget.id);
     setCancelling(false);
     setCancelTarget(null);
+    if (user && !user.isGuest) {
+      sendSmsToSelf(
+        `Bink: your booking at ${cancelTarget.venue_name} was cancelled. Any online payment is refunded to your original payment method.`
+      );
+    }
     refresh();
   };
   const onCancel = (id: string) => {
@@ -123,6 +129,11 @@ export default function Appointments() {
     await rescheduleBooking(booking.id, new Date(y, mo - 1, d, h, m), duration);
     setReschedId(null);
     setReschedDate(null);
+    if (user && !user.isGuest) {
+      sendSmsToSelf(
+        `Bink: your booking at ${booking.venue_name} moved to ${reschedDate} ${time}. See you there!`
+      );
+    }
     refresh();
   };
 

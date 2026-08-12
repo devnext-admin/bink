@@ -1,6 +1,6 @@
 // Money layer. When Supabase + a gateway key are configured, card payments go
-// through the `create-payment` edge function (Moyasar-ready) and webhooks
-// settle the transaction. In demo mode a simulated gateway succeeds instantly
+// through the `create-payment` edge function (TAP hosted checkout) and the
+// webhook settles the transaction. In demo mode a simulated gateway succeeds instantly
 // and everything (transactions, invoices, booking payment status) persists
 // locally so Sales, Invoices and dashboards run on real data flows either way.
 
@@ -17,7 +17,7 @@ const BOOKINGS_KEY = 'bink.bookings';
 
 // Card payments are offered in the UI when either a real gateway is wired or
 // we're in demo mode (simulated gateway). Set EXPO_PUBLIC_PAYMENTS_GATEWAY to
-// 'moyasar' once the edge functions + secret key are live.
+// 'tap' once the TAP_SECRET_KEY secret is set on the edge functions.
 export const paymentsGateway = process.env.EXPO_PUBLIC_PAYMENTS_GATEWAY ?? 'demo';
 
 function uid(prefix: string) {
@@ -71,8 +71,9 @@ export async function payForBooking(input: PayForBookingInput): Promise<Transact
   const sb = getSupabase();
 
   if (sb && paymentsGateway !== 'demo') {
-    // Real gateway: the edge function creates the gateway payment, records a
-    // pending transaction, and the webhook settles it. We await the result.
+    // Real gateway (TAP): the edge function creates the charge and records a
+    // pending transaction; the customer completes payment on TAP's hosted
+    // page (card, mada, Apple Pay) and the webhook settles the transaction.
     const { data, error } = await sb.functions.invoke('create-payment', {
       body: {
         booking_id: input.booking.id,
@@ -82,6 +83,14 @@ export async function payForBooking(input: PayForBookingInput): Promise<Transact
       },
     });
     if (error) throw new Error(error.message);
+    if (data.payment_url) {
+      if (typeof window !== 'undefined' && window.location) {
+        window.location.assign(data.payment_url);
+      } else {
+        const Linking = await import('expo-linking');
+        Linking.openURL(data.payment_url).catch(() => {});
+      }
+    }
     return data.transaction as Transaction;
   }
 

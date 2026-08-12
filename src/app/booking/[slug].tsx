@@ -14,9 +14,10 @@ import { useAppData } from '../../lib/app-data-context';
 import { useAuth } from '../../lib/auth-context';
 import { useBooking } from '../../lib/booking-context';
 import { createBooking } from '../../lib/data';
-import { formatDuration, formatPrice } from '../../lib/format';
-import { useI18n } from '../../lib/i18n';
+import { formatDuration, formatPrice, formatTimeOfDate } from '../../lib/format';
+import { formatDate, useI18n } from '../../lib/i18n';
 import { getBusyIntervals, isSlotFree, redeemPromo, validatePromo, type BusyInterval } from '../../lib/ops';
+import { sendSmsToSelf } from '../../lib/sms';
 import { markPayAtVenue, payDeposit, payForBooking, paymentsGateway } from '../../lib/payments';
 import { colors, font, radius, shadow } from '../../lib/theme';
 import type { PaymentMethod, PromoCode } from '../../lib/types';
@@ -60,7 +61,7 @@ const TIME_SLOTS = Array.from({ length: 22 }, (_, i) => {
 export default function BookingScreen() {
   const { slug } = useLocalSearchParams<{ slug: string }>();
   const router = useRouter();
-  const { t, isRTL } = useI18n();
+  const { t, isRTL, lang } = useI18n();
   const tt = t;
   const isDesktop = useIsDesktop();
   const insets = useSafeAreaInsets();
@@ -185,6 +186,17 @@ export default function BookingScreen() {
       setSubmitting(false);
       setConfirmedId(created.id);
       setStep('done');
+      // Booking-confirmation SMS to the customer's registered phone (no-op
+      // when SMS is unconfigured or the account has no phone)
+      if (user && !user.isGuest) {
+        sendSmsToSelf(
+          `Bink: your booking at ${venue!.name} on ${formatDate(lang, startsAt, {
+            weekday: 'short',
+            day: 'numeric',
+            month: 'short',
+          })} ${formatTimeOfDate(startsAt.toISOString())} is confirmed. See you there!`
+        );
+      }
     }
   };
 
