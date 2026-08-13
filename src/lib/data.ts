@@ -15,9 +15,10 @@ const VENUE_SELECT = `
   *,
   images:venue_images (url, sort_order),
   services (*),
-  staff (*, staff_services (service_id)),
+  staff (*, staff_services (service_id), hours:staff_hours (weekday, open_time, close_time, is_off)),
   reviews (*),
-  hours:opening_hours (weekday, open_time, close_time, is_closed)
+  hours:opening_hours (weekday, open_time, close_time, is_closed),
+  packages (*)
 `;
 
 function normalizeVenue(v: any): Venue {
@@ -29,9 +30,13 @@ function normalizeVenue(v: any): Venue {
     staff: (v.staff ?? []).map((m: any) => ({
       ...m,
       service_ids: (m.staff_services ?? []).map((x: any) => x.service_id),
+      hours: [...(m.hours ?? [])].sort((a: any, b: any) => a.weekday - b.weekday),
     })),
     reviews: [...(v.reviews ?? [])].sort((a, b) => b.created_at.localeCompare(a.created_at)),
     hours: [...(v.hours ?? [])].sort((a, b) => a.weekday - b.weekday),
+    packages: [...(v.packages ?? [])]
+      .filter((p: any) => p.is_active)
+      .sort((a: any, b: any) => a.sort_order - b.sort_order),
   };
 }
 
@@ -210,12 +215,19 @@ export interface CreateBookingInput {
   currency: string;
   promoCode?: string | null;
   promoPctOff?: number;
+  // When booking a package, the bundle price replaces the service sum.
+  totalCentsOverride?: number | null;
 }
 
 export async function createBooking(input: CreateBookingInput): Promise<Booking> {
   const totalMinutes = input.items.reduce((m, i) => m + i.duration_minutes, 0);
   const rawTotal = input.items.reduce((c, i) => c + i.price_cents, 0);
-  const totalCents = input.promoPctOff ? Math.round(rawTotal * (1 - input.promoPctOff / 100)) : rawTotal;
+  const totalCents =
+    input.totalCentsOverride != null
+      ? input.totalCentsOverride
+      : input.promoPctOff
+        ? Math.round(rawTotal * (1 - input.promoPctOff / 100))
+        : rawTotal;
   const endsAt = new Date(input.startsAt.getTime() + totalMinutes * 60_000);
 
   const booking: Booking = {

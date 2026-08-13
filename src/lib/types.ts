@@ -26,6 +26,13 @@ export interface Service {
   sort_order: number;
 }
 
+export interface StaffHours {
+  weekday: number;
+  open_time: string | null;
+  close_time: string | null;
+  is_off: boolean;
+}
+
 export interface Staff {
   id: string;
   venue_id: string;
@@ -38,6 +45,7 @@ export interface Staff {
   service_ids?: string[];
   avatar_url?: string | null;
   rating: number;
+  hours?: StaffHours[];
 }
 
 export interface Review {
@@ -58,6 +66,21 @@ export interface OpeningHour {
 
 export type UserRole = 'customer' | 'partner' | 'admin';
 export type VenueStatus = 'pending' | 'approved' | 'suspended';
+
+export interface Package {
+  id: string;
+  venue_id: string;
+  name: string;
+  name_ar?: string | null;
+  description: string;
+  service_ids: string[];
+  duration_minutes: number;
+  price_cents: number;
+  original_price_cents?: number | null;
+  currency: string;
+  is_active: boolean;
+  sort_order: number;
+}
 
 export interface Venue {
   id: string;
@@ -90,6 +113,7 @@ export interface Venue {
   staff: Staff[];
   reviews: Review[];
   hours: OpeningHour[];
+  packages?: Package[];
 }
 
 export type BookingStatus = 'pending' | 'confirmed' | 'completed' | 'cancelled' | 'no_show';

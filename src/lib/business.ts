@@ -402,6 +402,63 @@ export async function setStaffServices(staffId: string, serviceIds: string[]): P
   }
 }
 
+// ---------------------------------------------------------------------------
+// Packages: a named bundle of services at a bundle price
+// ---------------------------------------------------------------------------
+export interface PackageInput {
+  name: string;
+  name_ar?: string | null;
+  description?: string;
+  service_ids: string[];
+  duration_minutes: number;
+  price_cents: number;
+  original_price_cents?: number | null;
+}
+
+export async function addPackage(venue: Venue, input: PackageInput): Promise<void> {
+  const sb = getSupabase();
+  if (!sb || venue.id.startsWith('venue-')) return;
+  await sb.from('packages').insert({
+    venue_id: venue.id,
+    name: input.name,
+    name_ar: input.name_ar ?? null,
+    description: input.description ?? '',
+    service_ids: input.service_ids,
+    duration_minutes: input.duration_minutes,
+    price_cents: input.price_cents,
+    original_price_cents: input.original_price_cents ?? null,
+    currency: 'SAR',
+    sort_order: venue.packages?.length ?? 0,
+  });
+}
+
+export async function updatePackage(id: string, patch: Partial<PackageInput> & { is_active?: boolean }): Promise<void> {
+  const sb = getSupabase();
+  if (!sb) return;
+  await sb.from('packages').update(patch).eq('id', id);
+}
+
+export async function deletePackage(id: string): Promise<void> {
+  const sb = getSupabase();
+  if (!sb) return;
+  await sb.from('packages').delete().eq('id', id);
+}
+
+// ---------------------------------------------------------------------------
+// Per-staff working hours
+// ---------------------------------------------------------------------------
+export async function setStaffHours(
+  staffId: string,
+  hours: { weekday: number; open_time: string | null; close_time: string | null; is_off: boolean }[]
+): Promise<void> {
+  const sb = getSupabase();
+  if (!sb || staffId.startsWith('staff-')) return;
+  await sb.from('staff_hours').delete().eq('staff_id', staffId);
+  if (hours.length) {
+    await sb.from('staff_hours').insert(hours.map((h) => ({ staff_id: staffId, ...h })));
+  }
+}
+
 export interface StaffAccess {
   staffId: string;
   venueId: string;

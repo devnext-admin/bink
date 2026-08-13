@@ -19,6 +19,7 @@ import { formatDate, useI18n } from '../../lib/i18n';
 import { getBusyIntervals, isSlotFree, redeemPromo, validatePromo, type BusyInterval } from '../../lib/ops';
 import { sendSmsToSelf } from '../../lib/sms';
 import { markPayAtVenue, payDeposit, payForBooking, paymentsGateway } from '../../lib/payments';
+import { getSupabase } from '../../lib/supabase';
 import { colors, font, radius, shadow } from '../../lib/theme';
 import type { PaymentMethod, PromoCode } from '../../lib/types';
 import { useIsDesktop } from '../../lib/use-layout';
@@ -135,13 +136,29 @@ export default function BookingScreen() {
       const [h, m] = booking.time!.split(':').map(Number);
       const [y, mo, d] = booking.date!.split('-').map(Number);
       const startsAt = new Date(y, mo - 1, d, h, m);
+      // Attach the customer's saved allergies/health notes so the salon sees
+      // them on the booking (the salon cannot read customer profiles directly).
+      // Read fresh from the DB so it is current regardless of in-memory state.
+      let allergies = user?.allergies?.trim() ?? '';
+      try {
+        const sb = getSupabase();
+        if (sb && user && !user.isGuest) {
+          const { data } = await sb.rpc('my_allergies');
+          if (typeof data === 'string') allergies = data.trim();
+        }
+      } catch {}
+      const noteParts = [
+        notes.trim(),
+        allergies ? `${t('Health notes')}: ${allergies}` : '',
+      ].filter(Boolean);
       const created = await createBooking({
         venue,
         staffId: booking.staff?.id ?? null,
         staffName: booking.staff?.name ?? null,
         customerName: user?.name ?? user?.email ?? null,
         userId: user?.id ?? null,
-        notes: notes.trim() || null,
+        notes: noteParts.join(' · ') || null,
+        totalCentsOverride: finalTotal,
         startsAt,
         currency: booking.currency,
         promoCode: promo?.code ?? null,
@@ -304,9 +321,25 @@ export default function BookingScreen() {
             const isToday = booking.date === new Date().toISOString().slice(0, 10);
             const nowMin = new Date().getHours() * 60 + new Date().getMinutes();
             const isPast = isToday && sh * 60 + sm <= nowMin;
+            // If a specific professional is chosen and they publish working
+            // hours, the slot must fall inside their hours for that weekday.
+            const outsideStaffHours = (() => {
+              if (!booking.staff || !booking.date) return false;
+              const hrs = booking.staff.hours;
+              if (!hrs?.length) return false;
+              const wd = new Date(booking.date + 'T00:00:00').getDay();
+              const h = hrs.find((x) => x.weekday === wd);
+              if (!h) return false;
+              if (h.is_off || !h.open_time || !h.close_time) return true;
+              const [oh, om] = h.open_time.split(':').map(Number);
+              const [ch, cm] = h.close_time.split(':').map(Number);
+              const startMin = sh * 60 + sm;
+              return startMin < oh * 60 + om || startMin + (booking.totalMinutes || 30) > ch * 60 + cm;
+            })();
             const taken =
               (!!booking.date &&
                 !isSlotFree(busy, sh * 60 + sm, booking.totalMinutes || 30, booking.staff?.id ?? null, venue.staff.length)) ||
+              outsideStaffHours ||
               isPast;
             const disabled = !booking.date || taken;
             return (

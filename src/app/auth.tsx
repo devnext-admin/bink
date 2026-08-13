@@ -23,7 +23,7 @@ export default function Auth() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
   const { t } = useI18n();
-  const { signIn, signUp, continueAsGuest, resendVerification } = useAuth();
+  const { signIn, signUp, continueAsGuest, signInWithProvider, resendVerification } = useAuth();
   const { refresh } = useAppData();
   const [demoBusy, setDemoBusy] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -98,6 +98,13 @@ export default function Auth() {
   const switchMode = (m: 'signin' | 'signup') => {
     setMode(m);
     setError(null); // clear any stale error carried over between tabs
+  };
+
+  const onOAuth = async (provider: 'google' | 'apple') => {
+    setError(null);
+    const err = await signInWithProvider(provider);
+    if (err) setError(err);
+    // On success the browser redirects to the provider; nothing more to do.
   };
 
   const close = () => {
@@ -368,6 +375,22 @@ export default function Auth() {
           loading={busy}
           onPress={submit}
         />
+        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12 }}>
+          <View style={styles.hr} />
+          <BText variant="tiny">{t('or continue with')}</BText>
+          <View style={styles.hr} />
+        </View>
+        <View style={{ flexDirection: 'row', gap: 10 }}>
+          <Pressable style={styles.oauthBtn} onPress={() => onOAuth('google')}>
+            <Ionicons name="logo-google" size={18} color={colors.ink} />
+            <BText variant="smallMedium">Google</BText>
+          </Pressable>
+          <Pressable style={styles.oauthBtn} onPress={() => onOAuth('apple')}>
+            <Ionicons name="logo-apple" size={19} color={colors.ink} />
+            <BText variant="smallMedium">Apple</BText>
+          </Pressable>
+        </View>
+
         <Button
           title={t('Continue as guest')}
           variant="secondary"
@@ -507,6 +530,18 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     marginBottom: 4,
+  },
+  oauthBtn: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 8,
+    height: 48,
+    borderWidth: 1,
+    borderColor: colors.border,
+    borderRadius: radius.md,
+    backgroundColor: colors.white,
   },
   hr: { flex: 1, height: 1, backgroundColor: colors.divider },
   demoBtn: {

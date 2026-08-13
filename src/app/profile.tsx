@@ -43,6 +43,7 @@ export default function Profile() {
   const [editingName, setEditingName] = useState(false);
   const [nameDraft, setNameDraft] = useState('');
   const [phoneDraft, setPhoneDraft] = useState('');
+  const [allergiesDraft, setAllergiesDraft] = useState('');
   const [savingProfile, setSavingProfile] = useState(false);
 
   const ownsVenues = user ? allVenues.some((v) => v.owner_id === user.id) : false;
@@ -76,6 +77,7 @@ export default function Profile() {
                 onPress={() => {
                   setNameDraft(user.name ?? '');
                   setPhoneDraft(user.phone ?? '');
+                  setAllergiesDraft(user.allergies ?? '');
                   setEditingName(true);
                 }}
               />
@@ -109,6 +111,18 @@ export default function Profile() {
                       placeholderTextColor={colors.gray}
                     />
                   </View>
+                  <View style={{ gap: 6 }}>
+                    <BText variant="tiny" color={colors.gray}>{t('Allergies & health notes')}</BText>
+                    <TextInput
+                      {...({ dir: 'auto' } as any)}
+                      value={allergiesDraft}
+                      onChangeText={setAllergiesDraft}
+                      multiline
+                      style={[styles.detailInput, { minHeight: 64, textAlignVertical: 'top' }]}
+                      placeholder={t('e.g. sensitive skin, allergic to latex - shared with the salon on booking')}
+                      placeholderTextColor={colors.gray}
+                    />
+                  </View>
                   <View style={{ flexDirection: 'row', gap: 10 }}>
                     <Button
                       title={t('Save changes')}
@@ -116,7 +130,7 @@ export default function Profile() {
                       loading={savingProfile}
                       onPress={async () => {
                         setSavingProfile(true);
-                        await updateProfile({ name: nameDraft, phone: phoneDraft });
+                        await updateProfile({ name: nameDraft, phone: phoneDraft, allergies: allergiesDraft });
                         setSavingProfile(false);
                         setEditingName(false);
                       }}

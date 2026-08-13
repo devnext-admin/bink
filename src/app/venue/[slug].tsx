@@ -20,7 +20,7 @@ import { useAuth } from '../../lib/auth-context';
 import { useBooking } from '../../lib/booking-context';
 import { getBookings } from '../../lib/data';
 import { sized } from '../../lib/image';
-import { formatTime, weekdayName } from '../../lib/format';
+import { formatDuration, formatPrice, formatTime, weekdayName } from '../../lib/format';
 import { useI18n } from '../../lib/i18n';
 import { getLocalReviews, ratingWithLocal, submitReview } from '../../lib/ops';
 import { colors, font, maxContentWidth, radius, shadow } from '../../lib/theme';
@@ -106,6 +106,87 @@ function ServicesSection({ venue, compact }: { venue: Venue; compact?: boolean }
     </View>
   );
 }
+
+function PackagesSection({ venue }: { venue: Venue }) {
+  const router = useRouter();
+  const { t, lang } = useI18n();
+  const { startBookingPackage } = useBooking();
+  const packages = venue.packages ?? [];
+  if (!packages.length) return null;
+
+  const book = (pkg: (typeof packages)[number]) => {
+    startBookingPackage(venue, pkg);
+    router.push(`/booking/${venue.slug}`);
+  };
+
+  return (
+    <View>
+      <BText variant="h2">{t('Packages')}</BText>
+      <View style={{ gap: 12, marginTop: 16 }}>
+        {packages.map((p) => {
+          const title = lang === 'ar' && p.name_ar ? p.name_ar : t(p.name);
+          const saving =
+            p.original_price_cents && p.original_price_cents > p.price_cents
+              ? Math.round(((p.original_price_cents - p.price_cents) / p.original_price_cents) * 100)
+              : 0;
+          return (
+            <View key={p.id} style={pkgStyles.card}>
+              <View style={{ flex: 1 }}>
+                <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
+                  <BText variant="h3">{title}</BText>
+                  {saving > 0 ? (
+                    <View style={pkgStyles.savePill}>
+                      <BText style={{ fontFamily: font.bold, fontSize: 11, color: colors.white }}>
+                        {t('Save {pct}%', { pct: saving })}
+                      </BText>
+                    </View>
+                  ) : null}
+                </View>
+                {p.description ? (
+                  <BText variant="small" style={{ marginTop: 4 }}>
+                    {t(p.description)}
+                  </BText>
+                ) : null}
+                <BText variant="tiny" style={{ marginTop: 6 }}>
+                  {p.service_ids.length === 1 ? t('1 service') : t('{n} services', { n: p.service_ids.length })} ·{' '}
+                  {formatDuration(p.duration_minutes)}
+                </BText>
+                <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8, marginTop: 8 }}>
+                  <BText variant="h3">{formatPrice(p.price_cents, p.currency)}</BText>
+                  {p.original_price_cents && p.original_price_cents > p.price_cents ? (
+                    <BText variant="small" style={{ textDecorationLine: 'line-through' }} color={colors.gray}>
+                      {formatPrice(p.original_price_cents, p.currency)}
+                    </BText>
+                  ) : null}
+                </View>
+              </View>
+              <Button title={t('Book')} size="sm" onPress={() => book(p)} />
+            </View>
+          );
+        })}
+      </View>
+    </View>
+  );
+}
+
+const pkgStyles = StyleSheet.create({
+  card: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 14,
+    borderWidth: 1,
+    borderColor: colors.border,
+    borderRadius: radius.lg,
+    padding: 16,
+    backgroundColor: colors.white,
+  },
+  savePill: {
+    backgroundColor: colors.green,
+    borderRadius: radius.pill,
+    paddingHorizontal: 8,
+    paddingVertical: 2,
+  },
+});
 
 function TeamSection({ venue }: { venue: Venue }) {
   const { t } = useI18n();
@@ -492,6 +573,7 @@ function VenueDesktop({ venue }: { venue: Venue }) {
         <View style={{ flexDirection: 'row', gap: 40, marginTop: 40 }}>
           <View style={{ flex: 1, gap: 56 }}>
             <ServicesSection venue={venue} />
+            <PackagesSection venue={venue} />
             <TeamSection venue={venue} />
             <ReviewsSection venue={venue} />
             <AboutSection venue={venue} />
@@ -607,6 +689,7 @@ function VenueMobile({ venue }: { venue: Venue }) {
         <View style={{ paddingHorizontal: 20, gap: 44 }}>
           <AboutSection venue={venue} />
           <ServicesSection venue={venue} />
+          <PackagesSection venue={venue} />
           <TeamSection venue={venue} />
           <ReviewsSection venue={venue} columns={1} />
           <HoursAndInfoSection venue={venue} stacked />

@@ -12,6 +12,7 @@ export interface AuthUser {
   role: UserRole;
   isGuest: boolean;
   phone?: string | null;
+  allergies?: string | null;
   emailVerified?: boolean;
 }
 
@@ -31,10 +32,11 @@ interface AuthContextValue {
     opts?: { role?: UserRole; phone?: string }
   ) => Promise<{ error?: string; needsVerification?: boolean; userId?: string }>;
   continueAsGuest: (name?: string) => Promise<void>;
+  signInWithProvider: (provider: 'google' | 'apple') => Promise<string | null>;
   signOut: () => Promise<void>;
   setRole: (role: UserRole) => Promise<void>;
   updateName: (name: string) => Promise<void>;
-  updateProfile: (patch: { name?: string; phone?: string }) => Promise<void>;
+  updateProfile: (patch: { name?: string; phone?: string; allergies?: string }) => Promise<void>;
   resendVerification: (email: string) => Promise<string | null>;
   refreshUser: () => Promise<void>;
 }
@@ -115,6 +117,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             // Phone is column-protected; the owner reads their own via RPC.
             const { data: ph } = await sb.rpc('my_phone');
             if (ph) u.phone = ph as string;
+            const { data: al } = await sb.rpc('my_allergies');
+            if (al) u.allergies = al as string;
           }
           setUser(u);
           setLoading(false);
@@ -122,10 +126,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         const { data: sub } = sb.auth.onAuthStateChange((_e, session) => {
           const u = fromSession(session);
           setUser(u);
-          // profiles.role stays the source of truth (metadata may lag)
+          // profiles.role stays the source of truth (metadata may lag); phone
+          // and allergies are column-protected, read through their RPCs.
           if (u) {
             sb.from('profiles').select('role').eq('id', u.id).maybeSingle().then(({ data: p }) => {
               if (p?.role) setUser((cur) => (cur && cur.id === u.id ? { ...cur, role: p.role as UserRole } : cur));
+            }, () => {});
+            sb.rpc('my_phone').then(({ data }) => {
+              if (data) setUser((cur) => (cur && cur.id === u.id ? { ...cur, phone: data as string } : cur));
+            }, () => {});
+            sb.rpc('my_allergies').then(({ data }) => {
+              if (data) setUser((cur) => (cur && cur.id === u.id ? { ...cur, allergies: data as string } : cur));
             }, () => {});
           }
         });
@@ -203,6 +214,20 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     [persistLocal]
   );
 
+  // Social sign-in through Supabase OAuth. Returns an error string, or null on
+  // success (the provider redirect takes over). Requires the provider to be
+  // enabled in the Supabase dashboard with its client id/secret.
+  const signInWithProvider = useCallback(async (provider: 'google' | 'apple'): Promise<string | null> => {
+    const sb = getSupabase();
+    if (!sb) return 'Sign-in is unavailable right now.';
+    const redirectTo =
+      typeof window !== 'undefined' && window.location
+        ? `${window.location.origin}/appointments`
+        : 'https://bink-three.vercel.app/appointments';
+    const { error } = await sb.auth.signInWithOAuth({ provider, options: { redirectTo } });
+    return error ? error.message : null;
+  }, []);
+
   const setRole = useCallback(
     async (role: UserRole) => {
       if (!user) return;
@@ -235,11 +260,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   );
 
   const updateProfile = useCallback(
-    async (patch: { name?: string; phone?: string }) => {
+    async (patch: { name?: string; phone?: string; allergies?: string }) => {
       if (!user) return;
       const name = patch.name?.trim();
       const phone = patch.phone?.trim();
-      const next = { ...user, ...(name ? { name } : {}), ...(phone !== undefined ? { phone } : {}) };
+      const allergies = patch.allergies?.trim();
+      const next = {
+        ...user,
+        ...(name ? { name } : {}),
+        ...(phone !== undefined ? { phone } : {}),
+        ...(patch.allergies !== undefined ? { allergies } : {}),
+      };
       const sb = getSupabase();
       if (sb && !user.isGuest) {
         const meta: Record<string, unknown> = {};
@@ -249,6 +280,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         const col: Record<string, unknown> = {};
         if (name) col.full_name = name;
         if (phone !== undefined) col.phone = phone;
+        if (patch.allergies !== undefined) col.allergies = allergies || null;
         if (Object.keys(col).length) await sb.from('profiles').update(col).eq('id', user.id);
         setUser(next);
         return;
@@ -314,6 +346,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       signIn,
       signUp,
       continueAsGuest,
+      signInWithProvider,
       signOut,
       setRole,
       updateName,
@@ -321,7 +354,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       resendVerification,
       refreshUser,
     }),
-    [effectiveUser, loading, emulating, startEmulating, stopEmulating, signIn, signUp, continueAsGuest, signOut, setRole, updateName, updateProfile, resendVerification, refreshUser]
+    [effectiveUser, loading, emulating, startEmulating, stopEmulating, signIn, signUp, continueAsGuest, signInWithProvider, signOut, setRole, updateName, updateProfile, resendVerification, refreshUser]
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

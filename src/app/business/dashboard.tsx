@@ -2,7 +2,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { Image } from 'expo-image';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
+import { Modal, Pressable, ScrollView, StyleSheet, TextInput, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { ChatThread, ConversationList } from '../../components/chat';
 import { Logo } from '../../components/logo';
@@ -21,6 +21,10 @@ import * as ImagePicker from 'expo-image-picker';
 import {
   addService,
   addStaff,
+  addPackage,
+  updatePackage,
+  deletePackage,
+  setStaffHours,
   createWalkInBooking,
   addVenueImage,
   deleteService,
@@ -56,6 +60,7 @@ type Section =
   | 'sales'
   | 'analytics'
   | 'services'
+  | 'packages'
   | 'staff'
   | 'settings';
 const SECTIONS: { key: Section; label: string; icon: string }[] = [
@@ -67,13 +72,14 @@ const SECTIONS: { key: Section; label: string; icon: string }[] = [
   { key: 'sales', label: 'Sales', icon: 'cash-outline' },
   { key: 'analytics', label: 'Analytics', icon: 'stats-chart-outline' },
   { key: 'services', label: 'Services', icon: 'pricetags-outline' },
+  { key: 'packages', label: 'Packages', icon: 'gift-outline' },
   { key: 'staff', label: 'Team', icon: 'people-outline' },
   { key: 'settings', label: 'Settings', icon: 'settings-outline' },
 ];
 const NAV_GROUPS: { title: string; keys: Section[] }[] = [
   { title: 'Manage', keys: ['overview', 'bookings', 'messages', 'clients', 'reviews'] },
   { title: 'Money', keys: ['sales', 'analytics'] },
-  { title: 'Setup', keys: ['services', 'staff', 'settings'] },
+  { title: 'Setup', keys: ['services', 'packages', 'staff', 'settings'] },
 ];
 
 const publicHost =
@@ -915,6 +921,8 @@ export default function BusinessDashboard() {
         </View>
       );
     }
+  } else if (section === 'packages') {
+    body = <PackagesEditor venue={venue!} onChanged={reload} />;
   } else if (section === 'staff') {
     body = (
       <StaffEditor
@@ -1962,6 +1970,141 @@ function MemberServicesEditor({
   );
 }
 
+function PackagesEditor({ venue, onChanged }: { venue: Venue; onChanged: () => void }) {
+  const { t } = useI18n();
+  const packages = venue.packages ?? [];
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [name, setName] = useState('');
+  const [nameAr, setNameAr] = useState('');
+  const [desc, setDesc] = useState('');
+  const [serviceIds, setServiceIds] = useState<string[]>([]);
+  const [price, setPrice] = useState('');
+  const [wasPrice, setWasPrice] = useState('');
+  const [busy, setBusy] = useState(false);
+
+  const toggle = (id: string) =>
+    setServiceIds((l) => (l.includes(id) ? l.filter((x) => x !== id) : [...l, id]));
+
+  const reset = () => {
+    setEditingId(null);
+    setName('');
+    setNameAr('');
+    setDesc('');
+    setServiceIds([]);
+    setPrice('');
+    setWasPrice('');
+  };
+
+  const startEdit = (p: NonNullable<Venue['packages']>[number]) => {
+    setEditingId(p.id);
+    setName(p.name);
+    setNameAr(p.name_ar ?? '');
+    setDesc(p.description ?? '');
+    setServiceIds(p.service_ids ?? []);
+    setPrice(String(p.price_cents / 100));
+    setWasPrice(p.original_price_cents ? String(p.original_price_cents / 100) : '');
+  };
+
+  const save = async () => {
+    if (!name.trim() || !price.trim() || serviceIds.length === 0) return;
+    setBusy(true);
+    // The bundle's duration is the sum of its services
+    const duration = venue.services
+      .filter((s) => serviceIds.includes(s.id))
+      .reduce((c, s) => c + s.duration_minutes, 0);
+    const payload = {
+      name: name.trim(),
+      name_ar: nameAr.trim() || null,
+      description: desc.trim(),
+      service_ids: serviceIds,
+      duration_minutes: Math.max(15, duration),
+      price_cents: Math.round(parseFloat(price) * 100),
+      original_price_cents: wasPrice.trim() ? Math.round(parseFloat(wasPrice) * 100) : null,
+    };
+    if (editingId) await updatePackage(editingId, payload);
+    else await addPackage(venue, payload);
+    reset();
+    setBusy(false);
+    onChanged();
+  };
+
+  return (
+    <View style={{ gap: 16 }}>
+      <View style={styles.card}>
+        <BText variant="h3">{editingId ? t('Edit package') : t('Create a package')}</BText>
+        <BText variant="tiny" style={{ marginTop: 4 }}>
+          {t('Bundle a few services at one price. Customers book the whole package in one tap.')}
+        </BText>
+        <View style={{ gap: 12, marginTop: 16 }}>
+          <View style={{ flexDirection: 'row', gap: 12 }}>
+            <View style={{ flex: 1 }}>
+              <Field label={t('Package name')} placeholder={t('e.g. Bridal Glow')} value={name} onChangeText={setName} />
+            </View>
+            <View style={{ flex: 1 }}>
+              <Field label={t('Name in Arabic')} value={nameAr} onChangeText={setNameAr} />
+            </View>
+          </View>
+          <Field label={t('Description')} placeholder={t('What is included')} value={desc} onChangeText={setDesc} />
+          <View style={{ gap: 6 }}>
+            <BText variant="smallMedium">{t('Services in this package')}</BText>
+            <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8 }}>
+              {venue.services.map((sv) => (
+                <Chip key={sv.id} label={t(sv.name)} selected={serviceIds.includes(sv.id)} onPress={() => toggle(sv.id)} />
+              ))}
+            </View>
+          </View>
+          <View style={{ flexDirection: 'row', gap: 12 }}>
+            <View style={{ flex: 1 }}>
+              <Field label={t('Package price')} keyboardType="numeric" placeholder="450" value={price} onChangeText={setPrice} />
+            </View>
+            <View style={{ flex: 1 }}>
+              <Field label={t('Original price (optional)')} keyboardType="numeric" placeholder="600" value={wasPrice} onChangeText={setWasPrice} />
+            </View>
+          </View>
+          <View style={{ flexDirection: 'row', gap: 10 }}>
+            <Button title={editingId ? t('Save changes') : t('Add package')} loading={busy} onPress={save} />
+            {editingId ? <Button title={t('Cancel')} variant="secondary" onPress={reset} /> : null}
+          </View>
+        </View>
+      </View>
+
+      <View style={styles.card}>
+        <BText variant="h3">{t('Your packages ({n})', { n: packages.length })}</BText>
+        {packages.map((p) => (
+          <View key={p.id} style={styles.bookingRow}>
+            <View style={{ flex: 1 }}>
+              <BText variant="smallMedium">{t(p.name)}</BText>
+              <BText variant="tiny">
+                {p.service_ids.length === 1 ? t('1 service') : t('{n} services', { n: p.service_ids.length })} ·{' '}
+                {formatDuration(p.duration_minutes)} · {formatPrice(p.price_cents, p.currency)}
+                {p.original_price_cents ? ` · ${t('was {price}', { price: formatPrice(p.original_price_cents, p.currency) })}` : ''}
+              </BText>
+            </View>
+            <Pressable onPress={() => startEdit(p)} hitSlop={8}>
+              <Ionicons name="pencil-outline" size={18} color={colors.ink} />
+            </Pressable>
+            <Pressable
+              onPress={async () => {
+                await deletePackage(p.id);
+                if (editingId === p.id) reset();
+                onChanged();
+              }}
+              hitSlop={8}
+            >
+              <Ionicons name="trash-outline" size={18} color={colors.danger} />
+            </Pressable>
+          </View>
+        ))}
+        {packages.length === 0 && (
+          <BText variant="small" style={{ marginTop: 10 }}>
+            {t('No packages yet. Bundle your popular services to sell more.')}
+          </BText>
+        )}
+      </View>
+    </View>
+  );
+}
+
 function ServicesEditor({ venue, onChanged }: { venue: Venue; onChanged: () => void }) {
   const { t } = useI18n();
   const [editingId, setEditingId] = useState<string | null>(null);
@@ -2086,6 +2229,7 @@ function StaffEditor({
   const [venueRole, setVenueRole] = useState<'manager' | 'member'>('member');
   const [serviceIds, setServiceIds] = useState<string[]>([]);
   const [busy, setBusy] = useState(false);
+  const [hoursFor, setHoursFor] = useState<Venue['staff'][number] | null>(null);
   const [inviting, setInviting] = useState<string | null>(null);
   const [inviteError, setInviteError] = useState<string | null>(null);
 
@@ -2228,6 +2372,9 @@ function StaffEditor({
             {onViewAs ? (
               <SmallPillBtn label={t('View as')} color={colors.info} onPress={() => onViewAs(m)} />
             ) : null}
+            <Pressable onPress={() => setHoursFor(m)} hitSlop={8} accessibilityLabel={t('Working hours')}>
+              <Ionicons name="time-outline" size={18} color={colors.ink} />
+            </Pressable>
             <Pressable onPress={() => startEdit(m)} hitSlop={8}>
               <Ionicons name="pencil-outline" size={18} color={colors.ink} />
             </Pressable>
@@ -2249,7 +2396,114 @@ function StaffEditor({
           </BText>
         )}
       </View>
+      <StaffHoursModal member={hoursFor} onClose={() => setHoursFor(null)} onSaved={onChanged} />
     </View>
+  );
+}
+
+const WEEKDAYS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+
+function StaffHoursModal({
+  member,
+  onClose,
+  onSaved,
+}: {
+  member: Venue['staff'][number] | null;
+  onClose: () => void;
+  onSaved: () => void;
+}) {
+  const { t } = useI18n();
+  const [rows, setRows] = useState<{ open: string; close: string; off: boolean }[]>([]);
+  const [busy, setBusy] = useState(false);
+
+  useEffect(() => {
+    if (!member) return;
+    const existing = member.hours ?? [];
+    setRows(
+      Array.from({ length: 7 }, (_, wd) => {
+        const h = existing.find((x) => x.weekday === wd);
+        return {
+          open: h?.open_time?.slice(0, 5) ?? '10:00',
+          close: h?.close_time?.slice(0, 5) ?? '20:00',
+          off: h ? h.is_off : false,
+        };
+      })
+    );
+  }, [member?.id]);
+
+  const save = async () => {
+    if (!member) return;
+    setBusy(true);
+    await setStaffHours(
+      member.id,
+      rows.map((r, wd) => ({
+        weekday: wd,
+        open_time: r.off ? null : `${r.open}:00`,
+        close_time: r.off ? null : `${r.close}:00`,
+        is_off: r.off,
+      }))
+    );
+    setBusy(false);
+    onSaved();
+    onClose();
+  };
+
+  return (
+    <Modal visible={!!member} transparent animationType="fade" onRequestClose={onClose}>
+      <View style={styles.chatBackdrop}>
+        <View style={[styles.card, { width: '100%', maxWidth: 460, maxHeight: '85%' }]}>
+          <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 8 }}>
+            <BText variant="h3" style={{ flex: 1 }}>
+              {t('Working hours')}{member ? ` - ${t(member.name)}` : ''}
+            </BText>
+            <Pressable onPress={onClose} hitSlop={10}>
+              <Ionicons name="close" size={22} color={colors.ink} />
+            </Pressable>
+          </View>
+          <ScrollView>
+            {rows.map((r, wd) => (
+              <View key={wd} style={{ flexDirection: 'row', alignItems: 'center', gap: 8, paddingVertical: 8, borderBottomWidth: 1, borderBottomColor: colors.divider }}>
+                <BText variant="smallMedium" style={{ width: 84 }}>
+                  {t(WEEKDAYS[wd])}
+                </BText>
+                {r.off ? (
+                  <BText variant="small" style={{ flex: 1 }} color={colors.gray}>
+                    {t('Day off')}
+                  </BText>
+                ) : (
+                  <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6, flex: 1 }}>
+                    <TextInput
+                      value={r.open}
+                      onChangeText={(v: string) => setRows((rs) => rs.map((x, i) => (i === wd ? { ...x, open: v } : x)))}
+                      style={styles.hoursInput}
+                      placeholder="10:00"
+                      placeholderTextColor={colors.gray}
+                    />
+                    <BText variant="small">-</BText>
+                    <TextInput
+                      value={r.close}
+                      onChangeText={(v: string) => setRows((rs) => rs.map((x, i) => (i === wd ? { ...x, close: v } : x)))}
+                      style={styles.hoursInput}
+                      placeholder="20:00"
+                      placeholderTextColor={colors.gray}
+                    />
+                  </View>
+                )}
+                <Chip
+                  label={r.off ? t('Closed') : t('Open')}
+                  selected={!r.off}
+                  onPress={() => setRows((rs) => rs.map((x, i) => (i === wd ? { ...x, off: !x.off } : x)))}
+                />
+              </View>
+            ))}
+          </ScrollView>
+          <View style={{ flexDirection: 'row', gap: 10, marginTop: 14 }}>
+            <Button title={t('Save changes')} loading={busy} onPress={save} />
+            <Button title={t('Cancel')} variant="secondary" onPress={onClose} />
+          </View>
+        </View>
+      </View>
+    </Modal>
   );
 }
 
@@ -2595,6 +2849,26 @@ function GalleryEditor({ venue, onChanged }: { venue: Venue; onChanged: () => vo
 }
 
 const styles = StyleSheet.create({
+  chatBackdrop: {
+    flex: 1,
+    backgroundColor: 'rgba(17,17,17,0.45)',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 16,
+  },
+  hoursInput: {
+    borderWidth: 1,
+    borderColor: colors.border,
+    borderRadius: radius.sm,
+    paddingHorizontal: 10,
+    height: 38,
+    width: 64,
+    textAlign: 'center',
+    fontFamily: font.regular,
+    fontSize: 14,
+    color: colors.ink,
+    ...(typeof window !== 'undefined' ? ({ outlineStyle: 'none' } as any) : null),
+  },
   chatMobileHeader: {
     flexDirection: 'row',
     alignItems: 'center',

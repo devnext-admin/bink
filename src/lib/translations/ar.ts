@@ -803,4 +803,28 @@ export const ar: Record<string, string> = {
   'Expiry YYYY-MM-DD': 'الانتهاء YYYY-MM-DD',
   'used {n} of {max}': 'استُخدم {n} من {max}',
   'used {n} times': 'استُخدم {n} مرة',
+  'Packages': 'الباقات',
+  'Package': 'باقة',
+  'Create a package': 'إنشاء باقة',
+  'Edit package': 'تعديل الباقة',
+  'Add package': 'إضافة باقة',
+  'Bundle a few services at one price. Customers book the whole package in one tap.':
+    'اجمع عدة خدمات بسعر واحد. يحجز العملاء الباقة كاملة بضغطة واحدة.',
+  'Package name': 'اسم الباقة',
+  'e.g. Bridal Glow': 'مثال: إطلالة العروس',
+  'What is included': 'ما الذي تتضمنه',
+  'Services in this package': 'الخدمات ضمن هذه الباقة',
+  'Package price': 'سعر الباقة',
+  'Original price (optional)': 'السعر الأصلي (اختياري)',
+  'Your packages ({n})': 'باقاتك ({n})',
+  'was {price}': 'كان {price}',
+  'No packages yet. Bundle your popular services to sell more.':
+    'لا توجد باقات بعد. اجمع خدماتك الشائعة لبيع المزيد.',
+  'Allergies & health notes': 'الحساسية والملاحظات الصحية',
+  'e.g. sensitive skin, allergic to latex - shared with the salon on booking':
+    'مثال: بشرة حساسة، حساسية من اللاتكس - تُشارك مع الصالون عند الحجز',
+  'Health notes': 'ملاحظات صحية',
+  'or continue with': 'أو تابع باستخدام',
+  'Working hours': 'ساعات العمل',
+  'Day off': 'يوم إجازة',
 };
