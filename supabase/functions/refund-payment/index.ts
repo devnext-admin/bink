@@ -44,10 +44,12 @@ Deno.serve(async (req) => {
     const isAdmin = profile?.role === 'admin';
     if (!isAdmin && tx.user_id !== user.id) return json({ error: 'Not allowed' }, 403);
 
-    const secretKey = Deno.env.get('TAP_SECRET_KEY');
-    if (!secretKey) return json({ error: 'Gateway not configured (set TAP_SECRET_KEY)' }, 501);
-
+    // Only TAP transactions need the gateway call; demo-era transactions
+    // settle in the database alone (mixed histories keep working after the
+    // live key is introduced).
     if (tx.gateway === 'tap' && tx.gateway_ref) {
+      const secretKey = Deno.env.get('TAP_SECRET_KEY');
+      if (!secretKey) return json({ error: 'Gateway not configured (set TAP_SECRET_KEY)' }, 501);
       const gwRes = await fetch(TAP_REFUNDS, {
         method: 'POST',
         headers: {
