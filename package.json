@@ -17,10 +17,13 @@
     "lint": "npm run lint --workspaces --if-present",
     "typecheck": "npm run typecheck --workspaces --if-present",
     "test": "node --test e2e/security.test.mjs",
-    "verify:isolation": "node scripts/verify-isolation.mjs"
+    "verify:isolation": "node scripts/verify-isolation.mjs",
+    "deploy:admin": "npm run build:admin && vercel link --cwd apps/admin/dist --project bink-admin --yes && vercel deploy --cwd apps/admin/dist --prod --yes",
+    "deploy:public": "npm run build:public && vercel link --cwd apps/public/dist --project bink --yes && vercel deploy --cwd apps/public/dist --prod --yes"
   },
   "devDependencies": {
     "@types/react": "~19.1.10",
-    "typescript": "~5.9.2"
+    "typescript": "~5.9.2",
+    "vercel": "^59.1.3"
   }
 }
