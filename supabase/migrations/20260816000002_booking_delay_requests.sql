@@ -40,7 +40,7 @@ as $$
     ) then 'venue'
     when exists (
       select 1 from public.staff s
-       where s.venue_id = b.venue_id and s.profile_id = auth.uid()
+       where s.venue_id = b.venue_id and s.user_id = auth.uid()
     ) then 'venue'
     else null
   end
