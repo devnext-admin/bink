@@ -11,7 +11,7 @@ import { NotificationsBell } from './notifications-bell';
 import { CompactSearch } from './search-bar';
 import { Avatar } from './ui/avatar';
 import { BText } from './ui/text';
-import { openAdminConsole } from '../lib/admin-link';
+import { openAdminConsole, openPublicRoute } from '../lib/admin-link';
 
 interface WebHeaderProps {
   transparent?: boolean; // over the hero gradient
@@ -28,6 +28,8 @@ export function WebHeader({ transparent, showSearch }: WebHeaderProps) {
 
   const go = (href: string) => {
     setMenuOpen(false);
+    // In the admin console these routes do not exist, so leave the origin.
+    if (openPublicRoute(href)) return;
     router.push(href as any);
   };
 
@@ -55,7 +57,7 @@ export function WebHeader({ transparent, showSearch }: WebHeaderProps) {
             ? [{
                 label: 'Business dashboard',
                 icon: 'storefront-outline',
-                onPress: () => { setMenuOpen(false); router.replace('/business/dashboard' as any); },
+                onPress: () => { setMenuOpen(false); go('/business/dashboard'); },
               }]
             : []),
           { label: 'Profile', icon: 'person-outline', onPress: () => go('/profile') },
@@ -82,7 +84,7 @@ export function WebHeader({ transparent, showSearch }: WebHeaderProps) {
           {/* Salon acquisition CTA - only for visitors who aren't signed in.
               Signed-in customers shouldn't be pushed business links; owners
               and admins have their own entries in the avatar menu. */}
-          {!user && <HeaderPill label={t('For business')} onPress={() => router.push('/business')} />}
+          {!user && <HeaderPill label={t('For business')} onPress={() => go('/business')} />}
           {user ? (
             <>
               <NotificationsBell />
@@ -96,9 +98,9 @@ export function WebHeader({ transparent, showSearch }: WebHeaderProps) {
             </>
           ) : (
             <>
-              <HeaderPill label={t('Log in')} onPress={() => router.push('/auth')} />
+              <HeaderPill label={t('Log in')} onPress={() => go('/auth')} />
               <Pressable
-                onPress={() => router.push('/auth?mode=signup' as any)}
+                onPress={() => go('/auth?mode=signup')}
                 style={({ hovered }: any) => [styles.signupBtn, hovered && { backgroundColor: colors.accentDark }]}
               >
                 <BText style={{ fontFamily: font.bold, fontSize: 14, color: colors.white }}>{t('Sign up')}</BText>

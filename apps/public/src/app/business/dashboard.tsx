@@ -1,3 +1,4 @@
+import { DelayControls } from '@bink/shared/components/delay-controls';
 import { Ionicons } from '@expo/vector-icons';
 import { Image } from 'expo-image';
 import { useLocalSearchParams, useRouter } from 'expo-router';
@@ -1454,6 +1455,11 @@ function BookingRow({
           {booking.status === 'no_show' ? ` · ${t('no-show')}` : ''}
           {booking.status === 'cancelled' ? ` · ${t('cancelled')}` : ''}
         </BText>
+        {/* Running behind, or the customer is. Up to 15 minutes without a full
+            reschedule; the other side has to agree. */}
+        {canOperate && (
+          <DelayControls booking={booking} side="venue" onChanged={() => onChanged?.()} />
+        )}
         {booking.notes ? (
           <BText variant="tiny" color={colors.accent} style={{ marginTop: 2 }}>
             {t('Note:')} {booking.notes}

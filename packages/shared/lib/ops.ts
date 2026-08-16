@@ -6,7 +6,8 @@ import demo from '../data/demo.json';
 import { getBookings } from './data';
 import { pushNotification } from './notifications';
 import { getSupabase } from './supabase';
-import type { Booking, BookingStatus, PromoCode, Review, Venue } from './types';
+import { MAX_DELAY_MINUTES } from './types';
+import type { Booking, BookingStatus, DelaySide, PromoCode, Review, Venue } from './types';
 
 const BOOKINGS_KEY = 'bink.bookings';
 const REVIEWS_KEY = 'bink.reviews'; // local reviews layered over demo data
@@ -240,3 +241,68 @@ export async function redeemPromo(code: string): Promise<void> {
   if (sb) await sb.rpc('redeem_promo', { p_code: code }).then(() => {}, () => {});
 }
 
+
+// ---------------------------------------------------------------------------
+// Short delay requests
+//
+// Either side can ask to push a booking back by up to 15 minutes; the other
+// side accepts or declines. Against Supabase this goes through two security
+// definer RPCs that derive the caller's side from auth.uid(), so neither side
+// can answer its own request. In demo mode the same rules are applied locally.
+
+/** Ask the other side to push this booking back. Minutes must be 1 to 15. */
+export async function requestBookingDelay(id: string, minutes: number, side: DelaySide): Promise<void> {
+  if (!Number.isInteger(minutes) || minutes < 1 || minutes > MAX_DELAY_MINUTES) {
+    throw new Error(`A delay must be between 1 and ${MAX_DELAY_MINUTES} minutes`);
+  }
+  const sb = getSupabase();
+  if (sb && !id.startsWith('local-')) {
+    const { error } = await sb.rpc('request_booking_delay', { p_booking: id, p_minutes: minutes });
+    if (error) throw new Error(error.message);
+    return;
+  }
+  const bookings = await readList<Booking>(BOOKINGS_KEY);
+  await writeList(
+    BOOKINGS_KEY,
+    bookings.map((b) =>
+      b.id === id
+        ? { ...b, delay_minutes: minutes, delay_by: side, delay_at: new Date().toISOString() }
+        : b
+    )
+  );
+}
+
+/**
+ * Accept or decline a pending delay. Accepting shifts both ends of the booking
+ * so its duration is preserved. Only the side that did not raise the request
+ * may answer, which the database enforces for real bookings.
+ */
+export async function respondBookingDelay(id: string, accept: boolean, side: DelaySide): Promise<void> {
+  const sb = getSupabase();
+  if (sb && !id.startsWith('local-')) {
+    const { error } = await sb.rpc('respond_booking_delay', { p_booking: id, p_accept: accept });
+    if (error) throw new Error(error.message);
+    return;
+  }
+  const bookings = await readList<Booking>(BOOKINGS_KEY);
+  const booking = bookings.find((b) => b.id === id);
+  if (!booking?.delay_minutes || !booking.delay_by) throw new Error('There is no delay request on that booking');
+  if (booking.delay_by === side) throw new Error('The other side has to answer this request');
+
+  const shift = accept ? booking.delay_minutes * 60000 : 0;
+  await writeList(
+    BOOKINGS_KEY,
+    bookings.map((b) =>
+      b.id === id
+        ? {
+            ...b,
+            starts_at: new Date(new Date(b.starts_at).getTime() + shift).toISOString(),
+            ends_at: new Date(new Date(b.ends_at).getTime() + shift).toISOString(),
+            delay_minutes: null,
+            delay_by: null,
+            delay_at: null,
+          }
+        : b
+    )
+  );
+}

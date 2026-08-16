@@ -41,7 +41,7 @@ const MONTHS: [string, string][] = [
   ['Sep', 'سبتمبر'], ['Oct', 'أكتوبر'], ['Nov', 'نوفمبر'], ['Dec', 'ديسمبر'],
 ];
 
-// Content names sorted longest-first so "Glow Lash Studio" wins over "Glow".
+// Content names sorted longest-first so "The Blowout Bar" wins over "The Blowout".
 const NAMES = Object.entries(arContent)
   .filter(([k]) => k.length >= 3)
   .sort((a, b) => b[0].length - a[0].length);

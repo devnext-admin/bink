@@ -8,7 +8,6 @@ export const categories = [
   { id: 1, slug: 'hair-salon', name: 'Hair Salon', icon: 'cut-outline' },
   { id: 2, slug: 'barbershop', name: 'Barbershop', icon: 'man-outline' },
   { id: 3, slug: 'nail-salon', name: 'Nail Salon', icon: 'color-palette-outline' },
-  { id: 4, slug: 'brows-lashes', name: 'Eyebrows & Lashes', icon: 'eye-outline' },
   { id: 5, slug: 'waxing-salon', name: 'Waxing Salon', icon: 'leaf-outline' },
   { id: 6, slug: 'skincare-salon', name: 'Facials & Skincare', icon: 'sparkles-outline' },
   { id: 7, slug: 'makeup-salon', name: 'Makeup Studio', icon: 'rose-outline' },
@@ -35,26 +34,6 @@ const reviewPool = [
 ];
 
 const venueDefs = [
-  {
-    n: 1, slug: 'glow-lash-studio', name: 'Glow Lash Studio', cat: 4,
-    area: 'An Nuzhah', city: 'Riyadh', country: 'Saudi Arabia', address: 'An Nuzhah District, Olaya St',
-    lat: 24.7743, lng: 46.7386,
-    flags: { featured: true },
-    desc: 'Step into the peaceful world of Glow Lash Studio. We are all about perfect lashes and brows, offering expert lash extensions, lash lifts, eyebrow shaping and manicures. Our studio is designed like a relaxing bamboo spa, creating a calm and soothing atmosphere where quality and cleanliness come first.',
-    highlights: ['Instant confirmation', 'Pay by app', 'Parking available', 'Woman-owned'],
-    images: ['photo-1633681926022-84c23e8cb2d6', 'photo-1571875257727-256c39da42af', 'photo-1583209814683-c023dd293cc6'],
-    services: [
-      ['Classic Lash Extensions', 'Featured', 120, 55000, 'Achieve the most natural look with our classic lash extensions, individually applied to enhance length, curl and thickness.'],
-      ['Brow Shaping', 'Featured', 20, 5000, 'Define and sculpt your brows with precision threading, leaving you with clean and beautifully shaped eyebrows.'],
-      ['Lash Removal', 'Featured', 20, 10000, 'Our gentle lash removal service safely removes eyelash extensions while preserving your natural lashes.'],
-      ['Lashes & Brows Lift', 'Featured', 80, 80000, 'A complete lift package for lashes and brows for a naturally polished look.', 6],
-      ['Volume Lash Set', 'Lashes', 150, 65000, 'Full volume set with handmade fans for a dramatic, fluffy finish.'],
-      ['Lash Refill (2 weeks)', 'Lashes', 60, 25000, 'Keep your set full with a two-week refill by our lash masters.'],
-      ['Brow Lamination', 'Brows', 45, 20000, 'Fuller, fluffier brows that stay in place for up to 8 weeks.'],
-      ['Classic Manicure', 'Nails', 45, 8000, 'A classic manicure with shaping, cuticle care and polish.'],
-    ],
-    staff: [['Ainura', 'Lash master'], ['Gulzira', 'Lash master'], ['Madelaine', 'Nail master']],
-  },
   {
     n: 2, slug: 'the-fade-room', name: 'The Fade Room', cat: 2,
     area: 'Corniche', city: 'Al Khobar', country: 'Saudi Arabia', address: 'Prince Turki St',
@@ -102,7 +81,6 @@ const venueDefs = [
     services: [
       ['Gel Manicure', 'Featured', 60, 15000, 'Long-lasting gel polish with meticulous cuticle care and shaping.'],
       ['Luxury Spa Pedicure', 'Featured', 75, 20000, 'A pampering pedicure with sugar scrub, mask and hot towels.', 15],
-      ['Acrylic Full Set', 'Featured', 105, 28000, 'Sculpted acrylic extensions in your choice of shape and length.'],
       ['Nail Art (per nail)', 'Nail Art', 10, 1500, 'Hand-painted designs, chrome, foils and crystals.'],
       ['Gel Removal', 'Nails', 20, 4000, 'Gentle soak-off removal that protects your natural nail.'],
       ['Classic Manicure', 'Nails', 45, 9000, 'Shape, buff, cuticle care and classic polish.'],
@@ -180,23 +158,6 @@ const venueDefs = [
     staff: [['Grace', 'Wax specialist'], ['Marta', 'Wax specialist'], ['Ivy', 'Therapist']],
   },
   {
-    n: 9, slug: 'brow-bar-co', name: 'Brow Bar Co', cat: 4,
-    area: 'As Sulimaniyah', city: 'Riyadh', country: 'Saudi Arabia', address: 'Prince Mmd bin Abdulaziz Rd',
-    lat: 24.7469, lng: 46.705,
-    flags: { isNew: true },
-    desc: 'The brow specialists. Threading, tinting, lamination and henna brows perfected in minutes - walk in, glow out.',
-    highlights: ['Walk-ins welcome', 'Pay by app', 'Woman-owned'],
-    images: ['photo-1571875257727-256c39da42af', 'photo-1500840216050-6ffa99d75160', 'photo-1583209814683-c023dd293cc6'],
-    services: [
-      ['Brow Threading', 'Featured', 15, 4000, 'Clean, precise brow shaping with traditional threading.'],
-      ['Brow Lamination + Tint', 'Featured', 60, 22000, 'Brushed-up, fuller brows with a perfectly matched tint.', 10],
-      ['Henna Brows', 'Brows', 45, 15000, 'Natural henna staining for fuller-looking brows up to 6 weeks.'],
-      ['Lash Lift + Tint', 'Lashes', 60, 25000, 'Curled, darkened natural lashes - mascara optional.'],
-      ['Full Face Threading', 'Threading', 30, 9000, 'Complete facial hair removal with thread.'],
-    ],
-    staff: [['Zainab', 'Brow artist'], ['Hessa', 'Brow artist'], ['Mona', 'Lash tech']],
-  },
-  {
     n: 10, slug: 'the-glam-room', name: 'The Glam Room', cat: 7,
     area: 'Corniche', city: 'Jeddah', country: 'Saudi Arabia', address: 'North Corniche Rd',
     lat: 21.4901, lng: 39.1852,
@@ -208,7 +169,6 @@ const venueDefs = [
       ['Full Glam Makeup', 'Featured', 75, 40000, 'Occasion-ready full face by our senior artists.'],
       ['Soft Glam Makeup', 'Featured', 60, 30000, 'Natural, radiant makeup for daytime events.'],
       ['Bridal Makeup Trial', 'Bridal', 90, 45000, 'Try your wedding look before the big day.'],
-      ['Lash Application', 'Add-ons', 15, 6000, 'Strip or individual lashes applied to perfection.'],
       ['Makeup Lesson (1:1)', 'Lessons', 90, 50000, 'Personal masterclass with your own products.'],
     ],
     staff: [['Layla', 'Senior makeup artist'], ['Kim', 'Makeup artist'], ['Amani', 'Makeup artist']],
@@ -243,7 +203,7 @@ const venueDefs = [
       ['Full Face Makeup', 'Featured', 60, 35000, 'Occasion-ready glam by our senior makeup artists.'],
       ['Hair Colour (full)', 'Colour', 120, 40000, 'Full-head colour with gloss finish.'],
       ['Full Body Wax', 'Waxing', 90, 30000, 'Complete waxing with gentle, low-temp wax.'],
-      ['Bridal Package', 'Bridal', 240, 150000, 'Hair, makeup, nails and lashes for your big day.', 8],
+      ['Bridal Package', 'Bridal', 240, 150000, 'Hair, makeup and nails for your big day.', 8],
       ['Hair Treatment Mask', 'Treatments', 30, 10000, 'Intense repair mask with scalp massage.'],
     ],
     staff: [['Abeer', 'Salon director'], ['Shatha', 'Makeup artist'], ['Noura', 'Stylist']],

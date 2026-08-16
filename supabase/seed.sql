@@ -4,46 +4,11 @@ insert into public.categories (id, slug, name, icon, sort_order) values
   (1, 'hair-salon', 'Hair Salon', 'cut-outline', 0),
   (2, 'barbershop', 'Barbershop', 'man-outline', 1),
   (3, 'nail-salon', 'Nail Salon', 'color-palette-outline', 2),
-  (4, 'brows-lashes', 'Eyebrows & Lashes', 'eye-outline', 3),
-  (5, 'waxing-salon', 'Waxing Salon', 'leaf-outline', 4),
-  (6, 'skincare-salon', 'Facials & Skincare', 'sparkles-outline', 5),
-  (7, 'makeup-salon', 'Makeup Studio', 'rose-outline', 6),
-  (8, 'bridal-salon', 'Bridal Salon', 'heart-outline', 7);
-select setval('public.categories_id_seq', 8);
-
-insert into public.venues (id, slug, name, description, category_id, address, area, city, country, rating_avg, rating_count, is_featured, is_new, is_trending, highlights) values
-  ('00000000-0000-4000-8000-000000000001', 'glow-lash-studio', 'Glow Lash Studio', 'Step into the peaceful world of Glow Lash Studio. We are all about perfect lashes and brows, offering expert lash extensions, lash lifts, eyebrow shaping and manicures. Our studio is designed like a relaxing bamboo spa, creating a calm and soothing atmosphere where quality and cleanliness come first.', 4, 'An Nuzhah District, Olaya St', 'An Nuzhah', 'Riyadh', 'Saudi Arabia', 4.8, 77, true, false, false, array['Instant confirmation', 'Pay by app', 'Parking available', 'Woman-owned']::text[]);
-insert into public.venue_images (venue_id, url, sort_order) values
-  ('00000000-0000-4000-8000-000000000001', 'https://images.unsplash.com/photo-1633681926022-84c23e8cb2d6?w=1200&q=80&auto=format&fit=crop', 0),
-  ('00000000-0000-4000-8000-000000000001', 'https://images.unsplash.com/photo-1571875257727-256c39da42af?w=1200&q=80&auto=format&fit=crop', 1),
-  ('00000000-0000-4000-8000-000000000001', 'https://images.unsplash.com/photo-1583209814683-c023dd293cc6?w=1200&q=80&auto=format&fit=crop', 2);
-insert into public.services (id, venue_id, name, description, group_name, duration_minutes, price_cents, currency, discount_pct, is_featured, sort_order) values
-  ('00000000-0000-4000-9001-000000000001', '00000000-0000-4000-8000-000000000001', 'Classic Lash Extensions', 'Achieve the most natural look with our classic lash extensions, individually applied to enhance length, curl and thickness.', 'Featured', 120, 55000, 'SAR', 0, true, 0),
-  ('00000000-0000-4000-9001-000000000002', '00000000-0000-4000-8000-000000000001', 'Brow Shaping', 'Define and sculpt your brows with precision threading, leaving you with clean and beautifully shaped eyebrows.', 'Featured', 20, 5000, 'SAR', 0, true, 1),
-  ('00000000-0000-4000-9001-000000000003', '00000000-0000-4000-8000-000000000001', 'Lash Removal', 'Our gentle lash removal service safely removes eyelash extensions while preserving your natural lashes.', 'Featured', 20, 10000, 'SAR', 0, true, 2),
-  ('00000000-0000-4000-9001-000000000004', '00000000-0000-4000-8000-000000000001', 'Lashes & Brows Lift', 'A complete lift package for lashes and brows for a naturally polished look.', 'Featured', 80, 80000, 'SAR', 6, true, 3),
-  ('00000000-0000-4000-9001-000000000005', '00000000-0000-4000-8000-000000000001', 'Volume Lash Set', 'Full volume set with handmade fans for a dramatic, fluffy finish.', 'Lashes', 150, 65000, 'SAR', 0, false, 4),
-  ('00000000-0000-4000-9001-000000000006', '00000000-0000-4000-8000-000000000001', 'Lash Refill (2 weeks)', 'Keep your set full with a two-week refill by our lash masters.', 'Lashes', 60, 25000, 'SAR', 0, false, 5),
-  ('00000000-0000-4000-9001-000000000007', '00000000-0000-4000-8000-000000000001', 'Brow Lamination', 'Fuller, fluffier brows that stay in place for up to 8 weeks.', 'Brows', 45, 20000, 'SAR', 0, false, 6),
-  ('00000000-0000-4000-9001-000000000008', '00000000-0000-4000-8000-000000000001', 'Classic Manicure', 'A classic manicure with shaping, cuticle care and polish.', 'Nails', 45, 8000, 'SAR', 0, false, 7);
-insert into public.staff (id, venue_id, name, role, rating) values
-  ('00000000-0000-4000-a001-000000000001', '00000000-0000-4000-8000-000000000001', 'Ainura', 'Lash master', 4.8999999999999995),
-  ('00000000-0000-4000-a001-000000000002', '00000000-0000-4000-8000-000000000001', 'Gulzira', 'Lash master', 5),
-  ('00000000-0000-4000-a001-000000000003', '00000000-0000-4000-8000-000000000001', 'Madelaine', 'Nail master', 4.8);
-insert into public.reviews (id, venue_id, author_name, rating, comment, created_at) values
-  ('00000000-0000-4000-b001-000000000001', '00000000-0000-4000-8000-000000000001', 'Norah M', 5, 'Best booking experience I have had. Walked in and everything was ready for me.', '2026-02-04T10:00:00Z'),
-  ('00000000-0000-4000-b001-000000000002', '00000000-0000-4000-8000-000000000001', 'Dana F', 5, 'My go-to place now. The attention to detail is unmatched.', '2026-02-09T11:00:00Z'),
-  ('00000000-0000-4000-b001-000000000003', '00000000-0000-4000-8000-000000000001', 'Yara T', 5, 'The staff really listen to what you want. Left feeling brand new!', '2026-02-14T12:00:00Z'),
-  ('00000000-0000-4000-b001-000000000004', '00000000-0000-4000-8000-000000000001', 'Reem K', 4, 'Great service and lovely atmosphere. Slightly busy on weekends but worth it.', '2026-02-19T13:00:00Z'),
-  ('00000000-0000-4000-b001-000000000005', '00000000-0000-4000-8000-000000000001', 'Aisha B', 4, 'Very professional team and beautiful interior. Will definitely come back.', '2026-02-24T14:00:00Z');
-insert into public.opening_hours (venue_id, weekday, open_time, close_time, is_closed) values
-  ('00000000-0000-4000-8000-000000000001', 0, null, null, true),
-  ('00000000-0000-4000-8000-000000000001', 1, '10:00', '22:00', false),
-  ('00000000-0000-4000-8000-000000000001', 2, '10:00', '22:00', false),
-  ('00000000-0000-4000-8000-000000000001', 3, '10:00', '22:00', false),
-  ('00000000-0000-4000-8000-000000000001', 4, '10:00', '22:00', false),
-  ('00000000-0000-4000-8000-000000000001', 5, '10:00', '22:00', false),
-  ('00000000-0000-4000-8000-000000000001', 6, '10:00', '22:00', false);
+  (5, 'waxing-salon', 'Waxing Salon', 'leaf-outline', 3),
+  (6, 'skincare-salon', 'Facials & Skincare', 'sparkles-outline', 4),
+  (7, 'makeup-salon', 'Makeup Studio', 'rose-outline', 5),
+  (8, 'bridal-salon', 'Bridal Salon', 'heart-outline', 6);
+select setval('public.categories_id_seq', 7);
 
 insert into public.venues (id, slug, name, description, category_id, address, area, city, country, rating_avg, rating_count, is_featured, is_new, is_trending, highlights) values
   ('00000000-0000-4000-8000-000000000002', 'the-fade-room', 'The Fade Room', 'A modern barbershop for the modern gentleman. Precision fades, classic cuts, hot towel shaves and beard sculpting from award-winning barbers in a relaxed, stylish space.', 2, 'Prince Turki St', 'Corniche', 'Al Khobar', 'Saudi Arabia', 5, 114, true, false, false, array['Instant confirmation', 'Pay by app', 'Walk-ins welcome']::text[]);
@@ -79,13 +44,13 @@ insert into public.opening_hours (venue_id, weekday, open_time, close_time, is_c
   ('00000000-0000-4000-8000-000000000002', 6, '10:00', '22:00', false);
 
 insert into public.venues (id, slug, name, description, category_id, address, area, city, country, rating_avg, rating_count, is_featured, is_new, is_trending, highlights) values
-  ('00000000-0000-4000-8000-000000000003', 'the-blowout-bar', 'The Blowout Bar', 'Jeddah’s destination for perfect hair, fast. Signature blowouts, glossy styling, braids and treatments — walk in polished, walk out camera-ready.', 1, 'Prince Faisal Bin Fahd Rd', 'Ash Shati', 'Jeddah', 'Saudi Arabia', 4.7, 151, true, false, false, array['Instant confirmation', 'Walk-ins welcome', 'Parking available']::text[]);
+  ('00000000-0000-4000-8000-000000000003', 'the-blowout-bar', 'The Blowout Bar', 'Jeddah’s destination for perfect hair, fast. Signature blowouts, glossy styling, braids and treatments - walk in polished, walk out camera-ready.', 1, 'Prince Faisal Bin Fahd Rd', 'Ash Shati', 'Jeddah', 'Saudi Arabia', 4.7, 151, true, false, false, array['Instant confirmation', 'Walk-ins welcome', 'Parking available']::text[]);
 insert into public.venue_images (venue_id, url, sort_order) values
   ('00000000-0000-4000-8000-000000000003', 'https://images.unsplash.com/photo-1600948836101-f9ffda59d250?w=1200&q=80&auto=format&fit=crop', 0),
   ('00000000-0000-4000-8000-000000000003', 'https://images.unsplash.com/photo-1500840216050-6ffa99d75160?w=1200&q=80&auto=format&fit=crop', 1),
   ('00000000-0000-4000-8000-000000000003', 'https://images.unsplash.com/photo-1596178065887-1198b6148b2b?w=1200&q=80&auto=format&fit=crop', 2);
 insert into public.services (id, venue_id, name, description, group_name, duration_minutes, price_cents, currency, discount_pct, is_featured, sort_order) values
-  ('00000000-0000-4000-9003-000000000001', '00000000-0000-4000-8000-000000000003', 'Signature Blowout', 'Wash, blow dry and finish — smooth, bouncy or beach waves.', 'Featured', 45, 14000, 'SAR', 0, true, 0),
+  ('00000000-0000-4000-9003-000000000001', '00000000-0000-4000-8000-000000000003', 'Signature Blowout', 'Wash, blow dry and finish - smooth, bouncy or beach waves.', 'Featured', 45, 14000, 'SAR', 0, true, 0),
   ('00000000-0000-4000-9003-000000000002', '00000000-0000-4000-8000-000000000003', 'Express Blowout', 'In a rush? Dry styling in half an hour.', 'Featured', 30, 10000, 'SAR', 0, true, 1),
   ('00000000-0000-4000-9003-000000000003', '00000000-0000-4000-8000-000000000003', 'Glass Hair Gloss', 'High-shine gloss treatment with sleek finish.', 'Styling', 60, 22000, 'SAR', 0, false, 2),
   ('00000000-0000-4000-9003-000000000004', '00000000-0000-4000-8000-000000000003', 'Braided Updo', 'Event-ready braids and updos by our stylists.', 'Styling', 60, 18000, 'SAR', 0, false, 3),
@@ -118,11 +83,10 @@ insert into public.venue_images (venue_id, url, sort_order) values
 insert into public.services (id, venue_id, name, description, group_name, duration_minutes, price_cents, currency, discount_pct, is_featured, sort_order) values
   ('00000000-0000-4000-9004-000000000001', '00000000-0000-4000-8000-000000000004', 'Gel Manicure', 'Long-lasting gel polish with meticulous cuticle care and shaping.', 'Featured', 60, 15000, 'SAR', 0, true, 0),
   ('00000000-0000-4000-9004-000000000002', '00000000-0000-4000-8000-000000000004', 'Luxury Spa Pedicure', 'A pampering pedicure with sugar scrub, mask and hot towels.', 'Featured', 75, 20000, 'SAR', 15, true, 1),
-  ('00000000-0000-4000-9004-000000000003', '00000000-0000-4000-8000-000000000004', 'Acrylic Full Set', 'Sculpted acrylic extensions in your choice of shape and length.', 'Featured', 105, 28000, 'SAR', 0, true, 2),
-  ('00000000-0000-4000-9004-000000000004', '00000000-0000-4000-8000-000000000004', 'Nail Art (per nail)', 'Hand-painted designs, chrome, foils and crystals.', 'Nail Art', 10, 1500, 'SAR', 0, false, 3),
-  ('00000000-0000-4000-9004-000000000005', '00000000-0000-4000-8000-000000000004', 'Gel Removal', 'Gentle soak-off removal that protects your natural nail.', 'Nails', 20, 4000, 'SAR', 0, false, 4),
-  ('00000000-0000-4000-9004-000000000006', '00000000-0000-4000-8000-000000000004', 'Classic Manicure', 'Shape, buff, cuticle care and classic polish.', 'Nails', 45, 9000, 'SAR', 0, false, 5),
-  ('00000000-0000-4000-9004-000000000007', '00000000-0000-4000-8000-000000000004', 'BIAB Overlay', 'Builder gel overlay for stronger natural nails.', 'Nails', 75, 18000, 'SAR', 0, false, 6);
+  ('00000000-0000-4000-9004-000000000003', '00000000-0000-4000-8000-000000000004', 'Nail Art (per nail)', 'Hand-painted designs, chrome, foils and crystals.', 'Nail Art', 10, 1500, 'SAR', 0, false, 2),
+  ('00000000-0000-4000-9004-000000000004', '00000000-0000-4000-8000-000000000004', 'Gel Removal', 'Gentle soak-off removal that protects your natural nail.', 'Nails', 20, 4000, 'SAR', 0, false, 3),
+  ('00000000-0000-4000-9004-000000000005', '00000000-0000-4000-8000-000000000004', 'Classic Manicure', 'Shape, buff, cuticle care and classic polish.', 'Nails', 45, 9000, 'SAR', 0, false, 4),
+  ('00000000-0000-4000-9004-000000000006', '00000000-0000-4000-8000-000000000004', 'BIAB Overlay', 'Builder gel overlay for stronger natural nails.', 'Nails', 75, 18000, 'SAR', 0, false, 5);
 insert into public.staff (id, venue_id, name, role, rating) values
   ('00000000-0000-4000-a004-000000000001', '00000000-0000-4000-8000-000000000004', 'Jenny', 'Nail artist', 4.8999999999999995),
   ('00000000-0000-4000-a004-000000000002', '00000000-0000-4000-8000-000000000004', 'Thao', 'Senior nail tech', 5),
@@ -176,7 +140,7 @@ insert into public.opening_hours (venue_id, weekday, open_time, close_time, is_c
   ('00000000-0000-4000-8000-000000000005', 6, '10:00', '22:00', false);
 
 insert into public.venues (id, slug, name, description, category_id, address, area, city, country, rating_avg, rating_count, is_featured, is_new, is_trending, highlights) values
-  ('00000000-0000-4000-8000-000000000006', 'pure-skin-studio', 'Pure Skin Studio', 'A skincare salon devoted to the glow: deep-cleansing facials, gentle peels, dermaplaning and LED — tailored to your skin by certified estheticians.', 6, 'Prince Sultan Rd', 'Al Hamra', 'Jeddah', 'Saudi Arabia', 4.8, 262, false, true, false, array['Instant confirmation', 'Certified estheticians', 'Parking available']::text[]);
+  ('00000000-0000-4000-8000-000000000006', 'pure-skin-studio', 'Pure Skin Studio', 'A skincare salon devoted to the glow: deep-cleansing facials, gentle peels, dermaplaning and LED - tailored to your skin by certified estheticians.', 6, 'Prince Sultan Rd', 'Al Hamra', 'Jeddah', 'Saudi Arabia', 4.8, 262, false, true, false, array['Instant confirmation', 'Certified estheticians', 'Parking available']::text[]);
 insert into public.venue_images (venue_id, url, sort_order) values
   ('00000000-0000-4000-8000-000000000006', 'https://images.unsplash.com/photo-1631729371254-42c2892f0e6e?w=1200&q=80&auto=format&fit=crop', 0),
   ('00000000-0000-4000-8000-000000000006', 'https://images.unsplash.com/photo-1540555700478-4be289fbecef?w=1200&q=80&auto=format&fit=crop', 1),
@@ -269,36 +233,6 @@ insert into public.opening_hours (venue_id, weekday, open_time, close_time, is_c
   ('00000000-0000-4000-8000-000000000008', 6, '10:00', '22:00', false);
 
 insert into public.venues (id, slug, name, description, category_id, address, area, city, country, rating_avg, rating_count, is_featured, is_new, is_trending, highlights) values
-  ('00000000-0000-4000-8000-000000000009', 'brow-bar-co', 'Brow Bar Co', 'The brow specialists. Threading, tinting, lamination and henna brows perfected in minutes — walk in, glow out.', 4, 'Prince Mmd bin Abdulaziz Rd', 'As Sulimaniyah', 'Riyadh', 'Saudi Arabia', 4.9, 373, false, true, false, array['Walk-ins welcome', 'Pay by app', 'Woman-owned']::text[]);
-insert into public.venue_images (venue_id, url, sort_order) values
-  ('00000000-0000-4000-8000-000000000009', 'https://images.unsplash.com/photo-1571875257727-256c39da42af?w=1200&q=80&auto=format&fit=crop', 0),
-  ('00000000-0000-4000-8000-000000000009', 'https://images.unsplash.com/photo-1500840216050-6ffa99d75160?w=1200&q=80&auto=format&fit=crop', 1),
-  ('00000000-0000-4000-8000-000000000009', 'https://images.unsplash.com/photo-1583209814683-c023dd293cc6?w=1200&q=80&auto=format&fit=crop', 2);
-insert into public.services (id, venue_id, name, description, group_name, duration_minutes, price_cents, currency, discount_pct, is_featured, sort_order) values
-  ('00000000-0000-4000-9009-000000000001', '00000000-0000-4000-8000-000000000009', 'Brow Threading', 'Clean, precise brow shaping with traditional threading.', 'Featured', 15, 4000, 'SAR', 0, true, 0),
-  ('00000000-0000-4000-9009-000000000002', '00000000-0000-4000-8000-000000000009', 'Brow Lamination + Tint', 'Brushed-up, fuller brows with a perfectly matched tint.', 'Featured', 60, 22000, 'SAR', 10, true, 1),
-  ('00000000-0000-4000-9009-000000000003', '00000000-0000-4000-8000-000000000009', 'Henna Brows', 'Natural henna staining for fuller-looking brows up to 6 weeks.', 'Brows', 45, 15000, 'SAR', 0, false, 2),
-  ('00000000-0000-4000-9009-000000000004', '00000000-0000-4000-8000-000000000009', 'Lash Lift + Tint', 'Curled, darkened natural lashes — mascara optional.', 'Lashes', 60, 25000, 'SAR', 0, false, 3),
-  ('00000000-0000-4000-9009-000000000005', '00000000-0000-4000-8000-000000000009', 'Full Face Threading', 'Complete facial hair removal with thread.', 'Threading', 30, 9000, 'SAR', 0, false, 4);
-insert into public.staff (id, venue_id, name, role, rating) values
-  ('00000000-0000-4000-a009-000000000001', '00000000-0000-4000-8000-000000000009', 'Zainab', 'Brow artist', 4.8),
-  ('00000000-0000-4000-a009-000000000002', '00000000-0000-4000-8000-000000000009', 'Hessa', 'Brow artist', 4.8999999999999995),
-  ('00000000-0000-4000-a009-000000000003', '00000000-0000-4000-8000-000000000009', 'Mona', 'Lash tech', 5);
-insert into public.reviews (id, venue_id, author_name, rating, comment, created_at) values
-  ('00000000-0000-4000-b009-000000000001', '00000000-0000-4000-8000-000000000009', 'Norah M', 5, 'Best booking experience I have had. Walked in and everything was ready for me.', '2026-04-04T10:00:00Z'),
-  ('00000000-0000-4000-b009-000000000002', '00000000-0000-4000-8000-000000000009', 'Dana F', 5, 'My go-to place now. The attention to detail is unmatched.', '2026-04-09T11:00:00Z'),
-  ('00000000-0000-4000-b009-000000000003', '00000000-0000-4000-8000-000000000009', 'Yara T', 5, 'The staff really listen to what you want. Left feeling brand new!', '2026-04-14T12:00:00Z'),
-  ('00000000-0000-4000-b009-000000000004', '00000000-0000-4000-8000-000000000009', 'Reem K', 4, 'Great service and lovely atmosphere. Slightly busy on weekends but worth it.', '2026-04-19T13:00:00Z');
-insert into public.opening_hours (venue_id, weekday, open_time, close_time, is_closed) values
-  ('00000000-0000-4000-8000-000000000009', 0, null, null, true),
-  ('00000000-0000-4000-8000-000000000009', 1, '10:00', '22:00', false),
-  ('00000000-0000-4000-8000-000000000009', 2, '10:00', '22:00', false),
-  ('00000000-0000-4000-8000-000000000009', 3, '10:00', '22:00', false),
-  ('00000000-0000-4000-8000-000000000009', 4, '10:00', '22:00', false),
-  ('00000000-0000-4000-8000-000000000009', 5, '10:00', '22:00', false),
-  ('00000000-0000-4000-8000-000000000009', 6, '10:00', '22:00', false);
-
-insert into public.venues (id, slug, name, description, category_id, address, area, city, country, rating_avg, rating_count, is_featured, is_new, is_trending, highlights) values
   ('00000000-0000-4000-8000-000000000010', 'the-glam-room', 'The Glam Room', 'Jeddah’s go-to makeup studio for events, weddings and photoshoots. Senior artists, premium products and a look that lasts all night.', 7, 'North Corniche Rd', 'Corniche', 'Jeddah', 'Saudi Arabia', 4.6, 410, false, false, true, array['Instant confirmation', 'Sea view', 'Parking available', 'Woman-owned']::text[]);
 insert into public.venue_images (venue_id, url, sort_order) values
   ('00000000-0000-4000-8000-000000000010', 'https://images.unsplash.com/photo-1500840216050-6ffa99d75160?w=1200&q=80&auto=format&fit=crop', 0),
@@ -308,8 +242,7 @@ insert into public.services (id, venue_id, name, description, group_name, durati
   ('00000000-0000-4000-9010-000000000001', '00000000-0000-4000-8000-000000000010', 'Full Glam Makeup', 'Occasion-ready full face by our senior artists.', 'Featured', 75, 40000, 'SAR', 0, true, 0),
   ('00000000-0000-4000-9010-000000000002', '00000000-0000-4000-8000-000000000010', 'Soft Glam Makeup', 'Natural, radiant makeup for daytime events.', 'Featured', 60, 30000, 'SAR', 0, true, 1),
   ('00000000-0000-4000-9010-000000000003', '00000000-0000-4000-8000-000000000010', 'Bridal Makeup Trial', 'Try your wedding look before the big day.', 'Bridal', 90, 45000, 'SAR', 0, false, 2),
-  ('00000000-0000-4000-9010-000000000004', '00000000-0000-4000-8000-000000000010', 'Lash Application', 'Strip or individual lashes applied to perfection.', 'Add-ons', 15, 6000, 'SAR', 0, false, 3),
-  ('00000000-0000-4000-9010-000000000005', '00000000-0000-4000-8000-000000000010', 'Makeup Lesson (1:1)', 'Personal masterclass with your own products.', 'Lessons', 90, 50000, 'SAR', 0, false, 4);
+  ('00000000-0000-4000-9010-000000000004', '00000000-0000-4000-8000-000000000010', 'Makeup Lesson (1:1)', 'Personal masterclass with your own products.', 'Lessons', 90, 50000, 'SAR', 0, false, 3);
 insert into public.staff (id, venue_id, name, role, rating) values
   ('00000000-0000-4000-a010-000000000001', '00000000-0000-4000-8000-000000000010', 'Layla', 'Senior makeup artist', 4.8999999999999995),
   ('00000000-0000-4000-a010-000000000002', '00000000-0000-4000-8000-000000000010', 'Kim', 'Makeup artist', 5),
@@ -337,7 +270,7 @@ insert into public.venue_images (venue_id, url, sort_order) values
   ('00000000-0000-4000-8000-000000000011', 'https://images.unsplash.com/photo-1600948836101-f9ffda59d250?w=1200&q=80&auto=format&fit=crop', 2);
 insert into public.services (id, venue_id, name, description, group_name, duration_minutes, price_cents, currency, discount_pct, is_featured, sort_order) values
   ('00000000-0000-4000-9011-000000000001', '00000000-0000-4000-8000-000000000011', 'Executive Cut & Style', 'Tailored cut, wash and style with premium finish.', 'Featured', 60, 15000, 'SAR', 0, true, 0),
-  ('00000000-0000-4000-9011-000000000002', '00000000-0000-4000-8000-000000000011', 'Royal Shave', 'Hot towels, straight razor, facial massage — the full ritual.', 'Featured', 45, 11000, 'SAR', 0, true, 1),
+  ('00000000-0000-4000-9011-000000000002', '00000000-0000-4000-8000-000000000011', 'Royal Shave', 'Hot towels, straight razor, facial massage - the full ritual.', 'Featured', 45, 11000, 'SAR', 0, true, 1),
   ('00000000-0000-4000-9011-000000000003', '00000000-0000-4000-8000-000000000011', 'Gentleman’s Facial', 'Deep-cleansing facial designed for men’s skin.', 'Grooming', 45, 18000, 'SAR', 0, false, 2),
   ('00000000-0000-4000-9011-000000000004', '00000000-0000-4000-8000-000000000011', 'Hair + Beard Combo', 'Complete grooming: cut, beard sculpt and style.', 'Hair', 75, 19000, 'SAR', 12, false, 3),
   ('00000000-0000-4000-9011-000000000005', '00000000-0000-4000-8000-000000000011', 'Grey Blending', 'Subtle, natural-looking grey coverage.', 'Colour', 45, 14000, 'SAR', 0, false, 4);
@@ -372,7 +305,7 @@ insert into public.services (id, venue_id, name, description, group_name, durati
   ('00000000-0000-4000-9012-000000000002', '00000000-0000-4000-8000-000000000012', 'Full Face Makeup', 'Occasion-ready glam by our senior makeup artists.', 'Featured', 60, 35000, 'SAR', 0, true, 1),
   ('00000000-0000-4000-9012-000000000003', '00000000-0000-4000-8000-000000000012', 'Hair Colour (full)', 'Full-head colour with gloss finish.', 'Colour', 120, 40000, 'SAR', 0, false, 2),
   ('00000000-0000-4000-9012-000000000004', '00000000-0000-4000-8000-000000000012', 'Full Body Wax', 'Complete waxing with gentle, low-temp wax.', 'Waxing', 90, 30000, 'SAR', 0, false, 3),
-  ('00000000-0000-4000-9012-000000000005', '00000000-0000-4000-8000-000000000012', 'Bridal Package', 'Hair, makeup, nails and lashes for your big day.', 'Bridal', 240, 150000, 'SAR', 8, false, 4),
+  ('00000000-0000-4000-9012-000000000005', '00000000-0000-4000-8000-000000000012', 'Bridal Package', 'Hair, makeup and nails for your big day.', 'Bridal', 240, 150000, 'SAR', 8, false, 4),
   ('00000000-0000-4000-9012-000000000006', '00000000-0000-4000-8000-000000000012', 'Hair Treatment Mask', 'Intense repair mask with scalp massage.', 'Treatments', 30, 10000, 'SAR', 0, false, 5);
 insert into public.staff (id, venue_id, name, role, rating) values
   ('00000000-0000-4000-a012-000000000001', '00000000-0000-4000-8000-000000000012', 'Abeer', 'Salon director', 4.8),

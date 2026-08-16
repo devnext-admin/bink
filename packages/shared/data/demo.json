@@ -19,12 +19,6 @@
       "icon": "color-palette-outline"
     },
     {
-      "id": 4,
-      "slug": "brows-lashes",
-      "name": "Eyebrows & Lashes",
-      "icon": "eye-outline"
-    },
-    {
       "id": 5,
       "slug": "waxing-salon",
       "name": "Waxing Salon",
@@ -50,259 +44,6 @@
     }
   ],
   "venues": [
-    {
-      "id": "00000000-0000-4000-8000-000000000001",
-      "slug": "glow-lash-studio",
-      "name": "Glow Lash Studio",
-      "description": "Step into the peaceful world of Glow Lash Studio. We are all about perfect lashes and brows, offering expert lash extensions, lash lifts, eyebrow shaping and manicures. Our studio is designed like a relaxing bamboo spa, creating a calm and soothing atmosphere where quality and cleanliness come first.",
-      "category_id": 4,
-      "address": "An Nuzhah District, Olaya St",
-      "area": "An Nuzhah",
-      "city": "Riyadh",
-      "lat": 24.7743,
-      "lng": 46.7386,
-      "country": "Saudi Arabia",
-      "rating_avg": 4.8,
-      "rating_count": 77,
-      "is_featured": true,
-      "is_new": false,
-      "is_trending": false,
-      "highlights": [
-        "Instant confirmation",
-        "Pay by app",
-        "Parking available",
-        "Woman-owned"
-      ],
-      "images": [
-        {
-          "url": "https://images.unsplash.com/photo-1633681926022-84c23e8cb2d6?w=1200&q=80&auto=format&fit=crop",
-          "sort_order": 0
-        },
-        {
-          "url": "https://images.unsplash.com/photo-1571875257727-256c39da42af?w=1200&q=80&auto=format&fit=crop",
-          "sort_order": 1
-        },
-        {
-          "url": "https://images.unsplash.com/photo-1583209814683-c023dd293cc6?w=1200&q=80&auto=format&fit=crop",
-          "sort_order": 2
-        }
-      ],
-      "services": [
-        {
-          "id": "00000000-0000-4000-9001-000000000001",
-          "venue_id": "00000000-0000-4000-8000-000000000001",
-          "name": "Classic Lash Extensions",
-          "group_name": "Featured",
-          "duration_minutes": 120,
-          "price_cents": 55000,
-          "currency": "SAR",
-          "description": "Achieve the most natural look with our classic lash extensions, individually applied to enhance length, curl and thickness.",
-          "discount_pct": 0,
-          "is_featured": true,
-          "sort_order": 0
-        },
-        {
-          "id": "00000000-0000-4000-9001-000000000002",
-          "venue_id": "00000000-0000-4000-8000-000000000001",
-          "name": "Brow Shaping",
-          "group_name": "Featured",
-          "duration_minutes": 20,
-          "price_cents": 5000,
-          "currency": "SAR",
-          "description": "Define and sculpt your brows with precision threading, leaving you with clean and beautifully shaped eyebrows.",
-          "discount_pct": 0,
-          "is_featured": true,
-          "sort_order": 1
-        },
-        {
-          "id": "00000000-0000-4000-9001-000000000003",
-          "venue_id": "00000000-0000-4000-8000-000000000001",
-          "name": "Lash Removal",
-          "group_name": "Featured",
-          "duration_minutes": 20,
-          "price_cents": 10000,
-          "currency": "SAR",
-          "description": "Our gentle lash removal service safely removes eyelash extensions while preserving your natural lashes.",
-          "discount_pct": 0,
-          "is_featured": true,
-          "sort_order": 2
-        },
-        {
-          "id": "00000000-0000-4000-9001-000000000004",
-          "venue_id": "00000000-0000-4000-8000-000000000001",
-          "name": "Lashes & Brows Lift",
-          "group_name": "Featured",
-          "duration_minutes": 80,
-          "price_cents": 80000,
-          "currency": "SAR",
-          "description": "A complete lift package for lashes and brows for a naturally polished look.",
-          "discount_pct": 6,
-          "is_featured": true,
-          "sort_order": 3
-        },
-        {
-          "id": "00000000-0000-4000-9001-000000000005",
-          "venue_id": "00000000-0000-4000-8000-000000000001",
-          "name": "Volume Lash Set",
-          "group_name": "Lashes",
-          "duration_minutes": 150,
-          "price_cents": 65000,
-          "currency": "SAR",
-          "description": "Full volume set with handmade fans for a dramatic, fluffy finish.",
-          "discount_pct": 0,
-          "is_featured": false,
-          "sort_order": 4
-        },
-        {
-          "id": "00000000-0000-4000-9001-000000000006",
-          "venue_id": "00000000-0000-4000-8000-000000000001",
-          "name": "Lash Refill (2 weeks)",
-          "group_name": "Lashes",
-          "duration_minutes": 60,
-          "price_cents": 25000,
-          "currency": "SAR",
-          "description": "Keep your set full with a two-week refill by our lash masters.",
-          "discount_pct": 0,
-          "is_featured": false,
-          "sort_order": 5
-        },
-        {
-          "id": "00000000-0000-4000-9001-000000000007",
-          "venue_id": "00000000-0000-4000-8000-000000000001",
-          "name": "Brow Lamination",
-          "group_name": "Brows",
-          "duration_minutes": 45,
-          "price_cents": 20000,
-          "currency": "SAR",
-          "description": "Fuller, fluffier brows that stay in place for up to 8 weeks.",
-          "discount_pct": 0,
-          "is_featured": false,
-          "sort_order": 6
-        },
-        {
-          "id": "00000000-0000-4000-9001-000000000008",
-          "venue_id": "00000000-0000-4000-8000-000000000001",
-          "name": "Classic Manicure",
-          "group_name": "Nails",
-          "duration_minutes": 45,
-          "price_cents": 8000,
-          "currency": "SAR",
-          "description": "A classic manicure with shaping, cuticle care and polish.",
-          "discount_pct": 0,
-          "is_featured": false,
-          "sort_order": 7
-        }
-      ],
-      "staff": [
-        {
-          "id": "00000000-0000-4000-a001-000000000001",
-          "venue_id": "00000000-0000-4000-8000-000000000001",
-          "name": "Ainura",
-          "role": "Lash master",
-          "rating": 4.8999999999999995
-        },
-        {
-          "id": "00000000-0000-4000-a001-000000000002",
-          "venue_id": "00000000-0000-4000-8000-000000000001",
-          "name": "Gulzira",
-          "role": "Lash master",
-          "rating": 5
-        },
-        {
-          "id": "00000000-0000-4000-a001-000000000003",
-          "venue_id": "00000000-0000-4000-8000-000000000001",
-          "name": "Madelaine",
-          "role": "Nail master",
-          "rating": 4.8
-        }
-      ],
-      "reviews": [
-        {
-          "id": "00000000-0000-4000-b001-000000000001",
-          "venue_id": "00000000-0000-4000-8000-000000000001",
-          "author_name": "Norah M",
-          "rating": 5,
-          "comment": "Best booking experience I have had. Walked in and everything was ready for me.",
-          "created_at": "2026-02-04T10:00:00Z"
-        },
-        {
-          "id": "00000000-0000-4000-b001-000000000002",
-          "venue_id": "00000000-0000-4000-8000-000000000001",
-          "author_name": "Dana F",
-          "rating": 5,
-          "comment": "My go-to place now. The attention to detail is unmatched.",
-          "created_at": "2026-02-09T11:00:00Z"
-        },
-        {
-          "id": "00000000-0000-4000-b001-000000000003",
-          "venue_id": "00000000-0000-4000-8000-000000000001",
-          "author_name": "Yara T",
-          "rating": 5,
-          "comment": "The staff really listen to what you want. Left feeling brand new!",
-          "created_at": "2026-02-14T12:00:00Z"
-        },
-        {
-          "id": "00000000-0000-4000-b001-000000000004",
-          "venue_id": "00000000-0000-4000-8000-000000000001",
-          "author_name": "Reem K",
-          "rating": 4,
-          "comment": "Great service and lovely atmosphere. Slightly busy on weekends but worth it.",
-          "created_at": "2026-02-19T13:00:00Z"
-        },
-        {
-          "id": "00000000-0000-4000-b001-000000000005",
-          "venue_id": "00000000-0000-4000-8000-000000000001",
-          "author_name": "Aisha B",
-          "rating": 4,
-          "comment": "Very professional team and beautiful interior. Will definitely come back.",
-          "created_at": "2026-02-24T14:00:00Z"
-        }
-      ],
-      "hours": [
-        {
-          "weekday": 0,
-          "open_time": null,
-          "close_time": null,
-          "is_closed": true
-        },
-        {
-          "weekday": 1,
-          "open_time": "10:00",
-          "close_time": "22:00",
-          "is_closed": false
-        },
-        {
-          "weekday": 2,
-          "open_time": "10:00",
-          "close_time": "22:00",
-          "is_closed": false
-        },
-        {
-          "weekday": 3,
-          "open_time": "10:00",
-          "close_time": "22:00",
-          "is_closed": false
-        },
-        {
-          "weekday": 4,
-          "open_time": "10:00",
-          "close_time": "22:00",
-          "is_closed": false
-        },
-        {
-          "weekday": 5,
-          "open_time": "10:00",
-          "close_time": "22:00",
-          "is_closed": false
-        },
-        {
-          "weekday": 6,
-          "open_time": "10:00",
-          "close_time": "22:00",
-          "is_closed": false
-        }
-      ]
-    },
     {
       "id": "00000000-0000-4000-8000-000000000002",
       "slug": "the-fade-room",
@@ -822,19 +563,6 @@
         {
           "id": "00000000-0000-4000-9004-000000000003",
           "venue_id": "00000000-0000-4000-8000-000000000004",
-          "name": "Acrylic Full Set",
-          "group_name": "Featured",
-          "duration_minutes": 105,
-          "price_cents": 28000,
-          "currency": "SAR",
-          "description": "Sculpted acrylic extensions in your choice of shape and length.",
-          "discount_pct": 0,
-          "is_featured": true,
-          "sort_order": 2
-        },
-        {
-          "id": "00000000-0000-4000-9004-000000000004",
-          "venue_id": "00000000-0000-4000-8000-000000000004",
           "name": "Nail Art (per nail)",
           "group_name": "Nail Art",
           "duration_minutes": 10,
@@ -843,10 +571,10 @@
           "description": "Hand-painted designs, chrome, foils and crystals.",
           "discount_pct": 0,
           "is_featured": false,
-          "sort_order": 3
+          "sort_order": 2
         },
         {
-          "id": "00000000-0000-4000-9004-000000000005",
+          "id": "00000000-0000-4000-9004-000000000004",
           "venue_id": "00000000-0000-4000-8000-000000000004",
           "name": "Gel Removal",
           "group_name": "Nails",
@@ -856,10 +584,10 @@
           "description": "Gentle soak-off removal that protects your natural nail.",
           "discount_pct": 0,
           "is_featured": false,
-          "sort_order": 4
+          "sort_order": 3
         },
         {
-          "id": "00000000-0000-4000-9004-000000000006",
+          "id": "00000000-0000-4000-9004-000000000005",
           "venue_id": "00000000-0000-4000-8000-000000000004",
           "name": "Classic Manicure",
           "group_name": "Nails",
@@ -869,10 +597,10 @@
           "description": "Shape, buff, cuticle care and classic polish.",
           "discount_pct": 0,
           "is_featured": false,
-          "sort_order": 5
+          "sort_order": 4
         },
         {
-          "id": "00000000-0000-4000-9004-000000000007",
+          "id": "00000000-0000-4000-9004-000000000006",
           "venue_id": "00000000-0000-4000-8000-000000000004",
           "name": "BIAB Overlay",
           "group_name": "Nails",
@@ -882,7 +610,7 @@
           "description": "Builder gel overlay for stronger natural nails.",
           "discount_pct": 0,
           "is_featured": false,
-          "sort_order": 6
+          "sort_order": 5
         }
       ],
       "staff": [
@@ -1870,211 +1598,6 @@
       ]
     },
     {
-      "id": "00000000-0000-4000-8000-000000000009",
-      "slug": "brow-bar-co",
-      "name": "Brow Bar Co",
-      "description": "The brow specialists. Threading, tinting, lamination and henna brows perfected in minutes - walk in, glow out.",
-      "category_id": 4,
-      "address": "Prince Mmd bin Abdulaziz Rd",
-      "area": "As Sulimaniyah",
-      "city": "Riyadh",
-      "lat": 24.7469,
-      "lng": 46.705,
-      "country": "Saudi Arabia",
-      "rating_avg": 4.9,
-      "rating_count": 373,
-      "is_featured": false,
-      "is_new": true,
-      "is_trending": false,
-      "highlights": [
-        "Walk-ins welcome",
-        "Pay by app",
-        "Woman-owned"
-      ],
-      "images": [
-        {
-          "url": "https://images.unsplash.com/photo-1571875257727-256c39da42af?w=1200&q=80&auto=format&fit=crop",
-          "sort_order": 0
-        },
-        {
-          "url": "https://images.unsplash.com/photo-1500840216050-6ffa99d75160?w=1200&q=80&auto=format&fit=crop",
-          "sort_order": 1
-        },
-        {
-          "url": "https://images.unsplash.com/photo-1583209814683-c023dd293cc6?w=1200&q=80&auto=format&fit=crop",
-          "sort_order": 2
-        }
-      ],
-      "services": [
-        {
-          "id": "00000000-0000-4000-9009-000000000001",
-          "venue_id": "00000000-0000-4000-8000-000000000009",
-          "name": "Brow Threading",
-          "group_name": "Featured",
-          "duration_minutes": 15,
-          "price_cents": 4000,
-          "currency": "SAR",
-          "description": "Clean, precise brow shaping with traditional threading.",
-          "discount_pct": 0,
-          "is_featured": true,
-          "sort_order": 0
-        },
-        {
-          "id": "00000000-0000-4000-9009-000000000002",
-          "venue_id": "00000000-0000-4000-8000-000000000009",
-          "name": "Brow Lamination + Tint",
-          "group_name": "Featured",
-          "duration_minutes": 60,
-          "price_cents": 22000,
-          "currency": "SAR",
-          "description": "Brushed-up, fuller brows with a perfectly matched tint.",
-          "discount_pct": 10,
-          "is_featured": true,
-          "sort_order": 1
-        },
-        {
-          "id": "00000000-0000-4000-9009-000000000003",
-          "venue_id": "00000000-0000-4000-8000-000000000009",
-          "name": "Henna Brows",
-          "group_name": "Brows",
-          "duration_minutes": 45,
-          "price_cents": 15000,
-          "currency": "SAR",
-          "description": "Natural henna staining for fuller-looking brows up to 6 weeks.",
-          "discount_pct": 0,
-          "is_featured": false,
-          "sort_order": 2
-        },
-        {
-          "id": "00000000-0000-4000-9009-000000000004",
-          "venue_id": "00000000-0000-4000-8000-000000000009",
-          "name": "Lash Lift + Tint",
-          "group_name": "Lashes",
-          "duration_minutes": 60,
-          "price_cents": 25000,
-          "currency": "SAR",
-          "description": "Curled, darkened natural lashes - mascara optional.",
-          "discount_pct": 0,
-          "is_featured": false,
-          "sort_order": 3
-        },
-        {
-          "id": "00000000-0000-4000-9009-000000000005",
-          "venue_id": "00000000-0000-4000-8000-000000000009",
-          "name": "Full Face Threading",
-          "group_name": "Threading",
-          "duration_minutes": 30,
-          "price_cents": 9000,
-          "currency": "SAR",
-          "description": "Complete facial hair removal with thread.",
-          "discount_pct": 0,
-          "is_featured": false,
-          "sort_order": 4
-        }
-      ],
-      "staff": [
-        {
-          "id": "00000000-0000-4000-a009-000000000001",
-          "venue_id": "00000000-0000-4000-8000-000000000009",
-          "name": "Zainab",
-          "role": "Brow artist",
-          "rating": 4.8
-        },
-        {
-          "id": "00000000-0000-4000-a009-000000000002",
-          "venue_id": "00000000-0000-4000-8000-000000000009",
-          "name": "Hessa",
-          "role": "Brow artist",
-          "rating": 4.8999999999999995
-        },
-        {
-          "id": "00000000-0000-4000-a009-000000000003",
-          "venue_id": "00000000-0000-4000-8000-000000000009",
-          "name": "Mona",
-          "role": "Lash tech",
-          "rating": 5
-        }
-      ],
-      "reviews": [
-        {
-          "id": "00000000-0000-4000-b009-000000000001",
-          "venue_id": "00000000-0000-4000-8000-000000000009",
-          "author_name": "Norah M",
-          "rating": 5,
-          "comment": "Best booking experience I have had. Walked in and everything was ready for me.",
-          "created_at": "2026-04-04T10:00:00Z"
-        },
-        {
-          "id": "00000000-0000-4000-b009-000000000002",
-          "venue_id": "00000000-0000-4000-8000-000000000009",
-          "author_name": "Dana F",
-          "rating": 5,
-          "comment": "My go-to place now. The attention to detail is unmatched.",
-          "created_at": "2026-04-09T11:00:00Z"
-        },
-        {
-          "id": "00000000-0000-4000-b009-000000000003",
-          "venue_id": "00000000-0000-4000-8000-000000000009",
-          "author_name": "Yara T",
-          "rating": 5,
-          "comment": "The staff really listen to what you want. Left feeling brand new!",
-          "created_at": "2026-04-14T12:00:00Z"
-        },
-        {
-          "id": "00000000-0000-4000-b009-000000000004",
-          "venue_id": "00000000-0000-4000-8000-000000000009",
-          "author_name": "Reem K",
-          "rating": 4,
-          "comment": "Great service and lovely atmosphere. Slightly busy on weekends but worth it.",
-          "created_at": "2026-04-19T13:00:00Z"
-        }
-      ],
-      "hours": [
-        {
-          "weekday": 0,
-          "open_time": null,
-          "close_time": null,
-          "is_closed": true
-        },
-        {
-          "weekday": 1,
-          "open_time": "10:00",
-          "close_time": "22:00",
-          "is_closed": false
-        },
-        {
-          "weekday": 2,
-          "open_time": "10:00",
-          "close_time": "22:00",
-          "is_closed": false
-        },
-        {
-          "weekday": 3,
-          "open_time": "10:00",
-          "close_time": "22:00",
-          "is_closed": false
-        },
-        {
-          "weekday": 4,
-          "open_time": "10:00",
-          "close_time": "22:00",
-          "is_closed": false
-        },
-        {
-          "weekday": 5,
-          "open_time": "10:00",
-          "close_time": "22:00",
-          "is_closed": false
-        },
-        {
-          "weekday": 6,
-          "open_time": "10:00",
-          "close_time": "22:00",
-          "is_closed": false
-        }
-      ]
-    },
-    {
       "id": "00000000-0000-4000-8000-000000000010",
       "slug": "the-glam-room",
       "name": "The Glam Room",
@@ -2154,19 +1677,6 @@
         {
           "id": "00000000-0000-4000-9010-000000000004",
           "venue_id": "00000000-0000-4000-8000-000000000010",
-          "name": "Lash Application",
-          "group_name": "Add-ons",
-          "duration_minutes": 15,
-          "price_cents": 6000,
-          "currency": "SAR",
-          "description": "Strip or individual lashes applied to perfection.",
-          "discount_pct": 0,
-          "is_featured": false,
-          "sort_order": 3
-        },
-        {
-          "id": "00000000-0000-4000-9010-000000000005",
-          "venue_id": "00000000-0000-4000-8000-000000000010",
           "name": "Makeup Lesson (1:1)",
           "group_name": "Lessons",
           "duration_minutes": 90,
@@ -2175,7 +1685,7 @@
           "description": "Personal masterclass with your own products.",
           "discount_pct": 0,
           "is_featured": false,
-          "sort_order": 4
+          "sort_order": 3
         }
       ],
       "staff": [
@@ -2606,7 +2116,7 @@
           "duration_minutes": 240,
           "price_cents": 150000,
           "currency": "SAR",
-          "description": "Hair, makeup, nails and lashes for your big day.",
+          "description": "Hair, makeup and nails for your big day.",
           "discount_pct": 8,
           "is_featured": false,
           "sort_order": 4

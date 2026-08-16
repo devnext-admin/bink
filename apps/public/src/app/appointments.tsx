@@ -1,3 +1,4 @@
+import { DelayControls } from '@bink/shared/components/delay-controls';
 import { Ionicons } from '@expo/vector-icons';
 import { Image } from 'expo-image';
 import { useFocusEffect, useRouter } from 'expo-router';
@@ -236,6 +237,9 @@ export default function Appointments() {
             </View>
             {filter === 'upcoming' && b.status !== 'cancelled' ? (
               <View style={{ marginTop: 16 }}>
+                {/* Running late, or the salon is. Up to 15 minutes without a
+                    full reschedule; the other side has to agree. */}
+                <DelayControls booking={b} side="customer" onChanged={refresh} />
                 <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 10 }}>
                   <Button
                     title={reschedId === b.id ? t('Close') : t('Reschedule')}

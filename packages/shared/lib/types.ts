@@ -195,4 +195,15 @@ export interface Booking {
   currency: string;
   created_at?: string;
   items: BookingItem[];
+  /** Pending short-delay request: 1 to 15 minutes, or null when there is none. */
+  delay_minutes?: number | null;
+  /** Which side asked. The other side is the one who may answer. */
+  delay_by?: DelaySide | null;
+  delay_at?: string | null;
 }
+
+/** The two sides of a booking, for delay requests. */
+export type DelaySide = 'customer' | 'venue';
+
+/** Longest delay either side may ask for. Mirrored by a DB check constraint. */
+export const MAX_DELAY_MINUTES = 15;
