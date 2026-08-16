@@ -1,0 +1,70 @@
+{
+  "expo": {
+    "name": "Bink",
+    "slug": "bink",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "../../packages/shared/assets/images/icon.png",
+    "scheme": "bink",
+    "userInterfaceStyle": "automatic",
+    "ios": {
+      "icon": "../../packages/shared/assets/expo.icon",
+      "bundleIdentifier": "sa.devnext.bink",
+      "buildNumber": "1",
+      "supportsTablet": false,
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false
+      }
+    },
+    "android": {
+      "adaptiveIcon": {
+        "backgroundColor": "#6950F3",
+        "foregroundImage": "../../packages/shared/assets/images/android-icon-foreground.png",
+        "backgroundImage": "../../packages/shared/assets/images/android-icon-background.png",
+        "monochromeImage": "../../packages/shared/assets/images/android-icon-monochrome.png"
+      },
+      "predictiveBackGestureEnabled": false,
+      "package": "sa.devnext.bink",
+      "versionCode": 1
+    },
+    "web": {
+      "output": "single",
+      "favicon": "../../packages/shared/assets/images/favicon.png"
+    },
+    "plugins": [
+      "expo-router",
+      [
+        "expo-splash-screen",
+        {
+          "backgroundColor": "#6950F3",
+          "image": "../../packages/shared/assets/images/splash-icon.png",
+          "imageWidth": 76
+        }
+      ],
+      "expo-font",
+      [
+        "expo-location",
+        {
+          "locationWhenInUsePermission": "Bink uses your location to show salons near you and sort results by distance."
+        }
+      ]
+    ],
+    "experiments": {
+      "typedRoutes": true,
+      "reactCompiler": true
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "39fc42fe-69c1-44f7-8313-e35019818482"
+      }
+    },
+    "owner": "threelines",
+    "runtimeVersion": {
+      "policy": "sdkVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/39fc42fe-69c1-44f7-8313-e35019818482"
+    }
+  }
+}
