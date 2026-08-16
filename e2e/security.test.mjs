@@ -9,9 +9,13 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 
-const BASE = process.env.SUPABASE_URL ?? 'https://yxidiwkswariavopixmf.supabase.co';
+// Use || rather than ??: GitHub Actions sets an undefined secret to the empty
+// string, which ?? happily accepts. That made BASE '' and every request fail
+// with "Failed to parse URL", so CI was red on every run from the day it was
+// added. An empty value must fall through to the defaults below.
+const BASE = process.env.SUPABASE_URL || 'https://yxidiwkswariavopixmf.supabase.co';
 const ANON =
-  process.env.SUPABASE_ANON_KEY ??
+  process.env.SUPABASE_ANON_KEY ||
   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inl4aWRpd2tzd2FyaWF2b3BpeG1mIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODM4NDQ0ODgsImV4cCI6MjA5OTQyMDQ4OH0.0ZksAw0JbR72KvIaJ7zWgBFh5VS2cmNcog1RGPwj7aY';
 const DEMO = { email: 'demo@bink.com', password: 'binkdemo123' };
 

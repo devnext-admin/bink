@@ -1,0 +1,27 @@
+{
+  "expo": {
+    "name": "Bink Admin",
+    "slug": "bink-admin",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "../../packages/shared/assets/images/icon.png",
+    "scheme": "bink-admin",
+    "userInterfaceStyle": "automatic",
+    "platforms": ["web"],
+    "web": {
+      "output": "single",
+      "favicon": "../../packages/shared/assets/images/favicon.png"
+    },
+    "plugins": [
+      "expo-router",
+      "expo-font"
+    ],
+    "experiments": {
+      "typedRoutes": true,
+      "reactCompiler": true
+    },
+    "extra": {
+      "router": {}
+    }
+  }
+}

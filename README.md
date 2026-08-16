@@ -16,10 +16,17 @@ with everything persisted locally.
 ## Run it
 
 ```bash
-npm install
-npm run web        # desktop + mobile web on http://localhost:8081
-npm start          # then scan the QR code with Expo Go for the native app
+npm install        # installs every workspace
+npm run web        # public app: desktop + mobile web on http://localhost:8081
+npm start          # public app: scan the QR code with Expo Go for native
+npm run admin      # admin console (web only, separate app)
 ```
+
+Bink is an npm-workspaces monorepo with two deployable apps. `apps/public` is
+the customer and business surface (web + mobile); `apps/admin` is the internal
+console, web only and deployed to its own origin so its code never ships to
+visitors. Shared UI, data and theme live in `packages/shared`. See `AGENTS.md`
+for the rules that keep that boundary intact.
 
 ## Roles & portals
 
@@ -54,12 +61,19 @@ Tokens live in `src/lib/theme.ts`. Reference screenshots in `design-refs/`.
 ## Structure
 
 ```
-src/
+apps/public/src/
   app/                expo-router routes (index, search, venue/[slug], booking/[slug],
-                      appointments, profile, auth)
+                      appointments, profile, auth, business/*)
   screens/            desktop vs mobile home implementations
-  components/         VenueCard, SectionRail, SearchBar, ServiceRow, BottomTabs, ...
-  lib/                theme, types, data layer, auth/booking/app-data contexts
+  components/         VenueCard, SectionRail, BottomTabs, account-layout, ...
+  lib/                booking context, availability, demo seed, home rails
+apps/admin/src/
+  app/index.tsx       the admin console
+  lib/admin.ts        admin-only reads and writes. Nothing else may import this.
+packages/shared/
+  components/         SearchBar, ServiceRow, WebHeader, chat, ui primitives
+  lib/                theme, types, data layer, auth/app-data contexts, i18n
+  assets/             fonts and brand images used by both apps
   data/demo.json      generated demo dataset (mirrors supabase/seed.sql)
 scripts/
   data.mjs            canonical seed data (12 venues, services, staff, reviews)

@@ -16,11 +16,24 @@ jobs:
           node-version: 20
           cache: npm
       - name: Install
-        run: npm ci --legacy-peer-deps
-      - name: Type check
-        run: npx tsc --noEmit
+        run: npm ci
+
+      - name: Type check (all workspaces)
+        run: npm run typecheck
+
       - name: Security / RLS tests
         run: node --test e2e/security.test.mjs
         env:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+
+      # Builds both bundles so the isolation check below has something to read.
+      - name: Build public web bundle
+        run: npm run build:public
+      - name: Build admin web bundle
+        run: npm run build:admin
+
+      # Fails if any admin-only query reaches the public bundle. This is what
+      # keeps the customer/admin split honest as the code changes.
+      - name: Verify admin code is absent from the public bundle
+        run: npm run verify:isolation

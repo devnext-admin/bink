@@ -1,0 +1,12 @@
+{
+  "name": "@bink/shared",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Code used by both the public app and the admin app: UI primitives, data layer, auth, i18n, theme and brand assets. Admin-only reads and writes must NOT be added here - they belong in apps/admin/src/lib/admin.ts.",
+  "main": "index.js",
+  "peerDependencies": {
+    "expo": "*",
+    "react": "*",
+    "react-native": "*"
+  }
+}
