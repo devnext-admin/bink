@@ -16,8 +16,9 @@
       "expo-router",
       "expo-font"
     ],
+    "_comment_typedRoutes": "Off for the admin console on purpose. It has a single route, so typed routes add nothing, and shared components (web header, search bar) legitimately link to public-app routes such as /search and /auth. Those are handled at runtime by openPublicRoute, which sends them to EXPO_PUBLIC_APP_URL instead of routing in-app. The public app keeps typedRoutes on.",
     "experiments": {
-      "typedRoutes": true,
+      "typedRoutes": false,
       "reactCompiler": true
     },
     "extra": {

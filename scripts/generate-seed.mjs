@@ -1,4 +1,4 @@
-// Generates supabase/seed.sql and src/data/demo.json from scripts/data.mjs
+// Generates supabase/seed.sql and packages/shared/data/demo.json from scripts/data.mjs
 // Run: node scripts/generate-seed.mjs
 import { writeFileSync, mkdirSync } from 'node:fs';
 import { buildData } from './data.mjs';
@@ -43,10 +43,10 @@ sql += `update public.venues v set rating_avg = coalesce((select round(avg(ratin
 
 writeFileSync(new URL('../supabase/seed.sql', import.meta.url), sql);
 
-mkdirSync(new URL('../src/data', import.meta.url), { recursive: true });
+mkdirSync(new URL('../packages/shared/data', import.meta.url), { recursive: true });
 writeFileSync(
-  new URL('../src/data/demo.json', import.meta.url),
+  new URL('../packages/shared/data/demo.json', import.meta.url),
   JSON.stringify({ categories, venues, promos }, null, 2)
 );
 
-console.log(`Wrote supabase/seed.sql (${venues.length} venues) and src/data/demo.json`);
+console.log(`Wrote supabase/seed.sql (${venues.length} venues) and packages/shared/data/demo.json`);

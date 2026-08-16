@@ -1,3 +1,4 @@
+import { openPublicRoute } from '../lib/admin-link';
 import { Ionicons } from '@expo/vector-icons';
 import { useFocusEffect, useRouter } from 'expo-router';
 import React, { useCallback, useState } from 'react';
@@ -22,7 +23,7 @@ export function NotificationsBell({ color = colors.ink }: { color?: string }) {
   );
 
   return (
-    <Pressable onPress={() => router.push('/notifications')} hitSlop={8} style={styles.wrap}>
+    <Pressable onPress={() => (openPublicRoute('/notifications') ? undefined : router.push('/notifications' as any))} hitSlop={8} style={styles.wrap}>
       <Ionicons name="notifications-outline" size={22} color={color} />
       {unread > 0 && (
         <View style={styles.badge}>

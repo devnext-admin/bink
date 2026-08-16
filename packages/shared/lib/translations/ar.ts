@@ -297,7 +297,6 @@ export const ar: Record<string, string> = {
   "Excellent 5/5": "ممتاز 5/5",
   "expires {date}": "ينتهي في {date}",
   "Export CSV": "تصدير CSV",
-  "Eyebrows & Lashes": "حواجب ورموش",
   "Facials & Skincare": "العناية بالبشرة وتنظيف الوجه",
   "Failed": "فاشلة",
   "Favorites": "المفضلة",
