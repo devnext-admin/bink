@@ -18,8 +18,8 @@
     "typecheck": "npm run typecheck --workspaces --if-present",
     "test": "node --test e2e/security.test.mjs",
     "verify:isolation": "node scripts/verify-isolation.mjs",
-    "deploy:admin": "npm run build:admin && npx --yes vercel@latest link --cwd apps/admin/dist --project bink-admin --yes && npx --yes vercel@latest deploy --cwd apps/admin/dist --prod --yes",
-    "deploy:public": "npm run build:public && npx --yes vercel@latest link --cwd apps/public/dist --project bink --yes && npx --yes vercel@latest deploy --cwd apps/public/dist --prod --yes"
+    "deploy:admin": "npm run build:admin && npx --yes vercel@latest link --cwd apps/admin/dist --project bink-admin-v2 --yes && npx --yes vercel@latest deploy --cwd apps/admin/dist --prod --yes",
+    "deploy:public": "npm run build:public && npx --yes vercel@latest link --cwd apps/public/dist --project bink-v2 --yes && npx --yes vercel@latest deploy --cwd apps/public/dist --prod --yes"
   },
   "devDependencies": {
     "@types/react": "~19.1.10",
