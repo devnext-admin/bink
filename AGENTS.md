@@ -7,7 +7,8 @@ Edge Functions), deployed to web (Vercel) and mobile (EAS / Expo Go).
 
 ```
 apps/public      customer + business surfaces. Mobile (Expo Go / EAS) and web.
-                 Owns EAS project 39fc42fe-69c1-44f7-8313-e35019818482.
+                 Not yet bound to an EAS project: run npx eas init once to
+                 link native builds to your Expo account.
 apps/admin       internal admin console. Web only, its own Vercel project and
                  its own origin, so none of it reaches the public bundle.
 packages/shared  used by both: UI primitives, data layer, auth, i18n, theme,

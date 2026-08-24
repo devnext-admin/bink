@@ -54,17 +54,10 @@
       "reactCompiler": true
     },
     "extra": {
-      "router": {},
-      "eas": {
-        "projectId": "39fc42fe-69c1-44f7-8313-e35019818482"
-      }
+      "router": {}
     },
-    "owner": "threelines",
     "runtimeVersion": {
       "policy": "sdkVersion"
-    },
-    "updates": {
-      "url": "https://u.expo.dev/39fc42fe-69c1-44f7-8313-e35019818482"
     }
   }
 }

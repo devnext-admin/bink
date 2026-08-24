@@ -46,9 +46,12 @@ caller's own number.
 
 The project is build-ready: bundle id `sa.devnext.bink`, `eas.json`
 production profile, icons, splash and permission strings are all in place.
-Apple requires the account holder to authenticate, so run:
+The repo is not bound to any EAS project yet, so link it to your Expo
+account first, then build. Apple requires the account holder to
+authenticate, so run:
 
 ```bash
+npx eas-cli init                                        # once, links your Expo account
 npx eas-cli build --platform ios --profile production
 ```
 
