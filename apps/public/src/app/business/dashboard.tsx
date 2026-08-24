@@ -85,7 +85,7 @@ const NAV_GROUPS: { title: string; keys: Section[] }[] = [
 ];
 
 const publicHost =
-  typeof window !== 'undefined' && window.location?.host ? window.location.host : 'bink-three.vercel.app';
+  typeof window !== 'undefined' && window.location?.host ? window.location.host : 'bink-seven.vercel.app';
 
 export default function BusinessDashboard() {
   const router = useRouter();

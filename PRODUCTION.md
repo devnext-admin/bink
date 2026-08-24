@@ -10,7 +10,7 @@ No code changes are needed on launch day - only keys and one env flip.
 2. Set it on the edge functions:
 
    ```bash
-   npx supabase secrets set TAP_SECRET_KEY=sk_live_XXXX --project-ref yxidiwkswariavopixmf
+   npx supabase secrets set TAP_SECRET_KEY=sk_live_XXXX --project-ref cmvdudcyubhqdoeeppky
    ```
 
 3. Flip the app to the live gateway: change `EXPO_PUBLIC_PAYMENTS_GATEWAY`
@@ -34,7 +34,7 @@ cards before switching to live.
 2. Set both:
 
    ```bash
-   npx supabase secrets set TAQNYAT_API_KEY=XXXX TAQNYAT_SENDER=Bink --project-ref yxidiwkswariavopixmf
+   npx supabase secrets set TAQNYAT_API_KEY=XXXX TAQNYAT_SENDER=Bink --project-ref cmvdudcyubhqdoeeppky
    ```
 
 That is all - the app already sends booking confirmation, reschedule and
@@ -68,7 +68,7 @@ upload of the `.aab`).
 - Real Supabase auth only, password recovery flow live
 - Edge functions deployed: create-payment, payments-webhook (TAP-verified),
   refund-payment, send-sms, register-venue, invite-team-member
-- `APP_URL` secret set to https://bink-three.vercel.app
+- `APP_URL` secret set to https://bink-seven.vercel.app
 - Escrow, VAT invoices, notifications wired to the webhook
 - Cloud database migrated through 20260729000021
 

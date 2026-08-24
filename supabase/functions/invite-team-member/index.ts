@@ -2,7 +2,7 @@
 // Supabase's invite email (link lands on /welcome to set a password), and
 // links the staff record to the new user.
 // Deploy: npx supabase functions deploy invite-team-member
-// Secrets: APP_URL=https://bink-three.vercel.app
+// Secrets: APP_URL=https://bink-seven.vercel.app
 
 import { createClient } from 'jsr:@supabase/supabase-js@2';
 
@@ -64,7 +64,7 @@ Deno.serve(async (req) => {
       venue.owner_id === caller.id || callerProfile?.role === 'admin' || !!managerRow;
     if (!allowed) return json({ error: 'Only the salon owner or a manager can invite' }, 403);
 
-    const appUrl = Deno.env.get('APP_URL') ?? 'https://bink-three.vercel.app';
+    const appUrl = Deno.env.get('APP_URL') ?? 'https://bink-seven.vercel.app';
     const { data: invited, error: iErr } = await admin.auth.admin.inviteUserByEmail(
       staff.email,
       {

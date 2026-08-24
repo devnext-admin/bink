@@ -81,7 +81,7 @@ export default function Auth() {
     const redirectTo =
       Platform.OS === 'web' && typeof window !== 'undefined'
         ? `${window.location.origin}/reset-password`
-        : 'https://bink-three.vercel.app/reset-password';
+        : 'https://bink-seven.vercel.app/reset-password';
     const { error: err } = await sb.auth.resetPasswordForEmail(email.trim(), { redirectTo });
     setResetBusy(false);
     if (err) setError(err.message);

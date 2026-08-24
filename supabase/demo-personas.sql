@@ -6,11 +6,11 @@
 
 do $$
 declare
-  cust  uuid := 'e03bb741-1809-4d64-aad9-37bc1b9e98ad'; -- demo@bink.com
-  owner uuid := '16aea97c-f2b8-45c9-b40b-73bd30da6829'; -- owner@bink.com
-  admn  uuid := 'ad149c90-297c-4770-a2ab-edca959a7961'; -- admin@bink.com
-  aisha uuid := 'ccabd035-1757-4823-bedb-c0f73a2d0935'; -- aisha@bink.com
-  maha  uuid := '0bf546fd-d745-4f2f-8e22-73c0c909f5d9'; -- maha@bink.com
+  cust  uuid := '441199a2-a483-4a5f-8287-161d92f60693'; -- demo@bink.com
+  owner uuid := 'ae87efae-7f87-4940-8e9f-4bb9db3a5c64'; -- owner@bink.com
+  admn  uuid := 'adbe64cd-4f2a-4aa1-82b3-5bd385e6aa4c'; -- admin@bink.com
+  aisha uuid := '07e1dbb0-411b-4647-a57a-39f11b82a0db'; -- aisha@bink.com
+  maha  uuid := '2c206ad1-12e0-4e3d-a5b2-fb421a7566e0'; -- maha@bink.com
 
   glow    uuid := '00000000-0000-4000-9101-000000000001';
   glow_s1 uuid := '00000000-0000-4000-9102-000000000001'; -- Signature Cut & Style

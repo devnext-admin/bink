@@ -7,7 +7,7 @@ waxing, skincare, makeup and bridal salons. One Expo (React Native) codebase tha
 - **Mobile website** (same responsive code below 1024px)
 - **iOS / Android app** via Expo Go (bottom tabs, native-feeling screens)
 
-Backend: **cloud Supabase** (project `Bink` in the ThreeLines org, region
+Backend: **cloud Supabase** (project `Bink` in the devnext-admin org, region
 eu-central-1; schema + seed managed with the Supabase CLI). Auth, bookings,
 messaging, payments/escrow and notifications all run on the live database.
 Without `.env` credentials the app falls back to **demo mode** — bundled data
@@ -120,7 +120,7 @@ npx supabase functions deploy refund-payment
 # 2. Set the secrets
 npx supabase secrets set MOYASAR_SECRET_KEY=sk_live_... \
   MOYASAR_WEBHOOK_TOKEN=<shared-token> \
-  APP_URL=https://bink-three.vercel.app
+  APP_URL=https://bink-seven.vercel.app
 
 # 3. Point the Moyasar dashboard webhook at:
 #    https://<ref>.functions.supabase.co/payments-webhook
@@ -147,13 +147,13 @@ dashboard for production volumes.
 
 ## Cloud Supabase
 
-Live project: `yxidiwkswariavopixmf` (ThreeLines org, eu-central-1). `.env`
+Live project: `cmvdudcyubhqdoeeppky` (devnext-admin org, eu-central-1). `.env`
 (gitignored) carries `EXPO_PUBLIC_SUPABASE_URL` + `EXPO_PUBLIC_SUPABASE_ANON_KEY`
 — copy from `.env.example` and fill from the dashboard's API settings if you're
 setting up a new machine.
 
 ```bash
-npx supabase link --project-ref yxidiwkswariavopixmf   # once per machine
+npx supabase link --project-ref cmvdudcyubhqdoeeppky   # once per machine
 npx supabase db push                                   # apply new migrations
 ```
 
@@ -165,7 +165,7 @@ instant session.
 
 ## Deploy web to Vercel
 
-Live at **https://bink-three.vercel.app** (Vercel project `bink`).
+Live at **https://bink-seven.vercel.app** (Vercel project `bink`).
 
 ```bash
 npx expo export --platform web                 # SPA build → dist/ (web.output = "single")

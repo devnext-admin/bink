@@ -8,7 +8,7 @@ const FILE = 'dist/index.html';
 const DESCRIPTION =
   'Bink is Saudi Arabia’s salon booking marketplace - discover hair, nails, barber, waxing, skincare and makeup professionals near you and book in seconds.';
 const TITLE = 'Bink - Book salons, barbers & beauty in Saudi Arabia';
-const URL = 'https://bink-three.vercel.app';
+const URL = 'https://bink-seven.vercel.app';
 const IMAGE = `${URL}/favicon.png`;
 
 const tags = `

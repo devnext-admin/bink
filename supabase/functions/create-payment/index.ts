@@ -3,7 +3,7 @@
 // the payments-webhook function settles the transaction afterwards.
 //
 // Deploy:  npx supabase functions deploy create-payment
-// Secrets: npx supabase secrets set TAP_SECRET_KEY=sk_live_... APP_URL=https://bink-three.vercel.app
+// Secrets: npx supabase secrets set TAP_SECRET_KEY=sk_live_... APP_URL=https://bink-seven.vercel.app
 
 import { createClient } from 'jsr:@supabase/supabase-js@2';
 
@@ -48,7 +48,7 @@ Deno.serve(async (req) => {
       .eq('id', user.id)
       .maybeSingle();
 
-    const appUrl = Deno.env.get('APP_URL') ?? 'https://bink-three.vercel.app';
+    const appUrl = Deno.env.get('APP_URL') ?? 'https://bink-seven.vercel.app';
     const webhookUrl = `${Deno.env.get('SUPABASE_URL')}/functions/v1/payments-webhook`;
 
     // TAP amounts are in major currency units (SAR with 2 decimals)

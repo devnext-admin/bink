@@ -223,7 +223,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const redirectTo =
       typeof window !== 'undefined' && window.location
         ? `${window.location.origin}/appointments`
-        : 'https://bink-three.vercel.app/appointments';
+        : 'https://bink-seven.vercel.app/appointments';
     const { error } = await sb.auth.signInWithOAuth({ provider, options: { redirectTo } });
     return error ? error.message : null;
   }, []);

@@ -13,10 +13,10 @@ import assert from 'node:assert/strict';
 // string, which ?? happily accepts. That made BASE '' and every request fail
 // with "Failed to parse URL", so CI was red on every run from the day it was
 // added. An empty value must fall through to the defaults below.
-const BASE = process.env.SUPABASE_URL || 'https://yxidiwkswariavopixmf.supabase.co';
+const BASE = process.env.SUPABASE_URL || 'https://cmvdudcyubhqdoeeppky.supabase.co';
 const ANON =
   process.env.SUPABASE_ANON_KEY ||
-  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inl4aWRpd2tzd2FyaWF2b3BpeG1mIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODM4NDQ0ODgsImV4cCI6MjA5OTQyMDQ4OH0.0ZksAw0JbR72KvIaJ7zWgBFh5VS2cmNcog1RGPwj7aY';
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNtdmR1ZGN5dWJocWRvZWVwcGt5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODc1NjE0MzcsImV4cCI6MjEwMzEzNzQzN30.MMQHGoV0SeTvWxZKa-zkOVUS6ZH_dFjSlYU45eCkKPw';
 const DEMO = { email: 'demo@bink.com', password: 'binkdemo123' };
 
 async function signIn(email, password) {

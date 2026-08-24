@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://bink-three.vercel.app/sitemap.xml
+Sitemap: https://bink-seven.vercel.app/sitemap.xml
