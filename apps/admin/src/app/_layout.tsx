@@ -38,6 +38,7 @@ export default function AdminRootLayout() {
                 }}
               >
                 <Stack.Screen name="index" />
+                <Stack.Screen name="auth" />
               </Stack>
             </AppDataProvider>
           </AuthProvider>
