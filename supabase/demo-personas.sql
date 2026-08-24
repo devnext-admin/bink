@@ -37,9 +37,15 @@ begin
   select id into fade    from public.venues where slug = 'the-fade-room';
   select id into blowout from public.venues where slug = 'the-blowout-bar';
 
-  -- Roles (profiles are created by the on_auth_user_created trigger)
+  -- Roles (profiles are created by the on_auth_user_created trigger).
+  -- trg_lock_profile_privileges pins role changes unless the caller is already
+  -- an admin, and this script runs with no auth context - without the
+  -- disable/enable the updates are silently reverted and every persona stays
+  -- a customer.
+  alter table public.profiles disable trigger trg_lock_profile_privileges;
   update public.profiles set role = 'partner', full_name = 'Lama'       where id = owner;
   update public.profiles set role = 'admin',   full_name = 'Bink Admin' where id = admn;
+  alter table public.profiles enable trigger trg_lock_profile_privileges;
   update public.profiles set full_name = 'Deema'   where id = cust;
   update public.profiles set full_name = 'Aisha B' where id = aisha;
   update public.profiles set full_name = 'Maha S'  where id = maha;
