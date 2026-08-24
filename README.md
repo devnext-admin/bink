@@ -147,10 +147,11 @@ dashboard for production volumes.
 
 ## Cloud Supabase
 
-Live project: `cmvdudcyubhqdoeeppky` (devnext-admin org, eu-central-1). `.env`
-(gitignored) carries `EXPO_PUBLIC_SUPABASE_URL` + `EXPO_PUBLIC_SUPABASE_ANON_KEY`
-— copy from `.env.example` and fill from the dashboard's API settings if you're
-setting up a new machine.
+Live project: `cmvdudcyubhqdoeeppky` (devnext-admin org, eu-central-1). The
+`apps/*/.env` files are committed with `EXPO_PUBLIC_SUPABASE_URL` +
+`EXPO_PUBLIC_SUPABASE_ANON_KEY` already filled in (client-side values that ship
+in the bundle anyway), so a fresh clone runs against the cloud with no setup.
+Keep real secrets (service-role key, gateway keys) out of these files.
 
 ```bash
 npx supabase link --project-ref cmvdudcyubhqdoeeppky   # once per machine

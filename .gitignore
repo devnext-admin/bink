@@ -41,5 +41,9 @@ example
 # generated native folders
 /ios
 /android
-.env
 .playwright-mcp/
+
+# App .env files are committed on purpose: they carry only EXPO_PUBLIC_*
+# values (Supabase URL, anon key, app URLs) that ship inside the public
+# bundle anyway, so a fresh clone runs against the cloud with no setup.
+# Keep real secrets (service-role key, gateway keys, tokens) out of them.
