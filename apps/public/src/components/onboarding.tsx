@@ -1,5 +1,4 @@
 import { Ionicons } from '@expo/vector-icons';
-import { HeroGradient } from './hero-gradient';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, { useEffect, useState } from 'react';
 import { Modal, Pressable, StyleSheet, View } from 'react-native';
@@ -54,8 +53,7 @@ export function Onboarding() {
 
   return (
     <Modal visible transparent={false} animationType="fade" accessibilityLabel={t('Welcome to Bink')} aria-label={t('Welcome to Bink')}>
-      <HeroGradient
-        variant="soft"
+      <View
         style={[styles.wrap, { paddingTop: insets.top + 24, paddingBottom: Math.max(insets.bottom, 24) }]}
       >
         <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -93,18 +91,18 @@ export function Onboarding() {
             onPress={() => (last ? finish() : setSlide(slide + 1))}
           />
         </View>
-      </HeroGradient>
+      </View>
     </Modal>
   );
 }
 
 const styles = StyleSheet.create({
-  wrap: { flex: 1, paddingHorizontal: 24 },
+  wrap: { flex: 1, paddingHorizontal: 24, backgroundColor: colors.white },
   iconCircle: {
     width: 96,
     height: 96,
     borderRadius: 48,
-    backgroundColor: colors.white,
+    backgroundColor: colors.accentSoft,
     alignItems: 'center',
     justifyContent: 'center',
   },
