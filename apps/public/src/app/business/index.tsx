@@ -30,7 +30,7 @@ const PERKS = [
   { icon: 'card-outline', title: 'Zero subscription', body: 'Free to list. You only pay when clients book through Bink.' },
 ];
 
-const WIZARD_STEPS = ['Business', 'Location', 'Photos', 'Services', 'Team', 'Hours'] as const;
+const WIZARD_STEPS = ['Business', 'Verification', 'Location', 'Photos', 'Services', 'Team', 'Hours'] as const;
 const WEEKDAY_NAMES = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
 interface DraftService {
@@ -68,7 +68,12 @@ export default function BusinessLanding() {
   const [ownerName, setOwnerName] = useState('');
   const [ownerEmail, setOwnerEmail] = useState('');
   const [ownerPassword, setOwnerPassword] = useState('');
-  // Step 2 - location
+  // Step 2 - verification (payout account + legal document)
+  const [bankName, setBankName] = useState('');
+  const [bankIban, setBankIban] = useState('');
+  const [docType, setDocType] = useState<'freelance_license' | 'commercial_registration' | null>(null);
+  const [docNumber, setDocNumber] = useState('');
+  // Step 3 - location
   const [city, setCity] = useState('');
   const [area, setArea] = useState('');
   const [address, setAddress] = useState('');
@@ -98,6 +103,12 @@ export default function BusinessLanding() {
 
   const startListing = () => setShowWizard(true);
 
+  // The provider type implies which legal document applies; the person can
+  // still switch it on the verification step.
+  React.useEffect(() => {
+    setDocType(providerType === 'freelancer' ? 'freelance_license' : 'commercial_registration');
+  }, [providerType]);
+
   const validateStep = (): string | null => {
     if (step === 0) {
       if (!name.trim()) return providerType === 'freelancer' ? t('Please enter your professional name.') : t('Please enter your business name.');
@@ -108,8 +119,18 @@ export default function BusinessLanding() {
         if (ownerPassword.length < 6) return t('Password must be at least 6 characters.');
       }
     }
-    if (step === 1 && !city.trim()) return t('Please enter your city.');
-    if (step === 1 && mapsUrl.trim() && !mapsUrl.trim().startsWith('http')) return t('The Google Maps link should start with http.');
+    if (step === 1) {
+      // Payouts and the legal document are required - a business cannot list
+      // without a bank account and either a freelance work document or a
+      // commercial registration.
+      if (!bankName.trim()) return t('Please enter your bank name.');
+      const iban = bankIban.replace(/\s+/g, '').toUpperCase();
+      if (!/^SA\d{22}$/.test(iban)) return t('Please enter a valid Saudi IBAN (SA followed by 22 digits).');
+      if (!docType) return t('Please choose your legal document type.');
+      if (docNumber.trim().length < 5) return t('Please enter the document number.');
+    }
+    if (step === 2 && !city.trim()) return t('Please enter your city.');
+    if (step === 2 && mapsUrl.trim() && !mapsUrl.trim().startsWith('http')) return t('The Google Maps link should start with http.');
     return null;
   };
 
@@ -184,6 +205,12 @@ export default function BusinessLanding() {
     await registerSalon({
       ownerId: ownerId!,
       providerType,
+      businessDetails: {
+        bankName: bankName.trim(),
+        bankIban: bankIban.replace(/\s+/g, '').toUpperCase(),
+        legalDocType: docType ?? (providerType === 'freelancer' ? 'freelance_license' : 'commercial_registration'),
+        legalDocNumber: docNumber.trim(),
+      },
       mapsUrl: mapsUrl.trim() || null,
       name: name.trim(),
       categoryId: categoryId!,
@@ -289,6 +316,47 @@ export default function BusinessLanding() {
   } else if (step === 1) {
     stepBody = (
       <View style={{ gap: 16 }}>
+        <View style={styles.note}>
+          <Ionicons name="shield-checkmark-outline" size={16} color={colors.accent} />
+          <BText variant="tiny" color={colors.accent} style={{ flex: 1 }}>
+            {t('Required to list on Bink: the bank account that receives your payouts, and your legal document. The Bink team reviews these before your listing goes live. They are never shown publicly.')}
+          </BText>
+        </View>
+        <Field label={t('Bank name')} placeholder={t('e.g. Al Rajhi Bank')} value={bankName} onChangeText={setBankName} />
+        <Field
+          label={t('IBAN (payouts account)')}
+          placeholder="SA00 0000 0000 0000 0000 0000"
+          value={bankIban}
+          onChangeText={setBankIban}
+          autoCapitalize="characters"
+        />
+        <View style={{ gap: 6 }}>
+          <BText variant="smallMedium">{t('Legal document')}</BText>
+          <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8 }}>
+            <Chip
+              label={t('Freelance work document')}
+              selected={docType === 'freelance_license'}
+              onPress={() => setDocType('freelance_license')}
+            />
+            <Chip
+              label={t('Commercial registration')}
+              selected={docType === 'commercial_registration'}
+              onPress={() => setDocType('commercial_registration')}
+            />
+          </View>
+        </View>
+        <Field
+          label={docType === 'commercial_registration' ? t('Commercial registration number') : t('Freelance document number')}
+          placeholder={docType === 'commercial_registration' ? '1010XXXXXX' : t('FL-XXXXXXXX')}
+          value={docNumber}
+          onChangeText={setDocNumber}
+          autoCapitalize="characters"
+        />
+      </View>
+    );
+  } else if (step === 2) {
+    stepBody = (
+      <View style={{ gap: 16 }}>
         <View style={{ flexDirection: isDesktop ? 'row' : 'column', gap: 16 }}>
           <View style={{ flex: 1 }}>
             <Field label={t('City')} placeholder={t('Riyadh')} value={city} onChangeText={setCity} />
@@ -310,7 +378,7 @@ export default function BusinessLanding() {
         </BText>
       </View>
     );
-  } else if (step === 2) {
+  } else if (step === 3) {
     stepBody = (
       <View style={{ gap: 16 }}>
         <View style={styles.note}>
@@ -359,7 +427,7 @@ export default function BusinessLanding() {
         </View>
       </View>
     );
-  } else if (step === 3) {
+  } else if (step === 4) {
     stepBody = (
       <View style={{ gap: 16 }}>
         <View style={{ flexDirection: 'row', gap: 10, alignItems: 'flex-end' }}>
@@ -392,7 +460,7 @@ export default function BusinessLanding() {
         )}
       </View>
     );
-  } else if (step === 4) {
+  } else if (step === 5) {
     stepBody = (
       <View style={{ gap: 16 }}>
         <View style={{ flexDirection: 'row', gap: 10, alignItems: 'flex-end' }}>
@@ -577,11 +645,12 @@ export default function BusinessLanding() {
 
             <BText variant="h2" style={{ marginTop: 20 }}>
               {step === 0 && t('Tell us about your business')}
-              {step === 1 && t('Where are you located?')}
-              {step === 2 && t('Add photos of your space')}
-              {step === 3 && t('What services do you offer?')}
-              {step === 4 && t('Introduce your team')}
-              {step === 5 && t('Set your opening hours')}
+              {step === 1 && t('Verify your business')}
+              {step === 2 && t('Where are you located?')}
+              {step === 3 && t('Add photos of your space')}
+              {step === 4 && t('What services do you offer?')}
+              {step === 5 && t('Introduce your team')}
+              {step === 6 && t('Set your opening hours')}
             </BText>
             <BText variant="small" style={{ marginTop: 4, marginBottom: 20 }}>
               {t('Step {n} of {m} - your listing goes live once the Bink team approves it.', {

@@ -41,15 +41,19 @@ export interface BusyInterval {
   staffId: string | null;
 }
 
-export async function getBusyIntervals(venueId: string, date: string): Promise<BusyInterval[]> {
+export async function getBusyIntervals(
+  venueId: string,
+  date: string,
+  opts?: { excludeBookingId?: string }
+): Promise<BusyInterval[]> {
   const sb = getSupabase();
-  let bookings: Pick<Booking, 'starts_at' | 'ends_at' | 'staff_id' | 'status'>[] = [];
+  let bookings: Pick<Booking, 'id' | 'starts_at' | 'ends_at' | 'staff_id' | 'status'>[] = [];
   if (sb) {
     const dayStart = new Date(`${date}T00:00:00`);
     const dayEnd = new Date(`${date}T23:59:59`);
     const { data } = await sb
       .from('bookings')
-      .select('starts_at, ends_at, staff_id, status')
+      .select('id, starts_at, ends_at, staff_id, status')
       .eq('venue_id', venueId)
       .gte('starts_at', dayStart.toISOString())
       .lte('starts_at', dayEnd.toISOString());
@@ -63,6 +67,10 @@ export async function getBusyIntervals(venueId: string, date: string): Promise<B
   }
   return bookings
     .filter((b) => b.status === 'confirmed' || b.status === 'pending')
+    // When rescheduling, the booking being moved does not block its own slots
+    // - but every other booking (including the customer's other appointments
+    // with the same specialist) still does.
+    .filter((b) => !opts?.excludeBookingId || b.id !== opts.excludeBookingId)
     .map((b) => {
       const s = new Date(b.starts_at);
       const e = new Date(b.ends_at);
@@ -104,10 +112,19 @@ export async function rescheduleBooking(id: string, newStart: Date, durationMin:
   const bookings = await readList<Booking>(BOOKINGS_KEY);
   const booking = bookings.find((b) => b.id === id);
   if (sb && !id.startsWith('local-')) {
-    await sb
+    const { error } = await sb
       .from('bookings')
       .update({ starts_at: newStart.toISOString(), ends_at: ends.toISOString() })
       .eq('id', id);
+    if (error) {
+      // The exclusion constraint rejects overlaps the UI missed - surface it
+      // instead of pretending the move happened.
+      throw new Error(
+        /no_double_booking|exclusion/.test(error.message)
+          ? 'That time is already booked for this specialist. Pick another slot.'
+          : error.message
+      );
+    }
   } else {
     await writeList(
       BOOKINGS_KEY,
@@ -270,6 +287,75 @@ export async function requestBookingDelay(id: string, minutes: number, side: Del
         : b
     )
   );
+}
+
+/**
+ * The salon applies a short delay directly - no request, no waiting. The
+ * booking is shifted immediately (duration preserved) and the customer is
+ * notified. Customers cannot do this; they go through requestBookingDelay
+ * and the salon accepts or declines.
+ */
+export async function applyBookingDelay(id: string, minutes: number): Promise<void> {
+  if (!Number.isInteger(minutes) || minutes < 1 || minutes > MAX_DELAY_MINUTES) {
+    throw new Error(`A delay must be between 1 and ${MAX_DELAY_MINUTES} minutes`);
+  }
+  const shift = minutes * 60000;
+  const sb = getSupabase();
+  if (sb && !id.startsWith('local-')) {
+    const { data: b, error: readErr } = await sb
+      .from('bookings')
+      .select('id, user_id, venue_id, starts_at, ends_at, venue:venues (name)')
+      .eq('id', id)
+      .single();
+    if (readErr || !b) throw new Error(readErr?.message ?? 'Booking not found');
+    const { error } = await sb
+      .from('bookings')
+      .update({
+        starts_at: new Date(new Date(b.starts_at).getTime() + shift).toISOString(),
+        ends_at: new Date(new Date(b.ends_at).getTime() + shift).toISOString(),
+        // A delay applied by the salon settles any open delay request.
+        delay_minutes: null,
+        delay_by: null,
+        delay_at: null,
+      })
+      .eq('id', id);
+    if (error) throw new Error(error.message);
+    await pushNotification({
+      audience: 'customer',
+      userId: b.user_id ?? null,
+      venueId: b.venue_id,
+      title: 'Your appointment was delayed',
+      body: `${(b as any).venue?.name ?? 'The salon'} pushed your appointment back by ${minutes} minutes. New time: ${new Date(
+        new Date(b.starts_at).getTime() + shift
+      ).toLocaleString('en-US', { hour: 'numeric', minute: '2-digit' })}.`,
+    });
+    return;
+  }
+  const bookings = await readList<Booking>(BOOKINGS_KEY);
+  const booking = bookings.find((b) => b.id === id);
+  if (!booking) throw new Error('Booking not found');
+  await writeList(
+    BOOKINGS_KEY,
+    bookings.map((b) =>
+      b.id === id
+        ? {
+            ...b,
+            starts_at: new Date(new Date(b.starts_at).getTime() + shift).toISOString(),
+            ends_at: new Date(new Date(b.ends_at).getTime() + shift).toISOString(),
+            delay_minutes: null,
+            delay_by: null,
+            delay_at: null,
+          }
+        : b
+    )
+  );
+  await pushNotification({
+    audience: 'customer',
+    userId: booking.user_id ?? null,
+    venueId: booking.venue_id,
+    title: 'Your appointment was delayed',
+    body: `${booking.venue_name} pushed your appointment back by ${minutes} minutes.`,
+  });
 }
 
 /**

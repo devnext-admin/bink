@@ -1,6 +1,6 @@
 import { Ionicons } from '@expo/vector-icons';
 import React, { useEffect, useRef, useState } from 'react';
-import { Pressable, ScrollView, StyleSheet, TextInput, View } from 'react-native';
+import { KeyboardAvoidingView, Platform, Pressable, ScrollView, StyleSheet, TextInput, View } from 'react-native';
 import { ChatMessage, Conversation, getThread, markThreadRead, sendMessage } from '../lib/messages';
 import { Lang, useI18n } from '../lib/i18n';
 import { colors, font, radius } from '../lib/theme';
@@ -92,12 +92,16 @@ export function ChatThread({
   userId,
   userName,
   perspective,
+  keyboardOffset = 0,
 }: {
   venueId: string;
   venueName: string;
   userId: string;
   userName: string;
   perspective: 'customer' | 'venue';
+  /** Height of fixed chrome (header + tab bar) above/below the thread, so the
+   *  keyboard-avoiding shift lines the composer up with the keyboard. */
+  keyboardOffset?: number;
 }) {
   const { t, lang } = useI18n();
   const [messages, setMessages] = useState<ChatMessage[]>([]);
@@ -138,7 +142,13 @@ export function ChatThread({
   };
 
   return (
-    <View style={{ flex: 1 }}>
+    // Without the KeyboardAvoidingView the phone keyboard covers the composer
+    // and the thread cannot be used on native at all.
+    <KeyboardAvoidingView
+      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+      keyboardVerticalOffset={keyboardOffset}
+      style={{ flex: 1 }}
+    >
       <ScrollView ref={scrollRef} contentContainerStyle={{ padding: 16, gap: 8, flexGrow: 1 }}>
         {messages.length === 0 && (
           <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', gap: 8 }}>
@@ -188,7 +198,7 @@ export function ChatThread({
           <Ionicons name="send" size={16} color={colors.white} />
         </Pressable>
       </View>
-    </View>
+    </KeyboardAvoidingView>
   );
 }
 

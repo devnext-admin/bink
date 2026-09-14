@@ -196,6 +196,9 @@ export interface CreateBookingInput {
   promoPctOff?: number;
   // When booking a package, the bundle price replaces the service sum.
   totalCentsOverride?: number | null;
+  // Online payments create the booking as 'pending' - the gateway webhook
+  // confirms it once the charge settles. Defaults to 'confirmed'.
+  status?: 'pending' | 'confirmed';
 }
 
 export async function createBooking(input: CreateBookingInput): Promise<Booking> {
@@ -223,7 +226,7 @@ export async function createBooking(input: CreateBookingInput): Promise<Booking>
     staff_name: input.staffName ?? null,
     starts_at: input.startsAt.toISOString(),
     ends_at: endsAt.toISOString(),
-    status: 'confirmed',
+    status: input.status ?? 'confirmed',
     total_cents: totalCents,
     currency: input.currency,
     items: input.items,
@@ -241,7 +244,7 @@ export async function createBooking(input: CreateBookingInput): Promise<Booking>
         staff_id: input.staffId ?? null,
         starts_at: booking.starts_at,
         ends_at: booking.ends_at,
-        status: 'confirmed',
+        status: input.status ?? 'confirmed',
         total_cents: totalCents,
         currency: input.currency,
         notes: input.notes ?? null,
@@ -279,17 +282,20 @@ async function notifyBookingCreated(booking: Booking, input: CreateBookingInput)
     hour: 'numeric',
     minute: '2-digit',
   });
+  const pendingPayment = booking.status === 'pending';
   await pushNotification({
     audience: 'customer',
     userId: input.userId ?? null,
     venueId: booking.venue_id,
-    title: 'Booking confirmed',
-    body: `${input.venue.name} · ${when}. See you there!`,
+    title: pendingPayment ? 'Booking pending payment' : 'Booking confirmed',
+    body: pendingPayment
+      ? `${input.venue.name} · ${when}. Complete the payment to confirm your appointment.`
+      : `${input.venue.name} · ${when}. See you there!`,
   });
   await pushNotification({
     audience: 'venue',
     venueId: booking.venue_id,
-    title: 'New booking',
+    title: pendingPayment ? 'New booking (awaiting payment)' : 'New booking',
     body: `${input.customerName ?? 'A customer'} booked ${input.items.map((i) => i.service_name).join(', ')} for ${when}.`,
   });
 }
@@ -331,6 +337,11 @@ export async function getBookings(forUserId?: string | null): Promise<Booking[]>
         customer_confirmed_at: b.customer_confirmed_at,
         rated: (b.reviews?.length ?? 0) > 0,
         deposit_cents: b.deposit_cents ?? 0,
+        // Delay-request state must survive this mapping or the customer never
+        // sees the "waiting for a reply" confirmation after asking for one.
+        delay_minutes: b.delay_minutes ?? null,
+        delay_by: b.delay_by ?? null,
+        delay_at: b.delay_at ?? null,
         items: b.items ?? [],
       }));
     }

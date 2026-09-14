@@ -16,9 +16,10 @@ import { useBooking } from '../../lib/booking-context';
 import { createBooking } from '@bink/shared/lib/data';
 import { formatDuration, formatPrice, formatTimeOfDate } from '@bink/shared/lib/format';
 import { formatDate, useI18n } from '@bink/shared/lib/i18n';
-import { getBusyIntervals, isSlotFree, redeemPromo, validatePromo, type BusyInterval } from '@bink/shared/lib/ops';
+import { getBusyIntervals, isSlotFree, redeemPromo, setBookingStatus, validatePromo, type BusyInterval } from '@bink/shared/lib/ops';
 import { sendSmsToSelf } from '../../lib/sms';
-import { markPayAtVenue, payDeposit, payForBooking, paymentsGateway } from '@bink/shared/lib/payments';
+import { PaymentSheet } from '@bink/shared/components/payment-sheet';
+import { getBookingPaymentStatus, markPayAtVenue, payDeposit, payForBooking, paymentsGateway } from '@bink/shared/lib/payments';
 import { getSupabase } from '@bink/shared/lib/supabase';
 import { colors, font, radius, shadow } from '@bink/shared/lib/theme';
 import type { PaymentMethod, PromoCode } from '@bink/shared/lib/types';
@@ -78,6 +79,11 @@ export default function BookingScreen() {
   const [payMethod, setPayMethod] = useState<PaymentMethod>('pay_at_venue');
   const [payError, setPayError] = useState<string | null>(null);
   const [paid, setPaid] = useState(false);
+  // Real-gateway online payment: the hosted checkout shown in-app, and the
+  // pending state until the webhook confirms the charge.
+  const [paySheetUrl, setPaySheetUrl] = useState<string | null>(null);
+  const [paySheetOpen, setPaySheetOpen] = useState(false);
+  const [payPending, setPayPending] = useState(false);
   const [busy, setBusy] = useState<BusyInterval[]>([]);
   const [promoInput, setPromoInput] = useState('');
   const [promo, setPromo] = useState<PromoCode | null>(null);
@@ -90,6 +96,27 @@ export default function BookingScreen() {
     if (venue && booking.date) getBusyIntervals(venue.id, booking.date).then(setBusy, () => {});
     else setBusy([]);
   }, [venue?.id, booking.date]);
+
+  // While an online payment is pending, poll the booking until the gateway
+  // webhook confirms it - the payment page is cross-origin, so the status in
+  // our own database is the reliable completion signal.
+  useEffect(() => {
+    if (!payPending || !confirmedId) return;
+    const iv = setInterval(async () => {
+      const s = await getBookingPaymentStatus(confirmedId);
+      if (s?.payment_status === 'paid') {
+        setPaid(true);
+        setPayPending(false);
+        setPaySheetOpen(false);
+      } else if (s?.payment_status === 'unpaid') {
+        // The gateway reported the charge failed
+        setPayPending(false);
+        setPaySheetOpen(false);
+        setPayError(t('The payment did not go through. You can pay at the venue instead.'));
+      }
+    }, 3000);
+    return () => clearInterval(iv);
+  }, [payPending, confirmedId]);
 
   const days = useMemo(() => nextDays(14), []);
 
@@ -151,6 +178,9 @@ export default function BookingScreen() {
         notes.trim(),
         allergies ? `${t('Health notes')}: ${allergies}` : '',
       ].filter(Boolean);
+      // With a real gateway, an online-paid appointment is only confirmed by
+      // the settled charge - it is created 'pending' and the webhook flips it.
+      const onlineRealGateway = payMethod !== 'pay_at_venue' && paymentsGateway !== 'demo';
       const created = await createBooking({
         venue,
         staffId: booking.staff?.id ?? null,
@@ -163,6 +193,7 @@ export default function BookingScreen() {
         currency: booking.currency,
         promoCode: promo?.code ?? null,
         promoPctOff: promo?.pct_off,
+        status: onlineRealGateway ? 'pending' : 'confirmed',
         items: booking.services.map((s) => ({
           service_id: s.id,
           service_name: s.name,
@@ -186,17 +217,28 @@ export default function BookingScreen() {
           }
           setPaid(false);
         } else {
-          await payForBooking({
+          const res = await payForBooking({
             booking: { ...created, payment_method: payMethod },
             method: payMethod,
             customerName: user?.name ?? user?.email ?? null,
             userId: user?.id ?? null,
           });
-          setPaid(true);
+          if (res.paymentUrl) {
+            // Real gateway: the checkout opens inside the app; the booking
+            // and its payment stay pending until the webhook confirms.
+            setPaySheetUrl(res.paymentUrl);
+            setPaySheetOpen(true);
+            setPayPending(true);
+            setPaid(false);
+          } else {
+            setPaid(true);
+          }
         }
       } catch (e: any) {
-        // Booking stays confirmed as pay-at-venue if the charge fails
+        // The charge could not even start - fall back to pay at venue so the
+        // appointment is not lost, and confirm it if it was created pending.
         await markPayAtVenue(created.id);
+        if (onlineRealGateway) await setBookingStatus(created.id, 'confirmed').catch(() => {});
         setPaid(false);
         setPayError(e?.message ?? t('Payment failed - your booking is confirmed as pay at venue.'));
       }
@@ -250,6 +292,17 @@ export default function BookingScreen() {
       </View>
     );
   } else if (step === 'professional') {
+    // Only specialists assigned to every selected service are offered. Venues
+    // that never configured per-staff services (no assignments at all) fall
+    // back to the full team so booking still works for them.
+    const selectedServiceIds = booking.services.map((s) => s.id);
+    const anyAssignments = venue.staff.some((m) => (m.service_ids ?? []).length > 0);
+    const bookableStaff = anyAssignments
+      ? venue.staff.filter((m) => {
+          const ids = m.service_ids ?? [];
+          return ids.length > 0 && selectedServiceIds.every((id) => ids.includes(id));
+        })
+      : venue.staff;
     content = (
       <View>
         <BText variant="h1">{t('Select professional')}</BText>
@@ -261,7 +314,7 @@ export default function BookingScreen() {
             selected={!booking.staff}
             onPress={() => booking.setStaff(null)}
           />
-          {venue.staff.map((m) => (
+          {bookableStaff.map((m) => (
             <ProCard
               key={m.id}
               label={t(m.name)}
@@ -272,6 +325,11 @@ export default function BookingScreen() {
             />
           ))}
         </View>
+        {anyAssignments && bookableStaff.length === 0 ? (
+          <BText variant="small" style={{ marginTop: 16 }}>
+            {t('No single specialist provides all the selected services - choose "Any professional" or adjust your services.')}
+          </BText>
+        ) : null}
       </View>
     );
   } else if (step === 'time') {
@@ -513,14 +571,16 @@ export default function BookingScreen() {
   } else {
     content = (
       <View style={{ alignItems: 'center' }}>
-        <View style={styles.doneCircle}>
-          <Ionicons name="checkmark" size={40} color={colors.white} />
+        <View style={[styles.doneCircle, payPending && { backgroundColor: colors.warning }]}>
+          <Ionicons name={payPending ? 'time-outline' : 'checkmark'} size={40} color={colors.white} />
         </View>
         <BText variant="h1" style={{ marginTop: 24, textAlign: 'center' }}>
-          {t('Booking confirmed')}
+          {payPending ? t('Complete your payment') : t('Booking confirmed')}
         </BText>
         <BText variant="body" style={{ marginTop: 8, textAlign: 'center', maxWidth: 400 }}>
-          {t(venue.name)} · {t('{date} at {time}', { date: booking.date!, time: booking.time! })}. {t('We can’t wait to see you!')}
+          {payPending
+            ? `${t(venue.name)} · ${t('{date} at {time}', { date: booking.date!, time: booking.time! })}. ${t('Your appointment is held and will be confirmed as soon as the payment goes through.')}`
+            : `${t(venue.name)} · ${t('{date} at {time}', { date: booking.date!, time: booking.time! })}. ${t('We can’t wait to see you!')}`}
         </BText>
         {paid ? (
           <View style={[styles.paidPill, { backgroundColor: colors.greenBg }]}>
@@ -528,6 +588,16 @@ export default function BookingScreen() {
             <BText variant="smallMedium" color={colors.green}>
               {t('Paid {amount} · tax invoice issued', { amount: formatPrice(booking.totalCents, booking.currency) })}
             </BText>
+          </View>
+        ) : payPending ? (
+          <View style={{ alignItems: 'center', gap: 12 }}>
+            <View style={[styles.paidPill, { backgroundColor: colors.warningBg }]}>
+              <Ionicons name="time-outline" size={16} color={colors.warning} />
+              <BText variant="smallMedium" color={colors.warning}>
+                {t('Payment pending · {amount}', { amount: formatPrice(finalTotal, booking.currency) })}
+              </BText>
+            </View>
+            <Button title={t('Open payment page')} onPress={() => setPaySheetOpen(true)} />
           </View>
         ) : (
           <View style={[styles.paidPill, { backgroundColor: colors.bgSubtle }]}>
@@ -675,6 +745,7 @@ export default function BookingScreen() {
             </View>
           )}
         </ScrollView>
+        <PaymentSheet url={paySheetUrl} visible={paySheetOpen} onClose={() => setPaySheetOpen(false)} />
       </View>
     );
   }
@@ -724,6 +795,7 @@ export default function BookingScreen() {
           />
         </View>
       )}
+      <PaymentSheet url={paySheetUrl} visible={paySheetOpen} onClose={() => setPaySheetOpen(false)} />
     </View>
   );
 }

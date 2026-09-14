@@ -51,6 +51,13 @@ export async function mutateLocalVenue(venue: Venue, fn: (v: Venue) => Venue): P
 // ---------------------------------------------------------------------------
 // Salon registration + settings
 // ---------------------------------------------------------------------------
+export interface BusinessDetailsInput {
+  bankName: string;
+  bankIban: string;
+  legalDocType: 'freelance_license' | 'commercial_registration';
+  legalDocNumber: string;
+}
+
 export interface RegisterSalonInput {
   ownerId: string;
   name: string;
@@ -64,6 +71,9 @@ export interface RegisterSalonInput {
   country: string;
   imageUrl?: string;
   currency?: string;
+  // Payout account + legal document, required at registration. Stored in
+  // venue_business_details (owner/admin readable only - never public).
+  businessDetails?: BusinessDetailsInput;
   // Full setup captured by the registration wizard
   images?: string[];
   services?: { name: string; group_name?: string; duration_minutes: number; price_cents: number }[];
@@ -159,6 +169,15 @@ export async function registerSalon(input: RegisterSalonInput): Promise<Venue> {
       .single();
     if (!error && data) {
       venue.id = data.id;
+      if (input.businessDetails) {
+        await sb.from('venue_business_details').insert({
+          venue_id: data.id,
+          bank_name: input.businessDetails.bankName,
+          bank_iban: input.businessDetails.bankIban,
+          legal_doc_type: input.businessDetails.legalDocType,
+          legal_doc_number: input.businessDetails.legalDocNumber,
+        });
+      }
       await sb.from('venue_images').insert(
         venue.images.map((im) => ({ venue_id: data.id, url: im.url, sort_order: im.sort_order }))
       );
@@ -182,7 +201,7 @@ export async function registerSalon(input: RegisterSalonInput): Promise<Venue> {
     if (!sess.session && input.ownerId && !input.ownerId.startsWith('demo-')) {
       try {
         const { data: fn, error: fnErr } = await sb.functions.invoke('register-venue', {
-          body: { ownerId: input.ownerId, venue },
+          body: { ownerId: input.ownerId, venue, businessDetails: input.businessDetails ?? null },
         });
         if (!fnErr && fn?.id) {
           venue.id = fn.id;

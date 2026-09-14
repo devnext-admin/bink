@@ -100,6 +100,13 @@ Deno.serve(async (req) => {
       .single();
     if (txErr) return json({ error: txErr.message }, 500);
 
+    // The booking now awaits the gateway: payment (and the appointment, when
+    // it was created payment-first) stays pending until the webhook settles.
+    await supabase
+      .from('bookings')
+      .update({ payment_status: 'pending', payment_method: method })
+      .eq('id', booking_id);
+
     return json({ transaction: tx, payment_url: charge.transaction?.url ?? null });
   } catch (e) {
     return json({ error: String(e) }, 500);

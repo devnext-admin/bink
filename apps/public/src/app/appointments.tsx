@@ -19,7 +19,7 @@ import { useAuth } from '@bink/shared/lib/auth-context';
 import { cancelBooking, getBookings } from '@bink/shared/lib/data';
 import { formatPrice, formatTimeOfDate } from '@bink/shared/lib/format';
 import { formatDate, useI18n, type Lang } from '@bink/shared/lib/i18n';
-import { rescheduleBooking, submitReview } from '@bink/shared/lib/ops';
+import { getBusyIntervals, isSlotFree, rescheduleBooking, submitReview, type BusyInterval } from '@bink/shared/lib/ops';
 import { sendSmsToSelf } from '../lib/sms';
 import { confirmServiceByCustomer } from '@bink/shared/lib/payments';
 import { colors, font, radius } from '@bink/shared/lib/theme';
@@ -56,6 +56,9 @@ export default function Appointments() {
   const [loaded, setLoaded] = useState(false);
   const [reschedId, setReschedId] = useState<string | null>(null);
   const [reschedDate, setReschedDate] = useState<string | null>(null);
+  const [reschedBusy, setReschedBusy] = useState<BusyInterval[]>([]);
+  const [reschedError, setReschedError] = useState<string | null>(null);
+  const [rescheduling, setRescheduling] = useState(false);
   const [rateBooking, setRateBooking] = useState<Booking | null>(null);
   const [stars, setStars] = useState(5);
   const [comment, setComment] = useState('');
@@ -101,7 +104,27 @@ export default function Appointments() {
     b.status === 'cancelled' ||
     b.status === 'completed' ||
     b.status === 'no_show';
-  const visible = bookings.filter((b) => (filter === 'upcoming' ? !isPast(b) : isPast(b)));
+  // Upcoming: soonest first, so the next appointment tops the list.
+  // Past: most recent first.
+  const visible = bookings
+    .filter((b) => (filter === 'upcoming' ? !isPast(b) : isPast(b)))
+    .sort((a, b) =>
+      filter === 'upcoming'
+        ? new Date(a.starts_at).getTime() - new Date(b.starts_at).getTime()
+        : new Date(b.starts_at).getTime() - new Date(a.starts_at).getTime()
+    );
+
+  // Live availability for the reschedule picker. The booking being moved is
+  // excluded - every other booking (same specialist, any customer) blocks.
+  React.useEffect(() => {
+    if (!reschedId || !reschedDate) {
+      setReschedBusy([]);
+      return;
+    }
+    const b = bookings.find((x) => x.id === reschedId);
+    if (!b) return;
+    getBusyIntervals(b.venue_id, reschedDate, { excludeBookingId: b.id }).then(setReschedBusy, () => setReschedBusy([]));
+  }, [reschedId, reschedDate]);
 
   const [cancelTarget, setCancelTarget] = useState<Booking | null>(null);
   const [cancelling, setCancelling] = useState(false);
@@ -127,7 +150,16 @@ export default function Appointments() {
     const [h, m] = time.split(':').map(Number);
     const [y, mo, d] = reschedDate!.split('-').map(Number);
     const duration = booking.items.reduce((s, i) => s + i.duration_minutes, 0) || 60;
-    await rescheduleBooking(booking.id, new Date(y, mo - 1, d, h, m), duration);
+    setRescheduling(true);
+    setReschedError(null);
+    try {
+      await rescheduleBooking(booking.id, new Date(y, mo - 1, d, h, m), duration);
+    } catch (e: any) {
+      setReschedError(e?.message ?? t('Could not reschedule. Try another slot.'));
+      setRescheduling(false);
+      return;
+    }
+    setRescheduling(false);
     setReschedId(null);
     setReschedDate(null);
     if (user && !user.isGuest) {
@@ -248,6 +280,7 @@ export default function Appointments() {
                     onPress={() => {
                       setReschedId(reschedId === b.id ? null : b.id);
                       setReschedDate(null);
+                      setReschedError(null);
                     }}
                   />
                   <Button title={t('Cancel booking')} variant="secondary" size="sm" onPress={() => onCancel(b.id)} />
@@ -276,13 +309,38 @@ export default function Appointments() {
                     </ScrollView>
                     {reschedDate && (
                       <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8 }}>
-                        {RESCHEDULE_SLOTS.map((t) => (
-                          <Pressable key={t} onPress={() => onReschedule(b, t)} style={styles.slot}>
-                            <BText style={{ fontFamily: font.semibold, fontSize: 13, color: colors.ink }}>{t}</BText>
-                          </Pressable>
-                        ))}
+                        {RESCHEDULE_SLOTS.map((slot) => {
+                          const [sh, sm] = slot.split(':').map(Number);
+                          const duration = b.items.reduce((s, i) => s + i.duration_minutes, 0) || 60;
+                          const totalStaff = allVenues.find((v) => v.id === b.venue_id)?.staff.length ?? 1;
+                          const taken = !isSlotFree(reschedBusy, sh * 60 + sm, duration, b.staff_id ?? null, totalStaff);
+                          return (
+                            <Pressable
+                              key={slot}
+                              disabled={taken || rescheduling}
+                              onPress={() => onReschedule(b, slot)}
+                              style={[styles.slot, taken && { opacity: 0.4, backgroundColor: colors.bgSubtle, borderColor: colors.bgSubtle }]}
+                            >
+                              <BText
+                                style={{
+                                  fontFamily: font.semibold,
+                                  fontSize: 13,
+                                  color: taken ? colors.grayLight : colors.ink,
+                                  textDecorationLine: taken ? 'line-through' : 'none',
+                                }}
+                              >
+                                {slot}
+                              </BText>
+                            </Pressable>
+                          );
+                        })}
                       </View>
                     )}
+                    {reschedError ? (
+                      <BText variant="small" color={colors.danger}>
+                        {reschedError}
+                      </BText>
+                    ) : null}
                   </View>
                 )}
               </View>

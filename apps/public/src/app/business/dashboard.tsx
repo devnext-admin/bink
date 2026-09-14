@@ -1873,75 +1873,24 @@ function MemberServicesEditor({
   const providedSet = new Set(providesAll ? venue.services.map((s) => s.id) : explicit);
 
   const [savingId, setSavingId] = useState<string | null>(null);
-  const [name, setName] = useState('');
-  const [group, setGroup] = useState('Featured');
-  const [duration, setDuration] = useState('60');
-  const [price, setPrice] = useState('');
-  const [adding, setAdding] = useState(false);
 
   const toggle = async (id: string) => {
     const next = new Set(providedSet);
     if (next.has(id)) next.delete(id);
     else next.add(id);
     setSavingId(id);
-    // An empty list means "provides everything"; keep that shorthand when the
-    // member has (re)selected every service.
-    const list = next.size === venue.services.length ? [] : [...next];
-    await setStaffServices(staffId, list);
+    // Store the explicit list. (The legacy empty-list shorthand for "provides
+    // everything" is still read, but no longer written - client booking now
+    // filters specialists by their assigned services.)
+    await setStaffServices(staffId, [...next]);
     setSavingId(null);
     onChanged();
   };
 
-  const addNew = async () => {
-    if (!name.trim() || !price.trim()) return;
-    setAdding(true);
-    const beforeIds = new Set(venue.services.map((s) => s.id));
-    const updated = await addService(venue, {
-      name: name.trim(),
-      group_name: group.trim() || 'Featured',
-      duration_minutes: Math.max(5, parseInt(duration, 10) || 30),
-      price_cents: Math.round(parseFloat(price) * 100),
-    });
-    // Assign the newly created service to this member (unless they already
-    // provide everything, in which case it's covered automatically).
-    if (!providesAll) {
-      const added = updated.services.find((s) => !beforeIds.has(s.id));
-      if (added) await setStaffServices(staffId, [...explicit, added.id]);
-    }
-    setName('');
-    setPrice('');
-    setDuration('60');
-    setGroup('Featured');
-    setAdding(false);
-    onChanged();
-  };
-
+  // Team members pick which of the salon's services they provide - creating
+  // or editing the services themselves is management work (owner/manager only).
   return (
     <View style={{ gap: 16 }}>
-      <View style={styles.card}>
-        <BText variant="h3">{t('Add a service')}</BText>
-        <BText variant="tiny" style={{ marginTop: 4 }}>
-          {t('New services join the salon menu and are added to the ones you provide.')}
-        </BText>
-        <View style={{ gap: 12, marginTop: 16 }}>
-          <Field label={t('Service name')} placeholder={t('e.g. Gel Manicure')} value={name} onChangeText={setName} />
-          <View style={{ flexDirection: 'row', gap: 12 }}>
-            <View style={{ flex: 1 }}>
-              <Field label={t('Group')} placeholder={t('Featured')} value={group} onChangeText={setGroup} />
-            </View>
-            <View style={{ flex: 1 }}>
-              <Field label={t('Duration (min)')} keyboardType="numeric" value={duration} onChangeText={setDuration} />
-            </View>
-            <View style={{ flex: 1 }}>
-              <Field label={t('Price')} keyboardType="numeric" placeholder="150" value={price} onChangeText={setPrice} />
-            </View>
-          </View>
-          <View style={{ flexDirection: 'row' }}>
-            <Button title={t('Add service')} loading={adding} onPress={addNew} />
-          </View>
-        </View>
-      </View>
-
       <View style={styles.card}>
         <BText variant="h3">{t('Services you provide')}</BText>
         <BText variant="tiny" style={{ marginTop: 4 }}>
@@ -1968,7 +1917,7 @@ function MemberServicesEditor({
           })}
           {venue.services.length === 0 && (
             <BText variant="small" style={{ marginTop: 10 }}>
-              {t('No services yet - add your first one above.')}
+              {t('No services yet - ask a manager to add them.')}
             </BText>
           )}
         </View>

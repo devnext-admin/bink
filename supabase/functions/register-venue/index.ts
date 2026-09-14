@@ -17,7 +17,7 @@ const json = (body: unknown, status = 200) =>
 Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') return new Response('ok', { headers: CORS });
   try {
-    const { ownerId, venue } = await req.json();
+    const { ownerId, venue, businessDetails } = await req.json();
     if (!ownerId || !venue?.slug) return json({ error: 'Missing ownerId or venue' }, 400);
 
     const admin = createClient(
@@ -50,6 +50,16 @@ Deno.serve(async (req) => {
       .select('id')
       .single();
     if (error || !v) return json({ error: error?.message ?? 'Insert failed' }, 500);
+
+    if (businessDetails?.bankIban && businessDetails?.legalDocNumber) {
+      await admin.from('venue_business_details').insert({
+        venue_id: v.id,
+        bank_name: businessDetails.bankName ?? '',
+        bank_iban: businessDetails.bankIban,
+        legal_doc_type: businessDetails.legalDocType,
+        legal_doc_number: businessDetails.legalDocNumber,
+      });
+    }
 
     if (Array.isArray(venue.images) && venue.images.length) {
       await admin.from('venue_images').insert(

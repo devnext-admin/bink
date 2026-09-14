@@ -2,7 +2,7 @@ import { Ionicons } from '@expo/vector-icons';
 import React, { useState } from 'react';
 import { ActivityIndicator, Pressable, StyleSheet, View } from 'react-native';
 import { useI18n } from '../lib/i18n';
-import { requestBookingDelay, respondBookingDelay } from '../lib/ops';
+import { applyBookingDelay, requestBookingDelay, respondBookingDelay } from '../lib/ops';
 import { colors, font, radius } from '../lib/theme';
 import { MAX_DELAY_MINUTES } from '../lib/types';
 import type { Booking, DelaySide } from '../lib/types';
@@ -19,17 +19,21 @@ interface DelayControlsProps {
 }
 
 /**
- * Short delay requests on a booking, from either side.
+ * Short delays on a booking.
  *
- * Three states: nothing pending (offer to ask), our own request pending (wait),
- * or the other side's request pending (accept or decline). Anything longer than
- * MAX_DELAY_MINUTES is a reschedule, which is a separate flow.
+ * The customer asks and waits for the salon to accept or decline. The salon
+ * applies its own delay DIRECTLY - it is running behind in its own house, so
+ * there is nobody to ask - and answers the customer's pending requests.
+ * Anything longer than MAX_DELAY_MINUTES is a reschedule, a separate flow.
  */
 export function DelayControls({ booking, side, onChanged }: DelayControlsProps) {
   const { t } = useI18n();
   const [busy, setBusy] = useState(false);
   const [picking, setPicking] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [applied, setApplied] = useState<number | null>(null);
+  // The salon applies delays immediately; only customers file requests.
+  const direct = side === 'venue';
 
   if (booking.status === 'cancelled' || booking.status === 'completed') return null;
 
@@ -85,14 +89,30 @@ export function DelayControls({ booking, side, onChanged }: DelayControlsProps) 
     );
   }
 
-  // We already asked; nothing to do but wait.
+  // We already asked; nothing to do but wait for the salon's answer.
   if (pending) {
     return (
       <View style={[styles.card, { backgroundColor: colors.bgSubtle }]}>
         <View style={styles.row}>
-          <Ionicons name="hourglass-outline" size={16} color={colors.gray} />
+          <Ionicons name="checkmark-circle" size={16} color={colors.green} />
           <BText style={[styles.title, { color: colors.gray }]}>
-            {t('Waiting on a reply to your {n} min delay', { n: String(mins) })}
+            {t('Your {n} min delay request was sent - waiting for a response', { n: String(mins) })}
+          </BText>
+        </View>
+      </View>
+    );
+  }
+
+  // The salon just applied a delay - brief confirmation, then business as usual.
+  if (direct && applied != null) {
+    return (
+      <View style={[styles.card, { backgroundColor: colors.bgSubtle }]}>
+        <View style={styles.row}>
+          <Ionicons name="checkmark-circle" size={16} color={colors.green} />
+          <BText style={[styles.title, { color: colors.gray }]}>
+            {t('Delay applied - the booking moved {n} min later and the customer was notified', {
+              n: String(applied),
+            })}
           </BText>
         </View>
       </View>
@@ -103,7 +123,7 @@ export function DelayControls({ booking, side, onChanged }: DelayControlsProps) 
     return (
       <Pressable onPress={() => setPicking(true)} style={styles.link}>
         <Ionicons name="time-outline" size={15} color={colors.accent} />
-        <BText style={styles.linkText}>{t('Request a short delay')}</BText>
+        <BText style={styles.linkText}>{direct ? t('Delay this booking') : t('Request a short delay')}</BText>
       </Pressable>
     );
   }
@@ -117,7 +137,16 @@ export function DelayControls({ booking, side, onChanged }: DelayControlsProps) 
           <Pressable
             key={m}
             disabled={busy}
-            onPress={() => run(() => requestBookingDelay(booking.id, m, side))}
+            onPress={() =>
+              run(async () => {
+                if (direct) {
+                  await applyBookingDelay(booking.id, m);
+                  setApplied(m);
+                } else {
+                  await requestBookingDelay(booking.id, m, side);
+                }
+              })
+            }
             style={({ hovered }: any) => [styles.btn, styles.option, hovered && { borderColor: colors.accent }]}
           >
             <BText style={[styles.btnText, { color: colors.ink }]}>{t('{n} min', { n: String(m) })}</BText>

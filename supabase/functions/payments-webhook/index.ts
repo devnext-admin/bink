@@ -52,6 +52,13 @@ Deno.serve(async (req) => {
           .from('bookings')
           .update({ payment_status: 'paid' })
           .eq('id', tx.booking_id);
+        // A payment-first booking was created 'pending'; the settled charge
+        // is what confirms the appointment.
+        await supabase
+          .from('bookings')
+          .update({ status: 'confirmed' })
+          .eq('id', tx.booking_id)
+          .eq('status', 'pending');
 
         const { data: booking } = await supabase
           .from('bookings')
@@ -107,6 +114,15 @@ Deno.serve(async (req) => {
       tx.status === 'pending'
     ) {
       await supabase.from('transactions').update({ status: 'failed' }).eq('id', tx.id);
+      // The charge is dead: drop the booking out of payment-pending so the
+      // customer can retry or fall back to paying at the venue.
+      if (tx.booking_id) {
+        await supabase
+          .from('bookings')
+          .update({ payment_status: 'unpaid' })
+          .eq('id', tx.booking_id)
+          .eq('payment_status', 'pending');
+      }
     }
 
     return json({ ok: true });

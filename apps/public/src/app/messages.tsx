@@ -93,6 +93,7 @@ export default function Messages() {
       userId={user.id}
       userName={user.name ?? user.email ?? 'Customer'}
       perspective="customer"
+      keyboardOffset={isDesktop ? 0 : insets.top + 64}
     />
   ) : (
     <View style={styles.emptyThread}>

@@ -127,7 +127,7 @@ export interface PromoCode {
   max_uses?: number | null;
   used_count?: number;
 }
-export type PaymentStatus = 'unpaid' | 'paid' | 'refunded';
+export type PaymentStatus = 'unpaid' | 'pending' | 'paid' | 'refunded';
 export type PaymentMethod = 'pay_at_venue' | 'card' | 'apple_pay';
 
 export interface Transaction {

@@ -67,13 +67,21 @@ export interface PayForBookingInput {
   userId?: string | null;
 }
 
-export async function payForBooking(input: PayForBookingInput): Promise<Transaction> {
+export interface PayForBookingResult {
+  transaction: Transaction;
+  /** Hosted-checkout URL when the real gateway is charging; the caller shows
+   *  it in an in-app payment sheet. null when the payment settled directly. */
+  paymentUrl: string | null;
+}
+
+export async function payForBooking(input: PayForBookingInput): Promise<PayForBookingResult> {
   const sb = getSupabase();
 
   if (sb && paymentsGateway !== 'demo') {
-    // Real gateway (TAP): the edge function creates the charge and records a
-    // pending transaction; the customer completes payment on TAP's hosted
-    // page (card, mada, Apple Pay) and the webhook settles the transaction.
+    // Real gateway (TAP): the edge function creates the charge, records a
+    // pending transaction and marks the booking payment-pending. The customer
+    // completes payment on the gateway page shown INSIDE the app (payment
+    // sheet); the webhook settles the transaction and confirms the booking.
     const { data, error } = await sb.functions.invoke('create-payment', {
       body: {
         booking_id: input.booking.id,
@@ -83,15 +91,7 @@ export async function payForBooking(input: PayForBookingInput): Promise<Transact
       },
     });
     if (error) throw new Error(error.message);
-    if (data.payment_url) {
-      if (typeof window !== 'undefined' && window.location) {
-        window.location.assign(data.payment_url);
-      } else {
-        const Linking = await import('expo-linking');
-        Linking.openURL(data.payment_url).catch(() => {});
-      }
-    }
-    return data.transaction as Transaction;
+    return { transaction: data.transaction as Transaction, paymentUrl: data.payment_url ?? null };
   }
 
   // Demo gateway: instant success
@@ -150,7 +150,10 @@ export async function payForBooking(input: PayForBookingInput): Promise<Transact
           title: 'Payment received',
           body: `${(input.booking.total_cents / 100).toFixed(2)} ${input.booking.currency} paid online - held in escrow until the visit is confirmed.`,
         });
-        return { ...txRow, venue_name: input.booking.venue_name, customer_name: input.customerName ?? null } as Transaction;
+        return {
+          transaction: { ...txRow, venue_name: input.booking.venue_name, customer_name: input.customerName ?? null } as Transaction,
+          paymentUrl: null,
+        };
       }
     }
   }
@@ -201,7 +204,22 @@ export async function payForBooking(input: PayForBookingInput): Promise<Transact
     title: 'Payment held in escrow',
     body: `${invoice.number} issued. Bink holds your payment securely and releases it to ${input.booking.venue_name} after your visit is confirmed.`,
   });
-  return tx;
+  return { transaction: tx, paymentUrl: null };
+}
+
+/** The booking's current payment status straight from the backend - used to
+ *  poll while the in-app payment sheet is open. */
+export async function getBookingPaymentStatus(
+  bookingId: string
+): Promise<{ payment_status: string; status: string } | null> {
+  const sb = getSupabase();
+  if (!sb || bookingId.startsWith('local-')) return null;
+  const { data } = await sb
+    .from('bookings')
+    .select('payment_status, status')
+    .eq('id', bookingId)
+    .maybeSingle();
+  return (data as any) ?? null;
 }
 
 /**

@@ -1,5 +1,5 @@
 import { useFonts } from 'expo-font';
-import { Stack } from 'expo-router';
+import { Stack, usePathname, useRouter } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
 import React, { useEffect } from 'react';
@@ -7,13 +7,30 @@ import { Platform } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { AppDataProvider } from '@bink/shared/lib/app-data-context';
-import { AuthProvider } from '@bink/shared/lib/auth-context';
+import { AuthProvider, useAuth } from '@bink/shared/lib/auth-context';
 import { BookingProvider } from '../lib/booking-context';
 import { EmulationBanner } from '../components/emulation-banner';
 import { I18nProvider } from '@bink/shared/lib/i18n';
 import { colors } from '@bink/shared/lib/theme';
 
 SplashScreen.preventAutoHideAsync().catch(() => {});
+
+// Business accounts are business-only: a partner who lands on any customer
+// surface is sent to their dashboard. Auth, legal and support pages stay
+// reachable so sign-in flows and policies keep working.
+const PARTNER_ALLOWED = ['/business', '/auth', '/welcome', '/reset-password', '/terms', '/privacy', '/support'];
+
+function PartnerGate() {
+  const { user, loading } = useAuth();
+  const pathname = usePathname();
+  const router = useRouter();
+  useEffect(() => {
+    if (loading || !user || user.role !== 'partner') return;
+    const allowed = PARTNER_ALLOWED.some((p) => pathname === p || pathname.startsWith(p + '/'));
+    if (!allowed) router.replace('/business/dashboard');
+  }, [loading, user?.id, user?.role, pathname]);
+  return null;
+}
 
 // iOS tab apps never animate tab switches; the web slide stays for continuity.
 const tabScreen = Platform.OS === 'web' ? undefined : ({ animation: 'none' } as const);
@@ -81,6 +98,7 @@ export default function RootLayout() {
                 <Stack.Screen name="business/index" />
                 <Stack.Screen name="business/dashboard" />
               </Stack>
+              <PartnerGate />
               <EmulationBanner />
             </BookingProvider>
           </AppDataProvider>

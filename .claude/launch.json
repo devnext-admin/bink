@@ -3,9 +3,9 @@
   "configurations": [
     {
       "name": "bink-web",
-      "runtimeExecutable": "npx",
-      "runtimeArgs": ["expo", "start", "--web", "--port", "8081"],
-      "port": 8081
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "web", "--workspace", "@bink/public", "--", "--port", "8082"],
+      "port": 8082
     }
   ]
 }

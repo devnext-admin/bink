@@ -15,6 +15,7 @@ export function PaymentPill({
   const map: Record<string, { label: string; color: string; bg: string }> = {
     paid: { label: 'Paid', color: colors.green, bg: colors.greenBg },
     unpaid: { label: 'Pay at venue', color: colors.gray, bg: colors.bgSubtle },
+    pending: { label: 'Payment pending', color: colors.warning, bg: colors.warningBg },
     refunded: { label: 'Refunded', color: colors.danger, bg: colors.dangerBg },
   };
   let m = map[status] ?? map.unpaid;
