@@ -24,7 +24,7 @@ export function Logo({ size = 26, color = colors.ink }: { size?: number; color?:
       // row-reverse under RTL keeps the wordmark reading b-i-n-k
       style={[styles.row, isRTL && { flexDirection: 'row-reverse' }]}
     >
-      <Text style={textStyle}>b</Text>
+      <Text style={textStyle}>B</Text>
       <View>
         <Text style={textStyle}>{'ı'}</Text>
         <View

@@ -10,11 +10,11 @@ import { Avatar } from '@bink/shared/components/ui/avatar';
 import { WebFooter } from '../components/web-footer';
 import { WebHeader } from '@bink/shared/components/web-header';
 import { SkeletonRail } from '../components/skeleton';
-import { HeroGradient } from '../components/hero-gradient';
+import { CategoryRail } from '../components/category-rail';
 import { useAppData } from '@bink/shared/lib/app-data-context';
 import { homeRails } from '../lib/home-rails';
 import { useI18n } from '@bink/shared/lib/i18n';
-import { colors, font, maxContentWidth, radius, shadow } from '@bink/shared/lib/theme';
+import { colors, font, maxContentWidth, radius } from '@bink/shared/lib/theme';
 
 const TESTIMONIALS = [
   { title: 'The best booking system', body: 'Great experience, easy to book. Paying for my salon visits is so convenient - no cash or cards needed!', name: 'Sara', place: 'Riyadh' },
@@ -31,9 +31,9 @@ export function HomeDesktop() {
 
   return (
     <ScrollView style={{ flex: 1, backgroundColor: colors.white }}>
-      {/* Pink → ivory → orange wash, contained to the hero/header only */}
-      <HeroGradient style={styles.hero}>
-        <WebHeader transparent />
+      {/* Clean white hero: search-first, then quick category shortcuts */}
+      <View style={styles.hero}>
+        <WebHeader />
         <View style={styles.heroInner}>
           <BText variant="display" style={{ textAlign: 'center' }}>
             {t('Book your salon visit in seconds')}
@@ -44,12 +44,11 @@ export function HomeDesktop() {
           <View style={{ marginTop: 32, width: '100%', alignItems: 'center' }}>
             <HeroSearchDesktop />
           </View>
-          <View style={[styles.appPill, shadow.card]}>
-            <BText variant="smallMedium">{t('Get the app')}</BText>
-            <Ionicons name="qr-code-outline" size={16} color={colors.ink} />
+          <View style={{ marginTop: 28, width: '100%', maxWidth: 820 }}>
+            <CategoryRail columns={8} />
           </View>
         </View>
-      </HeroGradient>
+      </View>
 
       <View style={styles.content}>
         {loading ? (
@@ -116,13 +115,19 @@ export function HomeDesktop() {
 }
 
 const styles = StyleSheet.create({
-  hero: { width: '100%', paddingBottom: 72 },
+  hero: {
+    width: '100%',
+    paddingBottom: 52,
+    backgroundColor: colors.white,
+    borderBottomWidth: 1,
+    borderBottomColor: colors.divider,
+  },
   heroInner: {
     width: '100%',
     maxWidth: 880,
     alignSelf: 'center',
     alignItems: 'center',
-    paddingTop: 56,
+    paddingTop: 48,
     paddingHorizontal: 24,
   },
   content: {
@@ -130,16 +135,6 @@ const styles = StyleSheet.create({
     maxWidth: maxContentWidth + 48,
     alignSelf: 'center',
     paddingHorizontal: 24,
-  },
-  appPill: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-    backgroundColor: colors.white,
-    borderRadius: radius.pill,
-    paddingHorizontal: 18,
-    height: 44,
-    marginTop: 24,
   },
   testimonial: {
     flex: 1,
