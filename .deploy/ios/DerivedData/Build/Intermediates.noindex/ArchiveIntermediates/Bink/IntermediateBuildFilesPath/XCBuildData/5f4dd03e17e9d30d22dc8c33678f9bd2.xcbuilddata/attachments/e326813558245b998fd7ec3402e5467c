@@ -1,0 +1,521 @@
+{
+  "" : {
+    "const-values" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/EXUpdates-primary.swiftconstvalues",
+    "dependencies" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/EXUpdates-primary.d",
+    "diagnostics" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/EXUpdates-primary.dia",
+    "emit-module-dependencies" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/EXUpdates-primary-emit-module.d",
+    "emit-module-diagnostics" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/EXUpdates-primary-emit-module.dia",
+    "pch" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/EXUpdates-primary-Bridging-header.pch",
+    "swift-dependencies" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/EXUpdates-primary.swiftdeps"
+  },
+  "/Users/abdul/Desktop/bink/node_modules/expo-updates/ios/EXUpdates/ASN1Decoder/ASN1Decoder.swift" : {
+    "index-unit-output-path" : "/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/ASN1Decoder.o",
+    "llvm-bc" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/ASN1Decoder.bc",
+    "object" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/ASN1Decoder.o"
+  },
+  "/Users/abdul/Desktop/bink/node_modules/expo-updates/ios/EXUpdates/ASN1Decoder/ASN1DistinguishedNames.swift" : {
+    "index-unit-output-path" : "/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/ASN1DistinguishedNames.o",
+    "llvm-bc" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/ASN1DistinguishedNames.bc",
+    "object" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/ASN1DistinguishedNames.o"
+  },
+  "/Users/abdul/Desktop/bink/node_modules/expo-updates/ios/EXUpdates/ASN1Decoder/ASN1Encoder.swift" : {
+    "index-unit-output-path" : "/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/ASN1Encoder.o",
+    "llvm-bc" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/ASN1Encoder.bc",
+    "object" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/ASN1Encoder.o"
+  },
+  "/Users/abdul/Desktop/bink/node_modules/expo-updates/ios/EXUpdates/ASN1Decoder/ASN1Identifier.swift" : {
+    "index-unit-output-path" : "/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/ASN1Identifier.o",
+    "llvm-bc" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/ASN1Identifier.bc",
+    "object" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/ASN1Identifier.o"
+  },
+  "/Users/abdul/Desktop/bink/node_modules/expo-updates/ios/EXUpdates/ASN1Decoder/ASN1Object.swift" : {
+    "index-unit-output-path" : "/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/ASN1Object.o",
+    "llvm-bc" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/ASN1Object.bc",
+    "object" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/ASN1Object.o"
+  },
+  "/Users/abdul/Desktop/bink/node_modules/expo-updates/ios/EXUpdates/ASN1Decoder/OID.swift" : {
+    "index-unit-output-path" : "/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/OID.o",
+    "llvm-bc" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/OID.bc",
+    "object" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/OID.o"
+  },
+  "/Users/abdul/Desktop/bink/node_modules/expo-updates/ios/EXUpdates/ASN1Decoder/PKCS7.swift" : {
+    "index-unit-output-path" : "/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/PKCS7.o",
+    "llvm-bc" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/PKCS7.bc",
+    "object" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/PKCS7.o"
+  },
+  "/Users/abdul/Desktop/bink/node_modules/expo-updates/ios/EXUpdates/ASN1Decoder/PKCS7_AppleReceipt.swift" : {
+    "index-unit-output-path" : "/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/PKCS7_AppleReceipt.o",
+    "llvm-bc" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/PKCS7_AppleReceipt.bc",
+    "object" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/PKCS7_AppleReceipt.o"
+  },
+  "/Users/abdul/Desktop/bink/node_modules/expo-updates/ios/EXUpdates/ASN1Decoder/PKCS7_Signature.swift" : {
+    "index-unit-output-path" : "/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/PKCS7_Signature.o",
+    "llvm-bc" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/PKCS7_Signature.bc",
+    "object" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/PKCS7_Signature.o"
+  },
+  "/Users/abdul/Desktop/bink/node_modules/expo-updates/ios/EXUpdates/ASN1Decoder/X509Certificate.swift" : {
+    "index-unit-output-path" : "/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/X509Certificate.o",
+    "llvm-bc" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/X509Certificate.bc",
+    "object" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/X509Certificate.o"
+  },
+  "/Users/abdul/Desktop/bink/node_modules/expo-updates/ios/EXUpdates/ASN1Decoder/X509Extension.swift" : {
+    "index-unit-output-path" : "/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/X509Extension.o",
+    "llvm-bc" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/X509Extension.bc",
+    "object" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/X509Extension.o"
+  },
+  "/Users/abdul/Desktop/bink/node_modules/expo-updates/ios/EXUpdates/ASN1Decoder/X509ExtensionAltName.swift" : {
+    "index-unit-output-path" : "/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/X509ExtensionAltName.o",
+    "llvm-bc" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/X509ExtensionAltName.bc",
+    "object" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/X509ExtensionAltName.o"
+  },
+  "/Users/abdul/Desktop/bink/node_modules/expo-updates/ios/EXUpdates/ASN1Decoder/X509ExtensionClasses.swift" : {
+    "index-unit-output-path" : "/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/X509ExtensionClasses.o",
+    "llvm-bc" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/X509ExtensionClasses.bc",
+    "object" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/X509ExtensionClasses.o"
+  },
+  "/Users/abdul/Desktop/bink/node_modules/expo-updates/ios/EXUpdates/ASN1Decoder/X509PublicKey.swift" : {
+    "index-unit-output-path" : "/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/X509PublicKey.o",
+    "llvm-bc" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/X509PublicKey.bc",
+    "object" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/X509PublicKey.o"
+  },
+  "/Users/abdul/Desktop/bink/node_modules/expo-updates/ios/EXUpdates/AppController.swift" : {
+    "index-unit-output-path" : "/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/AppController.o",
+    "llvm-bc" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/AppController.bc",
+    "object" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/AppController.o"
+  },
+  "/Users/abdul/Desktop/bink/node_modules/expo-updates/ios/EXUpdates/AppLauncher/AppLauncher.swift" : {
+    "index-unit-output-path" : "/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/AppLauncher.o",
+    "llvm-bc" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/AppLauncher.bc",
+    "object" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/AppLauncher.o"
+  },
+  "/Users/abdul/Desktop/bink/node_modules/expo-updates/ios/EXUpdates/AppLauncher/AppLauncherNoDatabase.swift" : {
+    "index-unit-output-path" : "/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/AppLauncherNoDatabase.o",
+    "llvm-bc" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/AppLauncherNoDatabase.bc",
+    "object" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/AppLauncherNoDatabase.o"
+  },
+  "/Users/abdul/Desktop/bink/node_modules/expo-updates/ios/EXUpdates/AppLauncher/AppLauncherWithDatabase.swift" : {
+    "index-unit-output-path" : "/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/AppLauncherWithDatabase.o",
+    "llvm-bc" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/AppLauncherWithDatabase.bc",
+    "object" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/AppLauncherWithDatabase.o"
+  },
+  "/Users/abdul/Desktop/bink/node_modules/expo-updates/ios/EXUpdates/AppLoader/AppLoader.swift" : {
+    "index-unit-output-path" : "/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/AppLoader.o",
+    "llvm-bc" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/AppLoader.bc",
+    "object" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/AppLoader.o"
+  },
+  "/Users/abdul/Desktop/bink/node_modules/expo-updates/ios/EXUpdates/AppLoader/AppLoaderTask.swift" : {
+    "index-unit-output-path" : "/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/AppLoaderTask.o",
+    "llvm-bc" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/AppLoaderTask.bc",
+    "object" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/AppLoaderTask.o"
+  },
+  "/Users/abdul/Desktop/bink/node_modules/expo-updates/ios/EXUpdates/AppLoader/Crypto.swift" : {
+    "index-unit-output-path" : "/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/Crypto.o",
+    "llvm-bc" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/Crypto.bc",
+    "object" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/Crypto.o"
+  },
+  "/Users/abdul/Desktop/bink/node_modules/expo-updates/ios/EXUpdates/AppLoader/EmbeddedAppLoader.swift" : {
+    "index-unit-output-path" : "/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/EmbeddedAppLoader.o",
+    "llvm-bc" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/EmbeddedAppLoader.bc",
+    "object" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/EmbeddedAppLoader.o"
+  },
+  "/Users/abdul/Desktop/bink/node_modules/expo-updates/ios/EXUpdates/AppLoader/FileDownloader.swift" : {
+    "index-unit-output-path" : "/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/FileDownloader.o",
+    "llvm-bc" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/FileDownloader.bc",
+    "object" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/FileDownloader.o"
+  },
+  "/Users/abdul/Desktop/bink/node_modules/expo-updates/ios/EXUpdates/AppLoader/RemoteAppLoader.swift" : {
+    "index-unit-output-path" : "/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/RemoteAppLoader.o",
+    "llvm-bc" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/RemoteAppLoader.bc",
+    "object" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/RemoteAppLoader.o"
+  },
+  "/Users/abdul/Desktop/bink/node_modules/expo-updates/ios/EXUpdates/AppLoader/ResponseHeaderData.swift" : {
+    "index-unit-output-path" : "/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/ResponseHeaderData.o",
+    "llvm-bc" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/ResponseHeaderData.bc",
+    "object" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/ResponseHeaderData.o"
+  },
+  "/Users/abdul/Desktop/bink/node_modules/expo-updates/ios/EXUpdates/AppLoader/StructuredHeaders/StringDictionary.swift" : {
+    "index-unit-output-path" : "/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/StringDictionary.o",
+    "llvm-bc" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/StringDictionary.bc",
+    "object" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/StringDictionary.o"
+  },
+  "/Users/abdul/Desktop/bink/node_modules/expo-updates/ios/EXUpdates/AppLoader/StructuredHeaders/StringItem.swift" : {
+    "index-unit-output-path" : "/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/StringItem.o",
+    "llvm-bc" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/StringItem.bc",
+    "object" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/StringItem.o"
+  },
+  "/Users/abdul/Desktop/bink/node_modules/expo-updates/ios/EXUpdates/AppLoader/StructuredHeaders/StringList.swift" : {
+    "index-unit-output-path" : "/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/StringList.o",
+    "llvm-bc" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/StringList.bc",
+    "object" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/StringList.o"
+  },
+  "/Users/abdul/Desktop/bink/node_modules/expo-updates/ios/EXUpdates/AppLoader/UpdateAsset.swift" : {
+    "index-unit-output-path" : "/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/UpdateAsset.o",
+    "llvm-bc" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/UpdateAsset.bc",
+    "object" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/UpdateAsset.o"
+  },
+  "/Users/abdul/Desktop/bink/node_modules/expo-updates/ios/EXUpdates/AppLoader/UpdateResponse.swift" : {
+    "index-unit-output-path" : "/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/UpdateResponse.o",
+    "llvm-bc" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/UpdateResponse.bc",
+    "object" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/UpdateResponse.o"
+  },
+  "/Users/abdul/Desktop/bink/node_modules/expo-updates/ios/EXUpdates/CodeSigning/CertificateChain.swift" : {
+    "index-unit-output-path" : "/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/CertificateChain.o",
+    "llvm-bc" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/CertificateChain.bc",
+    "object" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/CertificateChain.o"
+  },
+  "/Users/abdul/Desktop/bink/node_modules/expo-updates/ios/EXUpdates/CodeSigning/CodeSigningAlgorithm.swift" : {
+    "index-unit-output-path" : "/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/CodeSigningAlgorithm.o",
+    "llvm-bc" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/CodeSigningAlgorithm.bc",
+    "object" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/CodeSigningAlgorithm.o"
+  },
+  "/Users/abdul/Desktop/bink/node_modules/expo-updates/ios/EXUpdates/CodeSigning/CodeSigningConfiguration.swift" : {
+    "index-unit-output-path" : "/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/CodeSigningConfiguration.o",
+    "llvm-bc" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/CodeSigningConfiguration.bc",
+    "object" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/CodeSigningConfiguration.o"
+  },
+  "/Users/abdul/Desktop/bink/node_modules/expo-updates/ios/EXUpdates/CodeSigning/CodeSigningError.swift" : {
+    "index-unit-output-path" : "/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/CodeSigningError.o",
+    "llvm-bc" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/CodeSigningError.bc",
+    "object" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/CodeSigningError.o"
+  },
+  "/Users/abdul/Desktop/bink/node_modules/expo-updates/ios/EXUpdates/CodeSigning/SignatureHeaderInfo.swift" : {
+    "index-unit-output-path" : "/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/SignatureHeaderInfo.o",
+    "llvm-bc" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/SignatureHeaderInfo.bc",
+    "object" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/SignatureHeaderInfo.o"
+  },
+  "/Users/abdul/Desktop/bink/node_modules/expo-updates/ios/EXUpdates/Database/Migrations/UpdatesDatabaseMigration.swift" : {
+    "index-unit-output-path" : "/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/UpdatesDatabaseMigration.o",
+    "llvm-bc" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/UpdatesDatabaseMigration.bc",
+    "object" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/UpdatesDatabaseMigration.o"
+  },
+  "/Users/abdul/Desktop/bink/node_modules/expo-updates/ios/EXUpdates/Database/Migrations/UpdatesDatabaseMigration10To11.swift" : {
+    "index-unit-output-path" : "/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/UpdatesDatabaseMigration10To11.o",
+    "llvm-bc" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/UpdatesDatabaseMigration10To11.bc",
+    "object" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/UpdatesDatabaseMigration10To11.o"
+  },
+  "/Users/abdul/Desktop/bink/node_modules/expo-updates/ios/EXUpdates/Database/Migrations/UpdatesDatabaseMigration4To5.swift" : {
+    "index-unit-output-path" : "/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/UpdatesDatabaseMigration4To5.o",
+    "llvm-bc" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/UpdatesDatabaseMigration4To5.bc",
+    "object" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/UpdatesDatabaseMigration4To5.o"
+  },
+  "/Users/abdul/Desktop/bink/node_modules/expo-updates/ios/EXUpdates/Database/Migrations/UpdatesDatabaseMigration5To6.swift" : {
+    "index-unit-output-path" : "/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/UpdatesDatabaseMigration5To6.o",
+    "llvm-bc" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/UpdatesDatabaseMigration5To6.bc",
+    "object" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/UpdatesDatabaseMigration5To6.o"
+  },
+  "/Users/abdul/Desktop/bink/node_modules/expo-updates/ios/EXUpdates/Database/Migrations/UpdatesDatabaseMigration6To7.swift" : {
+    "index-unit-output-path" : "/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/UpdatesDatabaseMigration6To7.o",
+    "llvm-bc" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/UpdatesDatabaseMigration6To7.bc",
+    "object" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/UpdatesDatabaseMigration6To7.o"
+  },
+  "/Users/abdul/Desktop/bink/node_modules/expo-updates/ios/EXUpdates/Database/Migrations/UpdatesDatabaseMigration7To8.swift" : {
+    "index-unit-output-path" : "/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/UpdatesDatabaseMigration7To8.o",
+    "llvm-bc" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/UpdatesDatabaseMigration7To8.bc",
+    "object" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/UpdatesDatabaseMigration7To8.o"
+  },
+  "/Users/abdul/Desktop/bink/node_modules/expo-updates/ios/EXUpdates/Database/Migrations/UpdatesDatabaseMigration8To9.swift" : {
+    "index-unit-output-path" : "/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/UpdatesDatabaseMigration8To9.o",
+    "llvm-bc" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/UpdatesDatabaseMigration8To9.bc",
+    "object" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/UpdatesDatabaseMigration8To9.o"
+  },
+  "/Users/abdul/Desktop/bink/node_modules/expo-updates/ios/EXUpdates/Database/Migrations/UpdatesDatabaseMigration9To10.swift" : {
+    "index-unit-output-path" : "/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/UpdatesDatabaseMigration9To10.o",
+    "llvm-bc" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/UpdatesDatabaseMigration9To10.bc",
+    "object" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/UpdatesDatabaseMigration9To10.o"
+  },
+  "/Users/abdul/Desktop/bink/node_modules/expo-updates/ios/EXUpdates/Database/Migrations/UpdatesDatabaseMigrationRegistry.swift" : {
+    "index-unit-output-path" : "/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/UpdatesDatabaseMigrationRegistry.o",
+    "llvm-bc" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/UpdatesDatabaseMigrationRegistry.bc",
+    "object" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/UpdatesDatabaseMigrationRegistry.o"
+  },
+  "/Users/abdul/Desktop/bink/node_modules/expo-updates/ios/EXUpdates/Database/UpdatesBuildData.swift" : {
+    "index-unit-output-path" : "/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/UpdatesBuildData.o",
+    "llvm-bc" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/UpdatesBuildData.bc",
+    "object" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/UpdatesBuildData.o"
+  },
+  "/Users/abdul/Desktop/bink/node_modules/expo-updates/ios/EXUpdates/Database/UpdatesDatabase.swift" : {
+    "index-unit-output-path" : "/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/UpdatesDatabase.o",
+    "llvm-bc" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/UpdatesDatabase.bc",
+    "object" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/UpdatesDatabase.o"
+  },
+  "/Users/abdul/Desktop/bink/node_modules/expo-updates/ios/EXUpdates/Database/UpdatesDatabaseInitialization.swift" : {
+    "index-unit-output-path" : "/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/UpdatesDatabaseInitialization.o",
+    "llvm-bc" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/UpdatesDatabaseInitialization.bc",
+    "object" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/UpdatesDatabaseInitialization.o"
+  },
+  "/Users/abdul/Desktop/bink/node_modules/expo-updates/ios/EXUpdates/Database/UpdatesDatabaseIntegrityCheck.swift" : {
+    "index-unit-output-path" : "/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/UpdatesDatabaseIntegrityCheck.o",
+    "llvm-bc" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/UpdatesDatabaseIntegrityCheck.bc",
+    "object" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/UpdatesDatabaseIntegrityCheck.o"
+  },
+  "/Users/abdul/Desktop/bink/node_modules/expo-updates/ios/EXUpdates/Database/UpdatesDatabaseUtils.swift" : {
+    "index-unit-output-path" : "/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/UpdatesDatabaseUtils.o",
+    "llvm-bc" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/UpdatesDatabaseUtils.bc",
+    "object" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/UpdatesDatabaseUtils.o"
+  },
+  "/Users/abdul/Desktop/bink/node_modules/expo-updates/ios/EXUpdates/Database/UpdatesReaper.swift" : {
+    "index-unit-output-path" : "/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/UpdatesReaper.o",
+    "llvm-bc" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/UpdatesReaper.bc",
+    "object" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/UpdatesReaper.o"
+  },
+  "/Users/abdul/Desktop/bink/node_modules/expo-updates/ios/EXUpdates/DevLauncherAppController.swift" : {
+    "index-unit-output-path" : "/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/DevLauncherAppController.o",
+    "llvm-bc" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/DevLauncherAppController.bc",
+    "object" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/DevLauncherAppController.o"
+  },
+  "/Users/abdul/Desktop/bink/node_modules/expo-updates/ios/EXUpdates/DisabledAppController.swift" : {
+    "index-unit-output-path" : "/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/DisabledAppController.o",
+    "llvm-bc" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/DisabledAppController.bc",
+    "object" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/DisabledAppController.o"
+  },
+  "/Users/abdul/Desktop/bink/node_modules/expo-updates/ios/EXUpdates/EnabledAppController.swift" : {
+    "index-unit-output-path" : "/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/EnabledAppController.o",
+    "llvm-bc" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/EnabledAppController.bc",
+    "object" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/EnabledAppController.o"
+  },
+  "/Users/abdul/Desktop/bink/node_modules/expo-updates/ios/EXUpdates/ErrorRecovery.swift" : {
+    "index-unit-output-path" : "/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/ErrorRecovery.o",
+    "llvm-bc" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/ErrorRecovery.bc",
+    "object" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/ErrorRecovery.o"
+  },
+  "/Users/abdul/Desktop/bink/node_modules/expo-updates/ios/EXUpdates/Events/NoOpUpdatesEventManager.swift" : {
+    "index-unit-output-path" : "/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/NoOpUpdatesEventManager.o",
+    "llvm-bc" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/NoOpUpdatesEventManager.bc",
+    "object" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/NoOpUpdatesEventManager.o"
+  },
+  "/Users/abdul/Desktop/bink/node_modules/expo-updates/ios/EXUpdates/Events/QueueUpdatesEventManager.swift" : {
+    "index-unit-output-path" : "/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/QueueUpdatesEventManager.o",
+    "llvm-bc" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/QueueUpdatesEventManager.bc",
+    "object" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/QueueUpdatesEventManager.o"
+  },
+  "/Users/abdul/Desktop/bink/node_modules/expo-updates/ios/EXUpdates/Events/UpdatesEventManager.swift" : {
+    "index-unit-output-path" : "/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/UpdatesEventManager.o",
+    "llvm-bc" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/UpdatesEventManager.bc",
+    "object" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/UpdatesEventManager.o"
+  },
+  "/Users/abdul/Desktop/bink/node_modules/expo-updates/ios/EXUpdates/Exceptions.swift" : {
+    "index-unit-output-path" : "/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/Exceptions.o",
+    "llvm-bc" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/Exceptions.bc",
+    "object" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/Exceptions.o"
+  },
+  "/Users/abdul/Desktop/bink/node_modules/expo-updates/ios/EXUpdates/Logging/UpdatesErrorCode.swift" : {
+    "index-unit-output-path" : "/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/UpdatesErrorCode.o",
+    "llvm-bc" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/UpdatesErrorCode.bc",
+    "object" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/UpdatesErrorCode.o"
+  },
+  "/Users/abdul/Desktop/bink/node_modules/expo-updates/ios/EXUpdates/Logging/UpdatesLogEntry.swift" : {
+    "index-unit-output-path" : "/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/UpdatesLogEntry.o",
+    "llvm-bc" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/UpdatesLogEntry.bc",
+    "object" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/UpdatesLogEntry.o"
+  },
+  "/Users/abdul/Desktop/bink/node_modules/expo-updates/ios/EXUpdates/Logging/UpdatesLogReader.swift" : {
+    "index-unit-output-path" : "/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/UpdatesLogReader.o",
+    "llvm-bc" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/UpdatesLogReader.bc",
+    "object" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/UpdatesLogReader.o"
+  },
+  "/Users/abdul/Desktop/bink/node_modules/expo-updates/ios/EXUpdates/Logging/UpdatesLogger.swift" : {
+    "index-unit-output-path" : "/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/UpdatesLogger.o",
+    "llvm-bc" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/UpdatesLogger.bc",
+    "object" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/UpdatesLogger.o"
+  },
+  "/Users/abdul/Desktop/bink/node_modules/expo-updates/ios/EXUpdates/Multipart/UpdatesMultipartStreamReader.swift" : {
+    "index-unit-output-path" : "/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/UpdatesMultipartStreamReader.o",
+    "llvm-bc" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/UpdatesMultipartStreamReader.bc",
+    "object" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/UpdatesMultipartStreamReader.o"
+  },
+  "/Users/abdul/Desktop/bink/node_modules/expo-updates/ios/EXUpdates/Multipart/UpdatesParameterParser.swift" : {
+    "index-unit-output-path" : "/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/UpdatesParameterParser.o",
+    "llvm-bc" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/UpdatesParameterParser.bc",
+    "object" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/UpdatesParameterParser.o"
+  },
+  "/Users/abdul/Desktop/bink/node_modules/expo-updates/ios/EXUpdates/Procedures/CheckForUpdateProcedure.swift" : {
+    "index-unit-output-path" : "/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/CheckForUpdateProcedure.o",
+    "llvm-bc" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/CheckForUpdateProcedure.bc",
+    "object" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/CheckForUpdateProcedure.o"
+  },
+  "/Users/abdul/Desktop/bink/node_modules/expo-updates/ios/EXUpdates/Procedures/FetchUpdateProcedure.swift" : {
+    "index-unit-output-path" : "/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/FetchUpdateProcedure.o",
+    "llvm-bc" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/FetchUpdateProcedure.bc",
+    "object" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/FetchUpdateProcedure.o"
+  },
+  "/Users/abdul/Desktop/bink/node_modules/expo-updates/ios/EXUpdates/Procedures/RecreateReactContextProcedure.swift" : {
+    "index-unit-output-path" : "/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/RecreateReactContextProcedure.o",
+    "llvm-bc" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/RecreateReactContextProcedure.bc",
+    "object" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/RecreateReactContextProcedure.o"
+  },
+  "/Users/abdul/Desktop/bink/node_modules/expo-updates/ios/EXUpdates/Procedures/RelaunchProcedure.swift" : {
+    "index-unit-output-path" : "/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/RelaunchProcedure.o",
+    "llvm-bc" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/RelaunchProcedure.bc",
+    "object" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/RelaunchProcedure.o"
+  },
+  "/Users/abdul/Desktop/bink/node_modules/expo-updates/ios/EXUpdates/Procedures/StartupProcedure.swift" : {
+    "index-unit-output-path" : "/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/StartupProcedure.o",
+    "llvm-bc" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/StartupProcedure.bc",
+    "object" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/StartupProcedure.o"
+  },
+  "/Users/abdul/Desktop/bink/node_modules/expo-updates/ios/EXUpdates/Procedures/StateMachineProcedure.swift" : {
+    "index-unit-output-path" : "/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/StateMachineProcedure.o",
+    "llvm-bc" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/StateMachineProcedure.bc",
+    "object" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/StateMachineProcedure.o"
+  },
+  "/Users/abdul/Desktop/bink/node_modules/expo-updates/ios/EXUpdates/Procedures/StateMachineSerialExecutorQueue.swift" : {
+    "index-unit-output-path" : "/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/StateMachineSerialExecutorQueue.o",
+    "llvm-bc" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/StateMachineSerialExecutorQueue.bc",
+    "object" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/StateMachineSerialExecutorQueue.o"
+  },
+  "/Users/abdul/Desktop/bink/node_modules/expo-updates/ios/EXUpdates/ReactDelegateHandler/ExpoUpdatesReactDelegateHandler.swift" : {
+    "index-unit-output-path" : "/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/ExpoUpdatesReactDelegateHandler.o",
+    "llvm-bc" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/ExpoUpdatesReactDelegateHandler.bc",
+    "object" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/ExpoUpdatesReactDelegateHandler.o"
+  },
+  "/Users/abdul/Desktop/bink/node_modules/expo-updates/ios/EXUpdates/ReloadScreen/ReloadExceptions.swift" : {
+    "index-unit-output-path" : "/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/ReloadExceptions.o",
+    "llvm-bc" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/ReloadExceptions.bc",
+    "object" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/ReloadExceptions.o"
+  },
+  "/Users/abdul/Desktop/bink/node_modules/expo-updates/ios/EXUpdates/ReloadScreen/ReloadScreenConfiguration.swift" : {
+    "index-unit-output-path" : "/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/ReloadScreenConfiguration.o",
+    "llvm-bc" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/ReloadScreenConfiguration.bc",
+    "object" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/ReloadScreenConfiguration.o"
+  },
+  "/Users/abdul/Desktop/bink/node_modules/expo-updates/ios/EXUpdates/ReloadScreen/ReloadScreenManager.swift" : {
+    "index-unit-output-path" : "/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/ReloadScreenManager.o",
+    "llvm-bc" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/ReloadScreenManager.bc",
+    "object" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/ReloadScreenManager.o"
+  },
+  "/Users/abdul/Desktop/bink/node_modules/expo-updates/ios/EXUpdates/ReloadScreen/ReloadScreenManagerMacOS.swift" : {
+    "index-unit-output-path" : "/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/ReloadScreenManagerMacOS.o",
+    "llvm-bc" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/ReloadScreenManagerMacOS.bc",
+    "object" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/ReloadScreenManagerMacOS.o"
+  },
+  "/Users/abdul/Desktop/bink/node_modules/expo-updates/ios/EXUpdates/ReloadScreen/ReloadScreenView.swift" : {
+    "index-unit-output-path" : "/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/ReloadScreenView.o",
+    "llvm-bc" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/ReloadScreenView.bc",
+    "object" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/ReloadScreenView.o"
+  },
+  "/Users/abdul/Desktop/bink/node_modules/expo-updates/ios/EXUpdates/ReloadScreen/ReloadScreenViewMacOS.swift" : {
+    "index-unit-output-path" : "/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/ReloadScreenViewMacOS.o",
+    "llvm-bc" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/ReloadScreenViewMacOS.bc",
+    "object" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/ReloadScreenViewMacOS.o"
+  },
+  "/Users/abdul/Desktop/bink/node_modules/expo-updates/ios/EXUpdates/ReloadScreen/Reloadable.swift" : {
+    "index-unit-output-path" : "/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/Reloadable.o",
+    "llvm-bc" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/Reloadable.bc",
+    "object" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/Reloadable.o"
+  },
+  "/Users/abdul/Desktop/bink/node_modules/expo-updates/ios/EXUpdates/SelectionPolicy/LauncherSelectionPolicy.swift" : {
+    "index-unit-output-path" : "/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/LauncherSelectionPolicy.o",
+    "llvm-bc" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/LauncherSelectionPolicy.bc",
+    "object" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/LauncherSelectionPolicy.o"
+  },
+  "/Users/abdul/Desktop/bink/node_modules/expo-updates/ios/EXUpdates/SelectionPolicy/LauncherSelectionPolicyDevelopmentClient.swift" : {
+    "index-unit-output-path" : "/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/LauncherSelectionPolicyDevelopmentClient.o",
+    "llvm-bc" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/LauncherSelectionPolicyDevelopmentClient.bc",
+    "object" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/LauncherSelectionPolicyDevelopmentClient.o"
+  },
+  "/Users/abdul/Desktop/bink/node_modules/expo-updates/ios/EXUpdates/SelectionPolicy/LauncherSelectionPolicyFilterAware.swift" : {
+    "index-unit-output-path" : "/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/LauncherSelectionPolicyFilterAware.o",
+    "llvm-bc" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/LauncherSelectionPolicyFilterAware.bc",
+    "object" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/LauncherSelectionPolicyFilterAware.o"
+  },
+  "/Users/abdul/Desktop/bink/node_modules/expo-updates/ios/EXUpdates/SelectionPolicy/LauncherSelectionPolicySingleUpdate.swift" : {
+    "index-unit-output-path" : "/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/LauncherSelectionPolicySingleUpdate.o",
+    "llvm-bc" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/LauncherSelectionPolicySingleUpdate.bc",
+    "object" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/LauncherSelectionPolicySingleUpdate.o"
+  },
+  "/Users/abdul/Desktop/bink/node_modules/expo-updates/ios/EXUpdates/SelectionPolicy/LoaderSelectionPolicy.swift" : {
+    "index-unit-output-path" : "/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/LoaderSelectionPolicy.o",
+    "llvm-bc" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/LoaderSelectionPolicy.bc",
+    "object" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/LoaderSelectionPolicy.o"
+  },
+  "/Users/abdul/Desktop/bink/node_modules/expo-updates/ios/EXUpdates/SelectionPolicy/LoaderSelectionPolicyDevelopmentClient.swift" : {
+    "index-unit-output-path" : "/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/LoaderSelectionPolicyDevelopmentClient.o",
+    "llvm-bc" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/LoaderSelectionPolicyDevelopmentClient.bc",
+    "object" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/LoaderSelectionPolicyDevelopmentClient.o"
+  },
+  "/Users/abdul/Desktop/bink/node_modules/expo-updates/ios/EXUpdates/SelectionPolicy/LoaderSelectionPolicyFilterAware.swift" : {
+    "index-unit-output-path" : "/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/LoaderSelectionPolicyFilterAware.o",
+    "llvm-bc" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/LoaderSelectionPolicyFilterAware.bc",
+    "object" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/LoaderSelectionPolicyFilterAware.o"
+  },
+  "/Users/abdul/Desktop/bink/node_modules/expo-updates/ios/EXUpdates/SelectionPolicy/ReaperSelectionPolicy.swift" : {
+    "index-unit-output-path" : "/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/ReaperSelectionPolicy.o",
+    "llvm-bc" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/ReaperSelectionPolicy.bc",
+    "object" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/ReaperSelectionPolicy.o"
+  },
+  "/Users/abdul/Desktop/bink/node_modules/expo-updates/ios/EXUpdates/SelectionPolicy/ReaperSelectionPolicyDevelopmentClient.swift" : {
+    "index-unit-output-path" : "/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/ReaperSelectionPolicyDevelopmentClient.o",
+    "llvm-bc" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/ReaperSelectionPolicyDevelopmentClient.bc",
+    "object" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/ReaperSelectionPolicyDevelopmentClient.o"
+  },
+  "/Users/abdul/Desktop/bink/node_modules/expo-updates/ios/EXUpdates/SelectionPolicy/ReaperSelectionPolicyFilterAware.swift" : {
+    "index-unit-output-path" : "/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/ReaperSelectionPolicyFilterAware.o",
+    "llvm-bc" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/ReaperSelectionPolicyFilterAware.bc",
+    "object" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/ReaperSelectionPolicyFilterAware.o"
+  },
+  "/Users/abdul/Desktop/bink/node_modules/expo-updates/ios/EXUpdates/SelectionPolicy/SelectionPolicies.swift" : {
+    "index-unit-output-path" : "/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/SelectionPolicies.o",
+    "llvm-bc" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/SelectionPolicies.bc",
+    "object" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/SelectionPolicies.o"
+  },
+  "/Users/abdul/Desktop/bink/node_modules/expo-updates/ios/EXUpdates/SelectionPolicy/SelectionPolicy.swift" : {
+    "index-unit-output-path" : "/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/SelectionPolicy.o",
+    "llvm-bc" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/SelectionPolicy.bc",
+    "object" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/SelectionPolicy.o"
+  },
+  "/Users/abdul/Desktop/bink/node_modules/expo-updates/ios/EXUpdates/SelectionPolicy/SelectionPolicyFactory.swift" : {
+    "index-unit-output-path" : "/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/SelectionPolicyFactory.o",
+    "llvm-bc" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/SelectionPolicyFactory.bc",
+    "object" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/SelectionPolicyFactory.o"
+  },
+  "/Users/abdul/Desktop/bink/node_modules/expo-updates/ios/EXUpdates/Update/EmbeddedUpdate.swift" : {
+    "index-unit-output-path" : "/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/EmbeddedUpdate.o",
+    "llvm-bc" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/EmbeddedUpdate.bc",
+    "object" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/EmbeddedUpdate.o"
+  },
+  "/Users/abdul/Desktop/bink/node_modules/expo-updates/ios/EXUpdates/Update/ExpoUpdatesUpdate.swift" : {
+    "index-unit-output-path" : "/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/ExpoUpdatesUpdate.o",
+    "llvm-bc" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/ExpoUpdatesUpdate.bc",
+    "object" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/ExpoUpdatesUpdate.o"
+  },
+  "/Users/abdul/Desktop/bink/node_modules/expo-updates/ios/EXUpdates/Update/Update.swift" : {
+    "index-unit-output-path" : "/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/Update.o",
+    "llvm-bc" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/Update.bc",
+    "object" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/Update.o"
+  },
+  "/Users/abdul/Desktop/bink/node_modules/expo-updates/ios/EXUpdates/UpdatesConfig.swift" : {
+    "index-unit-output-path" : "/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/UpdatesConfig.o",
+    "llvm-bc" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/UpdatesConfig.bc",
+    "object" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/UpdatesConfig.o"
+  },
+  "/Users/abdul/Desktop/bink/node_modules/expo-updates/ios/EXUpdates/UpdatesConfigOverride.swift" : {
+    "index-unit-output-path" : "/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/UpdatesConfigOverride.o",
+    "llvm-bc" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/UpdatesConfigOverride.bc",
+    "object" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/UpdatesConfigOverride.o"
+  },
+  "/Users/abdul/Desktop/bink/node_modules/expo-updates/ios/EXUpdates/UpdatesError.swift" : {
+    "index-unit-output-path" : "/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/UpdatesError.o",
+    "llvm-bc" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/UpdatesError.bc",
+    "object" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/UpdatesError.o"
+  },
+  "/Users/abdul/Desktop/bink/node_modules/expo-updates/ios/EXUpdates/UpdatesJsEvents.swift" : {
+    "index-unit-output-path" : "/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/UpdatesJsEvents.o",
+    "llvm-bc" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/UpdatesJsEvents.bc",
+    "object" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/UpdatesJsEvents.o"
+  },
+  "/Users/abdul/Desktop/bink/node_modules/expo-updates/ios/EXUpdates/UpdatesModule.swift" : {
+    "index-unit-output-path" : "/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/UpdatesModule.o",
+    "llvm-bc" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/UpdatesModule.bc",
+    "object" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/UpdatesModule.o"
+  },
+  "/Users/abdul/Desktop/bink/node_modules/expo-updates/ios/EXUpdates/UpdatesStateMachine.swift" : {
+    "index-unit-output-path" : "/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/UpdatesStateMachine.o",
+    "llvm-bc" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/UpdatesStateMachine.bc",
+    "object" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/UpdatesStateMachine.o"
+  },
+  "/Users/abdul/Desktop/bink/node_modules/expo-updates/ios/EXUpdates/UpdatesUtils.swift" : {
+    "index-unit-output-path" : "/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/UpdatesUtils.o",
+    "llvm-bc" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/UpdatesUtils.bc",
+    "object" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXUpdates.build/Objects-normal/arm64/UpdatesUtils.o"
+  }
+}

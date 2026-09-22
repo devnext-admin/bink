@@ -1,0 +1,41 @@
+dependencies: \
+  /Users/abdul/Desktop/bink/apps/public/ios/build/generated/ios/safeareacontext/safeareacontext-generated.mm \
+  /Users/abdul/Desktop/bink/apps/public/ios/Pods/Target\ Support\ Files/ReactCodegen/ReactCodegen-prefix.pch \
+  /Users/abdul/Desktop/bink/apps/public/ios/build/generated/ios/safeareacontext/safeareacontext.h \
+  /Users/abdul/Desktop/bink/apps/public/ios/Pods/Headers/Public/RCTRequired/RCTRequired/RCTRequired.h \
+  /Users/abdul/Desktop/bink/apps/public/ios/Pods/Headers/Public/RCTTypeSafety/RCTTypeSafety/RCTConvertHelpers.h \
+  /Users/abdul/Desktop/bink/apps/public/ios/Pods/Headers/Public/FBLazyVector/FBLazyVector/FBLazyVector.h \
+  /Users/abdul/Desktop/bink/apps/public/ios/Pods/Headers/Public/FBLazyVector/FBLazyVector/FBLazyIterator.h \
+  /Users/abdul/Desktop/bink/apps/public/ios/Pods/Headers/Public/RCTTypeSafety/RCTTypeSafety/RCTTypedModuleConstants.h \
+  /Users/abdul/Desktop/bink/apps/public/ios/Pods/Headers/Public/React-Core/React/RCTBridgeModule.h \
+  /Users/abdul/Desktop/bink/apps/public/ios/Pods/Headers/Public/React-Core/React/RCTDefines.h \
+  /Users/abdul/Desktop/bink/apps/public/ios/Pods/Headers/Public/React-Core/React/RCTInspectorDevServerHelper.h \
+  /Users/abdul/Desktop/bink/apps/public/ios/Pods/Headers/Public/React-Core/React/RCTPackagerConnection.h \
+  /Users/abdul/Desktop/bink/apps/public/ios/Pods/Headers/Public/React-Core/React/RCTJSThread.h \
+  /Users/abdul/Desktop/bink/apps/public/ios/Pods/Headers/Private/RCTDeprecation/RCTDeprecation.h \
+  /Users/abdul/Desktop/bink/apps/public/ios/Pods/Headers/Public/React-Core/React/RCTBundleManager.h \
+  /Users/abdul/Desktop/bink/apps/public/ios/Pods/Headers/Public/React-Core/React/RCTCxxConvert.h \
+  /Users/abdul/Desktop/bink/apps/public/ios/Pods/Headers/Public/React-Core/React/RCTManagedPointer.h \
+  /Users/abdul/Desktop/bink/apps/public/ios/Pods/Headers/Public/React-NativeModulesApple/ReactCommon/RCTTurboModule.h \
+  /Users/abdul/Desktop/bink/apps/public/ios/Pods/Headers/Public/React-Core/React/RCTBridge.h \
+  /Users/abdul/Desktop/bink/apps/public/ios/Pods/Headers/Public/React-Core/React/RCTBridgeDelegate.h \
+  /Users/abdul/Desktop/bink/apps/public/ios/Pods/Headers/Public/React-Core/React/RCTJavaScriptLoader.h \
+  /Users/abdul/Desktop/bink/apps/public/ios/Pods/Headers/Public/React-Core/React/RCTBridgeModuleDecorator.h \
+  /Users/abdul/Desktop/bink/apps/public/ios/Pods/Headers/Public/React-Core/React/RCTFrameUpdate.h \
+  /Users/abdul/Desktop/bink/apps/public/ios/Pods/Headers/Public/React-Core/React/RCTInvalidating.h \
+  /Users/abdul/Desktop/bink/apps/public/ios/Pods/Headers/Public/React-Core/React/RCTBridgeConstants.h \
+  /Users/abdul/Desktop/bink/apps/public/ios/Pods/Headers/Public/React-Core/React/RCTConstants.h \
+  /Users/abdul/Desktop/bink/apps/public/ios/Pods/Headers/Public/React-Core/React/RCTModuleMethod.h \
+  /Users/abdul/Desktop/bink/apps/public/ios/Pods/Headers/Public/React-Core/React/RCTBridgeMethod.h \
+  /Users/abdul/Desktop/bink/apps/public/ios/Pods/Headers/Public/React-Core/React/RCTNullability.h \
+  /Users/abdul/Desktop/bink/apps/public/ios/Pods/Headers/Public/React-callinvoker/ReactCommon/CallInvoker.h \
+  /Users/abdul/Desktop/bink/apps/public/ios/Pods/Headers/Public/React-callinvoker/ReactCommon/SchedulerPriority.h \
+  /Users/abdul/Desktop/bink/apps/public/ios/Pods/Headers/Public/React-Core-prebuilt/ReactCommon/TurboModule.h \
+  /Users/abdul/Desktop/bink/apps/public/ios/Pods/Headers/Public/React-jsi/jsi/jsi.h \
+  /Users/abdul/Desktop/bink/apps/public/ios/Pods/Headers/Public/React-jsi/jsi/jsi-inl.h \
+  /Users/abdul/Desktop/bink/apps/public/ios/Pods/Headers/Public/ReactCommon/react/bridging/EventEmitter.h \
+  /Users/abdul/Desktop/bink/apps/public/ios/Pods/Headers/Public/ReactCommon/react/bridging/Function.h \
+  /Users/abdul/Desktop/bink/apps/public/ios/Pods/Headers/Public/ReactCommon/react/bridging/Base.h \
+  /Users/abdul/Desktop/bink/apps/public/ios/Pods/Headers/Public/ReactCommon/react/bridging/Convert.h \
+  /Users/abdul/Desktop/bink/apps/public/ios/Pods/Headers/Public/ReactCommon/react/bridging/CallbackWrapper.h \
+  /Users/abdul/Desktop/bink/apps/public/ios/Pods/Headers/Public/ReactCommon/react/bridging/LongLivedObject.h

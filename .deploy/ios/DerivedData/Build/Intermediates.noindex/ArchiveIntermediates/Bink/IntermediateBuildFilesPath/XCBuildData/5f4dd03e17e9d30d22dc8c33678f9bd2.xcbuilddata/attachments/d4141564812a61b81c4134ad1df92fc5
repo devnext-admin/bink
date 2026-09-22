@@ -1,0 +1,46 @@
+{
+  "" : {
+    "const-values" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/ExpoFont.build/Objects-normal/arm64/ExpoFont-primary.swiftconstvalues",
+    "dependencies" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/ExpoFont.build/Objects-normal/arm64/ExpoFont-primary.d",
+    "diagnostics" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/ExpoFont.build/Objects-normal/arm64/ExpoFont-primary.dia",
+    "emit-module-dependencies" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/ExpoFont.build/Objects-normal/arm64/ExpoFont-primary-emit-module.d",
+    "emit-module-diagnostics" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/ExpoFont.build/Objects-normal/arm64/ExpoFont-primary-emit-module.dia",
+    "pch" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/ExpoFont.build/Objects-normal/arm64/ExpoFont-primary-Bridging-header.pch",
+    "swift-dependencies" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/ExpoFont.build/Objects-normal/arm64/ExpoFont-primary.swiftdeps"
+  },
+  "/Users/abdul/Desktop/bink/node_modules/expo-font/ios/FontExceptions.swift" : {
+    "index-unit-output-path" : "/Pods.build/Release-iphoneos/ExpoFont.build/Objects-normal/arm64/FontExceptions.o",
+    "llvm-bc" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/ExpoFont.build/Objects-normal/arm64/FontExceptions.bc",
+    "object" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/ExpoFont.build/Objects-normal/arm64/FontExceptions.o"
+  },
+  "/Users/abdul/Desktop/bink/node_modules/expo-font/ios/FontFamilyAliasManager.swift" : {
+    "index-unit-output-path" : "/Pods.build/Release-iphoneos/ExpoFont.build/Objects-normal/arm64/FontFamilyAliasManager.o",
+    "llvm-bc" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/ExpoFont.build/Objects-normal/arm64/FontFamilyAliasManager.bc",
+    "object" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/ExpoFont.build/Objects-normal/arm64/FontFamilyAliasManager.o"
+  },
+  "/Users/abdul/Desktop/bink/node_modules/expo-font/ios/FontLoaderModule.swift" : {
+    "index-unit-output-path" : "/Pods.build/Release-iphoneos/ExpoFont.build/Objects-normal/arm64/FontLoaderModule.o",
+    "llvm-bc" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/ExpoFont.build/Objects-normal/arm64/FontLoaderModule.bc",
+    "object" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/ExpoFont.build/Objects-normal/arm64/FontLoaderModule.o"
+  },
+  "/Users/abdul/Desktop/bink/node_modules/expo-font/ios/FontUtils.swift" : {
+    "index-unit-output-path" : "/Pods.build/Release-iphoneos/ExpoFont.build/Objects-normal/arm64/FontUtils.o",
+    "llvm-bc" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/ExpoFont.build/Objects-normal/arm64/FontUtils.bc",
+    "object" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/ExpoFont.build/Objects-normal/arm64/FontUtils.o"
+  },
+  "/Users/abdul/Desktop/bink/node_modules/expo-font/ios/FontUtilsModule.swift" : {
+    "index-unit-output-path" : "/Pods.build/Release-iphoneos/ExpoFont.build/Objects-normal/arm64/FontUtilsModule.o",
+    "llvm-bc" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/ExpoFont.build/Objects-normal/arm64/FontUtilsModule.bc",
+    "object" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/ExpoFont.build/Objects-normal/arm64/FontUtilsModule.o"
+  },
+  "/Users/abdul/Desktop/bink/node_modules/expo-font/ios/FontUtilsRecords.swift" : {
+    "index-unit-output-path" : "/Pods.build/Release-iphoneos/ExpoFont.build/Objects-normal/arm64/FontUtilsRecords.o",
+    "llvm-bc" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/ExpoFont.build/Objects-normal/arm64/FontUtilsRecords.bc",
+    "object" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/ExpoFont.build/Objects-normal/arm64/FontUtilsRecords.o"
+  },
+  "/Users/abdul/Desktop/bink/node_modules/expo-font/ios/UIFont+FontFamilyAlias.swift" : {
+    "index-unit-output-path" : "/Pods.build/Release-iphoneos/ExpoFont.build/Objects-normal/arm64/UIFont+FontFamilyAlias.o",
+    "llvm-bc" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/ExpoFont.build/Objects-normal/arm64/UIFont+FontFamilyAlias.bc",
+    "object" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/ExpoFont.build/Objects-normal/arm64/UIFont+FontFamilyAlias.o"
+  }
+}

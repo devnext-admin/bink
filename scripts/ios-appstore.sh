@@ -37,6 +37,9 @@ cat > "$OUT/ExportOptions.plist" <<PLIST
 </dict></plist>
 PLIST
 
+# Expo writes a literal CFBundleVersion into Info.plist at prebuild time, so
+# CURRENT_PROJECT_VERSION alone does not change the uploaded build number.
+/usr/libexec/PlistBuddy -c "Set :CFBundleVersion $BUILD" "$IOS/Bink/Info.plist"
 echo "== Archiving build $BUILD"
 xcodebuild archive \
   -workspace "$IOS/Bink.xcworkspace" -scheme Bink -configuration Release \

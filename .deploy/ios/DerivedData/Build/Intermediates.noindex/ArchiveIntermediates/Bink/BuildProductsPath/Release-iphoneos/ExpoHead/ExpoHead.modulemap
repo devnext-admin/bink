@@ -1,0 +1,12 @@
+module ExpoHead {
+  umbrella header "ExpoHead-umbrella.h"
+
+  export *
+  module * { export * }
+}
+
+
+module ExpoHead.Swift {
+  header "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/BuildProductsPath/Release-iphoneos/ExpoHead/Swift Compatibility Header/ExpoHead-Swift.h"
+  requires objc
+}

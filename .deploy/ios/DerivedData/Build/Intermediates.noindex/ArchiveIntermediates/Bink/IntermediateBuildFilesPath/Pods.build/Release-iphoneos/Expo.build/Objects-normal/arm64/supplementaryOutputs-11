@@ -1,0 +1,12 @@
+{
+  "/Users/abdul/Desktop/bink/node_modules/expo/ios/AppDelegates/AppDelegatesLoaderDelegate.swift" : {
+    "abi-baseline-json" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/Expo.build/Objects-normal/arm64/Expo.abi.json",
+    "const-values" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/Expo.build/Objects-normal/arm64/Expo-primary.swiftconstvalues",
+    "dependencies" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/Expo.build/Objects-normal/arm64/Expo-primary.d",
+    "diagnostics" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/Expo.build/Objects-normal/arm64/Expo-primary.dia",
+    "objc-header" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/Expo.build/Objects-normal/arm64/Expo-Swift.h",
+    "swiftdoc" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/Expo.build/Objects-normal/arm64/Expo.swiftdoc",
+    "swiftmodule" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/Expo.build/Objects-normal/arm64/Expo.swiftmodule",
+    "swiftsourceinfo" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/Expo.build/Objects-normal/arm64/Expo.swiftsourceinfo"
+  }
+}

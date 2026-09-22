@@ -1,0 +1,12 @@
+{
+  "/Users/abdul/Desktop/bink/node_modules/expo-image/ios/AnimatedImage.swift" : {
+    "abi-baseline-json" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/ExpoImage.build/Objects-normal/arm64/ExpoImage.abi.json",
+    "const-values" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/ExpoImage.build/Objects-normal/arm64/ExpoImage-primary.swiftconstvalues",
+    "dependencies" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/ExpoImage.build/Objects-normal/arm64/ExpoImage-primary.d",
+    "diagnostics" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/ExpoImage.build/Objects-normal/arm64/ExpoImage-primary.dia",
+    "objc-header" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/ExpoImage.build/Objects-normal/arm64/ExpoImage-Swift.h",
+    "swiftdoc" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/ExpoImage.build/Objects-normal/arm64/ExpoImage.swiftdoc",
+    "swiftmodule" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/ExpoImage.build/Objects-normal/arm64/ExpoImage.swiftmodule",
+    "swiftsourceinfo" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/ExpoImage.build/Objects-normal/arm64/ExpoImage.swiftsourceinfo"
+  }
+}

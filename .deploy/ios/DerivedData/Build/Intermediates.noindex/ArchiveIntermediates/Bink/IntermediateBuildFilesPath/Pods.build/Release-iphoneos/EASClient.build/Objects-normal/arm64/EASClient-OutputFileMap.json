@@ -1,0 +1,21 @@
+{
+  "" : {
+    "const-values" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EASClient.build/Objects-normal/arm64/EASClient-primary.swiftconstvalues",
+    "dependencies" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EASClient.build/Objects-normal/arm64/EASClient-primary.d",
+    "diagnostics" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EASClient.build/Objects-normal/arm64/EASClient-primary.dia",
+    "emit-module-dependencies" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EASClient.build/Objects-normal/arm64/EASClient-primary-emit-module.d",
+    "emit-module-diagnostics" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EASClient.build/Objects-normal/arm64/EASClient-primary-emit-module.dia",
+    "pch" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EASClient.build/Objects-normal/arm64/EASClient-primary-Bridging-header.pch",
+    "swift-dependencies" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EASClient.build/Objects-normal/arm64/EASClient-primary.swiftdeps"
+  },
+  "/Users/abdul/Desktop/bink/node_modules/expo-eas-client/ios/EASClient/EASClientID.swift" : {
+    "index-unit-output-path" : "/Pods.build/Release-iphoneos/EASClient.build/Objects-normal/arm64/EASClientID.o",
+    "llvm-bc" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EASClient.build/Objects-normal/arm64/EASClientID.bc",
+    "object" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EASClient.build/Objects-normal/arm64/EASClientID.o"
+  },
+  "/Users/abdul/Desktop/bink/node_modules/expo-eas-client/ios/EASClient/EASClientModule.swift" : {
+    "index-unit-output-path" : "/Pods.build/Release-iphoneos/EASClient.build/Objects-normal/arm64/EASClientModule.o",
+    "llvm-bc" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EASClient.build/Objects-normal/arm64/EASClientModule.bc",
+    "object" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EASClient.build/Objects-normal/arm64/EASClientModule.o"
+  }
+}

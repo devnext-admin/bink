@@ -1,0 +1,12 @@
+{
+  "/Users/abdul/Desktop/bink/node_modules/expo-splash-screen/ios/SplashScreenAppDelegateSubscriber.swift" : {
+    "abi-baseline-json" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/ExpoSplashScreen.build/Objects-normal/arm64/ExpoSplashScreen.abi.json",
+    "const-values" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/ExpoSplashScreen.build/Objects-normal/arm64/ExpoSplashScreen-primary.swiftconstvalues",
+    "dependencies" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/ExpoSplashScreen.build/Objects-normal/arm64/ExpoSplashScreen-primary.d",
+    "diagnostics" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/ExpoSplashScreen.build/Objects-normal/arm64/ExpoSplashScreen-primary.dia",
+    "objc-header" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/ExpoSplashScreen.build/Objects-normal/arm64/ExpoSplashScreen-Swift.h",
+    "swiftdoc" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/ExpoSplashScreen.build/Objects-normal/arm64/ExpoSplashScreen.swiftdoc",
+    "swiftmodule" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/ExpoSplashScreen.build/Objects-normal/arm64/ExpoSplashScreen.swiftmodule",
+    "swiftsourceinfo" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/ExpoSplashScreen.build/Objects-normal/arm64/ExpoSplashScreen.swiftsourceinfo"
+  }
+}

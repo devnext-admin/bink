@@ -1,0 +1,12 @@
+{
+  "/Users/abdul/Desktop/bink/node_modules/expo-modules-core/ios/Core/Arguments/AnyArgument.swift" : {
+    "abi-baseline-json" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/ExpoModulesCore.build/Objects-normal/arm64/ExpoModulesCore.abi.json",
+    "const-values" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/ExpoModulesCore.build/Objects-normal/arm64/ExpoModulesCore-primary.swiftconstvalues",
+    "dependencies" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/ExpoModulesCore.build/Objects-normal/arm64/ExpoModulesCore-primary.d",
+    "diagnostics" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/ExpoModulesCore.build/Objects-normal/arm64/ExpoModulesCore-primary.dia",
+    "objc-header" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/ExpoModulesCore.build/Objects-normal/arm64/ExpoModulesCore-Swift.h",
+    "swiftdoc" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/ExpoModulesCore.build/Objects-normal/arm64/ExpoModulesCore.swiftdoc",
+    "swiftmodule" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/ExpoModulesCore.build/Objects-normal/arm64/ExpoModulesCore.swiftmodule",
+    "swiftsourceinfo" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/ExpoModulesCore.build/Objects-normal/arm64/ExpoModulesCore.swiftsourceinfo"
+  }
+}

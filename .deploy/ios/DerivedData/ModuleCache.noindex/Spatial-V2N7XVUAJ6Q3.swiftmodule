@@ -1,0 +1,52 @@
+---
+path:            '/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphoneos/prebuilt-modules/26.5/Spatial.swiftmodule/arm64e-apple-ios.swiftmodule'
+dependencies:
+  - mtime:           1780962802000000000
+    path:            '/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphoneos/prebuilt-modules/26.5/Spatial.swiftmodule/arm64e-apple-ios.swiftmodule'
+    size:            1307076
+  - mtime:           1776554877000000000
+    path:            'usr/lib/swift/Swift.swiftmodule/arm64e-apple-ios.swiftinterface'
+    size:            2193073
+    sdk_relative:    true
+  - mtime:           1776556559000000000
+    path:            'usr/include/_DarwinFoundation2.apinotes'
+    size:            1145
+    sdk_relative:    true
+  - mtime:           1776556579000000000
+    path:            'usr/lib/swift/_DarwinFoundation1.swiftmodule/arm64e-apple-ios.swiftinterface'
+    size:            18759
+    sdk_relative:    true
+  - mtime:           1776556581000000000
+    path:            'usr/lib/swift/_DarwinFoundation2.swiftmodule/arm64e-apple-ios.swiftinterface'
+    size:            2631
+    sdk_relative:    true
+  - mtime:           1776556583000000000
+    path:            'usr/lib/swift/_DarwinFoundation3.swiftmodule/arm64e-apple-ios.swiftinterface'
+    size:            1527
+    sdk_relative:    true
+  - mtime:           1776555394000000000
+    path:            'usr/lib/swift/_Builtin_float.swiftmodule/arm64e-apple-ios.swiftinterface'
+    size:            4316
+    sdk_relative:    true
+  - mtime:           1776556586000000000
+    path:            'usr/lib/swift/Darwin.swiftmodule/arm64e-apple-ios.swiftinterface'
+    size:            19493
+    sdk_relative:    true
+  - mtime:           1776555354000000000
+    path:            'usr/lib/swift/_Concurrency.swiftmodule/arm64e-apple-ios.swiftinterface'
+    size:            280448
+    sdk_relative:    true
+  - mtime:           1776557232000000000
+    path:            'usr/lib/swift/_StringProcessing.swiftmodule/arm64e-apple-ios.swiftinterface'
+    size:            22940
+    sdk_relative:    true
+  - mtime:           1776557715000000000
+    path:            'usr/lib/swift/simd.swiftmodule/arm64e-apple-ios.swiftinterface'
+    size:            229498
+    sdk_relative:    true
+  - mtime:           1776557921000000000
+    path:            'usr/lib/swift/Spatial.swiftmodule/arm64e-apple-ios.swiftinterface'
+    size:            222854
+    sdk_relative:    true
+version:         1
+...

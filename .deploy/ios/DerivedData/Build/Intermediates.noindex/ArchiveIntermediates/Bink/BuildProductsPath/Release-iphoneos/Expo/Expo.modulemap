@@ -1,0 +1,12 @@
+module Expo {
+  umbrella header "Expo-umbrella.h"
+
+  export *
+  module * { export * }
+}
+
+
+module Expo.Swift {
+  header "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/BuildProductsPath/Release-iphoneos/Expo/Swift Compatibility Header/Expo-Swift.h"
+  requires objc
+}

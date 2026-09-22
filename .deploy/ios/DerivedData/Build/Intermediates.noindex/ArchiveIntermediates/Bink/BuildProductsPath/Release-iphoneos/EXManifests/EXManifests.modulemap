@@ -1,0 +1,12 @@
+module EXManifests {
+  umbrella header "EXManifests-umbrella.h"
+
+  export *
+  module * { export * }
+}
+
+
+module EXManifests.Swift {
+  header "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/BuildProductsPath/Release-iphoneos/EXManifests/Swift Compatibility Header/EXManifests-Swift.h"
+  requires objc
+}

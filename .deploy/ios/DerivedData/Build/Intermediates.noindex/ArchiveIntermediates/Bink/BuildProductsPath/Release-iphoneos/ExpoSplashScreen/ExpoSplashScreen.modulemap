@@ -1,0 +1,12 @@
+module ExpoSplashScreen {
+  umbrella header "ExpoSplashScreen-umbrella.h"
+
+  export *
+  module * { export * }
+}
+
+
+module ExpoSplashScreen.Swift {
+  header "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/BuildProductsPath/Release-iphoneos/ExpoSplashScreen/Swift Compatibility Header/ExpoSplashScreen-Swift.h"
+  requires objc
+}

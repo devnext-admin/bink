@@ -1,0 +1,12 @@
+{
+  "/Users/abdul/Desktop/bink/node_modules/expo-linking/ios/ExpoLinkingModule.swift" : {
+    "abi-baseline-json" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/ExpoLinking.build/Objects-normal/arm64/ExpoLinking.abi.json",
+    "const-values" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/ExpoLinking.build/Objects-normal/arm64/ExpoLinking-primary.swiftconstvalues",
+    "dependencies" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/ExpoLinking.build/Objects-normal/arm64/ExpoLinking-primary.d",
+    "diagnostics" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/ExpoLinking.build/Objects-normal/arm64/ExpoLinking-primary.dia",
+    "objc-header" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/ExpoLinking.build/Objects-normal/arm64/ExpoLinking-Swift.h",
+    "swiftdoc" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/ExpoLinking.build/Objects-normal/arm64/ExpoLinking.swiftdoc",
+    "swiftmodule" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/ExpoLinking.build/Objects-normal/arm64/ExpoLinking.swiftmodule",
+    "swiftsourceinfo" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/ExpoLinking.build/Objects-normal/arm64/ExpoLinking.swiftsourceinfo"
+  }
+}

@@ -1,0 +1,12 @@
+module EXConstants {
+  umbrella header "EXConstants-umbrella.h"
+
+  export *
+  module * { export * }
+}
+
+
+module EXConstants.Swift {
+  header "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/BuildProductsPath/Release-iphoneos/EXConstants/Swift Compatibility Header/EXConstants-Swift.h"
+  requires objc
+}

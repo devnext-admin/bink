@@ -1,0 +1,35 @@
+dependencies: \
+  /Users/abdul/Desktop/bink/node_modules/expo-modules-core/ios/Legacy/ModuleRegistryAdapter/EXModuleRegistryAdapter.m \
+  /Users/abdul/Desktop/bink/apps/public/ios/Pods/Target\ Support\ Files/ExpoModulesCore/ExpoModulesCore-prefix.pch \
+  /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/UIKit.framework/Modules/module.modulemap \
+  /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/Foundation.framework/Modules/module.modulemap \
+  /Users/abdul/Desktop/bink/node_modules/expo-modules-core/ios/Legacy/NativeModulesProxy/EXNativeModulesProxy.h \
+  /Users/abdul/Desktop/bink/apps/public/ios/Pods/Headers/Public/React-Core/React/RCTBridgeModule.h \
+  /Users/abdul/Desktop/bink/apps/public/ios/Pods/Headers/Public/React-Core/React/RCTDefines.h \
+  /Users/abdul/Desktop/bink/apps/public/ios/Pods/Headers/Public/React-Core/React/RCTInspectorDevServerHelper.h \
+  /Users/abdul/Desktop/bink/apps/public/ios/Pods/Headers/Public/React-Core/React/RCTPackagerConnection.h \
+  /Users/abdul/Desktop/bink/apps/public/ios/Pods/Headers/Public/React-Core/React/RCTJSThread.h \
+  /Users/abdul/Desktop/bink/apps/public/ios/Pods/Headers/Private/RCTDeprecation/RCTDeprecation.h \
+  /Users/abdul/Desktop/bink/apps/public/ios/Pods/Headers/Public/React-Core/React/RCTBundleManager.h \
+  /Users/abdul/Desktop/bink/node_modules/expo-modules-core/ios/Legacy/Protocols/EXInternalModule.h \
+  /Users/abdul/Desktop/bink/node_modules/expo-modules-core/ios/Legacy/ModuleRegistry/EXModuleRegistry.h \
+  /Users/abdul/Desktop/bink/node_modules/expo-modules-core/ios/Legacy/EXExportedModule.h \
+  /Users/abdul/Desktop/bink/node_modules/expo-modules-core/ios/EXDefines.h \
+  /Users/abdul/Desktop/bink/node_modules/expo-modules-core/ios/Platform/Platform.h \
+  /Users/abdul/Desktop/bink/node_modules/expo-modules-core/ios/Legacy/ModuleRegistry/EXModuleRegistryDelegate.h \
+  /Users/abdul/Desktop/bink/node_modules/expo-modules-core/ios/Legacy/ModuleRegistryAdapter/EXModuleRegistryAdapter.h \
+  /Users/abdul/Desktop/bink/node_modules/expo-modules-core/ios/Legacy/ModuleRegistryProvider/EXModuleRegistryProvider.h \
+  /Users/abdul/Desktop/bink/node_modules/expo-modules-core/ios/Legacy/ModuleRegistryAdapter/EXModuleRegistryHolderReactModule.h \
+  /Users/abdul/Desktop/bink/node_modules/expo-modules-core/ios/Legacy/Services/EXReactNativeEventEmitter.h \
+  /Users/abdul/Desktop/bink/apps/public/ios/Pods/Headers/Public/React-Core/React/RCTEventEmitter.h \
+  /Users/abdul/Desktop/bink/apps/public/ios/Pods/Headers/Public/React-Core/React/RCTBridge.h \
+  /Users/abdul/Desktop/bink/apps/public/ios/Pods/Headers/Public/React-Core/React/RCTBridgeDelegate.h \
+  /Users/abdul/Desktop/bink/apps/public/ios/Pods/Headers/Public/React-Core/React/RCTJavaScriptLoader.h \
+  /Users/abdul/Desktop/bink/apps/public/ios/Pods/Headers/Public/React-Core/React/RCTBridgeModuleDecorator.h \
+  /Users/abdul/Desktop/bink/apps/public/ios/Pods/Headers/Public/React-Core/React/RCTFrameUpdate.h \
+  /Users/abdul/Desktop/bink/apps/public/ios/Pods/Headers/Public/React-Core/React/RCTInvalidating.h \
+  /Users/abdul/Desktop/bink/apps/public/ios/Pods/Headers/Public/React-Core/React/RCTBridgeConstants.h \
+  /Users/abdul/Desktop/bink/apps/public/ios/Pods/Headers/Public/React-Core/React/RCTConstants.h \
+  /Users/abdul/Desktop/bink/node_modules/expo-modules-core/ios/Legacy/Protocols/EXEventEmitterService.h \
+  /Users/abdul/Desktop/bink/node_modules/expo-modules-core/ios/Legacy/Protocols/EXModuleRegistryConsumer.h \
+  /Users/abdul/Desktop/bink/node_modules/expo-modules-core/ios/Legacy/EXBridgeModule.h

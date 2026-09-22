@@ -1,0 +1,12 @@
+module EXUpdatesInterface {
+  umbrella header "EXUpdatesInterface-umbrella.h"
+
+  export *
+  module * { export * }
+}
+
+
+module EXUpdatesInterface.Swift {
+  header "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/BuildProductsPath/Release-iphoneos/EXUpdatesInterface/Swift Compatibility Header/EXUpdatesInterface-Swift.h"
+  requires objc
+}

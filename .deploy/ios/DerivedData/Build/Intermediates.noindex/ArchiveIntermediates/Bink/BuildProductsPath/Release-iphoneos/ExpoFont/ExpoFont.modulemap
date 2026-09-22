@@ -1,0 +1,12 @@
+module ExpoFont {
+  umbrella header "ExpoFont-umbrella.h"
+
+  export *
+  module * { export * }
+}
+
+
+module ExpoFont.Swift {
+  header "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/BuildProductsPath/Release-iphoneos/ExpoFont/Swift Compatibility Header/ExpoFont-Swift.h"
+  requires objc
+}

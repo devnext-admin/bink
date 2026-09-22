@@ -1,0 +1,39 @@
+dependencies: \
+  /Users/abdul/Desktop/bink/node_modules/react-native-webview/apple/RNCWebViewImpl.m \
+  /Users/abdul/Desktop/bink/apps/public/ios/Pods/Target\ Support\ Files/react-native-webview/react-native-webview-prefix.pch \
+  /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/UIKit.framework/Modules/module.modulemap \
+  /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/Foundation.framework/Modules/module.modulemap \
+  /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/usr/include/DarwinFoundation1.modulemap \
+  /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/21/include/module.modulemap \
+  /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/usr/include/ObjectiveC.modulemap \
+  /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/CoreGraphics.framework/Modules/module.modulemap \
+  /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/QuartzCore.framework/Modules/module.modulemap \
+  /Users/abdul/Desktop/bink/node_modules/react-native-webview/apple/RNCWebViewImpl.h \
+  /Users/abdul/Desktop/bink/apps/public/ios/Pods/Headers/Public/React-Core/React/RCTView.h \
+  /Users/abdul/Desktop/bink/apps/public/ios/Pods/Headers/Public/React-Core/React/RCTBorderCurve.h \
+  /Users/abdul/Desktop/bink/apps/public/ios/Pods/Headers/Public/React-Core/React/RCTBorderStyle.h \
+  /Users/abdul/Desktop/bink/apps/public/ios/Pods/Headers/Public/React-Core/React/RCTComponent.h \
+  /Users/abdul/Desktop/bink/apps/public/ios/Pods/Headers/Public/React-Core/React/RCTCursor.h \
+  /Users/abdul/Desktop/bink/apps/public/ios/Pods/Headers/Public/React-Core/React/RCTPointerEvents.h \
+  /Users/abdul/Desktop/bink/apps/public/ios/Pods/Headers/Public/React-Core/React/RCTDefines.h \
+  /Users/abdul/Desktop/bink/apps/public/ios/Pods/Headers/Public/React-Core/React/RCTInspectorDevServerHelper.h \
+  /Users/abdul/Desktop/bink/apps/public/ios/Pods/Headers/Public/React-Core/React/RCTPackagerConnection.h \
+  /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Cryptexes/OS/System/Library/Frameworks/WebKit.framework/Modules/module.modulemap \
+  /Users/abdul/Desktop/bink/node_modules/react-native-webview/apple/RNCWebViewDecisionManager.h \
+  /Users/abdul/Desktop/bink/apps/public/ios/Pods/Headers/Public/React-Core/React/RCTLog.h \
+  /Users/abdul/Desktop/bink/apps/public/ios/Pods/Headers/Public/React-Core/React/RCTAssert.h \
+  /Users/abdul/Desktop/bink/apps/public/ios/Pods/Headers/Public/React-Core/React/RCTUtils.h \
+  /Users/abdul/Desktop/bink/apps/public/ios/Pods/Headers/Public/React-Core/React/RCTConvert.h \
+  /Users/abdul/Desktop/bink/apps/public/ios/Pods/Headers/Public/React-Core/React/RCTAnimationType.h \
+  /Users/abdul/Desktop/bink/apps/public/ios/Pods/Headers/Public/React-Core/React/RCTTextDecorationLineType.h \
+  /Users/abdul/Desktop/bink/apps/public/ios/Pods/Headers/Public/React-Core-prebuilt/yoga/Yoga.h \
+  /Users/abdul/Desktop/bink/apps/public/ios/Pods/Headers/Public/React-Core-prebuilt/yoga/YGConfig.h \
+  /Users/abdul/Desktop/bink/apps/public/ios/Pods/Headers/Public/React-Core-prebuilt/yoga/YGEnums.h \
+  /Users/abdul/Desktop/bink/apps/public/ios/Pods/Headers/Public/React-Core-prebuilt/yoga/YGMacros.h \
+  /Users/abdul/Desktop/bink/apps/public/ios/Pods/Headers/Public/React-Core-prebuilt/yoga/YGNode.h \
+  /Users/abdul/Desktop/bink/apps/public/ios/Pods/Headers/Public/React-Core-prebuilt/yoga/YGNodeLayout.h \
+  /Users/abdul/Desktop/bink/apps/public/ios/Pods/Headers/Public/React-Core-prebuilt/yoga/YGNodeStyle.h \
+  /Users/abdul/Desktop/bink/apps/public/ios/Pods/Headers/Public/React-Core-prebuilt/yoga/YGValue.h \
+  /Users/abdul/Desktop/bink/apps/public/ios/Pods/Headers/Public/React-Core-prebuilt/yoga/YGPixelGrid.h \
+  /Users/abdul/Desktop/bink/apps/public/ios/Pods/Headers/Public/React-Core/React/RCTAutoInsetsProtocol.h \
+  /Users/abdul/Desktop/bink/node_modules/react-native-webview/apple/RNCWKProcessPoolManager.h

@@ -1,0 +1,26 @@
+{
+  "" : {
+    "const-values" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/ExpoLinearGradient.build/Objects-normal/arm64/ExpoLinearGradient-primary.swiftconstvalues",
+    "dependencies" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/ExpoLinearGradient.build/Objects-normal/arm64/ExpoLinearGradient-primary.d",
+    "diagnostics" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/ExpoLinearGradient.build/Objects-normal/arm64/ExpoLinearGradient-primary.dia",
+    "emit-module-dependencies" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/ExpoLinearGradient.build/Objects-normal/arm64/ExpoLinearGradient-primary-emit-module.d",
+    "emit-module-diagnostics" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/ExpoLinearGradient.build/Objects-normal/arm64/ExpoLinearGradient-primary-emit-module.dia",
+    "pch" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/ExpoLinearGradient.build/Objects-normal/arm64/ExpoLinearGradient-primary-Bridging-header.pch",
+    "swift-dependencies" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/ExpoLinearGradient.build/Objects-normal/arm64/ExpoLinearGradient-primary.swiftdeps"
+  },
+  "/Users/abdul/Desktop/bink/node_modules/expo-linear-gradient/ios/LinearGradientLayer.swift" : {
+    "index-unit-output-path" : "/Pods.build/Release-iphoneos/ExpoLinearGradient.build/Objects-normal/arm64/LinearGradientLayer.o",
+    "llvm-bc" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/ExpoLinearGradient.build/Objects-normal/arm64/LinearGradientLayer.bc",
+    "object" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/ExpoLinearGradient.build/Objects-normal/arm64/LinearGradientLayer.o"
+  },
+  "/Users/abdul/Desktop/bink/node_modules/expo-linear-gradient/ios/LinearGradientModule.swift" : {
+    "index-unit-output-path" : "/Pods.build/Release-iphoneos/ExpoLinearGradient.build/Objects-normal/arm64/LinearGradientModule.o",
+    "llvm-bc" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/ExpoLinearGradient.build/Objects-normal/arm64/LinearGradientModule.bc",
+    "object" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/ExpoLinearGradient.build/Objects-normal/arm64/LinearGradientModule.o"
+  },
+  "/Users/abdul/Desktop/bink/node_modules/expo-linear-gradient/ios/LinearGradientView.swift" : {
+    "index-unit-output-path" : "/Pods.build/Release-iphoneos/ExpoLinearGradient.build/Objects-normal/arm64/LinearGradientView.o",
+    "llvm-bc" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/ExpoLinearGradient.build/Objects-normal/arm64/LinearGradientView.bc",
+    "object" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/ExpoLinearGradient.build/Objects-normal/arm64/LinearGradientView.o"
+  }
+}

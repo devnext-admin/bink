@@ -1,0 +1,76 @@
+{
+  "" : {
+    "const-values" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/ExpoLocation.build/Objects-normal/arm64/ExpoLocation-primary.swiftconstvalues",
+    "dependencies" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/ExpoLocation.build/Objects-normal/arm64/ExpoLocation-primary.d",
+    "diagnostics" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/ExpoLocation.build/Objects-normal/arm64/ExpoLocation-primary.dia",
+    "emit-module-dependencies" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/ExpoLocation.build/Objects-normal/arm64/ExpoLocation-primary-emit-module.d",
+    "emit-module-diagnostics" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/ExpoLocation.build/Objects-normal/arm64/ExpoLocation-primary-emit-module.dia",
+    "pch" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/ExpoLocation.build/Objects-normal/arm64/ExpoLocation-primary-Bridging-header.pch",
+    "swift-dependencies" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/ExpoLocation.build/Objects-normal/arm64/ExpoLocation-primary.swiftdeps"
+  },
+  "/Users/abdul/Desktop/bink/node_modules/expo-location/ios/Convertibles+CLLocation.swift" : {
+    "index-unit-output-path" : "/Pods.build/Release-iphoneos/ExpoLocation.build/Objects-normal/arm64/Convertibles+CLLocation.o",
+    "llvm-bc" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/ExpoLocation.build/Objects-normal/arm64/Convertibles+CLLocation.bc",
+    "object" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/ExpoLocation.build/Objects-normal/arm64/Convertibles+CLLocation.o"
+  },
+  "/Users/abdul/Desktop/bink/node_modules/expo-location/ios/Geocoder.swift" : {
+    "index-unit-output-path" : "/Pods.build/Release-iphoneos/ExpoLocation.build/Objects-normal/arm64/Geocoder.o",
+    "llvm-bc" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/ExpoLocation.build/Objects-normal/arm64/Geocoder.bc",
+    "object" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/ExpoLocation.build/Objects-normal/arm64/Geocoder.o"
+  },
+  "/Users/abdul/Desktop/bink/node_modules/expo-location/ios/LastKnownLocationRequirements.swift" : {
+    "index-unit-output-path" : "/Pods.build/Release-iphoneos/ExpoLocation.build/Objects-normal/arm64/LastKnownLocationRequirements.o",
+    "llvm-bc" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/ExpoLocation.build/Objects-normal/arm64/LastKnownLocationRequirements.bc",
+    "object" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/ExpoLocation.build/Objects-normal/arm64/LastKnownLocationRequirements.o"
+  },
+  "/Users/abdul/Desktop/bink/node_modules/expo-location/ios/LocationAccuracy.swift" : {
+    "index-unit-output-path" : "/Pods.build/Release-iphoneos/ExpoLocation.build/Objects-normal/arm64/LocationAccuracy.o",
+    "llvm-bc" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/ExpoLocation.build/Objects-normal/arm64/LocationAccuracy.bc",
+    "object" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/ExpoLocation.build/Objects-normal/arm64/LocationAccuracy.o"
+  },
+  "/Users/abdul/Desktop/bink/node_modules/expo-location/ios/LocationExceptions.swift" : {
+    "index-unit-output-path" : "/Pods.build/Release-iphoneos/ExpoLocation.build/Objects-normal/arm64/LocationExceptions.o",
+    "llvm-bc" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/ExpoLocation.build/Objects-normal/arm64/LocationExceptions.bc",
+    "object" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/ExpoLocation.build/Objects-normal/arm64/LocationExceptions.o"
+  },
+  "/Users/abdul/Desktop/bink/node_modules/expo-location/ios/LocationModule.swift" : {
+    "index-unit-output-path" : "/Pods.build/Release-iphoneos/ExpoLocation.build/Objects-normal/arm64/LocationModule.o",
+    "llvm-bc" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/ExpoLocation.build/Objects-normal/arm64/LocationModule.bc",
+    "object" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/ExpoLocation.build/Objects-normal/arm64/LocationModule.o"
+  },
+  "/Users/abdul/Desktop/bink/node_modules/expo-location/ios/LocationOptions.swift" : {
+    "index-unit-output-path" : "/Pods.build/Release-iphoneos/ExpoLocation.build/Objects-normal/arm64/LocationOptions.o",
+    "llvm-bc" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/ExpoLocation.build/Objects-normal/arm64/LocationOptions.bc",
+    "object" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/ExpoLocation.build/Objects-normal/arm64/LocationOptions.o"
+  },
+  "/Users/abdul/Desktop/bink/node_modules/expo-location/ios/LocationUtils.swift" : {
+    "index-unit-output-path" : "/Pods.build/Release-iphoneos/ExpoLocation.build/Objects-normal/arm64/LocationUtils.o",
+    "llvm-bc" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/ExpoLocation.build/Objects-normal/arm64/LocationUtils.bc",
+    "object" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/ExpoLocation.build/Objects-normal/arm64/LocationUtils.o"
+  },
+  "/Users/abdul/Desktop/bink/node_modules/expo-location/ios/Providers/BaseLocationProvider.swift" : {
+    "index-unit-output-path" : "/Pods.build/Release-iphoneos/ExpoLocation.build/Objects-normal/arm64/BaseLocationProvider.o",
+    "llvm-bc" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/ExpoLocation.build/Objects-normal/arm64/BaseLocationProvider.bc",
+    "object" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/ExpoLocation.build/Objects-normal/arm64/BaseLocationProvider.o"
+  },
+  "/Users/abdul/Desktop/bink/node_modules/expo-location/ios/Providers/BaseStreamer.swift" : {
+    "index-unit-output-path" : "/Pods.build/Release-iphoneos/ExpoLocation.build/Objects-normal/arm64/BaseStreamer.o",
+    "llvm-bc" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/ExpoLocation.build/Objects-normal/arm64/BaseStreamer.bc",
+    "object" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/ExpoLocation.build/Objects-normal/arm64/BaseStreamer.o"
+  },
+  "/Users/abdul/Desktop/bink/node_modules/expo-location/ios/Providers/DeviceHeadingStreamer.swift" : {
+    "index-unit-output-path" : "/Pods.build/Release-iphoneos/ExpoLocation.build/Objects-normal/arm64/DeviceHeadingStreamer.o",
+    "llvm-bc" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/ExpoLocation.build/Objects-normal/arm64/DeviceHeadingStreamer.bc",
+    "object" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/ExpoLocation.build/Objects-normal/arm64/DeviceHeadingStreamer.o"
+  },
+  "/Users/abdul/Desktop/bink/node_modules/expo-location/ios/Providers/LocationRequester.swift" : {
+    "index-unit-output-path" : "/Pods.build/Release-iphoneos/ExpoLocation.build/Objects-normal/arm64/LocationRequester.o",
+    "llvm-bc" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/ExpoLocation.build/Objects-normal/arm64/LocationRequester.bc",
+    "object" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/ExpoLocation.build/Objects-normal/arm64/LocationRequester.o"
+  },
+  "/Users/abdul/Desktop/bink/node_modules/expo-location/ios/Providers/LocationsStreamer.swift" : {
+    "index-unit-output-path" : "/Pods.build/Release-iphoneos/ExpoLocation.build/Objects-normal/arm64/LocationsStreamer.o",
+    "llvm-bc" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/ExpoLocation.build/Objects-normal/arm64/LocationsStreamer.bc",
+    "object" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/ExpoLocation.build/Objects-normal/arm64/LocationsStreamer.o"
+  }
+}

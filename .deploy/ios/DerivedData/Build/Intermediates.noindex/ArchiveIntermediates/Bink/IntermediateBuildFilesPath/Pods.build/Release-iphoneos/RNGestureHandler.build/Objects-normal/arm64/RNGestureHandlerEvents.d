@@ -1,0 +1,29 @@
+dependencies: \
+  /Users/abdul/Desktop/bink/node_modules/react-native-gesture-handler/apple/RNGestureHandlerEvents.m \
+  /Users/abdul/Desktop/bink/apps/public/ios/Pods/Target\ Support\ Files/RNGestureHandler/RNGestureHandler-prefix.pch \
+  /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/UIKit.framework/Modules/module.modulemap \
+  /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/Foundation.framework/Modules/module.modulemap \
+  /Users/abdul/Desktop/bink/node_modules/react-native-gesture-handler/apple/RNGestureHandlerEvents.h \
+  /Users/abdul/Desktop/bink/apps/public/ios/Pods/Headers/Public/React-Core/React/RCTEventDispatcher.h \
+  /Users/abdul/Desktop/bink/apps/public/ios/Pods/Headers/Public/React-Core/React/RCTBridge.h \
+  /Users/abdul/Desktop/bink/apps/public/ios/Pods/Headers/Public/React-Core/React/RCTBridgeDelegate.h \
+  /Users/abdul/Desktop/bink/apps/public/ios/Pods/Headers/Public/React-Core/React/RCTJavaScriptLoader.h \
+  /Users/abdul/Desktop/bink/apps/public/ios/Pods/Headers/Public/React-Core/React/RCTDefines.h \
+  /Users/abdul/Desktop/bink/apps/public/ios/Pods/Headers/Public/React-Core/React/RCTInspectorDevServerHelper.h \
+  /Users/abdul/Desktop/bink/apps/public/ios/Pods/Headers/Public/React-Core/React/RCTPackagerConnection.h \
+  /Users/abdul/Desktop/bink/apps/public/ios/Pods/Headers/Public/React-Core/React/RCTBridgeModule.h \
+  /Users/abdul/Desktop/bink/apps/public/ios/Pods/Headers/Public/React-Core/React/RCTJSThread.h \
+  /Users/abdul/Desktop/bink/apps/public/ios/Pods/Headers/Private/RCTDeprecation/RCTDeprecation.h \
+  /Users/abdul/Desktop/bink/apps/public/ios/Pods/Headers/Public/React-Core/React/RCTBundleManager.h \
+  /Users/abdul/Desktop/bink/apps/public/ios/Pods/Headers/Public/React-Core/React/RCTBridgeModuleDecorator.h \
+  /Users/abdul/Desktop/bink/apps/public/ios/Pods/Headers/Public/React-Core/React/RCTFrameUpdate.h \
+  /Users/abdul/Desktop/bink/apps/public/ios/Pods/Headers/Public/React-Core/React/RCTInvalidating.h \
+  /Users/abdul/Desktop/bink/apps/public/ios/Pods/Headers/Public/React-Core/React/RCTBridgeConstants.h \
+  /Users/abdul/Desktop/bink/apps/public/ios/Pods/Headers/Public/React-Core/React/RCTConstants.h \
+  /Users/abdul/Desktop/bink/apps/public/ios/Pods/Headers/Public/React-Core/React/RCTEventDispatcherProtocol.h \
+  /Users/abdul/Desktop/bink/apps/public/ios/Pods/Headers/Public/React-Core/React/RCTBridgeProxy.h \
+  /Users/abdul/Desktop/bink/apps/public/ios/Pods/Headers/Public/React-Core/React/RCTInitializing.h \
+  /Users/abdul/Desktop/bink/node_modules/react-native-gesture-handler/apple/RNGHStylusData.h \
+  /Users/abdul/Desktop/bink/node_modules/react-native-gesture-handler/apple/RNGHTouchEventType.h \
+  /Users/abdul/Desktop/bink/node_modules/react-native-gesture-handler/apple/RNGHUIKit.h \
+  /Users/abdul/Desktop/bink/node_modules/react-native-gesture-handler/apple/RNGestureHandlerState.h

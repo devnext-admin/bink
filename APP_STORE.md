@@ -95,4 +95,9 @@ DEVNEXT_APPLE_TEAM_ID=<team id> ./scripts/ios-appstore.sh 1
 ```
 
 It expects the key file at `~/Desktop/devnext-signing/AuthKey_<key id>.p8`.
-Build numbers must increase on every upload.
+Build numbers must increase on every upload. The script writes the number into
+`ios/Bink/Info.plist` itself; keep `ios.buildNumber` in app.json in step.
+
+Uploaded so far on the devnext team (app id 6808159433, "Bink Salons"): builds
+6-10 from an earlier pipeline, then build 1 on 2026-09-22 from this repo
+(attached to version 1.0). Use 12 or higher next time.

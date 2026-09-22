@@ -1,0 +1,81 @@
+{
+  "" : {
+    "const-values" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/ExpoImagePicker.build/Objects-normal/arm64/ExpoImagePicker-primary.swiftconstvalues",
+    "dependencies" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/ExpoImagePicker.build/Objects-normal/arm64/ExpoImagePicker-primary.d",
+    "diagnostics" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/ExpoImagePicker.build/Objects-normal/arm64/ExpoImagePicker-primary.dia",
+    "emit-module-dependencies" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/ExpoImagePicker.build/Objects-normal/arm64/ExpoImagePicker-primary-emit-module.d",
+    "emit-module-diagnostics" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/ExpoImagePicker.build/Objects-normal/arm64/ExpoImagePicker-primary-emit-module.dia",
+    "pch" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/ExpoImagePicker.build/Objects-normal/arm64/ExpoImagePicker-primary-Bridging-header.pch",
+    "swift-dependencies" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/ExpoImagePicker.build/Objects-normal/arm64/ExpoImagePicker-primary.swiftdeps"
+  },
+  "/Users/abdul/Desktop/bink/node_modules/expo-image-picker/ios/ImagePickerExceptions.swift" : {
+    "index-unit-output-path" : "/Pods.build/Release-iphoneos/ExpoImagePicker.build/Objects-normal/arm64/ImagePickerExceptions.o",
+    "llvm-bc" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/ExpoImagePicker.build/Objects-normal/arm64/ImagePickerExceptions.bc",
+    "object" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/ExpoImagePicker.build/Objects-normal/arm64/ImagePickerExceptions.o"
+  },
+  "/Users/abdul/Desktop/bink/node_modules/expo-image-picker/ios/ImagePickerHandler.swift" : {
+    "index-unit-output-path" : "/Pods.build/Release-iphoneos/ExpoImagePicker.build/Objects-normal/arm64/ImagePickerHandler.o",
+    "llvm-bc" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/ExpoImagePicker.build/Objects-normal/arm64/ImagePickerHandler.bc",
+    "object" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/ExpoImagePicker.build/Objects-normal/arm64/ImagePickerHandler.o"
+  },
+  "/Users/abdul/Desktop/bink/node_modules/expo-image-picker/ios/ImagePickerModule.swift" : {
+    "index-unit-output-path" : "/Pods.build/Release-iphoneos/ExpoImagePicker.build/Objects-normal/arm64/ImagePickerModule.o",
+    "llvm-bc" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/ExpoImagePicker.build/Objects-normal/arm64/ImagePickerModule.bc",
+    "object" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/ExpoImagePicker.build/Objects-normal/arm64/ImagePickerModule.o"
+  },
+  "/Users/abdul/Desktop/bink/node_modules/expo-image-picker/ios/ImagePickerOptions.swift" : {
+    "index-unit-output-path" : "/Pods.build/Release-iphoneos/ExpoImagePicker.build/Objects-normal/arm64/ImagePickerOptions.o",
+    "llvm-bc" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/ExpoImagePicker.build/Objects-normal/arm64/ImagePickerOptions.bc",
+    "object" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/ExpoImagePicker.build/Objects-normal/arm64/ImagePickerOptions.o"
+  },
+  "/Users/abdul/Desktop/bink/node_modules/expo-image-picker/ios/ImagePickerPermissionRequesters.swift" : {
+    "index-unit-output-path" : "/Pods.build/Release-iphoneos/ExpoImagePicker.build/Objects-normal/arm64/ImagePickerPermissionRequesters.o",
+    "llvm-bc" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/ExpoImagePicker.build/Objects-normal/arm64/ImagePickerPermissionRequesters.bc",
+    "object" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/ExpoImagePicker.build/Objects-normal/arm64/ImagePickerPermissionRequesters.o"
+  },
+  "/Users/abdul/Desktop/bink/node_modules/expo-image-picker/ios/ImagePickerResponse.swift" : {
+    "index-unit-output-path" : "/Pods.build/Release-iphoneos/ExpoImagePicker.build/Objects-normal/arm64/ImagePickerResponse.o",
+    "llvm-bc" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/ExpoImagePicker.build/Objects-normal/arm64/ImagePickerResponse.bc",
+    "object" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/ExpoImagePicker.build/Objects-normal/arm64/ImagePickerResponse.o"
+  },
+  "/Users/abdul/Desktop/bink/node_modules/expo-image-picker/ios/ImagePickerUtils.swift" : {
+    "index-unit-output-path" : "/Pods.build/Release-iphoneos/ExpoImagePicker.build/Objects-normal/arm64/ImagePickerUtils.o",
+    "llvm-bc" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/ExpoImagePicker.build/Objects-normal/arm64/ImagePickerUtils.bc",
+    "object" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/ExpoImagePicker.build/Objects-normal/arm64/ImagePickerUtils.o"
+  },
+  "/Users/abdul/Desktop/bink/node_modules/expo-image-picker/ios/ImageUtils.swift" : {
+    "index-unit-output-path" : "/Pods.build/Release-iphoneos/ExpoImagePicker.build/Objects-normal/arm64/ImageUtils.o",
+    "llvm-bc" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/ExpoImagePicker.build/Objects-normal/arm64/ImageUtils.bc",
+    "object" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/ExpoImagePicker.build/Objects-normal/arm64/ImageUtils.o"
+  },
+  "/Users/abdul/Desktop/bink/node_modules/expo-image-picker/ios/MediaHandler.swift" : {
+    "index-unit-output-path" : "/Pods.build/Release-iphoneos/ExpoImagePicker.build/Objects-normal/arm64/MediaHandler.o",
+    "llvm-bc" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/ExpoImagePicker.build/Objects-normal/arm64/MediaHandler.bc",
+    "object" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/ExpoImagePicker.build/Objects-normal/arm64/MediaHandler.o"
+  },
+  "/Users/abdul/Desktop/bink/node_modules/expo-image-picker/ios/NSItemProvider+Async.swift" : {
+    "index-unit-output-path" : "/Pods.build/Release-iphoneos/ExpoImagePicker.build/Objects-normal/arm64/NSItemProvider+Async.o",
+    "llvm-bc" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/ExpoImagePicker.build/Objects-normal/arm64/NSItemProvider+Async.bc",
+    "object" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/ExpoImagePicker.build/Objects-normal/arm64/NSItemProvider+Async.o"
+  },
+  "/Users/abdul/Desktop/bink/node_modules/expo-image-picker/ios/StatusBarVisibilityController.swift" : {
+    "index-unit-output-path" : "/Pods.build/Release-iphoneos/ExpoImagePicker.build/Objects-normal/arm64/StatusBarVisibilityController.o",
+    "llvm-bc" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/ExpoImagePicker.build/Objects-normal/arm64/StatusBarVisibilityController.bc",
+    "object" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/ExpoImagePicker.build/Objects-normal/arm64/StatusBarVisibilityController.o"
+  },
+  "/Users/abdul/Desktop/bink/node_modules/expo-image-picker/ios/UIImage+fixOrientation.swift" : {
+    "index-unit-output-path" : "/Pods.build/Release-iphoneos/ExpoImagePicker.build/Objects-normal/arm64/UIImage+fixOrientation.o",
+    "llvm-bc" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/ExpoImagePicker.build/Objects-normal/arm64/UIImage+fixOrientation.bc",
+    "object" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/ExpoImagePicker.build/Objects-normal/arm64/UIImage+fixOrientation.o"
+  },
+  "/Users/abdul/Desktop/bink/node_modules/expo-image-picker/ios/UIImagePickerControllerExtentsion.swift" : {
+    "index-unit-output-path" : "/Pods.build/Release-iphoneos/ExpoImagePicker.build/Objects-normal/arm64/UIImagePickerControllerExtentsion.o",
+    "llvm-bc" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/ExpoImagePicker.build/Objects-normal/arm64/UIImagePickerControllerExtentsion.bc",
+    "object" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/ExpoImagePicker.build/Objects-normal/arm64/UIImagePickerControllerExtentsion.o"
+  },
+  "/Users/abdul/Desktop/bink/node_modules/expo-image-picker/ios/VideoUtils.swift" : {
+    "index-unit-output-path" : "/Pods.build/Release-iphoneos/ExpoImagePicker.build/Objects-normal/arm64/VideoUtils.o",
+    "llvm-bc" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/ExpoImagePicker.build/Objects-normal/arm64/VideoUtils.bc",
+    "object" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/ExpoImagePicker.build/Objects-normal/arm64/VideoUtils.o"
+  }
+}

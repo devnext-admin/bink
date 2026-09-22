@@ -1,0 +1,15 @@
+
+
+    >>>>> Generating codegen artifacts
+
+    
+ output has been written to /Users/abdul/Desktop/bink/apps/public/ios:
+Bink
+Bink.xcodeproj
+Bink.xcworkspace
+Podfile
+Podfile.lock
+Podfile.properties.json
+Pods
+build
+Done.

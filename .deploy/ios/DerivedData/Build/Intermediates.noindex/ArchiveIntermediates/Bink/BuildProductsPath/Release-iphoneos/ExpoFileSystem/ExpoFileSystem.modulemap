@@ -1,0 +1,12 @@
+module ExpoFileSystem {
+  umbrella header "ExpoFileSystem-umbrella.h"
+
+  export *
+  module * { export * }
+}
+
+
+module ExpoFileSystem.Swift {
+  header "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/BuildProductsPath/Release-iphoneos/ExpoFileSystem/Swift Compatibility Header/ExpoFileSystem-Swift.h"
+  requires objc
+}

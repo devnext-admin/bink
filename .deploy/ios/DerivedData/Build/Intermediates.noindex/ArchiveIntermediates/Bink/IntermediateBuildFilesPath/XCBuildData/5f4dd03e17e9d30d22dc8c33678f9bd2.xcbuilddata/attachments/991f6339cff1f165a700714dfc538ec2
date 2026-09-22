@@ -1,0 +1,31 @@
+{
+  "" : {
+    "const-values" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXManifests.build/Objects-normal/arm64/EXManifests-primary.swiftconstvalues",
+    "dependencies" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXManifests.build/Objects-normal/arm64/EXManifests-primary.d",
+    "diagnostics" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXManifests.build/Objects-normal/arm64/EXManifests-primary.dia",
+    "emit-module-dependencies" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXManifests.build/Objects-normal/arm64/EXManifests-primary-emit-module.d",
+    "emit-module-diagnostics" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXManifests.build/Objects-normal/arm64/EXManifests-primary-emit-module.dia",
+    "pch" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXManifests.build/Objects-normal/arm64/EXManifests-primary-Bridging-header.pch",
+    "swift-dependencies" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXManifests.build/Objects-normal/arm64/EXManifests-primary.swiftdeps"
+  },
+  "/Users/abdul/Desktop/bink/node_modules/expo-manifests/ios/EXManifests/EmbeddedManifest.swift" : {
+    "index-unit-output-path" : "/Pods.build/Release-iphoneos/EXManifests.build/Objects-normal/arm64/EmbeddedManifest.o",
+    "llvm-bc" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXManifests.build/Objects-normal/arm64/EmbeddedManifest.bc",
+    "object" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXManifests.build/Objects-normal/arm64/EmbeddedManifest.o"
+  },
+  "/Users/abdul/Desktop/bink/node_modules/expo-manifests/ios/EXManifests/ExpoUpdatesManifest.swift" : {
+    "index-unit-output-path" : "/Pods.build/Release-iphoneos/EXManifests.build/Objects-normal/arm64/ExpoUpdatesManifest.o",
+    "llvm-bc" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXManifests.build/Objects-normal/arm64/ExpoUpdatesManifest.bc",
+    "object" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXManifests.build/Objects-normal/arm64/ExpoUpdatesManifest.o"
+  },
+  "/Users/abdul/Desktop/bink/node_modules/expo-manifests/ios/EXManifests/Manifest.swift" : {
+    "index-unit-output-path" : "/Pods.build/Release-iphoneos/EXManifests.build/Objects-normal/arm64/Manifest.o",
+    "llvm-bc" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXManifests.build/Objects-normal/arm64/Manifest.bc",
+    "object" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXManifests.build/Objects-normal/arm64/Manifest.o"
+  },
+  "/Users/abdul/Desktop/bink/node_modules/expo-manifests/ios/EXManifests/ManifestFactory.swift" : {
+    "index-unit-output-path" : "/Pods.build/Release-iphoneos/EXManifests.build/Objects-normal/arm64/ManifestFactory.o",
+    "llvm-bc" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXManifests.build/Objects-normal/arm64/ManifestFactory.bc",
+    "object" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/EXManifests.build/Objects-normal/arm64/ManifestFactory.o"
+  }
+}

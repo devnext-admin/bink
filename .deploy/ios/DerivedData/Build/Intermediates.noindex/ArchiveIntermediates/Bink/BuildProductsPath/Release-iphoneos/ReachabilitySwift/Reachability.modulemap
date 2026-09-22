@@ -1,0 +1,12 @@
+module Reachability {
+  umbrella header "ReachabilitySwift-umbrella.h"
+
+  export *
+  module * { export * }
+}
+
+
+module Reachability.Swift {
+  header "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/BuildProductsPath/Release-iphoneos/ReachabilitySwift/Swift Compatibility Header/Reachability-Swift.h"
+  requires objc
+}

@@ -1,0 +1,12 @@
+module ExpoKeepAwake {
+  umbrella header "ExpoKeepAwake-umbrella.h"
+
+  export *
+  module * { export * }
+}
+
+
+module ExpoKeepAwake.Swift {
+  header "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/BuildProductsPath/Release-iphoneos/ExpoKeepAwake/Swift Compatibility Header/ExpoKeepAwake-Swift.h"
+  requires objc
+}

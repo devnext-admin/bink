@@ -1,0 +1,26 @@
+{
+  "" : {
+    "const-values" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/ExpoLinking.build/Objects-normal/arm64/ExpoLinking-primary.swiftconstvalues",
+    "dependencies" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/ExpoLinking.build/Objects-normal/arm64/ExpoLinking-primary.d",
+    "diagnostics" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/ExpoLinking.build/Objects-normal/arm64/ExpoLinking-primary.dia",
+    "emit-module-dependencies" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/ExpoLinking.build/Objects-normal/arm64/ExpoLinking-primary-emit-module.d",
+    "emit-module-diagnostics" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/ExpoLinking.build/Objects-normal/arm64/ExpoLinking-primary-emit-module.dia",
+    "pch" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/ExpoLinking.build/Objects-normal/arm64/ExpoLinking-primary-Bridging-header.pch",
+    "swift-dependencies" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/ExpoLinking.build/Objects-normal/arm64/ExpoLinking-primary.swiftdeps"
+  },
+  "/Users/abdul/Desktop/bink/node_modules/expo-linking/ios/ExpoLinkingModule.swift" : {
+    "index-unit-output-path" : "/Pods.build/Release-iphoneos/ExpoLinking.build/Objects-normal/arm64/ExpoLinkingModule.o",
+    "llvm-bc" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/ExpoLinking.build/Objects-normal/arm64/ExpoLinkingModule.bc",
+    "object" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/ExpoLinking.build/Objects-normal/arm64/ExpoLinkingModule.o"
+  },
+  "/Users/abdul/Desktop/bink/node_modules/expo-linking/ios/ExpoLinkingRegistry.swift" : {
+    "index-unit-output-path" : "/Pods.build/Release-iphoneos/ExpoLinking.build/Objects-normal/arm64/ExpoLinkingRegistry.o",
+    "llvm-bc" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/ExpoLinking.build/Objects-normal/arm64/ExpoLinkingRegistry.bc",
+    "object" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/ExpoLinking.build/Objects-normal/arm64/ExpoLinkingRegistry.o"
+  },
+  "/Users/abdul/Desktop/bink/node_modules/expo-linking/ios/LinkingAppDelegateSubscriber.swift" : {
+    "index-unit-output-path" : "/Pods.build/Release-iphoneos/ExpoLinking.build/Objects-normal/arm64/LinkingAppDelegateSubscriber.o",
+    "llvm-bc" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/ExpoLinking.build/Objects-normal/arm64/LinkingAppDelegateSubscriber.bc",
+    "object" : "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/IntermediateBuildFilesPath/Pods.build/Release-iphoneos/ExpoLinking.build/Objects-normal/arm64/LinkingAppDelegateSubscriber.o"
+  }
+}

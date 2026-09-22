@@ -1,0 +1,12 @@
+module ExpoLinking {
+  umbrella header "ExpoLinking-umbrella.h"
+
+  export *
+  module * { export * }
+}
+
+
+module ExpoLinking.Swift {
+  header "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/BuildProductsPath/Release-iphoneos/ExpoLinking/Swift Compatibility Header/ExpoLinking-Swift.h"
+  requires objc
+}

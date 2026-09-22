@@ -1,0 +1,12 @@
+module ExpoImagePicker {
+  umbrella header "ExpoImagePicker-umbrella.h"
+
+  export *
+  module * { export * }
+}
+
+
+module ExpoImagePicker.Swift {
+  header "/Users/abdul/Desktop/bink/.deploy/ios/DerivedData/Build/Intermediates.noindex/ArchiveIntermediates/Bink/BuildProductsPath/Release-iphoneos/ExpoImagePicker/Swift Compatibility Header/ExpoImagePicker-Swift.h"
+  requires objc
+}
