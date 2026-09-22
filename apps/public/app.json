@@ -10,7 +10,7 @@
     "ios": {
       "icon": "../../packages/shared/assets/expo.icon",
       "bundleIdentifier": "sa.devnext.bink",
-      "buildNumber": "1",
+      "buildNumber": "11",
       "supportsTablet": false,
       "infoPlist": {
         "ITSAppUsesNonExemptEncryption": false
