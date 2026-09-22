@@ -7,18 +7,10 @@ import { Logo } from '@bink/shared/components/logo';
 import { Button } from '@bink/shared/components/ui/button';
 import { BText } from '@bink/shared/components/ui/text';
 import { useAppData } from '@bink/shared/lib/app-data-context';
-import { isSupabaseConfigured, useAuth } from '@bink/shared/lib/auth-context';
-import {
-  DEMO_ADMIN_EMAIL,
-  DEMO_CUSTOMER_EMAIL,
-  DEMO_OWNER_EMAIL,
-  seedCustomerDemo,
-  seedOwnerDemo,
-} from '../lib/demo-seed';
+import { useAuth } from '@bink/shared/lib/auth-context';
 import { useI18n } from '@bink/shared/lib/i18n';
 import { getSupabase } from '@bink/shared/lib/supabase';
 import { colors, font, radius } from '@bink/shared/lib/theme';
-import { openAdminConsole } from '@bink/shared/lib/admin-link';
 
 export default function Auth() {
   const router = useRouter();
@@ -26,42 +18,7 @@ export default function Auth() {
   const { t } = useI18n();
   const { signIn, signUp, continueAsGuest, signInWithProvider, resendVerification } = useAuth();
   const { refresh } = useAppData();
-  const [demoBusy, setDemoBusy] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
-
-  const DEMO_PASSWORD = 'binkdemo123';
-  const enterDemo = async (persona: 'customer' | 'owner' | 'staffer' | 'admin') => {
-    setDemoBusy(persona);
-    if (!isSupabaseConfigured) {
-      if (persona === 'customer') await seedCustomerDemo();
-      else if (persona === 'owner') await seedOwnerDemo();
-      else {
-        await seedCustomerDemo();
-        await seedOwnerDemo();
-      }
-    }
-    const email =
-      persona === 'customer'
-        ? DEMO_CUSTOMER_EMAIL
-        : persona === 'owner'
-          ? DEMO_OWNER_EMAIL
-          : persona === 'staffer'
-            ? 'staff@bink.com'
-            : DEMO_ADMIN_EMAIL;
-    const err = await signIn(email, DEMO_PASSWORD);
-    if (err) {
-      setError(err);
-      setDemoBusy(null);
-      return;
-    }
-    await refresh();
-    if (persona === 'admin') {
-      openAdminConsole();
-    } else {
-      router.replace(persona === 'customer' ? '/appointments' : '/business/dashboard');
-    }
-    setDemoBusy(null);
-  };
 
   const params = useLocalSearchParams<{ mode?: string }>();
   const [mode, setMode] = useState<'signin' | 'signup'>(params.mode === 'signup' ? 'signup' : 'signin');
@@ -412,42 +369,6 @@ export default function Auth() {
           </BText>
         </View>
 
-        <View style={{ gap: 10 }}>
-          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12, marginTop: 4 }}>
-            <View style={styles.hr} />
-            <BText variant="tiny">{t('or explore a ready-made demo')}</BText>
-            <View style={styles.hr} />
-          </View>
-          <DemoButton
-            icon="person-outline"
-            title={t('Demo customer')}
-            sub={t('Bookings, escrow, chat & reviews pre-loaded')}
-            loading={demoBusy === 'customer'}
-            onPress={() => enterDemo('customer')}
-          />
-          <DemoButton
-            icon="storefront-outline"
-            title={t('Demo salon owner')}
-            sub={t('A live salon with sales, messages & analytics')}
-            loading={demoBusy === 'owner'}
-            onPress={() => enterDemo('owner')}
-          />
-          <DemoButton
-            icon="cut-outline"
-            title={t('Demo team member')}
-            sub={t('A stylist who sees only her own bookings')}
-            loading={demoBusy === 'staffer'}
-            onPress={() => enterDemo('staffer')}
-          />
-          <DemoButton
-            icon="shield-checkmark-outline"
-            title={t('Demo admin')}
-            sub={t('Approvals, users, payments & platform stats')}
-            loading={demoBusy === 'admin'}
-            onPress={() => enterDemo('admin')}
-          />
-        </View>
-
         <Pressable onPress={() => switchMode(mode === 'signin' ? 'signup' : 'signin')}>
           <BText variant="small" style={{ textAlign: 'center' }}>
             {mode === 'signin' ? t("Don't have an account?") : t('Already have an account?')}{' '}
@@ -459,38 +380,6 @@ export default function Auth() {
       </View>
     </ScrollView>
     </KeyboardAvoidingView>
-  );
-}
-
-function DemoButton({
-  icon,
-  title,
-  sub,
-  loading,
-  onPress,
-}: {
-  icon: any;
-  title: string;
-  sub: string;
-  loading: boolean;
-  onPress: () => void;
-}) {
-  const { isRTL } = useI18n();
-  return (
-    <Pressable
-      onPress={onPress}
-      disabled={loading}
-      style={({ hovered }: any) => [styles.demoBtn, hovered && { backgroundColor: colors.accentSoft }]}
-    >
-      <View style={styles.demoIcon}>
-        <Ionicons name={icon} size={18} color={colors.accent} />
-      </View>
-      <View style={{ flex: 1 }}>
-        <BText variant="smallMedium">{title}</BText>
-        <BText variant="tiny">{sub}</BText>
-      </View>
-      <Ionicons name={loading ? 'hourglass-outline' : isRTL ? 'arrow-back' : 'arrow-forward'} size={16} color={colors.gray} />
-    </Pressable>
   );
 }
 
@@ -547,23 +436,6 @@ const styles = StyleSheet.create({
     backgroundColor: colors.white,
   },
   hr: { flex: 1, height: 1, backgroundColor: colors.divider },
-  demoBtn: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 12,
-    borderWidth: 1,
-    borderColor: colors.divider,
-    borderRadius: radius.md,
-    padding: 12,
-  },
-  demoIcon: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
-    backgroundColor: colors.accentSoft,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
   bizHint: {
     flexDirection: 'row',
     alignItems: 'center',
