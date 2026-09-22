@@ -33,6 +33,8 @@ interface AuthContextValue {
   ) => Promise<{ error?: string; needsVerification?: boolean; userId?: string }>;
   continueAsGuest: (name?: string) => Promise<void>;
   signInWithProvider: (provider: 'google' | 'apple') => Promise<string | null>;
+  /** Permanently deletes the signed-in account (App Store guideline 5.1.1). Returns an error string or null. */
+  deleteAccount: () => Promise<string | null>;
   signOut: () => Promise<void>;
   setRole: (role: UserRole) => Promise<void>;
   updateName: (name: string) => Promise<void>;
@@ -332,6 +334,21 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setUser(null);
   }, []);
 
+  // Account deletion runs server-side (delete-account edge function, service
+  // role) so the auth user and every cascading row disappear together.
+  const deleteAccount = useCallback(async (): Promise<string | null> => {
+    const sb = getSupabase();
+    if (!sb || !user || user.isGuest) {
+      await signOut();
+      return null;
+    }
+    const { data, error } = await sb.functions.invoke('delete-account', { body: {} });
+    if (error) return error.message ?? 'Could not delete the account.';
+    if (data?.error) return String(data.error);
+    await signOut();
+    return null;
+  }, [user, signOut]);
+
   // While an admin is emulating, the whole app sees the emulated customer
   const effectiveUser = user?.role === 'admin' && emulated ? emulated : user;
   const emulating = user?.role === 'admin' && emulated ? { id: emulated.id, name: emulated.name } : null;
@@ -348,13 +365,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       continueAsGuest,
       signInWithProvider,
       signOut,
+      deleteAccount,
       setRole,
       updateName,
       updateProfile,
       resendVerification,
       refreshUser,
     }),
-    [effectiveUser, loading, emulating, startEmulating, stopEmulating, signIn, signUp, continueAsGuest, signInWithProvider, signOut, setRole, updateName, updateProfile, resendVerification, refreshUser]
+    [effectiveUser, loading, emulating, startEmulating, stopEmulating, signIn, signUp, continueAsGuest, signInWithProvider, signOut, deleteAccount, setRole, updateName, updateProfile, resendVerification, refreshUser]
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

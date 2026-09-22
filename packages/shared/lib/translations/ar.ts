@@ -817,4 +817,7 @@ export const ar: Record<string, string> = {
   'or continue with': 'أو تابع باستخدام',
   'Working hours': 'ساعات العمل',
   'Day off': 'يوم إجازة',
+  'Delete account': 'حذف الحساب',
+  'Permanently removes your account, appointments, favorites and messages. This cannot be undone.': 'يحذف حسابك ومواعيدك ومفضلاتك ورسائلك نهائيًا. لا يمكن التراجع عن هذا الإجراء.',
+  'Yes, delete my account': 'نعم، احذف حسابي',
 };

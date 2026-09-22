@@ -30,8 +30,23 @@ export default function Settings() {
   const insets = useSafeAreaInsets();
   const router = useRouter();
   const { t, lang, setLang, isRTL } = useI18n();
-  const { user, signOut } = useAuth();
+  const { user, signOut, deleteAccount } = useAuth();
   const [prefs, setPrefs] = useState<Prefs>(DEFAULTS);
+  const [confirmDelete, setConfirmDelete] = useState(false);
+  const [deleting, setDeleting] = useState(false);
+  const [deleteError, setDeleteError] = useState<string | null>(null);
+
+  const onDeleteAccount = async () => {
+    setDeleting(true);
+    setDeleteError(null);
+    const err = await deleteAccount();
+    setDeleting(false);
+    if (err) {
+      setDeleteError(err);
+      return;
+    }
+    router.replace('/');
+  };
 
   useEffect(() => {
     AsyncStorage.getItem(SETTINGS_KEY).then((raw) => {
@@ -94,6 +109,36 @@ export default function Settings() {
               router.replace('/');
             }}
           />
+        </View>
+      ) : null}
+
+      {user && !user.isGuest ? (
+        <View style={[styles.card, { borderColor: colors.danger }]}>
+          <BText variant="h3">{t('Delete account')}</BText>
+          <BText variant="tiny" style={{ marginTop: 6 }}>
+            {t('Permanently removes your account, appointments, favorites and messages. This cannot be undone.')}
+          </BText>
+          {deleteError ? (
+            <BText variant="small" color={colors.danger} style={{ marginTop: 10 }}>
+              {deleteError}
+            </BText>
+          ) : null}
+          <View style={{ flexDirection: 'row', gap: 10, marginTop: 14, flexWrap: 'wrap' }}>
+            {confirmDelete ? (
+              <>
+                <Button
+                  title={t('Yes, delete my account')}
+                  variant="primary"
+                  style={{ backgroundColor: colors.danger }}
+                  loading={deleting}
+                  onPress={onDeleteAccount}
+                />
+                <Button title={t('Cancel')} variant="secondary" onPress={() => setConfirmDelete(false)} />
+              </>
+            ) : (
+              <Button title={t('Delete account')} variant="secondary" onPress={() => setConfirmDelete(true)} />
+            )}
+          </View>
         </View>
       ) : null}
     </View>

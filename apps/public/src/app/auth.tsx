@@ -335,21 +335,27 @@ export default function Auth() {
           loading={busy}
           onPress={submit}
         />
-        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12 }}>
-          <View style={styles.hr} />
-          <BText variant="tiny">{t('or continue with')}</BText>
-          <View style={styles.hr} />
-        </View>
-        <View style={{ flexDirection: 'row', gap: 10 }}>
-          <Pressable style={styles.oauthBtn} onPress={() => onOAuth('google')}>
-            <Ionicons name="logo-google" size={18} color={colors.ink} />
-            <BText variant="smallMedium">Google</BText>
-          </Pressable>
-          <Pressable style={styles.oauthBtn} onPress={() => onOAuth('apple')}>
-            <Ionicons name="logo-apple" size={19} color={colors.ink} />
-            <BText variant="smallMedium">Apple</BText>
-          </Pressable>
-        </View>
+        {/* Social sign-in uses the browser OAuth redirect, which only completes
+            on the web. The native app offers email and guest access only. */}
+        {Platform.OS === 'web' ? (
+          <>
+            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12 }}>
+              <View style={styles.hr} />
+              <BText variant="tiny">{t('or continue with')}</BText>
+              <View style={styles.hr} />
+            </View>
+            <View style={{ flexDirection: 'row', gap: 10 }}>
+              <Pressable style={styles.oauthBtn} onPress={() => onOAuth('google')}>
+                <Ionicons name="logo-google" size={18} color={colors.ink} />
+                <BText variant="smallMedium">Google</BText>
+              </Pressable>
+              <Pressable style={styles.oauthBtn} onPress={() => onOAuth('apple')}>
+                <Ionicons name="logo-apple" size={19} color={colors.ink} />
+                <BText variant="smallMedium">Apple</BText>
+              </Pressable>
+            </View>
+          </>
+        ) : null}
 
         <Button
           title={t('Continue as guest')}
