@@ -1,5 +1,6 @@
 import Head from 'expo-router/head';
 import React from 'react';
+import { Platform } from 'react-native';
 
 /**
  * Per-route page metadata for web. On native this renders nothing.
@@ -7,6 +8,9 @@ import React from 'react';
  * +html.tsx so each page (and shared link) gets its own title and preview.
  */
 export function Seo({ title, description }: { title: string; description?: string }) {
+  // expo-router's Head also drives native handoff and alerts when it is not
+  // fully configured, so keep it strictly to the web bundle.
+  if (Platform.OS !== 'web') return null;
   const full = title.includes('Bink') ? title : `${title} · Bink`;
   return (
     <Head>

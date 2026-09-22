@@ -32,7 +32,12 @@
       "favicon": "../../packages/shared/assets/images/favicon.png"
     },
     "plugins": [
-      "expo-router",
+      [
+        "expo-router",
+        {
+          "origin": "https://bink-seven.vercel.app"
+        }
+      ],
       [
         "expo-splash-screen",
         {
