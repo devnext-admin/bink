@@ -85,22 +85,14 @@ No iPad set is needed because `supportsTablet` is false.
 
 ## Build and upload
 
-The archive is signed manually with a distribution certificate and an App Store
-provisioning profile for `sa.devnext.bink` on the Apple team that owns the app
-record. Then:
+The app record lives on the devnext Apple team. `scripts/ios-appstore.sh <build>`
+archives with cloud managed signing (the App Store Connect API key creates the
+distribution certificate and profile itself), exports the IPA and uploads it:
 
 ```bash
-cd apps/public/ios
-xcodebuild archive -workspace Bink.xcworkspace -scheme Bink -configuration Release \
-  -destination 'generic/platform=iOS' -archivePath ../../../.deploy/ios/Bink.xcarchive \
-  -allowProvisioningUpdates -authenticationKeyPath <AuthKey.p8> \
-  -authenticationKeyID <KEY_ID> -authenticationKeyIssuerID <ISSUER_ID>
-xcodebuild -exportArchive -archivePath ../../../.deploy/ios/Bink.xcarchive \
-  -exportOptionsPlist ExportOptions.plist -exportPath ../../../.deploy/ios/export \
-  -allowProvisioningUpdates -authenticationKeyPath <AuthKey.p8> \
-  -authenticationKeyID <KEY_ID> -authenticationKeyIssuerID <ISSUER_ID>
-xcrun altool --upload-app -f ../../../.deploy/ios/export/Bink.ipa -t ios \
-  --apiKey <KEY_ID> --apiIssuer <ISSUER_ID>
+DEVNEXT_ASC_KEY_ID=<key id> DEVNEXT_ASC_ISSUER_ID=<issuer uuid> \
+DEVNEXT_APPLE_TEAM_ID=<team id> ./scripts/ios-appstore.sh 1
 ```
 
-Build numbers must increase on every upload (`ios.buildNumber` in app.json).
+It expects the key file at `~/Desktop/devnext-signing/AuthKey_<key id>.p8`.
+Build numbers must increase on every upload.
